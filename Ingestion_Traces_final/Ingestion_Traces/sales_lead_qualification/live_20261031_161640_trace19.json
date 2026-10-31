@@ -1,0 +1,182 @@
+{
+  "run_id": "live_20261031_161640_trace19",
+  "workflow_name": "sales_lead_qualification",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 12.962,
+  "agent_execution_count": 7,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_11 (gsk_A9...C3BP)",
+      "duration_seconds": 2.847,
+      "tokens": 1226,
+      "prompt_tokens": 399,
+      "completion_tokens": 827,
+      "output": {
+        "lead_id": "LEAD-2026-0004",
+        "enriched_lead_profile": {
+          "lead_id": "LEAD-2026-0004",
+          "contact_name": "Elena Rostova",
+          "contact_email": "erostova@apexbiotech.com",
+          "job_title": "Director of IT",
+          "company_id": "COMP-102",
+          "stated_budget": 120000.0,
+          "purchase_timeline": "Immediate (Q4)",
+          "test_case_tag": "enterprise_fast_track",
+          "company_name": "Apex Biotech Labs",
+          "industry": "Healthcare & Life Sciences",
+          "employee_count": 850,
+          "annual_revenue_usd": 120000000,
+          "region": "North America"
+        },
+        "missing_attributes": [
+          "Verification needed for synthetic data (is_synthetic flag true)"
+        ]
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "lead_enrichment_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_12 (gsk_5G...OStT)",
+      "duration_seconds": 1.254,
+      "tokens": 867,
+      "prompt_tokens": 624,
+      "completion_tokens": 243,
+      "output": {
+        "fit_category": "STRONG_FIT",
+        "industry_fit_score": 10,
+        "company_size_fit_score": 9,
+        "fit_rationale": "The account operates in a target industry (Healthcare & Life Sciences) and is not in any disqualified sector. With 850 employees, it comfortably exceeds the minimum employee threshold (200) and falls well below the maximum, aligning with the enterprise size criteria. Annual revenue of $120M surpasses the $20M minimum. The contact holds a target role (Director of IT). All core ICP dimensions are met, resulting in a strong fit."
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "lead_fit_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_13 (gsk_i9...Ujsn)",
+      "duration_seconds": 1.508,
+      "tokens": 772,
+      "prompt_tokens": 442,
+      "completion_tokens": 330,
+      "output": {
+        "intent_level": "HIGH_INTENT",
+        "intent_score": 88,
+        "high_value_signals": [
+          {
+            "type": "executive_briefing_request",
+            "date": "2026-09-15",
+            "notes": "Requested direct call with product VP"
+          },
+          {
+            "type": "security_whitepaper_download",
+            "date": "2026-09-11",
+            "notes": "Downloaded SOC2 & HIPAA compliance pack"
+          }
+        ],
+        "behavioral_summary": "Elena Rostova, Director of IT at Apex Biotech, has indicated an immediate purchase timeline (Q4) with a stated budget of $120,000. She has actively engaged by requesting an executive briefing with the product VP and downloading security compliance whitepapers (SOC2 & HIPAA), both strong buying signals for an enterprise solution. The combination of a high‑budget, urgent timeline, senior decision‑maker role, and direct engagement actions places her at a high intent level with an estimated intent score of 88."
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "intent_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_14 (gsk_6G...l7b1)",
+      "duration_seconds": 1.611,
+      "tokens": 721,
+      "prompt_tokens": 310,
+      "completion_tokens": 411,
+      "output": {
+        "total_score": 100,
+        "qualification_tier": "SALES_QUALIFIED_LEAD",
+        "component_scores": {
+          "industry_fit": 25,
+          "company_size_fit": 25,
+          "role_authority": 20,
+          "intent_signals": 20,
+          "budget_timeline": 10
+        },
+        "scoring_rationale": "The deterministic model assigns a fixed weight to each of five qualification dimensions that sum to 100 points. Each dimension is evaluated against predefined criteria (e.g., industry relevance, company headcount range, decision‑maker role, observed buying intent, and disclosed budget/timeline) and receives its full allocated points when the prospect meets the threshold. The total_score is the sum of the component scores. Tier classification is based on the total_score:\n- >= 80 → SALES_QUALIFIED_LEAD (ready for direct sales engagement)\n- 40–79 → MARKETING_NURTURE (requires further education and lead nurturing)\n- < 40 → DISQUALIFIED (does not meet minimum qualification criteria).\nIn this instance, the prospect achieved the maximum possible score of 100, placing them firmly in the SALES_QUALIFIED_LEAD tier. The highest‑scoring dimensions are 'industry_fit' and 'company_size_fit' (each 25 points). The lowest‑scoring dimension is 'budget_timeline' with 10 points, indicating the only area where the prospect did not receive full credit."
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "lead_scoring_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_15 (gsk_3b...vKIi)",
+      "duration_seconds": 1.709,
+      "tokens": 1527,
+      "prompt_tokens": 1160,
+      "completion_tokens": 367,
+      "output": {
+        "opportunity_viability": "HIGH",
+        "estimated_deal_size": 120000,
+        "pipeline_stage": "Qualified Opportunity",
+        "key_risks": [
+          "Synthetic data flag requires verification of lead authenticity before proceeding",
+          "Potential internal budget approval delays despite stated immediate timeline",
+          "Competitive landscape in healthcare IT solutions; vendors with established compliance track records may contest",
+          "Compliance and security validation (SOC2/HIPAA) may require additional proof points",
+          "Possible need for multi‑stakeholder consensus beyond Director of IT"
+        ]
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "opportunity_assessment_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_16 (gsk_ID...uEx3)",
+      "duration_seconds": 1.738,
+      "tokens": 1714,
+      "prompt_tokens": 1297,
+      "completion_tokens": 417,
+      "output": {
+        "recommended_action": "Immediate SDR outreach and schedule an Account Executive briefing within 2 hours of lead receipt",
+        "target_team": "Enterprise Sales Team (Senior SDR + Account Executive)",
+        "priority": "High",
+        "action_justification": "Lead is a SALES_QUALIFIED_LEAD with a total score of 100, strong fit across industry, company size, and role, high intent signals (executive briefing request, security whitepaper download), stated budget of $120,000 and an immediate Q4 purchase timeline. These factors indicate ready-to-buy status and require rapid engagement to capture momentum. The synthetic data flag will be verified in parallel, but the high business impact and urgency justify top‑priority handling."
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "next_action_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 2.261,
+      "tokens": 2037,
+      "prompt_tokens": 1430,
+      "completion_tokens": 607,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "lead_id": "LEAD-2026-0004",
+        "final_qualification_tier": "SALES_QUALIFIED_LEAD",
+        "final_score": 100,
+        "summary_report": "The lead (Elena Rostova, Director of IT at Apex Biotech Labs) meets all core ICP dimensions: target industry (Healthcare & Life Sciences), enterprise size (850 employees, $120M revenue), senior decision‑maker role, disclosed budget ($120,000) and immediate Q4 timeline. Intent signals (executive briefing request, SOC2/HIPAA whitepaper download) generate a high intent score (88). The deterministic scoring model awards full points across all five dimensions, yielding a total_score of 100 and qualifying the prospect as a SALES_QUALIFIED_LEAD. The recommended action—immediate SDR outreach and Account Executive briefing within 2 hours—matches the high‑priority routing for an SQ‑Lead. The only outstanding flag is the synthetic‑data indicator, which must be verified before full engagement, but it does not create a routing conflict.",
+        "audit_findings": [
+          "ICP fit (STRONG_FIT) is consistent with the component scores (industry_fit 25, company_size_fit 25, role_authority 20, intent_signals 20, budget_timeline 10) and the resulting total_score of 100.",
+          "Scoring rubric correctly maps a total_score >= 80 to the SALES_QUALIFIED_LEAD tier; no discrepancy observed.",
+          "Recommended routing to the Enterprise Sales Team (Senior SDR + AE) aligns with the SQ‑Lead tier and high priority flag.",
+          "No contradictory routing decisions detected.",
+          "Synthetic data flag noted; verification required before proceeding but does not affect the current qualification outcome."
+        ]
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "final_review_agent_sales"
+    }
+  ],
+  "total_tokens": 8864,
+  "prompt_tokens": 5662,
+  "completion_tokens": 3202,
+  "estimated_cost_usd": 0.00587,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"lead_id\": \"LEAD-2026-0004\",\n  \"final_qualification_tier\": \"SALES_QUALIFIED_LEAD\",\n  \"final_score\": 100,\n  \"summary_report\": \"The lead (Elena Rostova, Director of IT at Apex Biotech Labs) meets all core ICP dimensions: target industry (Healthcare & Life Sciences), enterprise size (850 employees, $120M revenue), senior decision\\u2011maker role, disclosed budget ($120,000) and immediate Q4 timeline. Intent signals (executive briefing request, SOC2/HIPAA whitepaper download) generate a high intent score (88). The deterministic scoring model awards full points across all five dimensions, yielding a total_score of 100 and qualifying the prospect as a SALES_QUALIFIED_LEAD. The recommended action\\u2014immediate SDR outreach and Account Executive briefing within 2 hours\\u2014matches the high\\u2011priority routing for an SQ\\u2011Lead. The only outstanding flag is the synthetic\\u2011data indicator, which must be verified before full engagement, but it does not create a routing conflict.\",\n  \"audit_findings\": [\n    \"ICP fit (STRONG_FIT) is consistent with the component scores (industry_fit 25, company_size_fit 25, role_authority 20, intent_signals 20, budget_timeline 10) and the resulting total_score of 100.\",\n    \"Scoring rubric correctly maps a total_score >= 80 to the SALES_QUALIFIED_LEAD tier; no discrepancy observed.\",\n    \"Recommended routing to the Enterprise Sales Team (Senior SDR + AE) aligns with the SQ\\u2011Lead tier and high priority flag.\",\n    \"No contradictory routing decisions detected.\",\n    \"Synthetic data flag noted; verification required before proceeding but does not affect the current qualification outcome.\"\n  ]\n}",
+  "timestamp": "2026-10-31T16:16:53.282645+00:00"
+}

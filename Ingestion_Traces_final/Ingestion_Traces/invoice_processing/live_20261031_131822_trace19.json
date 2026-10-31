@@ -1,0 +1,296 @@
+{
+  "run_id": "live_20261031_131822_trace19",
+  "workflow_name": "invoice_processing",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 15.912,
+  "agent_execution_count": 8,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 2.385,
+      "tokens": 1394,
+      "prompt_tokens": 568,
+      "completion_tokens": 826,
+      "output": {
+        "extracted_invoice": {
+          "invoice_number": "INV-2026-0019",
+          "supplier_id": "SUP-109",
+          "supplier_name": "Omni Packaging Works",
+          "po_reference": "PO-2026-0019",
+          "invoice_date": "2026-09-11",
+          "due_date": "2026-10-11",
+          "currency": "USD",
+          "line_items": [
+            {
+              "description": "Annual Security License Seat",
+              "quantity": 14,
+              "unit_price": 180.0,
+              "line_total": 2520.0
+            },
+            {
+              "description": "Bulk Whiteboard Markers Pack",
+              "quantity": 16,
+              "unit_price": 45.0,
+              "line_total": 720.0
+            },
+            {
+              "description": "SSD NVMe 2TB Enterprise",
+              "quantity": 6,
+              "unit_price": 220.0,
+              "line_total": 1320.0
+            }
+          ],
+          "subtotal": 4560.0,
+          "tax": 364.8,
+          "discount": 0.0,
+          "total_amount": 4924.8
+        },
+        "extraction_flags": {
+          "missing_fields": [],
+          "ambiguous_fields": [],
+          "inconsistent_fields": []
+        }
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "invoice_extraction_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.47,
+      "tokens": 969,
+      "prompt_tokens": 621,
+      "completion_tokens": 348,
+      "output": {
+        "validation_status": "PASSED",
+        "math_audit": {
+          "is_arithmetic_valid": true,
+          "calculated_subtotal": 4560.0,
+          "calculated_total": 4924.8,
+          "stated_total": 4924.8,
+          "discrepancy_amount": 0.0,
+          "line_discrepancies": []
+        },
+        "validation_errors": []
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "invoice_validation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.098,
+      "tokens": 1014,
+      "prompt_tokens": 840,
+      "completion_tokens": 174,
+      "output": {
+        "po_match_status": "EXACT_MATCH",
+        "matched_po_id": "PO-2026-0019",
+        "discrepancies": [],
+        "matching_confidence": 1.0
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "po_matching_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 1.581,
+      "tokens": 1010,
+      "prompt_tokens": 653,
+      "completion_tokens": 357,
+      "output": {
+        "is_compliant": false,
+        "applied_policy_ids": [
+          "POL-AP-001",
+          "POL-AP-002",
+          "POL-AP-003"
+        ],
+        "violations": [
+          {
+            "policy_id": "POL-AP-002",
+            "rule": "Invoices from suspended suppliers cannot be approved.",
+            "severity": "critical",
+            "detail": "Supplier SUP-109 (Omni Packaging Works) is currently suspended.",
+            "classification": "fatal"
+          }
+        ],
+        "compliance_summary": "The invoice fails compliance due to a critical, fatal violation of POL-AP-002 (suspended supplier). No other policy thresholds (e.g., total amount under $5,000 per POL-AP-001 and zero discount per POL-AP-003) are breached. Approval is prohibited until the supplier status is resolved or an exception is formally granted."
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "policy_compliance_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 1.443,
+      "tokens": 1027,
+      "prompt_tokens": 648,
+      "completion_tokens": 379,
+      "output": {
+        "duplicate_status": "EXACT_DUPLICATE",
+        "matching_records": [
+          {
+            "historical_invoice_id": "INV-HIST-0018",
+            "supplier_id": "SUP-109",
+            "invoice_number_match": true,
+            "po_reference_match": true,
+            "total_amount_match": true,
+            "reason": "Exact invoice number or identical (supplier, PO, amount) duplicate."
+          }
+        ],
+        "risk_assessment": {
+          "risk_level": "HIGH",
+          "justification": "Exact duplicate detected; same supplier, PO, total amount, and invoice number pattern indicates potential fraudulent re-submission."
+        }
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "duplicate_detection_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 1.557,
+      "tokens": 1577,
+      "prompt_tokens": 1057,
+      "completion_tokens": 520,
+      "output": {
+        "has_exceptions": true,
+        "exception_count": 2,
+        "critical_exceptions": [
+          {
+            "exception_type": "PolicyViolation",
+            "policy_id": "POL-AP-002",
+            "severity": "CRITICAL",
+            "detail": "Supplier SUP-109 (Omni Packaging Works) is currently suspended, violating policy that prohibits invoices from suspended suppliers."
+          }
+        ],
+        "detailed_exceptions": [
+          {
+            "exception_type": "PolicyViolation",
+            "policy_id": "POL-AP-002",
+            "severity": "CRITICAL",
+            "resolution": "fatal_blocker",
+            "detail": "Invoices from suspended suppliers cannot be approved. Supplier SUP-109 is suspended."
+          },
+          {
+            "exception_type": "DuplicateInvoice",
+            "duplicate_status": "EXACT_DUPLICATE",
+            "severity": "HIGH",
+            "resolution": "requires_human_review",
+            "detail": "Exact duplicate detected with historical invoice INV-HIST-0018 (same supplier, PO, total amount). Potential fraudulent re‑submission."
+          }
+        ]
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "exception_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 1.656,
+      "tokens": 1734,
+      "prompt_tokens": 1335,
+      "completion_tokens": 399,
+      "output": {
+        "recommendation": "rejected",
+        "justification": "Although the invoice matches PO-2026-0019 exactly and the arithmetic validation is correct, it fails compliance because supplier SUP-109 is suspended, violating POL-AP-002 (critical/fatal). Duplicate detection also identified an exact duplicate (INV-HIST-0018) with high risk. Both the fatal policy violation and the duplicate constitute critical blockers, therefore the invoice must be rejected.",
+        "conditions": [
+          "Policy violation: POL-AP-002 (suspended supplier)",
+          "Exact duplicate invoice detected (high risk)",
+          "Critical severity exceptions present"
+        ]
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "approval_recommendation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_8 (gsk_yt...AwPO)",
+      "duration_seconds": 2.648,
+      "tokens": 2343,
+      "prompt_tokens": 1439,
+      "completion_tokens": 904,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "invoice_id": "INV-2026-0019",
+        "final_recommendation": "rejected",
+        "risk_level": "HIGH",
+        "summary_report": "The invoice passes arithmetic validation and matches PO-2026-0019 exactly. However, it violates a critical policy (POL-AP-002) because the supplier is suspended and is flagged as an exact duplicate of a historical invoice (INV-HIST-0018). Both issues constitute fatal blockers, leading to a rejection.",
+        "audit_findings": {
+          "math_validation": {
+            "status": "PASSED",
+            "calculated_subtotal": 4560.0,
+            "calculated_total": 4924.8,
+            "stated_total": 4924.8,
+            "discrepancy_amount": 0.0
+          },
+          "po_matching": {
+            "status": "EXACT_MATCH",
+            "matched_po_id": "PO-2026-0019",
+            "matching_confidence": 1.0
+          },
+          "policy_compliance": {
+            "is_compliant": false,
+            "violations": [
+              {
+                "policy_id": "POL-AP-002",
+                "rule": "Invoices from suspended suppliers cannot be approved.",
+                "severity": "critical",
+                "detail": "Supplier SUP-109 (Omni Packaging Works) is currently suspended.",
+                "classification": "fatal"
+              }
+            ],
+            "summary": "Invoice fails compliance due to a critical, fatal violation of POL-AP-002. No other policy thresholds are breached."
+          },
+          "duplicate_detection": {
+            "status": "EXACT_DUPLICATE",
+            "historical_invoice_id": "INV-HIST-0018",
+            "risk_level": "HIGH",
+            "justification": "Exact duplicate detected; same supplier, PO, total amount, and invoice number pattern indicates potential fraudulent re‑submission."
+          },
+          "exception_analysis": {
+            "has_exceptions": true,
+            "critical_exceptions": [
+              {
+                "exception_type": "PolicyViolation",
+                "policy_id": "POL-AP-002",
+                "severity": "CRITICAL",
+                "detail": "Supplier SUP-109 (Omni Packaging Works) is currently suspended, violating policy that prohibits invoices from suspended suppliers."
+              },
+              {
+                "exception_type": "DuplicateInvoice",
+                "duplicate_status": "EXACT_DUPLICATE",
+                "severity": "HIGH",
+                "detail": "Exact duplicate detected with historical invoice INV-HIST-0018 (same supplier, PO, total amount). Potential fraudulent re‑submission."
+              }
+            ]
+          },
+          "approval_recommendation": {
+            "recommendation": "rejected",
+            "justification": "Invoice matches PO and arithmetic validation but fails compliance due to suspended supplier (POL-AP-002) and is flagged as an exact duplicate (high risk). Both constitute critical blockers."
+          }
+        }
+      },
+      "notes": "",
+      "order": 8,
+      "agent_id": "final_review_agent_invoice"
+    }
+  ],
+  "total_tokens": 11068,
+  "prompt_tokens": 7161,
+  "completion_tokens": 3907,
+  "estimated_cost_usd": 0.007312,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"invoice_id\": \"INV-2026-0019\",\n  \"final_recommendation\": \"rejected\",\n  \"risk_level\": \"HIGH\",\n  \"summary_report\": \"The invoice passes arithmetic validation and matches PO-2026-0019 exactly. However, it violates a critical policy (POL-AP-002) because the supplier is suspended and is flagged as an exact duplicate of a historical invoice (INV-HIST-0018). Both issues constitute fatal blockers, leading to a rejection.\",\n  \"audit_findings\": {\n    \"math_validation\": {\n      \"status\": \"PASSED\",\n      \"calculated_subtotal\": 4560.0,\n      \"calculated_total\": 4924.8,\n      \"stated_total\": 4924.8,\n      \"discrepancy_amount\": 0.0\n    },\n    \"po_matching\": {\n      \"status\": \"EXACT_MATCH\",\n      \"matched_po_id\": \"PO-2026-0019\",\n      \"matching_confidence\": 1.0\n    },\n    \"policy_compliance\": {\n      \"is_compliant\": false,\n      \"violations\": [\n        {\n          \"policy_id\": \"POL-AP-002\",\n          \"rule\": \"Invoices from suspended suppliers cannot be approved.\",\n          \"severity\": \"critical\",\n          \"detail\": \"Supplier SUP-109 (Omni Packaging Works) is currently suspended.\",\n          \"classification\": \"fatal\"\n        }\n      ],\n      \"summary\": \"Invoice fails compliance due to a critical, fatal violation of POL-AP-002. No other policy thresholds are breached.\"\n    },\n    \"duplicate_detection\": {\n      \"status\": \"EXACT_DUPLICATE\",\n      \"historical_invoice_id\": \"INV-HIST-0018\",\n      \"risk_level\": \"HIGH\",\n      \"justification\": \"Exact duplicate detected; same supplier, PO, total amount, and invoice number pattern indicates potential fraudulent re\\u2011submission.\"\n    },\n    \"exception_analysis\": {\n      \"has_exceptions\": true,\n      \"critical_exceptions\": [\n        {\n          \"exception_type\": \"PolicyViolation\",\n          \"policy_id\": \"POL-AP-002\",\n          \"severity\": \"CRITICAL\",\n          \"detail\": \"Supplier SUP-109 (Omni Packaging Works) is currently suspended, violating policy that prohibits invoices from suspended suppliers.\"\n        },\n        {\n          \"exception_type\": \"DuplicateInvoice\",\n          \"duplicate_status\": \"EXACT_DUPLICATE\",\n          \"severity\": \"HIGH\",\n          \"detail\": \"Exact duplicate detected with historical invoice INV-HIST-0018 (same supplier, PO, total amount). Potential fraudulent re\\u2011submission.\"\n        }\n      ]\n    },\n    \"approval_recommendation\": {\n      \"recommendation\": \"rejected\",\n      \"justification\": \"Invoice matches PO and arithmetic validation but fails compliance due to suspended supplier (POL-AP-002) and is flagged as an exact duplicate (high risk). Both constitute critical blockers.\"\n    }\n  }\n}",
+  "timestamp": "2026-10-31T13:18:38.302804+00:00"
+}

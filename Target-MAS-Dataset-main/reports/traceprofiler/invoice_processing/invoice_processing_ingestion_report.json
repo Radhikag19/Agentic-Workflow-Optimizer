@@ -1,0 +1,3679 @@
+{
+  "workflow_name": "invoice_processing",
+  "report_type": "traceprofiler_single_workflow_ingestion",
+  "analysis_mode": "static_ast_non_executing",
+  "metrics": {
+    "declared_agents": 8,
+    "implemented_agents": 8,
+    "python_files": 9,
+    "telemetry_runs": 4,
+    "discrepancy_count": 1
+  },
+  "manifest": {
+    "file": "Agents/invoice_processing/workflow.json",
+    "dir": "Agents/invoice_processing",
+    "workflow_name": "invoice_processing",
+    "version": "1.0.0",
+    "description": "Baseline Accounts Payable Invoice Processing Multi-Agent Workflow",
+    "fixed_model": "openai/gpt-oss-120b",
+    "total_agents": 8,
+    "execution_mode": "sequential",
+    "execution_order": [
+      "invoice_extraction_agent",
+      "invoice_validation_agent",
+      "po_matching_agent",
+      "policy_compliance_agent",
+      "duplicate_detection_agent",
+      "exception_analysis_agent",
+      "approval_recommendation_agent",
+      "final_review_agent_invoice"
+    ],
+    "optimization_opportunities": [
+      "Prune exception_analysis_agent if validation and compliance provide sufficient evidence",
+      "Consolidate invoice_validation_agent and exception_analysis_agent",
+      "Parallelize invoice_validation, po_matching, policy_compliance, and duplicate_detection after extraction",
+      "Optimize prompts to eliminate repeated context across agents"
+    ],
+    "agents": [
+      {
+        "id": "invoice_extraction_agent",
+        "name": "Senior Invoice Extraction Specialist",
+        "role": "Senior Invoice Extraction Specialist",
+        "declared_file": null,
+        "dependencies": [],
+        "inputs": [
+          "raw_invoice_record"
+        ],
+        "outputs": [
+          "extracted_invoice",
+          "extraction_flags"
+        ],
+        "assigned_key": "GROQ_API_KEY_1",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "invoice_extraction_agent",
+          "role": "Senior Invoice Extraction Specialist",
+          "assigned_key_env": "GROQ_API_KEY_1",
+          "dependencies": [],
+          "inputs": [
+            "raw_invoice_record"
+          ],
+          "outputs": [
+            "extracted_invoice",
+            "extraction_flags"
+          ]
+        }
+      },
+      {
+        "id": "invoice_validation_agent",
+        "name": "Invoice Validation Auditor",
+        "role": "Invoice Validation Auditor",
+        "declared_file": null,
+        "dependencies": [
+          "invoice_extraction_agent"
+        ],
+        "inputs": [
+          "extracted_invoice"
+        ],
+        "outputs": [
+          "validation_status",
+          "math_audit",
+          "validation_errors"
+        ],
+        "assigned_key": "GROQ_API_KEY_1",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": "Candidate for parallelization after extraction or consolidation with exception analysis.",
+        "raw": {
+          "agent_id": "invoice_validation_agent",
+          "role": "Invoice Validation Auditor",
+          "assigned_key_env": "GROQ_API_KEY_1",
+          "dependencies": [
+            "invoice_extraction_agent"
+          ],
+          "inputs": [
+            "extracted_invoice"
+          ],
+          "outputs": [
+            "validation_status",
+            "math_audit",
+            "validation_errors"
+          ],
+          "optimization_note": "Candidate for parallelization after extraction or consolidation with exception analysis."
+        }
+      },
+      {
+        "id": "po_matching_agent",
+        "name": "Purchase Order Reconciliation Specialist",
+        "role": "Purchase Order Reconciliation Specialist",
+        "declared_file": null,
+        "dependencies": [
+          "invoice_extraction_agent"
+        ],
+        "inputs": [
+          "extracted_invoice",
+          "purchase_orders.json"
+        ],
+        "outputs": [
+          "po_match_status",
+          "matched_po_id",
+          "discrepancies",
+          "matching_confidence"
+        ],
+        "assigned_key": "GROQ_API_KEY_1",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": "Candidate for parallelization after extraction.",
+        "raw": {
+          "agent_id": "po_matching_agent",
+          "role": "Purchase Order Reconciliation Specialist",
+          "assigned_key_env": "GROQ_API_KEY_1",
+          "dependencies": [
+            "invoice_extraction_agent"
+          ],
+          "inputs": [
+            "extracted_invoice",
+            "purchase_orders.json"
+          ],
+          "outputs": [
+            "po_match_status",
+            "matched_po_id",
+            "discrepancies",
+            "matching_confidence"
+          ],
+          "optimization_note": "Candidate for parallelization after extraction."
+        }
+      },
+      {
+        "id": "policy_compliance_agent",
+        "name": "Corporate Accounts Payable Compliance Officer",
+        "role": "Corporate Accounts Payable Compliance Officer",
+        "declared_file": null,
+        "dependencies": [
+          "invoice_extraction_agent"
+        ],
+        "inputs": [
+          "extracted_invoice",
+          "policies.json",
+          "suppliers.json"
+        ],
+        "outputs": [
+          "is_compliant",
+          "applied_policy_ids",
+          "violations",
+          "compliance_summary"
+        ],
+        "assigned_key": "GROQ_API_KEY_1",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": "Candidate for parallelization after extraction.",
+        "raw": {
+          "agent_id": "policy_compliance_agent",
+          "role": "Corporate Accounts Payable Compliance Officer",
+          "assigned_key_env": "GROQ_API_KEY_1",
+          "dependencies": [
+            "invoice_extraction_agent"
+          ],
+          "inputs": [
+            "extracted_invoice",
+            "policies.json",
+            "suppliers.json"
+          ],
+          "outputs": [
+            "is_compliant",
+            "applied_policy_ids",
+            "violations",
+            "compliance_summary"
+          ],
+          "optimization_note": "Candidate for parallelization after extraction."
+        }
+      },
+      {
+        "id": "duplicate_detection_agent",
+        "name": "Fraud & Duplicate Payment Prevention Analyst",
+        "role": "Fraud & Duplicate Payment Prevention Analyst",
+        "declared_file": null,
+        "dependencies": [
+          "invoice_extraction_agent"
+        ],
+        "inputs": [
+          "extracted_invoice",
+          "historical_invoices.json"
+        ],
+        "outputs": [
+          "duplicate_status",
+          "matching_records",
+          "risk_assessment"
+        ],
+        "assigned_key": "GROQ_API_KEY_1",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": "Candidate for parallelization after extraction.",
+        "raw": {
+          "agent_id": "duplicate_detection_agent",
+          "role": "Fraud & Duplicate Payment Prevention Analyst",
+          "assigned_key_env": "GROQ_API_KEY_1",
+          "dependencies": [
+            "invoice_extraction_agent"
+          ],
+          "inputs": [
+            "extracted_invoice",
+            "historical_invoices.json"
+          ],
+          "outputs": [
+            "duplicate_status",
+            "matching_records",
+            "risk_assessment"
+          ],
+          "optimization_note": "Candidate for parallelization after extraction."
+        }
+      },
+      {
+        "id": "exception_analysis_agent",
+        "name": "Accounts Payable Exception Specialist",
+        "role": "Accounts Payable Exception Specialist",
+        "declared_file": null,
+        "dependencies": [
+          "invoice_validation_agent",
+          "po_matching_agent",
+          "policy_compliance_agent",
+          "duplicate_detection_agent"
+        ],
+        "inputs": [
+          "validation_results",
+          "po_matching_results",
+          "compliance_results",
+          "duplicate_results"
+        ],
+        "outputs": [
+          "has_exceptions",
+          "exception_count",
+          "critical_exceptions",
+          "detailed_exceptions"
+        ],
+        "assigned_key": "GROQ_API_KEY_1",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": "Primary pruning or consolidation candidate.",
+        "raw": {
+          "agent_id": "exception_analysis_agent",
+          "role": "Accounts Payable Exception Specialist",
+          "assigned_key_env": "GROQ_API_KEY_1",
+          "dependencies": [
+            "invoice_validation_agent",
+            "po_matching_agent",
+            "policy_compliance_agent",
+            "duplicate_detection_agent"
+          ],
+          "inputs": [
+            "validation_results",
+            "po_matching_results",
+            "compliance_results",
+            "duplicate_results"
+          ],
+          "outputs": [
+            "has_exceptions",
+            "exception_count",
+            "critical_exceptions",
+            "detailed_exceptions"
+          ],
+          "optimization_note": "Primary pruning or consolidation candidate."
+        }
+      },
+      {
+        "id": "approval_recommendation_agent",
+        "name": "Accounts Payable Decision Authority",
+        "role": "Accounts Payable Decision Authority",
+        "declared_file": null,
+        "dependencies": [
+          "exception_analysis_agent"
+        ],
+        "inputs": [
+          "consolidated_evidence"
+        ],
+        "outputs": [
+          "recommendation",
+          "justification",
+          "conditions"
+        ],
+        "assigned_key": "GROQ_API_KEY_1",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "approval_recommendation_agent",
+          "role": "Accounts Payable Decision Authority",
+          "assigned_key_env": "GROQ_API_KEY_1",
+          "dependencies": [
+            "exception_analysis_agent"
+          ],
+          "inputs": [
+            "consolidated_evidence"
+          ],
+          "outputs": [
+            "recommendation",
+            "justification",
+            "conditions"
+          ]
+        }
+      },
+      {
+        "id": "final_review_agent_invoice",
+        "name": "Chief AP Quality & Verification Auditor",
+        "role": "Chief AP Quality & Verification Auditor",
+        "declared_file": null,
+        "dependencies": [
+          "approval_recommendation_agent"
+        ],
+        "inputs": [
+          "complete_audit_trail"
+        ],
+        "outputs": [
+          "workflow_status",
+          "invoice_id",
+          "final_recommendation",
+          "risk_level",
+          "summary_report",
+          "audit_findings"
+        ],
+        "assigned_key": "GROQ_API_KEY_1",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "final_review_agent_invoice",
+          "role": "Chief AP Quality & Verification Auditor",
+          "assigned_key_env": "GROQ_API_KEY_1",
+          "dependencies": [
+            "approval_recommendation_agent"
+          ],
+          "inputs": [
+            "complete_audit_trail"
+          ],
+          "outputs": [
+            "workflow_status",
+            "invoice_id",
+            "final_recommendation",
+            "risk_level",
+            "summary_report",
+            "audit_findings"
+          ]
+        }
+      }
+    ]
+  },
+  "agent_inventory": [
+    {
+      "id": "invoice_extraction_agent",
+      "name": "Senior Invoice Extraction Specialist",
+      "role": "Senior Invoice Extraction Specialist",
+      "workflow": "invoice_processing",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_1",
+      "dependencies": [],
+      "inputs": [
+        "raw_invoice_record"
+      ],
+      "outputs": [
+        "extracted_invoice",
+        "extraction_flags"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/invoice_processing/invoice_extraction_agent.py",
+      "agent_constructors": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Senior Invoice Extraction Specialist",
+          "goal": "Accurately extract all structured invoice fields (supplier, PO, line items, dates, totals) without hallucinating missing data.",
+          "backstory": "An expert document processor specialized in parsing accounts payable documents into structured formats.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 35,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 39,
+          "docstring": null,
+          "args": [
+            "agent",
+            "invoice_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    },
+    {
+      "id": "invoice_validation_agent",
+      "name": "Invoice Validation Auditor",
+      "role": "Invoice Validation Auditor",
+      "workflow": "invoice_processing",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_1",
+      "dependencies": [
+        "invoice_extraction_agent"
+      ],
+      "inputs": [
+        "extracted_invoice"
+      ],
+      "outputs": [
+        "validation_status",
+        "math_audit",
+        "validation_errors"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": "Candidate for parallelization after extraction or consolidation with exception analysis.",
+      "implementation_found": true,
+      "implementation_file": "Agents/invoice_processing/invoice_validation_agent.py",
+      "agent_constructors": [
+        {
+          "line": 54,
+          "constructor": "Agent",
+          "role": "Invoice Validation Auditor",
+          "goal": "Verify invoice field integrity, validate calculations against deterministic math checks, and document discrepancies.",
+          "backstory": "A meticulous compliance auditor specializing in accounts payable fraud and mathematical discrepancy detection.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 75,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "deterministic_arithmetic_check",
+          "line": 12,
+          "end_line": 49,
+          "docstring": "Performs deterministic Python arithmetic verification on invoice numbers.",
+          "args": [
+            "invoice_data"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 51,
+          "end_line": 60,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 62,
+          "end_line": 79,
+          "docstring": null,
+          "args": [
+            "agent",
+            "invoice_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_arithmetic_check",
+          "line": 12,
+          "classification": "function_candidate",
+          "docstring": "Performs deterministic Python arithmetic verification on invoice numbers."
+        }
+      ]
+    },
+    {
+      "id": "po_matching_agent",
+      "name": "Purchase Order Reconciliation Specialist",
+      "role": "Purchase Order Reconciliation Specialist",
+      "workflow": "invoice_processing",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_1",
+      "dependencies": [
+        "invoice_extraction_agent"
+      ],
+      "inputs": [
+        "extracted_invoice",
+        "purchase_orders.json"
+      ],
+      "outputs": [
+        "po_match_status",
+        "matched_po_id",
+        "discrepancies",
+        "matching_confidence"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": "Candidate for parallelization after extraction.",
+      "implementation_found": true,
+      "implementation_file": "Agents/invoice_processing/po_matching_agent.py",
+      "agent_constructors": [
+        {
+          "line": 80,
+          "constructor": "Agent",
+          "role": "Purchase Order Reconciliation Specialist",
+          "goal": "Match invoice line items, pricing, quantities, and terms against authorized purchase orders.",
+          "backstory": "An accounts payable specialist ensuring invoices only get paid if backed by approved purchase orders.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 100,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "deterministic_po_match",
+          "line": 14,
+          "end_line": 75,
+          "docstring": "Matches invoice against local synthetic purchase orders.",
+          "args": [
+            "invoice_data"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 77,
+          "end_line": 86,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 88,
+          "end_line": 104,
+          "docstring": null,
+          "args": [
+            "agent",
+            "invoice_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_po_match",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Matches invoice against local synthetic purchase orders."
+        }
+      ]
+    },
+    {
+      "id": "policy_compliance_agent",
+      "name": "Corporate Accounts Payable Compliance Officer",
+      "role": "Corporate Accounts Payable Compliance Officer",
+      "workflow": "invoice_processing",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_1",
+      "dependencies": [
+        "invoice_extraction_agent"
+      ],
+      "inputs": [
+        "extracted_invoice",
+        "policies.json",
+        "suppliers.json"
+      ],
+      "outputs": [
+        "is_compliant",
+        "applied_policy_ids",
+        "violations",
+        "compliance_summary"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": "Candidate for parallelization after extraction.",
+      "implementation_found": true,
+      "implementation_file": "Agents/invoice_processing/policy_compliance_agent.py",
+      "agent_constructors": [
+        {
+          "line": 75,
+          "constructor": "Agent",
+          "role": "Corporate Accounts Payable Compliance Officer",
+          "goal": "Audit invoice against corporate purchasing policies, threshold limits, and vendor eligibility.",
+          "backstory": "An uncompromising governance officer ensuring adherence to internal procurement policies and SOX controls.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 96,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "deterministic_policy_check",
+          "line": 14,
+          "end_line": 70,
+          "docstring": "Verifies invoice rules against local synthetic AP policies and supplier statuses.",
+          "args": [
+            "invoice_data"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 72,
+          "end_line": 81,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 83,
+          "end_line": 100,
+          "docstring": null,
+          "args": [
+            "agent",
+            "invoice_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_policy_check",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Verifies invoice rules against local synthetic AP policies and supplier statuses."
+        }
+      ]
+    },
+    {
+      "id": "duplicate_detection_agent",
+      "name": "Fraud & Duplicate Payment Prevention Analyst",
+      "role": "Fraud & Duplicate Payment Prevention Analyst",
+      "workflow": "invoice_processing",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_1",
+      "dependencies": [
+        "invoice_extraction_agent"
+      ],
+      "inputs": [
+        "extracted_invoice",
+        "historical_invoices.json"
+      ],
+      "outputs": [
+        "duplicate_status",
+        "matching_records",
+        "risk_assessment"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": "Candidate for parallelization after extraction.",
+      "implementation_found": true,
+      "implementation_file": "Agents/invoice_processing/duplicate_detection_agent.py",
+      "agent_constructors": [
+        {
+          "line": 65,
+          "constructor": "Agent",
+          "role": "Fraud & Duplicate Payment Prevention Analyst",
+          "goal": "Screen invoices against historical payments to stop duplicate billing and overpayments.",
+          "backstory": "An AP forensic specialist focused on identifying redundant billing and matching invoice histories.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 85,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "deterministic_duplicate_check",
+          "line": 14,
+          "end_line": 60,
+          "docstring": "Scans historical invoices for exact and probable duplicate submissions.",
+          "args": [
+            "invoice_data"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 62,
+          "end_line": 71,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 73,
+          "end_line": 89,
+          "docstring": null,
+          "args": [
+            "agent",
+            "invoice_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_duplicate_check",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Scans historical invoices for exact and probable duplicate submissions."
+        }
+      ]
+    },
+    {
+      "id": "exception_analysis_agent",
+      "name": "Accounts Payable Exception Specialist",
+      "role": "Accounts Payable Exception Specialist",
+      "workflow": "invoice_processing",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_1",
+      "dependencies": [
+        "invoice_validation_agent",
+        "po_matching_agent",
+        "policy_compliance_agent",
+        "duplicate_detection_agent"
+      ],
+      "inputs": [
+        "validation_results",
+        "po_matching_results",
+        "compliance_results",
+        "duplicate_results"
+      ],
+      "outputs": [
+        "has_exceptions",
+        "exception_count",
+        "critical_exceptions",
+        "detailed_exceptions"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": "Primary pruning or consolidation candidate.",
+      "implementation_found": true,
+      "implementation_file": "Agents/invoice_processing/exception_analysis_agent.py",
+      "agent_constructors": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Accounts Payable Exception Specialist",
+          "goal": "Consolidate discrepancies, classify exception severities, and flag operational risks across all stages.",
+          "backstory": "A senior risk analyst evaluating edge cases, discrepancies, and policy violations in payment workflows.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 34,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 38,
+          "docstring": null,
+          "args": [
+            "agent",
+            "upstream_evidence"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    },
+    {
+      "id": "approval_recommendation_agent",
+      "name": "Accounts Payable Decision Authority",
+      "role": "Accounts Payable Decision Authority",
+      "workflow": "invoice_processing",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_1",
+      "dependencies": [
+        "exception_analysis_agent"
+      ],
+      "inputs": [
+        "consolidated_evidence"
+      ],
+      "outputs": [
+        "recommendation",
+        "justification",
+        "conditions"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/invoice_processing/approval_recommendation_agent.py",
+      "agent_constructors": [
+        {
+          "line": 53,
+          "constructor": "Agent",
+          "role": "Accounts Payable Decision Authority",
+          "goal": "Determine final payment recommendation (recommended_for_approval, rejected, or needs_review) based on factual evidence.",
+          "backstory": "An executive accounts payable controller applying strict fiduciary oversight to payment approvals.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 74,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "deterministic_recommendation_rule",
+          "line": 12,
+          "end_line": 48,
+          "docstring": "Deterministic baseline decision rule engine.",
+          "args": [
+            "consolidated_evidence"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 50,
+          "end_line": 59,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 61,
+          "end_line": 78,
+          "docstring": null,
+          "args": [
+            "agent",
+            "consolidated_evidence"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_recommendation_rule",
+          "line": 12,
+          "classification": "function_candidate",
+          "docstring": "Deterministic baseline decision rule engine."
+        }
+      ]
+    },
+    {
+      "id": "final_review_agent_invoice",
+      "name": "Chief AP Quality & Verification Auditor",
+      "role": "Chief AP Quality & Verification Auditor",
+      "workflow": "invoice_processing",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_1",
+      "dependencies": [
+        "approval_recommendation_agent"
+      ],
+      "inputs": [
+        "complete_audit_trail"
+      ],
+      "outputs": [
+        "workflow_status",
+        "invoice_id",
+        "final_recommendation",
+        "risk_level",
+        "summary_report",
+        "audit_findings"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/invoice_processing/final_review_agent.py",
+      "agent_constructors": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Chief AP Quality & Verification Auditor",
+          "goal": "Perform final consistency verification across all stages and produce the authoritative accounts payable report.",
+          "backstory": "The final executive gatekeeper ensuring audit trails are complete, robust, and mathematically sound.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 34,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 38,
+          "docstring": null,
+          "args": [
+            "agent",
+            "all_stage_results"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    }
+  ],
+  "workflow_analysis": {
+    "file": "Agents/invoice_processing/workflow.py",
+    "classes": [],
+    "entry_points": [
+      {
+        "name": "run_invoice_processing_workflow",
+        "line": 62,
+        "args": [
+          "invoice_data",
+          "run_id",
+          "mock_mode"
+        ],
+        "docstring": "Executes the 8-agent sequential Invoice Processing baseline workflow."
+      }
+    ],
+    "crew_constructions": [
+      {
+        "line": 86,
+        "source": "Crew(agents=[agent1], tasks=[task1], verbose=False)"
+      },
+      {
+        "line": 101,
+        "source": "Crew(agents=[agent2], tasks=[task2], verbose=False)"
+      },
+      {
+        "line": 116,
+        "source": "Crew(agents=[agent3], tasks=[task3], verbose=False)"
+      },
+      {
+        "line": 131,
+        "source": "Crew(agents=[agent4], tasks=[task4], verbose=False)"
+      },
+      {
+        "line": 146,
+        "source": "Crew(agents=[agent5], tasks=[task5], verbose=False)"
+      },
+      {
+        "line": 160,
+        "source": "Crew(agents=[agent6], tasks=[task6], verbose=False)"
+      },
+      {
+        "line": 174,
+        "source": "Crew(agents=[agent7], tasks=[task7], verbose=False)"
+      },
+      {
+        "line": 188,
+        "source": "Crew(agents=[agent8], tasks=[task8], verbose=False)"
+      }
+    ],
+    "assignments": [
+      {
+        "line": 60,
+        "targets": [
+          "WORKFLOW_NAME"
+        ],
+        "value_names": [],
+        "expression": "\"invoice_processing\""
+      },
+      {
+        "line": 71,
+        "targets": [
+          "tracker"
+        ],
+        "value_names": [
+          "WORKFLOW_NAME",
+          "WorkflowRunTracker",
+          "run_id"
+        ],
+        "expression": "WorkflowRunTracker(WORKFLOW_NAME, run_id).start()"
+      },
+      {
+        "line": 78,
+        "targets": [
+          "stage_evidence"
+        ],
+        "value_names": [],
+        "expression": "{}"
+      },
+      {
+        "line": 82,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 84,
+        "targets": [
+          "agent1"
+        ],
+        "value_names": [
+          "create_extraction_agent"
+        ],
+        "expression": "create_extraction_agent()"
+      },
+      {
+        "line": 85,
+        "targets": [
+          "task1"
+        ],
+        "value_names": [
+          "agent1",
+          "create_extraction_task",
+          "invoice_data"
+        ],
+        "expression": "create_extraction_task(agent1, invoice_data)"
+      },
+      {
+        "line": 86,
+        "targets": [
+          "crew1"
+        ],
+        "value_names": [
+          "Crew",
+          "agent1",
+          "task1"
+        ],
+        "expression": "Crew(agents=[agent1], tasks=[task1], verbose=False)"
+      },
+      {
+        "line": 87,
+        "targets": [
+          "res1"
+        ],
+        "value_names": [
+          "crew1"
+        ],
+        "expression": "crew1.kickoff()"
+      },
+      {
+        "line": 88,
+        "targets": [
+          "out1"
+        ],
+        "value_names": [
+          "hasattr",
+          "res1",
+          "str"
+        ],
+        "expression": "res1.raw if hasattr(res1, \"raw\") else str(res1)"
+      },
+      {
+        "line": 90,
+        "targets": [
+          "dur1"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 96,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 98,
+        "targets": [
+          "math_check"
+        ],
+        "value_names": [
+          "deterministic_arithmetic_check",
+          "invoice_data"
+        ],
+        "expression": "deterministic_arithmetic_check(invoice_data)"
+      },
+      {
+        "line": 99,
+        "targets": [
+          "agent2"
+        ],
+        "value_names": [
+          "create_validation_agent"
+        ],
+        "expression": "create_validation_agent()"
+      },
+      {
+        "line": 100,
+        "targets": [
+          "task2"
+        ],
+        "value_names": [
+          "agent2",
+          "create_validation_task",
+          "invoice_data"
+        ],
+        "expression": "create_validation_task(agent2, invoice_data)"
+      },
+      {
+        "line": 101,
+        "targets": [
+          "crew2"
+        ],
+        "value_names": [
+          "Crew",
+          "agent2",
+          "task2"
+        ],
+        "expression": "Crew(agents=[agent2], tasks=[task2], verbose=False)"
+      },
+      {
+        "line": 102,
+        "targets": [
+          "res2"
+        ],
+        "value_names": [
+          "crew2"
+        ],
+        "expression": "crew2.kickoff()"
+      },
+      {
+        "line": 103,
+        "targets": [
+          "out2"
+        ],
+        "value_names": [
+          "hasattr",
+          "res2",
+          "str"
+        ],
+        "expression": "res2.raw if hasattr(res2, \"raw\") else str(res2)"
+      },
+      {
+        "line": 105,
+        "targets": [
+          "dur2"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 111,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 113,
+        "targets": [
+          "po_match"
+        ],
+        "value_names": [
+          "deterministic_po_match",
+          "invoice_data"
+        ],
+        "expression": "deterministic_po_match(invoice_data)"
+      },
+      {
+        "line": 114,
+        "targets": [
+          "agent3"
+        ],
+        "value_names": [
+          "create_po_agent"
+        ],
+        "expression": "create_po_agent()"
+      },
+      {
+        "line": 115,
+        "targets": [
+          "task3"
+        ],
+        "value_names": [
+          "agent3",
+          "create_po_task",
+          "invoice_data"
+        ],
+        "expression": "create_po_task(agent3, invoice_data)"
+      },
+      {
+        "line": 116,
+        "targets": [
+          "crew3"
+        ],
+        "value_names": [
+          "Crew",
+          "agent3",
+          "task3"
+        ],
+        "expression": "Crew(agents=[agent3], tasks=[task3], verbose=False)"
+      },
+      {
+        "line": 117,
+        "targets": [
+          "res3"
+        ],
+        "value_names": [
+          "crew3"
+        ],
+        "expression": "crew3.kickoff()"
+      },
+      {
+        "line": 118,
+        "targets": [
+          "out3"
+        ],
+        "value_names": [
+          "hasattr",
+          "res3",
+          "str"
+        ],
+        "expression": "res3.raw if hasattr(res3, \"raw\") else str(res3)"
+      },
+      {
+        "line": 120,
+        "targets": [
+          "dur3"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 126,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 128,
+        "targets": [
+          "pol_check"
+        ],
+        "value_names": [
+          "deterministic_policy_check",
+          "invoice_data"
+        ],
+        "expression": "deterministic_policy_check(invoice_data)"
+      },
+      {
+        "line": 129,
+        "targets": [
+          "agent4"
+        ],
+        "value_names": [
+          "create_compliance_agent"
+        ],
+        "expression": "create_compliance_agent()"
+      },
+      {
+        "line": 130,
+        "targets": [
+          "task4"
+        ],
+        "value_names": [
+          "agent4",
+          "create_compliance_task",
+          "invoice_data"
+        ],
+        "expression": "create_compliance_task(agent4, invoice_data)"
+      },
+      {
+        "line": 131,
+        "targets": [
+          "crew4"
+        ],
+        "value_names": [
+          "Crew",
+          "agent4",
+          "task4"
+        ],
+        "expression": "Crew(agents=[agent4], tasks=[task4], verbose=False)"
+      },
+      {
+        "line": 132,
+        "targets": [
+          "res4"
+        ],
+        "value_names": [
+          "crew4"
+        ],
+        "expression": "crew4.kickoff()"
+      },
+      {
+        "line": 133,
+        "targets": [
+          "out4"
+        ],
+        "value_names": [
+          "hasattr",
+          "res4",
+          "str"
+        ],
+        "expression": "res4.raw if hasattr(res4, \"raw\") else str(res4)"
+      },
+      {
+        "line": 135,
+        "targets": [
+          "dur4"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 141,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 143,
+        "targets": [
+          "dup_check"
+        ],
+        "value_names": [
+          "deterministic_duplicate_check",
+          "invoice_data"
+        ],
+        "expression": "deterministic_duplicate_check(invoice_data)"
+      },
+      {
+        "line": 144,
+        "targets": [
+          "agent5"
+        ],
+        "value_names": [
+          "create_duplicate_agent"
+        ],
+        "expression": "create_duplicate_agent()"
+      },
+      {
+        "line": 145,
+        "targets": [
+          "task5"
+        ],
+        "value_names": [
+          "agent5",
+          "create_duplicate_task",
+          "invoice_data"
+        ],
+        "expression": "create_duplicate_task(agent5, invoice_data)"
+      },
+      {
+        "line": 146,
+        "targets": [
+          "crew5"
+        ],
+        "value_names": [
+          "Crew",
+          "agent5",
+          "task5"
+        ],
+        "expression": "Crew(agents=[agent5], tasks=[task5], verbose=False)"
+      },
+      {
+        "line": 147,
+        "targets": [
+          "res5"
+        ],
+        "value_names": [
+          "crew5"
+        ],
+        "expression": "crew5.kickoff()"
+      },
+      {
+        "line": 148,
+        "targets": [
+          "out5"
+        ],
+        "value_names": [
+          "hasattr",
+          "res5",
+          "str"
+        ],
+        "expression": "res5.raw if hasattr(res5, \"raw\") else str(res5)"
+      },
+      {
+        "line": 150,
+        "targets": [
+          "dur5"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 156,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 158,
+        "targets": [
+          "agent6"
+        ],
+        "value_names": [
+          "create_exception_agent"
+        ],
+        "expression": "create_exception_agent()"
+      },
+      {
+        "line": 159,
+        "targets": [
+          "task6"
+        ],
+        "value_names": [
+          "agent6",
+          "create_exception_task",
+          "stage_evidence"
+        ],
+        "expression": "create_exception_task(agent6, stage_evidence)"
+      },
+      {
+        "line": 160,
+        "targets": [
+          "crew6"
+        ],
+        "value_names": [
+          "Crew",
+          "agent6",
+          "task6"
+        ],
+        "expression": "Crew(agents=[agent6], tasks=[task6], verbose=False)"
+      },
+      {
+        "line": 161,
+        "targets": [
+          "res6"
+        ],
+        "value_names": [
+          "crew6"
+        ],
+        "expression": "crew6.kickoff()"
+      },
+      {
+        "line": 162,
+        "targets": [
+          "out6"
+        ],
+        "value_names": [
+          "hasattr",
+          "res6",
+          "str"
+        ],
+        "expression": "res6.raw if hasattr(res6, \"raw\") else str(res6)"
+      },
+      {
+        "line": 164,
+        "targets": [
+          "dur6"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 170,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 172,
+        "targets": [
+          "agent7"
+        ],
+        "value_names": [
+          "create_approval_agent"
+        ],
+        "expression": "create_approval_agent()"
+      },
+      {
+        "line": 173,
+        "targets": [
+          "task7"
+        ],
+        "value_names": [
+          "agent7",
+          "create_approval_task",
+          "stage_evidence"
+        ],
+        "expression": "create_approval_task(agent7, stage_evidence)"
+      },
+      {
+        "line": 174,
+        "targets": [
+          "crew7"
+        ],
+        "value_names": [
+          "Crew",
+          "agent7",
+          "task7"
+        ],
+        "expression": "Crew(agents=[agent7], tasks=[task7], verbose=False)"
+      },
+      {
+        "line": 175,
+        "targets": [
+          "res7"
+        ],
+        "value_names": [
+          "crew7"
+        ],
+        "expression": "crew7.kickoff()"
+      },
+      {
+        "line": 176,
+        "targets": [
+          "out7"
+        ],
+        "value_names": [
+          "hasattr",
+          "res7",
+          "str"
+        ],
+        "expression": "res7.raw if hasattr(res7, \"raw\") else str(res7)"
+      },
+      {
+        "line": 178,
+        "targets": [
+          "dur7"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 184,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 186,
+        "targets": [
+          "agent8"
+        ],
+        "value_names": [
+          "create_review_agent"
+        ],
+        "expression": "create_review_agent()"
+      },
+      {
+        "line": 187,
+        "targets": [
+          "task8"
+        ],
+        "value_names": [
+          "agent8",
+          "create_review_task",
+          "stage_evidence"
+        ],
+        "expression": "create_review_task(agent8, stage_evidence)"
+      },
+      {
+        "line": 188,
+        "targets": [
+          "crew8"
+        ],
+        "value_names": [
+          "Crew",
+          "agent8",
+          "task8"
+        ],
+        "expression": "Crew(agents=[agent8], tasks=[task8], verbose=False)"
+      },
+      {
+        "line": 189,
+        "targets": [
+          "res8"
+        ],
+        "value_names": [
+          "crew8"
+        ],
+        "expression": "crew8.kickoff()"
+      },
+      {
+        "line": 190,
+        "targets": [
+          "final_output"
+        ],
+        "value_names": [
+          "hasattr",
+          "res8",
+          "str"
+        ],
+        "expression": "res8.raw if hasattr(res8, \"raw\") else str(res8)"
+      },
+      {
+        "line": 192,
+        "targets": [
+          "dur8"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      }
+    ],
+    "task_handoffs": [],
+    "observed_order": [
+      "invoice_extraction_agent",
+      "invoice_validation_agent",
+      "po_matching_agent",
+      "policy_compliance_agent",
+      "duplicate_detection_agent",
+      "exception_analysis_agent",
+      "approval_recommendation_agent",
+      "final_review_agent_invoice"
+    ],
+    "sequential_kickoffs": 8
+  },
+  "comparison": {
+    "workflow": "invoice_processing",
+    "manifest_file": "Agents/invoice_processing/workflow.json",
+    "workflow_source": "Agents/invoice_processing/workflow.py",
+    "declared_order": [
+      "invoice_extraction_agent",
+      "invoice_validation_agent",
+      "po_matching_agent",
+      "policy_compliance_agent",
+      "duplicate_detection_agent",
+      "exception_analysis_agent",
+      "approval_recommendation_agent",
+      "final_review_agent_invoice"
+    ],
+    "source_observed_order": [
+      "invoice_extraction_agent",
+      "invoice_validation_agent",
+      "po_matching_agent",
+      "policy_compliance_agent",
+      "duplicate_detection_agent",
+      "exception_analysis_agent",
+      "approval_recommendation_agent",
+      "final_review_agent_invoice"
+    ],
+    "declared_agent_count": 8,
+    "observed_agent_count": 8,
+    "discrepancy_count": 1,
+    "findings": [
+      {
+        "type": "MULTIPLE_KICKOFF_CALLS",
+        "severity": "WARNING",
+        "count": 8,
+        "note": "Workflow invokes 8 sequential Crew kickoff calls instead of single execution graph."
+      }
+    ]
+  },
+  "python_files": [
+    {
+      "file": "Agents/invoice_processing/approval_recommendation_agent.py",
+      "filename": "approval_recommendation_agent.py",
+      "stem": "approval_recommendation_agent",
+      "sha256": "b83ebdf8fceb45fdc7d8f2fb53614fc97af58ef56e3366a7aaa367dec47ed5e6",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "deterministic_recommendation_rule",
+          "line": 12,
+          "end_line": 48,
+          "docstring": "Deterministic baseline decision rule engine.",
+          "args": [
+            "consolidated_evidence"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 50,
+          "end_line": 59,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 61,
+          "end_line": 78,
+          "docstring": null,
+          "args": [
+            "agent",
+            "consolidated_evidence"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "approval_recommendation_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 53,
+          "constructor": "Agent",
+          "role": "Accounts Payable Decision Authority",
+          "goal": "Determine final payment recommendation (recommended_for_approval, rejected, or needs_review) based on factual evidence.",
+          "backstory": "An executive accounts payable controller applying strict fiduciary oversight to payment approvals.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 74,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 52,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_recommendation_rule",
+          "line": 12,
+          "classification": "function_candidate",
+          "docstring": "Deterministic baseline decision rule engine."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 7: Approval Recommendation Agent\nEvaluates consolidated evidence and formulates a structured approval outcome.\n",
+          "line": 1
+        },
+        {
+          "value": "Deterministic baseline decision rule engine.",
+          "line": 13
+        },
+        {
+          "value": "Strictly valid JSON containing recommendation, justification, and conditions.",
+          "line": 73
+        },
+        {
+          "value": "All validation, 3-way matching, compliance checks, and duplicate scans passed successfully.",
+          "line": 47
+        },
+        {
+          "value": "Formulate a structured approval recommendation for this invoice.\nConsolidated Evidence from all preceding stages:\n",
+          "line": 64
+        },
+        {
+          "value": "\n\nInstructions:\n1. Select outcome: 'recommended_for_approval', 'rejected', or 'needs_review'.\n2. Provide explicit justification referencing PO match status, policy IDs, math audit, and duplicate findings.\n3. Note: NEVER execute real financial transactions.\nReturn strictly valid JSON with keys: 'recommendation' ('recommended_for_approval', 'rejected', or 'needs_review'), 'justification', and 'conditions'.",
+          "line": 66
+        },
+        {
+          "value": "Arithmetic calculation failure or confirmed exact duplicate invoice submission.",
+          "line": 24
+        },
+        {
+          "value": "Policy threshold flag requiring manager review.",
+          "line": 35
+        },
+        {
+          "value": "Purchase order mismatch, missing PO, or potential duplicate warning.",
+          "line": 42
+        },
+        {
+          "value": "Accounts Payable Decision Authority",
+          "line": 54
+        },
+        {
+          "value": "Determine final payment recommendation (recommended_for_approval, rejected, or needs_review) based on factual evidence.",
+          "line": 55
+        },
+        {
+          "value": "An executive accounts payable controller applying strict fiduciary oversight to payment approvals.",
+          "line": 56
+        },
+        {
+          "value": "Critical policy violation (e.g., suspended supplier or unapproved vendor).",
+          "line": 31
+        }
+      ]
+    },
+    {
+      "file": "Agents/invoice_processing/duplicate_detection_agent.py",
+      "filename": "duplicate_detection_agent.py",
+      "stem": "duplicate_detection_agent",
+      "sha256": "aaea3047fcdc1ec358d12621938c2791a137a424a2a18dd12da8dd2c114b8033",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "deterministic_duplicate_check",
+          "line": 14,
+          "end_line": 60,
+          "docstring": "Scans historical invoices for exact and probable duplicate submissions.",
+          "args": [
+            "invoice_data"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 62,
+          "end_line": 71,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 73,
+          "end_line": 89,
+          "docstring": null,
+          "args": [
+            "agent",
+            "invoice_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "duplicate_detection_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 65,
+          "constructor": "Agent",
+          "role": "Fraud & Duplicate Payment Prevention Analyst",
+          "goal": "Screen invoices against historical payments to stop duplicate billing and overpayments.",
+          "backstory": "An AP forensic specialist focused on identifying redundant billing and matching invoice histories.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 85,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 64,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_duplicate_check",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Scans historical invoices for exact and probable duplicate submissions."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 5: Duplicate Detection Agent\nCompares current invoice against historical invoice records to prevent duplicate payments.\n",
+          "line": 1
+        },
+        {
+          "value": "Scans historical invoices for exact and probable duplicate submissions.",
+          "line": 15
+        },
+        {
+          "value": "Strictly valid JSON containing duplicate_status, matching_records, and risk_assessment.",
+          "line": 84
+        },
+        {
+          "value": "Perform duplicate screening on this invoice.\nCurrent Invoice:\n",
+          "line": 76
+        },
+        {
+          "value": "\n\nDeterministic Historical Match Scan:\n",
+          "line": 77
+        },
+        {
+          "value": "\n\nInstructions:\n1. Evaluate whether this invoice is an exact duplicate, potential duplicate, or original billing.\n2. Cite matching historical invoice IDs and field comparisons.\nReturn strictly valid JSON with keys: 'duplicate_status' ('NONE', 'POTENTIAL_DUPLICATE', 'EXACT_DUPLICATE'), 'matching_records', and 'risk_assessment'.",
+          "line": 78
+        },
+        {
+          "value": "Fraud & Duplicate Payment Prevention Analyst",
+          "line": 66
+        },
+        {
+          "value": "Screen invoices against historical payments to stop duplicate billing and overpayments.",
+          "line": 67
+        },
+        {
+          "value": "An AP forensic specialist focused on identifying redundant billing and matching invoice histories.",
+          "line": 68
+        },
+        {
+          "value": "Exact invoice number or identical (supplier, PO, amount) duplicate.",
+          "line": 44
+        },
+        {
+          "value": "Same supplier and exact same dollar amount.",
+          "line": 52
+        }
+      ]
+    },
+    {
+      "file": "Agents/invoice_processing/exception_analysis_agent.py",
+      "filename": "exception_analysis_agent.py",
+      "stem": "exception_analysis_agent",
+      "sha256": "9071917d0fb2966b8e883f80ec79f722562e2c78b7c82ec80c22505afca304a2",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 38,
+          "docstring": null,
+          "args": [
+            "agent",
+            "upstream_evidence"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "exception_analysis_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Accounts Payable Exception Specialist",
+          "goal": "Consolidate discrepancies, classify exception severities, and flag operational risks across all stages.",
+          "backstory": "A senior risk analyst evaluating edge cases, discrepancies, and policy violations in payment workflows.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 34,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 14,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 6: Exception Analysis Agent\nConsolidates and analyzes anomalies, policy exceptions, math discrepancies, and PO mismatches.\n",
+          "line": 1
+        },
+        {
+          "value": "Strictly valid JSON containing has_exceptions, exception_count, critical_exceptions, and detailed_exceptions.",
+          "line": 33
+        },
+        {
+          "value": "Analyze all upstream findings for accounts payable exceptions.\nConsolidated Evidence:\n",
+          "line": 25
+        },
+        {
+          "value": "\n\nTasks:\n1. Consolidate math discrepancies, PO mismatch findings, policy violations, and duplicate alerts.\n2. Assign an exception severity to each issue ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL').\n3. Note whether any exceptions are resolvable with further human review or are fatal blockers.\nReturn strictly valid JSON with keys: 'has_exceptions', 'exception_count', 'critical_exceptions', and 'detailed_exceptions'.",
+          "line": 26
+        },
+        {
+          "value": "Accounts Payable Exception Specialist",
+          "line": 16
+        },
+        {
+          "value": "Consolidate discrepancies, classify exception severities, and flag operational risks across all stages.",
+          "line": 17
+        },
+        {
+          "value": "A senior risk analyst evaluating edge cases, discrepancies, and policy violations in payment workflows.",
+          "line": 18
+        }
+      ]
+    },
+    {
+      "file": "Agents/invoice_processing/final_review_agent.py",
+      "filename": "final_review_agent.py",
+      "stem": "final_review_agent",
+      "sha256": "dbf2b11d8fa57f1cdce1b92710aa3a64a52fc6c5f2d60c4af894bb117d35504d",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 38,
+          "docstring": null,
+          "args": [
+            "agent",
+            "all_stage_results"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "final_review_agent_invoice"
+      ],
+      "agent_definitions": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Chief AP Quality & Verification Auditor",
+          "goal": "Perform final consistency verification across all stages and produce the authoritative accounts payable report.",
+          "backstory": "The final executive gatekeeper ensuring audit trails are complete, robust, and mathematically sound.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 34,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 14,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 8: Final Review Agent (Invoice Processing)\nVerifies end-to-end evidence consistency and produces the final accounts payable audit report.\n",
+          "line": 1
+        },
+        {
+          "value": "Strictly valid JSON containing workflow_status, invoice_id, final_recommendation, risk_level, summary_report, and audit_findings.",
+          "line": 33
+        },
+        {
+          "value": "Perform the final comprehensive review of this accounts payable workflow execution.\nComplete Audit Trail:\n",
+          "line": 25
+        },
+        {
+          "value": "\n\nTasks:\n1. Verify that the recommendation aligns with math validation, PO matching, policy checks, and duplicate findings.\n2. Confirm there are no unaddressed critical exceptions.\n3. Generate the final structured AP review report.\nOutput strictly valid JSON with keys: 'workflow_status' ('COMPLETED'), 'invoice_id', 'final_recommendation', 'risk_level', 'summary_report', and 'audit_findings'.",
+          "line": 26
+        },
+        {
+          "value": "Chief AP Quality & Verification Auditor",
+          "line": 16
+        },
+        {
+          "value": "Perform final consistency verification across all stages and produce the authoritative accounts payable report.",
+          "line": 17
+        },
+        {
+          "value": "The final executive gatekeeper ensuring audit trails are complete, robust, and mathematically sound.",
+          "line": 18
+        }
+      ]
+    },
+    {
+      "file": "Agents/invoice_processing/invoice_extraction_agent.py",
+      "filename": "invoice_extraction_agent.py",
+      "stem": "invoice_extraction_agent",
+      "sha256": "0e0eb512df13d08afdc8d5951c640aa1b4240e04c3dcc5632ab4ab3ca03e2201",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 39,
+          "docstring": null,
+          "args": [
+            "agent",
+            "invoice_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "invoice_extraction_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Senior Invoice Extraction Specialist",
+          "goal": "Accurately extract all structured invoice fields (supplier, PO, line items, dates, totals) without hallucinating missing data.",
+          "backstory": "An expert document processor specialized in parsing accounts payable documents into structured formats.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 35,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 14,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 1: Invoice Extraction Agent\nExtracts structured invoice fields from synthetic invoice input.\n",
+          "line": 1
+        },
+        {
+          "value": "Strictly valid JSON containing extracted_invoice and extraction_flags.",
+          "line": 34
+        },
+        {
+          "value": "Analyze the following synthetic invoice and extract its structured fields.\nRaw Invoice Input:\n",
+          "line": 25
+        },
+        {
+          "value": "\n\nTasks:\n1. Extract: invoice_number, supplier_id, supplier_name, po_reference, invoice_date, due_date, currency.\n2. Extract line_items with description, quantity, unit_price, line_total.\n3. Extract subtotal, tax, discount, and total_amount.\n4. Identify any missing, ambiguous, or inconsistent fields.\nOutput strictly valid JSON with keys: 'extracted_invoice' and 'extraction_flags'.",
+          "line": 26
+        },
+        {
+          "value": "Senior Invoice Extraction Specialist",
+          "line": 16
+        },
+        {
+          "value": "Accurately extract all structured invoice fields (supplier, PO, line items, dates, totals) without hallucinating missing data.",
+          "line": 17
+        },
+        {
+          "value": "An expert document processor specialized in parsing accounts payable documents into structured formats.",
+          "line": 18
+        }
+      ]
+    },
+    {
+      "file": "Agents/invoice_processing/invoice_validation_agent.py",
+      "filename": "invoice_validation_agent.py",
+      "stem": "invoice_validation_agent",
+      "sha256": "520dfad057aba37f26853f0ce8dd9d39ff90eb7dff9cd45658c200cde19e0b32",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "deterministic_arithmetic_check",
+          "line": 12,
+          "end_line": 49,
+          "docstring": "Performs deterministic Python arithmetic verification on invoice numbers.",
+          "args": [
+            "invoice_data"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 51,
+          "end_line": 60,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 62,
+          "end_line": 79,
+          "docstring": null,
+          "args": [
+            "agent",
+            "invoice_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "invoice_validation_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 54,
+          "constructor": "Agent",
+          "role": "Invoice Validation Auditor",
+          "goal": "Verify invoice field integrity, validate calculations against deterministic math checks, and document discrepancies.",
+          "backstory": "A meticulous compliance auditor specializing in accounts payable fraud and mathematical discrepancy detection.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 75,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 53,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_arithmetic_check",
+          "line": 12,
+          "classification": "function_candidate",
+          "docstring": "Performs deterministic Python arithmetic verification on invoice numbers."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 2: Invoice Validation Agent\nValidates invoice completeness and performs deterministic arithmetic calculations on invoice totals.\n",
+          "line": 1
+        },
+        {
+          "value": "Performs deterministic Python arithmetic verification on invoice numbers.",
+          "line": 13
+        },
+        {
+          "value": "Strictly valid JSON containing validation_status, math_audit, and validation_errors.",
+          "line": 74
+        },
+        {
+          "value": "Perform structured validation of this invoice.\nInvoice Data:\n",
+          "line": 65
+        },
+        {
+          "value": "\n\nVerified Deterministic Math Audit from Python:\n",
+          "line": 66
+        },
+        {
+          "value": "\n\nInstructions:\n1. Check if all required fields are present (supplier, dates, line items, totals).\n2. Incorporate the deterministic arithmetic check results.\n3. Note whether the invoice has valid arithmetic or critical math errors.\nReturn strictly valid JSON with keys: 'validation_status' ('PASSED' or 'FAILED'), 'math_audit', and 'validation_errors'.",
+          "line": 67
+        },
+        {
+          "value": "Verify invoice field integrity, validate calculations against deterministic math checks, and document discrepancies.",
+          "line": 56
+        },
+        {
+          "value": "A meticulous compliance auditor specializing in accounts payable fraud and mathematical discrepancy detection.",
+          "line": 57
+        }
+      ]
+    },
+    {
+      "file": "Agents/invoice_processing/po_matching_agent.py",
+      "filename": "po_matching_agent.py",
+      "stem": "po_matching_agent",
+      "sha256": "5d3c0222f9e96fa32113c68507075ef0e817743e17cf3f2d4a13a91622489f7d",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "deterministic_po_match",
+          "line": 14,
+          "end_line": 75,
+          "docstring": "Matches invoice against local synthetic purchase orders.",
+          "args": [
+            "invoice_data"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 77,
+          "end_line": 86,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 88,
+          "end_line": 104,
+          "docstring": null,
+          "args": [
+            "agent",
+            "invoice_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "po_matching_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 80,
+          "constructor": "Agent",
+          "role": "Purchase Order Reconciliation Specialist",
+          "goal": "Match invoice line items, pricing, quantities, and terms against authorized purchase orders.",
+          "backstory": "An accounts payable specialist ensuring invoices only get paid if backed by approved purchase orders.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 100,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 79,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_po_match",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Matches invoice against local synthetic purchase orders."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 3: Purchase Order Matching Agent\nPerforms 3-way matching between synthetic invoices and purchase orders.\n",
+          "line": 1
+        },
+        {
+          "value": "Matches invoice against local synthetic purchase orders.",
+          "line": 15
+        },
+        {
+          "value": "Strictly valid JSON containing po_match_status, matched_po_id, discrepancies, and matching_confidence.",
+          "line": 99
+        },
+        {
+          "value": "Reconcile this invoice against its corresponding purchase order.\nInvoice Data:\n",
+          "line": 91
+        },
+        {
+          "value": "\n\nInstructions:\n1. Evaluate whether the invoice accurately matches the PO.\n2. Detail all quantity, price, or supplier discrepancies.\nReturn strictly valid JSON with keys: 'po_match_status', 'matched_po_id', 'discrepancies', and 'matching_confidence'.",
+          "line": 93
+        },
+        {
+          "value": "Purchase Order Reconciliation Specialist",
+          "line": 81
+        },
+        {
+          "value": "Match invoice line items, pricing, quantities, and terms against authorized purchase orders.",
+          "line": 82
+        },
+        {
+          "value": "An accounts payable specialist ensuring invoices only get paid if backed by approved purchase orders.",
+          "line": 83
+        },
+        {
+          "value": "No purchase order reference specified in invoice.",
+          "line": 23
+        },
+        {
+          "value": "Supplier mismatch: Invoice supplier '",
+          "line": 46
+        },
+        {
+          "value": "Total amount mismatch: Invoice total $",
+          "line": 54
+        }
+      ]
+    },
+    {
+      "file": "Agents/invoice_processing/policy_compliance_agent.py",
+      "filename": "policy_compliance_agent.py",
+      "stem": "policy_compliance_agent",
+      "sha256": "6788b12e66e1172c479a21a76334de759fdefb38a24af5195919619d27f1d5d4",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "deterministic_policy_check",
+          "line": 14,
+          "end_line": 70,
+          "docstring": "Verifies invoice rules against local synthetic AP policies and supplier statuses.",
+          "args": [
+            "invoice_data"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 72,
+          "end_line": 81,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 83,
+          "end_line": 100,
+          "docstring": null,
+          "args": [
+            "agent",
+            "invoice_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "policy_compliance_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 75,
+          "constructor": "Agent",
+          "role": "Corporate Accounts Payable Compliance Officer",
+          "goal": "Audit invoice against corporate purchasing policies, threshold limits, and vendor eligibility.",
+          "backstory": "An uncompromising governance officer ensuring adherence to internal procurement policies and SOX controls.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 96,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 74,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_policy_check",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Verifies invoice rules against local synthetic AP policies and supplier statuses."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 4: Policy Compliance Agent\nEvaluates invoice against accounts payable policies and supplier eligibility.\n",
+          "line": 1
+        },
+        {
+          "value": "Verifies invoice rules against local synthetic AP policies and supplier statuses.",
+          "line": 15
+        },
+        {
+          "value": "Strictly valid JSON containing is_compliant, applied_policy_ids, violations, and compliance_summary.",
+          "line": 95
+        },
+        {
+          "value": "Perform policy compliance review on this invoice.\nInvoice Data:\n",
+          "line": 86
+        },
+        {
+          "value": "\n\nInstructions:\n1. Evaluate policy violations and threshold conditions.\n2. Explicitly cite each applied policy ID.\n3. Classify whether infractions are fatal policy violations or flags requiring secondary sign-off.\nReturn strictly valid JSON with keys: 'is_compliant', 'applied_policy_ids', 'violations', and 'compliance_summary'.",
+          "line": 88
+        },
+        {
+          "value": "Corporate Accounts Payable Compliance Officer",
+          "line": 76
+        },
+        {
+          "value": "Audit invoice against corporate purchasing policies, threshold limits, and vendor eligibility.",
+          "line": 77
+        },
+        {
+          "value": "An uncompromising governance officer ensuring adherence to internal procurement policies and SOX controls.",
+          "line": 78
+        },
+        {
+          "value": "Every invoice above $1,000 must strictly match a valid Purchase Order.",
+          "line": 41
+        },
+        {
+          "value": "Invoices from suspended suppliers cannot be approved.",
+          "line": 51
+        },
+        {
+          "value": "Invoices totaling over $25,000 require executive financial review.",
+          "line": 61
+        },
+        {
+          "value": " exceeds high-value threshold ($25,000).",
+          "line": 63
+        }
+      ]
+    },
+    {
+      "file": "Agents/invoice_processing/workflow.py",
+      "filename": "workflow.py",
+      "stem": "workflow",
+      "sha256": "35c12c99139d76dc0c73a571883e14b416bdc14cc5241bca0ab6a0ef93f417f1",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "time",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "json",
+          "asname": null,
+          "line": 7
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Dict",
+            "Any",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Crew",
+            "Process"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.tracing",
+          "level": 0,
+          "names": [
+            "WorkflowRunTracker",
+            "init_phoenix",
+            "extract_token_usage"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "common.api_key_manager",
+          "level": 0,
+          "names": [
+            "get_key_for_agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "Agents.invoice_processing.invoice_extraction_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_extraction_agent",
+            "create_task": "create_extraction_task",
+            "AGENT_ID": "AGENT_EXTRACTION_ID"
+          },
+          "line": 14
+        },
+        {
+          "module": "Agents.invoice_processing.invoice_validation_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "deterministic_arithmetic_check",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_validation_agent",
+            "create_task": "create_validation_task",
+            "AGENT_ID": "AGENT_VALIDATION_ID"
+          },
+          "line": 19
+        },
+        {
+          "module": "Agents.invoice_processing.po_matching_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "deterministic_po_match",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_po_agent",
+            "create_task": "create_po_task",
+            "AGENT_ID": "AGENT_PO_ID"
+          },
+          "line": 25
+        },
+        {
+          "module": "Agents.invoice_processing.policy_compliance_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "deterministic_policy_check",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_compliance_agent",
+            "create_task": "create_compliance_task",
+            "AGENT_ID": "AGENT_COMPLIANCE_ID"
+          },
+          "line": 31
+        },
+        {
+          "module": "Agents.invoice_processing.duplicate_detection_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "deterministic_duplicate_check",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_duplicate_agent",
+            "create_task": "create_duplicate_task",
+            "AGENT_ID": "AGENT_DUPLICATE_ID"
+          },
+          "line": 37
+        },
+        {
+          "module": "Agents.invoice_processing.exception_analysis_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_exception_agent",
+            "create_task": "create_exception_task",
+            "AGENT_ID": "AGENT_EXCEPTION_ID"
+          },
+          "line": 43
+        },
+        {
+          "module": "Agents.invoice_processing.approval_recommendation_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "deterministic_recommendation_rule",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_approval_agent",
+            "create_task": "create_approval_task",
+            "AGENT_ID": "AGENT_APPROVAL_ID"
+          },
+          "line": 48
+        },
+        {
+          "module": "Agents.invoice_processing.final_review_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_review_agent",
+            "create_task": "create_review_task",
+            "AGENT_ID": "AGENT_REVIEW_ID"
+          },
+          "line": 54
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "run_invoice_processing_workflow",
+          "line": 62,
+          "end_line": 213,
+          "docstring": "Executes the 8-agent sequential Invoice Processing baseline workflow.",
+          "args": [
+            "invoice_data",
+            "run_id",
+            "mock_mode"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [
+        {
+          "line": 86,
+          "agents_expression": "[agent1]",
+          "tasks_expression": "[task1]",
+          "process_expression": ""
+        },
+        {
+          "line": 101,
+          "agents_expression": "[agent2]",
+          "tasks_expression": "[task2]",
+          "process_expression": ""
+        },
+        {
+          "line": 116,
+          "agents_expression": "[agent3]",
+          "tasks_expression": "[task3]",
+          "process_expression": ""
+        },
+        {
+          "line": 131,
+          "agents_expression": "[agent4]",
+          "tasks_expression": "[task4]",
+          "process_expression": ""
+        },
+        {
+          "line": 146,
+          "agents_expression": "[agent5]",
+          "tasks_expression": "[task5]",
+          "process_expression": ""
+        },
+        {
+          "line": 160,
+          "agents_expression": "[agent6]",
+          "tasks_expression": "[task6]",
+          "process_expression": ""
+        },
+        {
+          "line": 174,
+          "agents_expression": "[agent7]",
+          "tasks_expression": "[task7]",
+          "process_expression": ""
+        },
+        {
+          "line": 188,
+          "agents_expression": "[agent8]",
+          "tasks_expression": "[task8]",
+          "process_expression": ""
+        }
+      ],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_invoice_processing_workflow",
+          "line": 62,
+          "classification": "function_candidate",
+          "docstring": "Executes the 8-agent sequential Invoice Processing baseline workflow."
+        }
+      ],
+      "execution_calls": [
+        {
+          "call": "crew1.kickoff",
+          "line": 87
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 91
+        },
+        {
+          "call": "crew2.kickoff",
+          "line": 102
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 106
+        },
+        {
+          "call": "crew3.kickoff",
+          "line": 117
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 121
+        },
+        {
+          "call": "crew4.kickoff",
+          "line": 132
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 136
+        },
+        {
+          "call": "crew5.kickoff",
+          "line": 147
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 151
+        },
+        {
+          "call": "crew6.kickoff",
+          "line": 161
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 165
+        },
+        {
+          "call": "crew7.kickoff",
+          "line": 175
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 179
+        },
+        {
+          "call": "crew8.kickoff",
+          "line": 189
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 193
+        }
+      ],
+      "string_literals": [
+        {
+          "value": "\nWorkflow 1: Invoice Processing and Accounts Payable Orchestrator.\nSequential 8-Agent Baseline System.\n",
+          "line": 1
+        },
+        {
+          "value": "\n    Executes the 8-agent sequential Invoice Processing baseline workflow.\n    ",
+          "line": 67
+        },
+        {
+          "value": "\n========================================================",
+          "line": 73
+        },
+        {
+          "value": "========================================================",
+          "line": 76
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "file": "runs/invoice_processing/invoice_processing_20261020_131708_80802c.json",
+      "filename": "invoice_processing_20261020_131708_80802c.json",
+      "suffix": ".json",
+      "workflow_name": "invoice_processing",
+      "run_id": "invoice_processing_20261020_131708_80802c",
+      "status": "SUCCESS",
+      "total_duration_seconds": 42.837,
+      "agent_count": null,
+      "total_tokens": 0,
+      "estimated_cost_usd": 0.0
+    },
+    {
+      "file": "runs/invoice_processing/invoice_processing_20261023_043543_f5b68b.json",
+      "filename": "invoice_processing_20261023_043543_f5b68b.json",
+      "suffix": ".json",
+      "workflow_name": "invoice_processing",
+      "run_id": "invoice_processing_20261023_043543_f5b68b",
+      "status": "SUCCESS",
+      "total_duration_seconds": 36.352,
+      "agent_count": null,
+      "total_tokens": 12895,
+      "estimated_cost_usd": 0.003661
+    },
+    {
+      "file": "runs/invoice_processing/live_20261023_070056_invoic.json",
+      "filename": "live_20261023_070056_invoic.json",
+      "suffix": ".json",
+      "workflow_name": "invoice_processing",
+      "run_id": "live_20261023_070056_invoic",
+      "status": "SUCCESS",
+      "total_duration_seconds": 39.74,
+      "agent_count": null,
+      "total_tokens": 13458,
+      "estimated_cost_usd": 0.003978
+    },
+    {
+      "file": "runs/invoice_processing/test_inv_run_01.json",
+      "filename": "test_inv_run_01.json",
+      "suffix": ".json",
+      "workflow_name": "invoice_processing",
+      "run_id": "test_inv_run_01",
+      "status": "SUCCESS",
+      "total_duration_seconds": 0.172,
+      "agent_count": null,
+      "total_tokens": 0,
+      "estimated_cost_usd": 0.0
+    }
+  ]
+}

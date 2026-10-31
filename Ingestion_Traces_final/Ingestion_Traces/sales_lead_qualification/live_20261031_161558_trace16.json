@@ -1,0 +1,187 @@
+{
+  "run_id": "live_20261031_161558_trace16",
+  "workflow_name": "sales_lead_qualification",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 13.291,
+  "agent_execution_count": 7,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_11 (gsk_A9...C3BP)",
+      "duration_seconds": 1.626,
+      "tokens": 736,
+      "prompt_tokens": 397,
+      "completion_tokens": 339,
+      "output": {
+        "lead_id": "LEAD-2026-0001",
+        "enriched_lead_profile": {
+          "lead_id": "LEAD-2026-0001",
+          "contact_name": "Sarah Jenkins",
+          "contact_email": "sjenkins@fintechhorizon.com",
+          "job_title": "VP of Engineering",
+          "company_id": "COMP-101",
+          "stated_budget": 85000.0,
+          "purchase_timeline": "Within 3 months",
+          "test_case_tag": "high_fit_high_intent",
+          "lead_is_synthetic": true,
+          "company_name": "Fintech Horizon Global",
+          "industry": "Financial Services",
+          "employee_count": 4500,
+          "annual_revenue_usd": 650000000,
+          "region": "North America",
+          "company_is_synthetic": true
+        },
+        "missing_attributes": []
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "lead_enrichment_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_12 (gsk_5G...OStT)",
+      "duration_seconds": 1.525,
+      "tokens": 890,
+      "prompt_tokens": 639,
+      "completion_tokens": 251,
+      "output": {
+        "fit_category": "STRONG_FIT",
+        "industry_fit_score": 10,
+        "company_size_fit_score": 10,
+        "fit_rationale": "The account operates in Financial Services, which is a target industry, and its headcount (4,500) and annual revenue ($650M) comfortably exceed the ICP thresholds (>=200 employees, >= $20M revenue). The contact holds a VP of Engineering role, which is a target persona. No disqualifying industry flags are present, and the synthetic flag aligns with the ICP requirement."
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "lead_fit_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_13 (gsk_i9...Ujsn)",
+      "duration_seconds": 1.942,
+      "tokens": 1066,
+      "prompt_tokens": 477,
+      "completion_tokens": 589,
+      "output": {
+        "intent_level": "HIGH_INTENT",
+        "intent_score": 92,
+        "high_value_signals": [
+          {
+            "type": "demo_request",
+            "date": "2026-09-10",
+            "notes": "Requested live demo for 50-person engineering org"
+          },
+          {
+            "type": "pricing_page_visit",
+            "date": "2026-09-12",
+            "notes": "Viewed Enterprise Tier pricing 4 times"
+          },
+          {
+            "type": "whitepaper_download",
+            "date": "2026-09-08",
+            "notes": "Downloaded 'Autonomous AI Agent Architecture'"
+          }
+        ],
+        "behavioral_summary": "Sarah Jenkins, VP of Engineering at FinTech Horizon, has demonstrated strong purchase intent. Within a four‑day window she downloaded a technical whitepaper, requested a live demo for a 50‑person engineering org, and visited the Enterprise Tier pricing page multiple times. Her stated budget of $85,000 aligns with the Enterprise offering, and the timeline of 'within 3 months' indicates an imminent decision. Coupled with the high‑fit tag, these signals place her in the HIGH_INTENT category with a score of 92."
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "intent_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_14 (gsk_6G...l7b1)",
+      "duration_seconds": 2.112,
+      "tokens": 887,
+      "prompt_tokens": 310,
+      "completion_tokens": 577,
+      "output": {
+        "total_score": 100,
+        "qualification_tier": "SALES_QUALIFIED_LEAD",
+        "component_scores": {
+          "industry_fit": 25,
+          "company_size_fit": 25,
+          "role_authority": 20,
+          "intent_signals": 20,
+          "budget_timeline": 10
+        },
+        "scoring_rationale": "The deterministic model distributes a maximum of 100 points across five weighted dimensions that reflect a prospect's readiness to buy. Each dimension has a predefined ceiling: industry_fit (25), company_size_fit (25), role_authority (20), intent_signals (20), and budget_timeline (10). The prospect’s data were evaluated against criteria for each dimension, and points were awarded up to the ceiling. Summing the awarded points yields the total_score of 100. \n\nTier classification uses score thresholds: \n- >= 80 → SALES_QUALIFIED_LEAD (ready for direct sales engagement) \n- 40–79 → MARKETING_NURTURE (requires further education and lead nurturing) \n- < 40 → DISQUALIFIED (does not meet minimum fit criteria). \nBecause the prospect achieved the full 100 points, they fall into the SALES_QUALIFIED_LEAD tier. \n\nHighest‑scoring dimensions: industry_fit and company_size_fit, each contributing 25 points, indicating strong alignment with target market and ideal company size. \nLowest‑scoring dimension: budget_timeline with 10 points, the smallest weight in the model, suggesting that while the prospect meets basic budget and timeline expectations, this factor carries less influence on the overall qualification."
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "lead_scoring_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_15 (gsk_3b...vKIi)",
+      "duration_seconds": 1.777,
+      "tokens": 1698,
+      "prompt_tokens": 1230,
+      "completion_tokens": 468,
+      "output": {
+        "opportunity_viability": "HIGH",
+        "estimated_deal_size": 85000,
+        "pipeline_stage": "Proposal",
+        "key_risks": [
+          "Synthetic lead flag may indicate data quality or non‑real prospect risk",
+          "Budget $85k is at the lower end of the enterprise tier and may limit scope or require upsell justification",
+          "Potential competition from established fintech platform vendors",
+          "Internal procurement and security review cycles could extend beyond the 3‑month timeline"
+        ]
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "opportunity_assessment_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_16 (gsk_ID...uEx3)",
+      "duration_seconds": 1.95,
+      "tokens": 1795,
+      "prompt_tokens": 1360,
+      "completion_tokens": 435,
+      "output": {
+        "recommended_action": "Immediate SDR outreach and schedule AE discovery call within 2 hours",
+        "target_team": "Enterprise Sales Team (SDR + Account Executive)",
+        "priority": "High",
+        "action_justification": "Lead is a SALES_QUALIFIED_LEAD with a total_score of 100, demonstrating strong industry and company-size fit, high‑intent signals (demo request, multiple pricing page visits, whitepaper download), a stated budget of $85,000 that aligns with the Enterprise tier, and a purchase timeline of within 3 months. The contact holds a VP of Engineering role, a target decision‑maker persona. Although flagged as synthetic, the combination of fit, intent, budget, and timeline outweighs the data‑quality risk, necessitating immediate engagement to secure the opportunity."
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "next_action_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 2.354,
+      "tokens": 2209,
+      "prompt_tokens": 1514,
+      "completion_tokens": 695,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "lead_id": "LEAD-2026-0001",
+        "final_qualification_tier": "SALES_QUALIFIED_LEAD",
+        "final_score": 100,
+        "summary_report": "The lead (LEAD-2026-0001) meets the Ideal Customer Profile (ICP) with a STRONG_FIT classification: target industry (Financial Services), company size (4,500 employees, $650M revenue) and persona (VP of Engineering). The deterministic scoring model awards full points across all five dimensions, resulting in a total_score of 100, which places the prospect in the SALES_QUALIFIED_LEAD tier per the defined thresholds. High‑intent signals (demo request, pricing page visits, whitepaper download) and a stated budget of $85,000 within a 3‑month purchase timeline further validate readiness to buy. The recommended action—immediate SDR outreach and scheduling an AE discovery call within 2 hours—aligns with the SLA for SALES_QUALIFIED_LEADs. The synthetic lead flag is acknowledged as a data‑quality risk, but the overall qualification strength outweighs this concern. No routing conflicts are present; the Enterprise Sales Team is correctly identified as the owner.",
+        "audit_findings": [
+          "ICP fit (STRONG_FIT) is consistent with the scoring rubric and yields maximum points in industry and company size dimensions.",
+          "Component scores (25+25+20+20+10) correctly sum to the reported total_score of 100.",
+          "Total_score of 100 meets the >=80 threshold for SALES_QUALIFIED_LEAD, matching the final_qualification_tier.",
+          "Recommended action (immediate SDR outreach) aligns with the SLA for SALES_QUALIFIED_LEADs and does not conflict with any other routing rules.",
+          "Synthetic lead flag is noted as a risk but does not create a contradictory routing decision.",
+          "No contradictory or duplicate routing assignments were detected."
+        ]
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "final_review_agent_sales"
+    }
+  ],
+  "total_tokens": 9281,
+  "prompt_tokens": 5927,
+  "completion_tokens": 3354,
+  "estimated_cost_usd": 0.006147,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"lead_id\": \"LEAD-2026-0001\",\n  \"final_qualification_tier\": \"SALES_QUALIFIED_LEAD\",\n  \"final_score\": 100,\n  \"summary_report\": \"The lead (LEAD-2026-0001) meets the Ideal Customer Profile (ICP) with a STRONG_FIT classification: target industry (Financial Services), company size (4,500 employees, $650M revenue) and persona (VP of Engineering). The deterministic scoring model awards full points across all five dimensions, resulting in a total_score of 100, which places the prospect in the SALES_QUALIFIED_LEAD tier per the defined thresholds. High\\u2011intent signals (demo request, pricing page visits, whitepaper download) and a stated budget of $85,000 within a 3\\u2011month purchase timeline further validate readiness to buy. The recommended action\\u2014immediate SDR outreach and scheduling an AE discovery call within 2 hours\\u2014aligns with the SLA for SALES_QUALIFIED_LEADs. The synthetic lead flag is acknowledged as a data\\u2011quality risk, but the overall qualification strength outweighs this concern. No routing conflicts are present; the Enterprise Sales Team is correctly identified as the owner.\",\n  \"audit_findings\": [\n    \"ICP fit (STRONG_FIT) is consistent with the scoring rubric and yields maximum points in industry and company size dimensions.\",\n    \"Component scores (25+25+20+20+10) correctly sum to the reported total_score of 100.\",\n    \"Total_score of 100 meets the >=80 threshold for SALES_QUALIFIED_LEAD, matching the final_qualification_tier.\",\n    \"Recommended action (immediate SDR outreach) aligns with the SLA for SALES_QUALIFIED_LEADs and does not conflict with any other routing rules.\",\n    \"Synthetic lead flag is noted as a risk but does not create a contradictory routing decision.\",\n    \"No contradictory or duplicate routing assignments were detected.\"\n  ]\n}",
+  "timestamp": "2026-10-31T16:16:11.291212+00:00"
+}

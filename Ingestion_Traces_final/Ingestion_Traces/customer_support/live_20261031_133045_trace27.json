@@ -1,0 +1,147 @@
+{
+  "run_id": "live_20261031_133045_trace27",
+  "workflow_name": "customer_support",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 19.836,
+  "agent_execution_count": 6,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.229,
+      "tokens": 745,
+      "prompt_tokens": 439,
+      "completion_tokens": 306,
+      "output": {
+        "category": "technical_failure",
+        "urgency": "high",
+        "complexity": "complex",
+        "customer_impact": "Intermittent API webhook failures causing potential integration downtime and loss of data flow for the enterprise client.",
+        "routing_recommendation": "Escalate to Tier 2 Technical Support (API/Webhook team). Assign a senior engineer to investigate root cause, monitor logs, and provide a fix. Keep the account manager informed due to high urgency and enterprise status."
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "ticket_classification_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.701,
+      "tokens": 1007,
+      "prompt_tokens": 513,
+      "completion_tokens": 494,
+      "output": {
+        "applicable_policy_ids": [],
+        "applicable_guide_ids": [
+          "TSG-203"
+        ],
+        "policy_conditions": {
+          "coverage": false,
+          "eligibility": "Standard tier customer; high urgency ticket.",
+          "sla": {
+            "initial_response": "Within 4 business hours (standard support SLA for high urgency)",
+            "target_resolution": "Within 2 business days (standard support SLA for complex technical failures)"
+          },
+          "restrictions": "None beyond standard support terms; escalation to engineering may be required per troubleshooting guide."
+        },
+        "retrieval_summary": "Policy lookup returned no matching policies; troubleshooting guide TSG-203 was identified as applicable."
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "policy_retrieval_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 2.692,
+      "tokens": 1253,
+      "prompt_tokens": 675,
+      "completion_tokens": 578,
+      "output": {
+        "investigation_findings": "The ticket reports intermittent HTTP 500 responses from an API webhook. The issue is classified as a technical failure with high urgency. The customer is a standard‑tier synthetic account with a history of successful resolutions via SOP TSG‑203 for similar technical issues. Intermittent 500 errors typically stem from backend service instability, unhandled exceptions in the webhook handler (often triggered by specific payload patterns), authentication token expiry, or rate‑limiting/throttling on shared infrastructure used by standard‑tier customers.",
+        "root_cause_hypothesis": "The most probable cause is an unhandled exception in the webhook processing code that is triggered by certain request payloads or load spikes, leading to intermittent internal server errors. Contributing factors may include rate‑limiting on shared resources for standard‑tier accounts or a recent deployment change that introduced a bug.",
+        "confirmed_facts": [
+          "Ticket ID TICK-2026-0027 reports intermittent HTTP 500 errors from an API webhook.",
+          "Category: technical_failure; urgency: high; complexity: complex.",
+          "Customer is Enterprise Client 27, tier: Standard, synthetic account.",
+          "Past technical_failure case (HIST-RES-0003) was resolved using SOP guide TSG-203.",
+          "The issue is synthetic, meaning it is generated for testing purposes."
+        ],
+        "data_gaps": [
+          "Exact timestamps and frequency of the 500 errors.",
+          "Sample request payloads that triggered the failures.",
+          "Webhook endpoint logs (application error stack traces, request IDs).",
+          "Recent deployment or configuration changes to the webhook service.",
+          "Rate‑limit or throttling metrics for the customer's API usage.",
+          "Authentication token status and renewal logs."
+        ]
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "issue_investigation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 3.031,
+      "tokens": 1652,
+      "prompt_tokens": 1063,
+      "completion_tokens": 589,
+      "output": {
+        "resolution_type": "escalate_to_engineering",
+        "recommended_action": "1. Acknowledge the ticket within 4 business hours as required by the standard high‑urgency SLA. 2. Assign a senior API/Webhook engineer (Tier 2) to the case and notify the customer's account manager of the escalation. 3. Request from the customer: a) timestamps and frequency of the 500 errors, b) sample request payloads that triggered the failures, c) any recent changes to the webhook configuration or deployment. 4. Retrieve and review webhook service logs (error stack traces, request IDs) and rate‑limit/throttling metrics for the account. 5. Verify authentication token validity and renewal logs. 6. Correlate logs with the provided timestamps to identify the exact failure pattern. 7. If an unhandled exception or rate‑limit breach is confirmed, create a fix (code patch, configuration adjustment, or token refresh) and have engineering apply it in a controlled deployment. 8. Conduct a targeted test using the sample payloads to confirm the 500 errors are resolved. 9. Monitor the webhook for 24 hours post‑fix and update the customer with findings and confirmation of stability. 10. Close the ticket within the 2‑business‑day target resolution window, documenting the root cause and remediation steps.",
+        "policy_justification": "The ticket is high urgency and complex for a Standard‑tier customer. Policy SLA mandates an initial response within 4 business hours and resolution within 2 business days. No specific credit or financial policy applies. The applicable troubleshooting guide TSG‑203 directs escalation to the API/Webhook engineering team for intermittent 500 errors, and the policy allows escalation to engineering when a root‑cause fix is required.",
+        "escalation_required": true
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "resolution_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 5.831,
+      "tokens": 1344,
+      "prompt_tokens": 799,
+      "completion_tokens": 545,
+      "output": {
+        "response_text": "Dear Enterprise Client 27,\n\nThank you for bringing the intermittent 500 Internal Server Errors you are experiencing with our API webhook to our attention. We understand how critical reliable webhook functionality is for your operations, and we apologize for any inconvenience this may have caused.\n\nWe have escalated this issue to our senior API/Webhook engineering team (Tier 2) and have also notified your account manager. To expedite our investigation, could you please provide the following information?\n\n- Exact timestamps (including time zone) when the 500 errors occurred and how frequently they were observed.\n- Sample request payloads that triggered the failures.\n- Details of any recent changes to your webhook configuration, deployment, or authentication tokens.\n\nOur engineering team will:\n1. Review the webhook service logs and correlate them with the timestamps you provide.\n2. Verify authentication token validity and check for any rate‑limit or throttling events.\n3. Identify the root cause (e.g., unhandled exception, rate‑limit breach) and develop the appropriate fix.\n4. Perform targeted testing with the supplied payloads to confirm the issue is resolved.\n5. Monitor the webhook for 24 hours after the fix and update you on the outcome.\n\nWe will keep you informed throughout this process and aim to resolve the issue within the 2‑business‑day SLA window.\n\nThank you for your cooperation and patience.\n\nSincerely,\nCustomer Support Team",
+        "tone": "empathetic, professional, formal",
+        "next_steps_for_customer": [
+          "Provide timestamps (with time zone) and frequency of the 500 errors.",
+          "Send sample request payloads that caused the failures.",
+          "Share any recent changes to webhook configuration, deployment, or authentication tokens."
+        ],
+        "ticket_status": "Escalated to Engineering"
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "response_drafting_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 2.001,
+      "tokens": 2129,
+      "prompt_tokens": 1720,
+      "completion_tokens": 409,
+      "output": {
+        "qa_status": "APPROVED",
+        "final_ticket_status": "ACTION_REQUIRED_BY_USER",
+        "verification_notes": "The drafted response acknowledges the issue, apologizes, escalates to Tier 2 engineering, and clearly requests the missing data needed to proceed. It does not claim immediate resolution, which is appropriate given the current data gaps. No policy violations or unsupported commitments are present; the SLA promises align with the documented policy. The only outstanding step is the customer's provision of timestamps, payload samples, and change logs, so the ticket remains open pending user action.",
+        "support_summary_report": "The response is empathetic, professional, and follows the troubleshooting guide TSG‑203. It correctly sets expectations, outlines engineering actions, and adheres to the 4‑hour initial response and 2‑day resolution SLA. Since additional information from the customer is required to diagnose the intermittent 500 errors, the ticket cannot be marked RESOLVED yet. The appropriate next status is ACTION_REQUIRED_BY_USER."
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "resolution_verification_agent"
+    }
+  ],
+  "total_tokens": 8130,
+  "prompt_tokens": 5209,
+  "completion_tokens": 2921,
+  "estimated_cost_usd": 0.005381,
+  "error_message": null,
+  "final_output": "{\n  \"qa_status\": \"APPROVED\",\n  \"final_ticket_status\": \"ACTION_REQUIRED_BY_USER\",\n  \"verification_notes\": \"The drafted response acknowledges the issue, apologizes, escalates to Tier\\u202f2 engineering, and clearly requests the missing data needed to proceed. It does not claim immediate resolution, which is appropriate given the current data gaps. No policy violations or unsupported commitments are present; the SLA promises align with the documented policy. The only outstanding step is the customer's provision of timestamps, payload samples, and change logs, so the ticket remains open pending user action.\",\n  \"support_summary_report\": \"The response is empathetic, professional, and follows the troubleshooting guide TSG\\u2011203. It correctly sets expectations, outlines engineering actions, and adheres to the 4\\u2011hour initial response and 2\\u2011day resolution SLA. Since additional information from the customer is required to diagnose the intermittent 500 errors, the ticket cannot be marked RESOLVED yet. The appropriate next status is ACTION_REQUIRED_BY_USER.\"\n}",
+  "timestamp": "2026-10-31T13:31:05.692623+00:00"
+}

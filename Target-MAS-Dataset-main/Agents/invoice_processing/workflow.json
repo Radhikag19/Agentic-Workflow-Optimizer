@@ -1,0 +1,101 @@
+{
+  "workflow_name": "invoice_processing",
+  "version": "1.0.0",
+  "description": "Baseline Accounts Payable Invoice Processing Multi-Agent Workflow",
+  "fixed_model": "openai/gpt-oss-120b",
+  "assigned_groq_key_env": "GROQ_API_KEY_1",
+  "total_agents": 8,
+  "execution_mode": "sequential",
+  "execution_order": [
+    "invoice_extraction_agent",
+    "invoice_validation_agent",
+    "po_matching_agent",
+    "policy_compliance_agent",
+    "duplicate_detection_agent",
+    "exception_analysis_agent",
+    "approval_recommendation_agent",
+    "final_review_agent_invoice"
+  ],
+  "agents": [
+    {
+      "agent_id": "invoice_extraction_agent",
+      "role": "Senior Invoice Extraction Specialist",
+      "assigned_key_env": "GROQ_API_KEY_1",
+      "dependencies": [],
+      "inputs": ["raw_invoice_record"],
+      "outputs": ["extracted_invoice", "extraction_flags"]
+    },
+    {
+      "agent_id": "invoice_validation_agent",
+      "role": "Invoice Validation Auditor",
+      "assigned_key_env": "GROQ_API_KEY_1",
+      "dependencies": ["invoice_extraction_agent"],
+      "inputs": ["extracted_invoice"],
+      "outputs": ["validation_status", "math_audit", "validation_errors"],
+      "optimization_note": "Candidate for parallelization after extraction or consolidation with exception analysis."
+    },
+    {
+      "agent_id": "po_matching_agent",
+      "role": "Purchase Order Reconciliation Specialist",
+      "assigned_key_env": "GROQ_API_KEY_1",
+      "dependencies": ["invoice_extraction_agent"],
+      "inputs": ["extracted_invoice", "purchase_orders.json"],
+      "outputs": ["po_match_status", "matched_po_id", "discrepancies", "matching_confidence"],
+      "optimization_note": "Candidate for parallelization after extraction."
+    },
+    {
+      "agent_id": "policy_compliance_agent",
+      "role": "Corporate Accounts Payable Compliance Officer",
+      "assigned_key_env": "GROQ_API_KEY_1",
+      "dependencies": ["invoice_extraction_agent"],
+      "inputs": ["extracted_invoice", "policies.json", "suppliers.json"],
+      "outputs": ["is_compliant", "applied_policy_ids", "violations", "compliance_summary"],
+      "optimization_note": "Candidate for parallelization after extraction."
+    },
+    {
+      "agent_id": "duplicate_detection_agent",
+      "role": "Fraud & Duplicate Payment Prevention Analyst",
+      "assigned_key_env": "GROQ_API_KEY_1",
+      "dependencies": ["invoice_extraction_agent"],
+      "inputs": ["extracted_invoice", "historical_invoices.json"],
+      "outputs": ["duplicate_status", "matching_records", "risk_assessment"],
+      "optimization_note": "Candidate for parallelization after extraction."
+    },
+    {
+      "agent_id": "exception_analysis_agent",
+      "role": "Accounts Payable Exception Specialist",
+      "assigned_key_env": "GROQ_API_KEY_1",
+      "dependencies": [
+        "invoice_validation_agent",
+        "po_matching_agent",
+        "policy_compliance_agent",
+        "duplicate_detection_agent"
+      ],
+      "inputs": ["validation_results", "po_matching_results", "compliance_results", "duplicate_results"],
+      "outputs": ["has_exceptions", "exception_count", "critical_exceptions", "detailed_exceptions"],
+      "optimization_note": "Primary pruning or consolidation candidate."
+    },
+    {
+      "agent_id": "approval_recommendation_agent",
+      "role": "Accounts Payable Decision Authority",
+      "assigned_key_env": "GROQ_API_KEY_1",
+      "dependencies": ["exception_analysis_agent"],
+      "inputs": ["consolidated_evidence"],
+      "outputs": ["recommendation", "justification", "conditions"]
+    },
+    {
+      "agent_id": "final_review_agent_invoice",
+      "role": "Chief AP Quality & Verification Auditor",
+      "assigned_key_env": "GROQ_API_KEY_1",
+      "dependencies": ["approval_recommendation_agent"],
+      "inputs": ["complete_audit_trail"],
+      "outputs": ["workflow_status", "invoice_id", "final_recommendation", "risk_level", "summary_report", "audit_findings"]
+    }
+  ],
+  "optimization_opportunities": [
+    "Prune exception_analysis_agent if validation and compliance provide sufficient evidence",
+    "Consolidate invoice_validation_agent and exception_analysis_agent",
+    "Parallelize invoice_validation, po_matching, policy_compliance, and duplicate_detection after extraction",
+    "Optimize prompts to eliminate repeated context across agents"
+  ]
+}

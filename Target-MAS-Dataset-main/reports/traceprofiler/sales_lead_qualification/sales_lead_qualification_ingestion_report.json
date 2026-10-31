@@ -1,0 +1,3262 @@
+{
+  "workflow_name": "sales_lead_qualification",
+  "report_type": "traceprofiler_single_workflow_ingestion",
+  "analysis_mode": "static_ast_non_executing",
+  "metrics": {
+    "declared_agents": 7,
+    "implemented_agents": 7,
+    "python_files": 8,
+    "telemetry_runs": 3,
+    "discrepancy_count": 1
+  },
+  "manifest": {
+    "file": "Agents/sales_lead_qualification/workflow.json",
+    "dir": "Agents/sales_lead_qualification",
+    "workflow_name": "sales_lead_qualification",
+    "version": "1.0.0",
+    "description": "Baseline Sales Lead Qualification Multi-Agent Workflow",
+    "fixed_model": "openai/gpt-oss-120b",
+    "total_agents": 7,
+    "execution_mode": "sequential",
+    "execution_order": [
+      "lead_enrichment_agent",
+      "lead_fit_agent",
+      "intent_analysis_agent",
+      "lead_scoring_agent",
+      "opportunity_assessment_agent",
+      "next_action_agent",
+      "final_review_agent_sales"
+    ],
+    "optimization_opportunities": [
+      "Dynamic routing: Early-stop and disqualify immediately after lead_fit_agent if the company is in disqualified industries",
+      "Pruning opportunity_assessment_agent when qualification score is under 45 points",
+      "Parallelize lead_fit_agent and intent_analysis_agent immediately after enrichment",
+      "Prompt compression: Pass only structured numeric feature vectors to lead_scoring_agent"
+    ],
+    "agents": [
+      {
+        "id": "lead_enrichment_agent",
+        "name": "Lead Enrichment & Intelligence Specialist",
+        "role": "Lead Enrichment & Intelligence Specialist",
+        "declared_file": null,
+        "dependencies": [],
+        "inputs": [
+          "raw_lead_record",
+          "company_profiles.json"
+        ],
+        "outputs": [
+          "lead_id",
+          "enriched_lead_profile",
+          "missing_attributes"
+        ],
+        "assigned_key": "GROQ_API_KEY_4",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "lead_enrichment_agent",
+          "role": "Lead Enrichment & Intelligence Specialist",
+          "assigned_key_env": "GROQ_API_KEY_4",
+          "dependencies": [],
+          "inputs": [
+            "raw_lead_record",
+            "company_profiles.json"
+          ],
+          "outputs": [
+            "lead_id",
+            "enriched_lead_profile",
+            "missing_attributes"
+          ]
+        }
+      },
+      {
+        "id": "lead_fit_agent",
+        "name": "Ideal Customer Profile (ICP) Fit Evaluator",
+        "role": "Ideal Customer Profile (ICP) Fit Evaluator",
+        "declared_file": null,
+        "dependencies": [
+          "lead_enrichment_agent"
+        ],
+        "inputs": [
+          "enriched_lead_profile",
+          "ideal_customer_profiles.json"
+        ],
+        "outputs": [
+          "fit_category",
+          "industry_fit_score",
+          "company_size_fit_score",
+          "fit_rationale"
+        ],
+        "assigned_key": "GROQ_API_KEY_4",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": "Primary trigger for early disqualification and short-circuit routing.",
+        "raw": {
+          "agent_id": "lead_fit_agent",
+          "role": "Ideal Customer Profile (ICP) Fit Evaluator",
+          "assigned_key_env": "GROQ_API_KEY_4",
+          "dependencies": [
+            "lead_enrichment_agent"
+          ],
+          "inputs": [
+            "enriched_lead_profile",
+            "ideal_customer_profiles.json"
+          ],
+          "outputs": [
+            "fit_category",
+            "industry_fit_score",
+            "company_size_fit_score",
+            "fit_rationale"
+          ],
+          "optimization_note": "Primary trigger for early disqualification and short-circuit routing."
+        }
+      },
+      {
+        "id": "intent_analysis_agent",
+        "name": "Buyer Intent & Behavioral Analyst",
+        "role": "Buyer Intent & Behavioral Analyst",
+        "declared_file": null,
+        "dependencies": [
+          "lead_enrichment_agent"
+        ],
+        "inputs": [
+          "lead_data",
+          "engagement_histories.json"
+        ],
+        "outputs": [
+          "intent_level",
+          "intent_score",
+          "high_value_signals",
+          "behavioral_summary"
+        ],
+        "assigned_key": "GROQ_API_KEY_4",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": "Can be skipped if lead_fit_agent concludes DISQUALIFIED.",
+        "raw": {
+          "agent_id": "intent_analysis_agent",
+          "role": "Buyer Intent & Behavioral Analyst",
+          "assigned_key_env": "GROQ_API_KEY_4",
+          "dependencies": [
+            "lead_enrichment_agent"
+          ],
+          "inputs": [
+            "lead_data",
+            "engagement_histories.json"
+          ],
+          "outputs": [
+            "intent_level",
+            "intent_score",
+            "high_value_signals",
+            "behavioral_summary"
+          ],
+          "optimization_note": "Can be skipped if lead_fit_agent concludes DISQUALIFIED."
+        }
+      },
+      {
+        "id": "lead_scoring_agent",
+        "name": "Lead Qualification Scoring Specialist",
+        "role": "Lead Qualification Scoring Specialist",
+        "declared_file": null,
+        "dependencies": [
+          "lead_fit_agent",
+          "intent_analysis_agent"
+        ],
+        "inputs": [
+          "lead_data",
+          "fit_evaluation",
+          "intent_evaluation",
+          "qualification_rules.json"
+        ],
+        "outputs": [
+          "total_score",
+          "qualification_tier",
+          "component_scores",
+          "scoring_rationale"
+        ],
+        "assigned_key": "GROQ_API_KEY_4",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "lead_scoring_agent",
+          "role": "Lead Qualification Scoring Specialist",
+          "assigned_key_env": "GROQ_API_KEY_4",
+          "dependencies": [
+            "lead_fit_agent",
+            "intent_analysis_agent"
+          ],
+          "inputs": [
+            "lead_data",
+            "fit_evaluation",
+            "intent_evaluation",
+            "qualification_rules.json"
+          ],
+          "outputs": [
+            "total_score",
+            "qualification_tier",
+            "component_scores",
+            "scoring_rationale"
+          ]
+        }
+      },
+      {
+        "id": "opportunity_assessment_agent",
+        "name": "Commercial Opportunity Assessor",
+        "role": "Commercial Opportunity Assessor",
+        "declared_file": null,
+        "dependencies": [
+          "lead_scoring_agent"
+        ],
+        "inputs": [
+          "lead_scoring_results",
+          "lead_fit_results",
+          "intent_results"
+        ],
+        "outputs": [
+          "opportunity_viability",
+          "estimated_deal_size",
+          "pipeline_stage",
+          "key_risks"
+        ],
+        "assigned_key": "GROQ_API_KEY_4",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": "Candidate for pruning when lead is clearly unsuitable or already definitively scored.",
+        "raw": {
+          "agent_id": "opportunity_assessment_agent",
+          "role": "Commercial Opportunity Assessor",
+          "assigned_key_env": "GROQ_API_KEY_4",
+          "dependencies": [
+            "lead_scoring_agent"
+          ],
+          "inputs": [
+            "lead_scoring_results",
+            "lead_fit_results",
+            "intent_results"
+          ],
+          "outputs": [
+            "opportunity_viability",
+            "estimated_deal_size",
+            "pipeline_stage",
+            "key_risks"
+          ],
+          "optimization_note": "Candidate for pruning when lead is clearly unsuitable or already definitively scored."
+        }
+      },
+      {
+        "id": "next_action_agent",
+        "name": "Sales Engagement Strategy Lead",
+        "role": "Sales Engagement Strategy Lead",
+        "declared_file": null,
+        "dependencies": [
+          "opportunity_assessment_agent",
+          "lead_scoring_agent"
+        ],
+        "inputs": [
+          "opportunity_assessment",
+          "qualification_tier"
+        ],
+        "outputs": [
+          "recommended_action",
+          "target_team",
+          "priority",
+          "action_justification"
+        ],
+        "assigned_key": "GROQ_API_KEY_4",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "next_action_agent",
+          "role": "Sales Engagement Strategy Lead",
+          "assigned_key_env": "GROQ_API_KEY_4",
+          "dependencies": [
+            "opportunity_assessment_agent",
+            "lead_scoring_agent"
+          ],
+          "inputs": [
+            "opportunity_assessment",
+            "qualification_tier"
+          ],
+          "outputs": [
+            "recommended_action",
+            "target_team",
+            "priority",
+            "action_justification"
+          ]
+        }
+      },
+      {
+        "id": "final_review_agent_sales",
+        "name": "Revenue Operations QA Lead",
+        "role": "Revenue Operations QA Lead",
+        "declared_file": null,
+        "dependencies": [
+          "next_action_agent"
+        ],
+        "inputs": [
+          "complete_lead_audit"
+        ],
+        "outputs": [
+          "workflow_status",
+          "lead_id",
+          "final_qualification_tier",
+          "final_score",
+          "summary_report",
+          "audit_findings"
+        ],
+        "assigned_key": "GROQ_API_KEY_4",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "final_review_agent_sales",
+          "role": "Revenue Operations QA Lead",
+          "assigned_key_env": "GROQ_API_KEY_4",
+          "dependencies": [
+            "next_action_agent"
+          ],
+          "inputs": [
+            "complete_lead_audit"
+          ],
+          "outputs": [
+            "workflow_status",
+            "lead_id",
+            "final_qualification_tier",
+            "final_score",
+            "summary_report",
+            "audit_findings"
+          ]
+        }
+      }
+    ]
+  },
+  "agent_inventory": [
+    {
+      "id": "lead_enrichment_agent",
+      "name": "Lead Enrichment & Intelligence Specialist",
+      "role": "Lead Enrichment & Intelligence Specialist",
+      "workflow": "sales_lead_qualification",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_4",
+      "dependencies": [],
+      "inputs": [
+        "raw_lead_record",
+        "company_profiles.json"
+      ],
+      "outputs": [
+        "lead_id",
+        "enriched_lead_profile",
+        "missing_attributes"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/sales_lead_qualification/lead_enrichment_agent.py",
+      "agent_constructors": [
+        {
+          "line": 27,
+          "constructor": "Agent",
+          "role": "Lead Enrichment & Intelligence Specialist",
+          "goal": "Normalize contact and company fields using verified internal registry records.",
+          "backstory": "A CRM operations specialist normalizing inbound sales records against known company databases.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 49,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "deterministic_enrichment",
+          "line": 14,
+          "end_line": 22,
+          "docstring": "Retrieves synthetic company firmographic details from local files.",
+          "args": [
+            "company_id"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 24,
+          "end_line": 33,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 35,
+          "end_line": 53,
+          "docstring": null,
+          "args": [
+            "agent",
+            "lead_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_enrichment",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Retrieves synthetic company firmographic details from local files."
+        }
+      ]
+    },
+    {
+      "id": "lead_fit_agent",
+      "name": "Ideal Customer Profile (ICP) Fit Evaluator",
+      "role": "Ideal Customer Profile (ICP) Fit Evaluator",
+      "workflow": "sales_lead_qualification",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_4",
+      "dependencies": [
+        "lead_enrichment_agent"
+      ],
+      "inputs": [
+        "enriched_lead_profile",
+        "ideal_customer_profiles.json"
+      ],
+      "outputs": [
+        "fit_category",
+        "industry_fit_score",
+        "company_size_fit_score",
+        "fit_rationale"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": "Primary trigger for early disqualification and short-circuit routing.",
+      "implementation_found": true,
+      "implementation_file": "Agents/sales_lead_qualification/lead_fit_agent.py",
+      "agent_constructors": [
+        {
+          "line": 54,
+          "constructor": "Agent",
+          "role": "Ideal Customer Profile (ICP) Fit Evaluator",
+          "goal": "Audit lead firmographics against ICP criteria to identify ideal buyers and flag unsuitable prospects.",
+          "backstory": "A revenue operations specialist assessing inbound lead market segment fit.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 76,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "deterministic_icp_check",
+          "line": 14,
+          "end_line": 49,
+          "docstring": "Evaluates rule-based ICP thresholds deterministically.",
+          "args": [
+            "lead_data",
+            "company_data"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 51,
+          "end_line": 60,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 62,
+          "end_line": 80,
+          "docstring": null,
+          "args": [
+            "agent",
+            "lead_data",
+            "company_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_icp_check",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Evaluates rule-based ICP thresholds deterministically."
+        }
+      ]
+    },
+    {
+      "id": "intent_analysis_agent",
+      "name": "Buyer Intent & Behavioral Analyst",
+      "role": "Buyer Intent & Behavioral Analyst",
+      "workflow": "sales_lead_qualification",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_4",
+      "dependencies": [
+        "lead_enrichment_agent"
+      ],
+      "inputs": [
+        "lead_data",
+        "engagement_histories.json"
+      ],
+      "outputs": [
+        "intent_level",
+        "intent_score",
+        "high_value_signals",
+        "behavioral_summary"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": "Can be skipped if lead_fit_agent concludes DISQUALIFIED.",
+      "implementation_found": true,
+      "implementation_file": "Agents/sales_lead_qualification/intent_analysis_agent.py",
+      "agent_constructors": [
+        {
+          "line": 27,
+          "constructor": "Agent",
+          "role": "Buyer Intent & Behavioral Analyst",
+          "goal": "Quantify purchase intent based on interaction history, content consumption, and stated timeline.",
+          "backstory": "A growth marketing analyst interpreting digital engagement signals and buyer readiness.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 48,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "deterministic_intent_lookup",
+          "line": 14,
+          "end_line": 22,
+          "docstring": "Retrieves synthetic engagement event history from local files.",
+          "args": [
+            "lead_id"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 24,
+          "end_line": 33,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 35,
+          "end_line": 52,
+          "docstring": null,
+          "args": [
+            "agent",
+            "lead_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_intent_lookup",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Retrieves synthetic engagement event history from local files."
+        }
+      ]
+    },
+    {
+      "id": "lead_scoring_agent",
+      "name": "Lead Qualification Scoring Specialist",
+      "role": "Lead Qualification Scoring Specialist",
+      "workflow": "sales_lead_qualification",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_4",
+      "dependencies": [
+        "lead_fit_agent",
+        "intent_analysis_agent"
+      ],
+      "inputs": [
+        "lead_data",
+        "fit_evaluation",
+        "intent_evaluation",
+        "qualification_rules.json"
+      ],
+      "outputs": [
+        "total_score",
+        "qualification_tier",
+        "component_scores",
+        "scoring_rationale"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/sales_lead_qualification/lead_scoring_agent.py",
+      "agent_constructors": [
+        {
+          "line": 98,
+          "constructor": "Agent",
+          "role": "Lead Qualification Scoring Specialist",
+          "goal": "Apply mathematical scoring models to evaluate and grade inbound prospect readiness.",
+          "backstory": "A RevOps scoring architect quantifying inbound lead potential using rigorous rubrics.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 117,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "deterministic_lead_score",
+          "line": 12,
+          "end_line": 93,
+          "docstring": "Calculates deterministic points (0-100) based on predefined weights.",
+          "args": [
+            "lead_data",
+            "company_data",
+            "events"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 95,
+          "end_line": 104,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 106,
+          "end_line": 121,
+          "docstring": null,
+          "args": [
+            "agent",
+            "lead_data",
+            "company_data",
+            "events"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_lead_score",
+          "line": 12,
+          "classification": "function_candidate",
+          "docstring": "Calculates deterministic points (0-100) based on predefined weights."
+        }
+      ]
+    },
+    {
+      "id": "opportunity_assessment_agent",
+      "name": "Commercial Opportunity Assessor",
+      "role": "Commercial Opportunity Assessor",
+      "workflow": "sales_lead_qualification",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_4",
+      "dependencies": [
+        "lead_scoring_agent"
+      ],
+      "inputs": [
+        "lead_scoring_results",
+        "lead_fit_results",
+        "intent_results"
+      ],
+      "outputs": [
+        "opportunity_viability",
+        "estimated_deal_size",
+        "pipeline_stage",
+        "key_risks"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": "Candidate for pruning when lead is clearly unsuitable or already definitively scored.",
+      "implementation_found": true,
+      "implementation_file": "Agents/sales_lead_qualification/opportunity_assessment_agent.py",
+      "agent_constructors": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Commercial Opportunity Assessor",
+          "goal": "Synthesize fit, intent, and scoring into a commercial deal viability assessment.",
+          "backstory": "A strategic account director evaluating enterprise deal feasibility and sales viability.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 33,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 37,
+          "docstring": null,
+          "args": [
+            "agent",
+            "upstream_evidence"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    },
+    {
+      "id": "next_action_agent",
+      "name": "Sales Engagement Strategy Lead",
+      "role": "Sales Engagement Strategy Lead",
+      "workflow": "sales_lead_qualification",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_4",
+      "dependencies": [
+        "opportunity_assessment_agent",
+        "lead_scoring_agent"
+      ],
+      "inputs": [
+        "opportunity_assessment",
+        "qualification_tier"
+      ],
+      "outputs": [
+        "recommended_action",
+        "target_team",
+        "priority",
+        "action_justification"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/sales_lead_qualification/next_action_agent.py",
+      "agent_constructors": [
+        {
+          "line": 36,
+          "constructor": "Agent",
+          "role": "Sales Engagement Strategy Lead",
+          "goal": "Prescribe the highest-ROI next action without wasting expensive sales rep bandwidth on unfit leads.",
+          "backstory": "An inside sales director orchestrating outbound sequences and qualification handoffs.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 59,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "deterministic_action_rule",
+          "line": 12,
+          "end_line": 31,
+          "docstring": "Provides deterministic baseline recommendation based on score tier.",
+          "args": [
+            "qualification_tier"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 33,
+          "end_line": 42,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 44,
+          "end_line": 63,
+          "docstring": null,
+          "args": [
+            "agent",
+            "upstream_evidence"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_action_rule",
+          "line": 12,
+          "classification": "function_candidate",
+          "docstring": "Provides deterministic baseline recommendation based on score tier."
+        }
+      ]
+    },
+    {
+      "id": "final_review_agent_sales",
+      "name": "Revenue Operations QA Lead",
+      "role": "Revenue Operations QA Lead",
+      "workflow": "sales_lead_qualification",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_4",
+      "dependencies": [
+        "next_action_agent"
+      ],
+      "inputs": [
+        "complete_lead_audit"
+      ],
+      "outputs": [
+        "workflow_status",
+        "lead_id",
+        "final_qualification_tier",
+        "final_score",
+        "summary_report",
+        "audit_findings"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/sales_lead_qualification/final_review_agent.py",
+      "agent_constructors": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Revenue Operations QA Lead",
+          "goal": "Verify lead qualification accuracy, scoring consistency, and handoff validity.",
+          "backstory": "An executive operations leader maintaining high pipeline hygiene and conversion accuracy.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 34,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 38,
+          "docstring": null,
+          "args": [
+            "agent",
+            "complete_lead_audit"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    }
+  ],
+  "workflow_analysis": {
+    "file": "Agents/sales_lead_qualification/workflow.py",
+    "classes": [],
+    "entry_points": [
+      {
+        "name": "run_sales_lead_workflow",
+        "line": 57,
+        "args": [
+          "lead_data",
+          "run_id"
+        ],
+        "docstring": "Executes the 7-agent sequential Sales Lead Qualification baseline workflow."
+      }
+    ],
+    "crew_constructions": [
+      {
+        "line": 81,
+        "source": "Crew(agents=[agent1], tasks=[task1], verbose=False)"
+      },
+      {
+        "line": 96,
+        "source": "Crew(agents=[agent2], tasks=[task2], verbose=False)"
+      },
+      {
+        "line": 111,
+        "source": "Crew(agents=[agent3], tasks=[task3], verbose=False)"
+      },
+      {
+        "line": 126,
+        "source": "Crew(agents=[agent4], tasks=[task4], verbose=False)"
+      },
+      {
+        "line": 140,
+        "source": "Crew(agents=[agent5], tasks=[task5], verbose=False)"
+      },
+      {
+        "line": 154,
+        "source": "Crew(agents=[agent6], tasks=[task6], verbose=False)"
+      },
+      {
+        "line": 168,
+        "source": "Crew(agents=[agent7], tasks=[task7], verbose=False)"
+      }
+    ],
+    "assignments": [
+      {
+        "line": 55,
+        "targets": [
+          "WORKFLOW_NAME"
+        ],
+        "value_names": [],
+        "expression": "\"sales_lead_qualification\""
+      },
+      {
+        "line": 65,
+        "targets": [
+          "tracker"
+        ],
+        "value_names": [
+          "WORKFLOW_NAME",
+          "WorkflowRunTracker",
+          "run_id"
+        ],
+        "expression": "WorkflowRunTracker(WORKFLOW_NAME, run_id).start()"
+      },
+      {
+        "line": 72,
+        "targets": [
+          "stage_evidence"
+        ],
+        "value_names": [],
+        "expression": "{}"
+      },
+      {
+        "line": 76,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 78,
+        "targets": [
+          "comp_info"
+        ],
+        "value_names": [
+          "deterministic_enrichment",
+          "lead_data"
+        ],
+        "expression": "deterministic_enrichment(lead_data.get(\"company_id\", \"\"))"
+      },
+      {
+        "line": 79,
+        "targets": [
+          "agent1"
+        ],
+        "value_names": [
+          "create_enrichment_agent"
+        ],
+        "expression": "create_enrichment_agent()"
+      },
+      {
+        "line": 80,
+        "targets": [
+          "task1"
+        ],
+        "value_names": [
+          "agent1",
+          "create_enrichment_task",
+          "lead_data"
+        ],
+        "expression": "create_enrichment_task(agent1, lead_data)"
+      },
+      {
+        "line": 81,
+        "targets": [
+          "crew1"
+        ],
+        "value_names": [
+          "Crew",
+          "agent1",
+          "task1"
+        ],
+        "expression": "Crew(agents=[agent1], tasks=[task1], verbose=False)"
+      },
+      {
+        "line": 82,
+        "targets": [
+          "res1"
+        ],
+        "value_names": [
+          "crew1"
+        ],
+        "expression": "crew1.kickoff()"
+      },
+      {
+        "line": 83,
+        "targets": [
+          "out1"
+        ],
+        "value_names": [
+          "hasattr",
+          "res1",
+          "str"
+        ],
+        "expression": "res1.raw if hasattr(res1, \"raw\") else str(res1)"
+      },
+      {
+        "line": 85,
+        "targets": [
+          "dur1"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 91,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 93,
+        "targets": [
+          "fit_calc"
+        ],
+        "value_names": [
+          "comp_info",
+          "deterministic_icp_check",
+          "lead_data"
+        ],
+        "expression": "deterministic_icp_check(lead_data, comp_info)"
+      },
+      {
+        "line": 94,
+        "targets": [
+          "agent2"
+        ],
+        "value_names": [
+          "create_fit_agent"
+        ],
+        "expression": "create_fit_agent()"
+      },
+      {
+        "line": 95,
+        "targets": [
+          "task2"
+        ],
+        "value_names": [
+          "agent2",
+          "comp_info",
+          "create_fit_task",
+          "lead_data"
+        ],
+        "expression": "create_fit_task(agent2, lead_data, comp_info)"
+      },
+      {
+        "line": 96,
+        "targets": [
+          "crew2"
+        ],
+        "value_names": [
+          "Crew",
+          "agent2",
+          "task2"
+        ],
+        "expression": "Crew(agents=[agent2], tasks=[task2], verbose=False)"
+      },
+      {
+        "line": 97,
+        "targets": [
+          "res2"
+        ],
+        "value_names": [
+          "crew2"
+        ],
+        "expression": "crew2.kickoff()"
+      },
+      {
+        "line": 98,
+        "targets": [
+          "out2"
+        ],
+        "value_names": [
+          "hasattr",
+          "res2",
+          "str"
+        ],
+        "expression": "res2.raw if hasattr(res2, \"raw\") else str(res2)"
+      },
+      {
+        "line": 100,
+        "targets": [
+          "dur2"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 106,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 108,
+        "targets": [
+          "events"
+        ],
+        "value_names": [
+          "deterministic_intent_lookup",
+          "lead_data"
+        ],
+        "expression": "deterministic_intent_lookup(lead_data.get(\"lead_id\", \"\"))"
+      },
+      {
+        "line": 109,
+        "targets": [
+          "agent3"
+        ],
+        "value_names": [
+          "create_intent_agent"
+        ],
+        "expression": "create_intent_agent()"
+      },
+      {
+        "line": 110,
+        "targets": [
+          "task3"
+        ],
+        "value_names": [
+          "agent3",
+          "create_intent_task",
+          "lead_data"
+        ],
+        "expression": "create_intent_task(agent3, lead_data)"
+      },
+      {
+        "line": 111,
+        "targets": [
+          "crew3"
+        ],
+        "value_names": [
+          "Crew",
+          "agent3",
+          "task3"
+        ],
+        "expression": "Crew(agents=[agent3], tasks=[task3], verbose=False)"
+      },
+      {
+        "line": 112,
+        "targets": [
+          "res3"
+        ],
+        "value_names": [
+          "crew3"
+        ],
+        "expression": "crew3.kickoff()"
+      },
+      {
+        "line": 113,
+        "targets": [
+          "out3"
+        ],
+        "value_names": [
+          "hasattr",
+          "res3",
+          "str"
+        ],
+        "expression": "res3.raw if hasattr(res3, \"raw\") else str(res3)"
+      },
+      {
+        "line": 115,
+        "targets": [
+          "dur3"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 121,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 123,
+        "targets": [
+          "score_calc"
+        ],
+        "value_names": [
+          "comp_info",
+          "deterministic_lead_score",
+          "events",
+          "lead_data"
+        ],
+        "expression": "deterministic_lead_score(lead_data, comp_info, events)"
+      },
+      {
+        "line": 124,
+        "targets": [
+          "agent4"
+        ],
+        "value_names": [
+          "create_scoring_agent"
+        ],
+        "expression": "create_scoring_agent()"
+      },
+      {
+        "line": 125,
+        "targets": [
+          "task4"
+        ],
+        "value_names": [
+          "agent4",
+          "comp_info",
+          "create_scoring_task",
+          "events",
+          "lead_data"
+        ],
+        "expression": "create_scoring_task(agent4, lead_data, comp_info, events)"
+      },
+      {
+        "line": 126,
+        "targets": [
+          "crew4"
+        ],
+        "value_names": [
+          "Crew",
+          "agent4",
+          "task4"
+        ],
+        "expression": "Crew(agents=[agent4], tasks=[task4], verbose=False)"
+      },
+      {
+        "line": 127,
+        "targets": [
+          "res4"
+        ],
+        "value_names": [
+          "crew4"
+        ],
+        "expression": "crew4.kickoff()"
+      },
+      {
+        "line": 128,
+        "targets": [
+          "out4"
+        ],
+        "value_names": [
+          "hasattr",
+          "res4",
+          "str"
+        ],
+        "expression": "res4.raw if hasattr(res4, \"raw\") else str(res4)"
+      },
+      {
+        "line": 130,
+        "targets": [
+          "dur4"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 136,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 138,
+        "targets": [
+          "agent5"
+        ],
+        "value_names": [
+          "create_opportunity_agent"
+        ],
+        "expression": "create_opportunity_agent()"
+      },
+      {
+        "line": 139,
+        "targets": [
+          "task5"
+        ],
+        "value_names": [
+          "agent5",
+          "create_opportunity_task",
+          "stage_evidence"
+        ],
+        "expression": "create_opportunity_task(agent5, stage_evidence)"
+      },
+      {
+        "line": 140,
+        "targets": [
+          "crew5"
+        ],
+        "value_names": [
+          "Crew",
+          "agent5",
+          "task5"
+        ],
+        "expression": "Crew(agents=[agent5], tasks=[task5], verbose=False)"
+      },
+      {
+        "line": 141,
+        "targets": [
+          "res5"
+        ],
+        "value_names": [
+          "crew5"
+        ],
+        "expression": "crew5.kickoff()"
+      },
+      {
+        "line": 142,
+        "targets": [
+          "out5"
+        ],
+        "value_names": [
+          "hasattr",
+          "res5",
+          "str"
+        ],
+        "expression": "res5.raw if hasattr(res5, \"raw\") else str(res5)"
+      },
+      {
+        "line": 144,
+        "targets": [
+          "dur5"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 150,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 152,
+        "targets": [
+          "agent6"
+        ],
+        "value_names": [
+          "create_action_agent"
+        ],
+        "expression": "create_action_agent()"
+      },
+      {
+        "line": 153,
+        "targets": [
+          "task6"
+        ],
+        "value_names": [
+          "agent6",
+          "create_action_task",
+          "stage_evidence"
+        ],
+        "expression": "create_action_task(agent6, stage_evidence)"
+      },
+      {
+        "line": 154,
+        "targets": [
+          "crew6"
+        ],
+        "value_names": [
+          "Crew",
+          "agent6",
+          "task6"
+        ],
+        "expression": "Crew(agents=[agent6], tasks=[task6], verbose=False)"
+      },
+      {
+        "line": 155,
+        "targets": [
+          "res6"
+        ],
+        "value_names": [
+          "crew6"
+        ],
+        "expression": "crew6.kickoff()"
+      },
+      {
+        "line": 156,
+        "targets": [
+          "out6"
+        ],
+        "value_names": [
+          "hasattr",
+          "res6",
+          "str"
+        ],
+        "expression": "res6.raw if hasattr(res6, \"raw\") else str(res6)"
+      },
+      {
+        "line": 158,
+        "targets": [
+          "dur6"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 164,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 166,
+        "targets": [
+          "agent7"
+        ],
+        "value_names": [
+          "create_review_agent"
+        ],
+        "expression": "create_review_agent()"
+      },
+      {
+        "line": 167,
+        "targets": [
+          "task7"
+        ],
+        "value_names": [
+          "agent7",
+          "create_review_task",
+          "stage_evidence"
+        ],
+        "expression": "create_review_task(agent7, stage_evidence)"
+      },
+      {
+        "line": 168,
+        "targets": [
+          "crew7"
+        ],
+        "value_names": [
+          "Crew",
+          "agent7",
+          "task7"
+        ],
+        "expression": "Crew(agents=[agent7], tasks=[task7], verbose=False)"
+      },
+      {
+        "line": 169,
+        "targets": [
+          "res7"
+        ],
+        "value_names": [
+          "crew7"
+        ],
+        "expression": "crew7.kickoff()"
+      },
+      {
+        "line": 170,
+        "targets": [
+          "final_output"
+        ],
+        "value_names": [
+          "hasattr",
+          "res7",
+          "str"
+        ],
+        "expression": "res7.raw if hasattr(res7, \"raw\") else str(res7)"
+      },
+      {
+        "line": 172,
+        "targets": [
+          "dur7"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      }
+    ],
+    "task_handoffs": [],
+    "observed_order": [
+      "lead_enrichment_agent",
+      "lead_fit_agent",
+      "intent_analysis_agent",
+      "lead_scoring_agent",
+      "opportunity_assessment_agent",
+      "next_action_agent",
+      "final_review_agent_sales"
+    ],
+    "sequential_kickoffs": 7
+  },
+  "comparison": {
+    "workflow": "sales_lead_qualification",
+    "manifest_file": "Agents/sales_lead_qualification/workflow.json",
+    "workflow_source": "Agents/sales_lead_qualification/workflow.py",
+    "declared_order": [
+      "lead_enrichment_agent",
+      "lead_fit_agent",
+      "intent_analysis_agent",
+      "lead_scoring_agent",
+      "opportunity_assessment_agent",
+      "next_action_agent",
+      "final_review_agent_sales"
+    ],
+    "source_observed_order": [
+      "lead_enrichment_agent",
+      "lead_fit_agent",
+      "intent_analysis_agent",
+      "lead_scoring_agent",
+      "opportunity_assessment_agent",
+      "next_action_agent",
+      "final_review_agent_sales"
+    ],
+    "declared_agent_count": 7,
+    "observed_agent_count": 7,
+    "discrepancy_count": 1,
+    "findings": [
+      {
+        "type": "MULTIPLE_KICKOFF_CALLS",
+        "severity": "WARNING",
+        "count": 7,
+        "note": "Workflow invokes 7 sequential Crew kickoff calls instead of single execution graph."
+      }
+    ]
+  },
+  "python_files": [
+    {
+      "file": "Agents/sales_lead_qualification/final_review_agent.py",
+      "filename": "final_review_agent.py",
+      "stem": "final_review_agent",
+      "sha256": "c273d4919da183fb9480a041b477ae278c5dcb754b86d981e3c78c1caf82b820",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 38,
+          "docstring": null,
+          "args": [
+            "agent",
+            "complete_lead_audit"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "final_review_agent_sales"
+      ],
+      "agent_definitions": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Revenue Operations QA Lead",
+          "goal": "Verify lead qualification accuracy, scoring consistency, and handoff validity.",
+          "backstory": "An executive operations leader maintaining high pipeline hygiene and conversion accuracy.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 34,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 14,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 7: Final Review Agent (Sales Lead Qualification)\nVerifies qualification consistency and produces the final lead evaluation report.\n",
+          "line": 1
+        },
+        {
+          "value": "Strictly valid JSON containing workflow_status, lead_id, final_qualification_tier, final_score, summary_report, and audit_findings.",
+          "line": 33
+        },
+        {
+          "value": "Perform the final quality review on this sales lead qualification.\nComplete Lead Qualification Audit:\n",
+          "line": 25
+        },
+        {
+          "value": "\n\nTasks:\n1. Verify that the next action strictly aligns with the qualification score tier.\n2. Ensure obviously unsuitable leads are not marked as high priority.\n3. Generate the final structured qualification report.\nOutput strictly valid JSON with keys: 'workflow_status' ('COMPLETED'), 'lead_id', 'final_qualification_tier', 'final_score', 'summary_report', and 'audit_findings'.",
+          "line": 26
+        },
+        {
+          "value": "Verify lead qualification accuracy, scoring consistency, and handoff validity.",
+          "line": 17
+        },
+        {
+          "value": "An executive operations leader maintaining high pipeline hygiene and conversion accuracy.",
+          "line": 18
+        }
+      ]
+    },
+    {
+      "file": "Agents/sales_lead_qualification/intent_analysis_agent.py",
+      "filename": "intent_analysis_agent.py",
+      "stem": "intent_analysis_agent",
+      "sha256": "a9502a908e66aa15c57a7aac132c0440ea3ece9b94bce45321f49b09bb4e115a",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "deterministic_intent_lookup",
+          "line": 14,
+          "end_line": 22,
+          "docstring": "Retrieves synthetic engagement event history from local files.",
+          "args": [
+            "lead_id"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 24,
+          "end_line": 33,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 35,
+          "end_line": 52,
+          "docstring": null,
+          "args": [
+            "agent",
+            "lead_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "intent_analysis_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 27,
+          "constructor": "Agent",
+          "role": "Buyer Intent & Behavioral Analyst",
+          "goal": "Quantify purchase intent based on interaction history, content consumption, and stated timeline.",
+          "backstory": "A growth marketing analyst interpreting digital engagement signals and buyer readiness.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 48,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 26,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_intent_lookup",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Retrieves synthetic engagement event history from local files."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 3: Intent Analysis Agent (Sales Lead Qualification)\nAnalyzes engagement events, demo requests, and timeline urgency to assess buying intent.\n",
+          "line": 1
+        },
+        {
+          "value": "Retrieves synthetic engagement event history from local files.",
+          "line": 15
+        },
+        {
+          "value": "Strictly valid JSON containing intent_level, intent_score, high_value_signals, and behavioral_summary.",
+          "line": 47
+        },
+        {
+          "value": "Analyze buyer intent for this lead.\nLead Details (Timeline & Stated Budget):\n",
+          "line": 39
+        },
+        {
+          "value": "\n\nTasks:\n1. Classify buyer intent: 'HIGH_INTENT', 'MEDIUM_INTENT', or 'LOW_INTENT'.\n2. Cite high-value signals (e.g. demo request, pricing page views) vs. weak signals (newsletter signup).\nReturn strictly valid JSON with keys: 'intent_level', 'intent_score', 'high_value_signals', and 'behavioral_summary'.",
+          "line": 41
+        },
+        {
+          "value": "Quantify purchase intent based on interaction history, content consumption, and stated timeline.",
+          "line": 29
+        },
+        {
+          "value": "A growth marketing analyst interpreting digital engagement signals and buyer readiness.",
+          "line": 30
+        }
+      ]
+    },
+    {
+      "file": "Agents/sales_lead_qualification/lead_enrichment_agent.py",
+      "filename": "lead_enrichment_agent.py",
+      "stem": "lead_enrichment_agent",
+      "sha256": "78ec591e0df19e92f0d5c7a50ff10d7b248a340389d004dfae3304f41a344ec2",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "deterministic_enrichment",
+          "line": 14,
+          "end_line": 22,
+          "docstring": "Retrieves synthetic company firmographic details from local files.",
+          "args": [
+            "company_id"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 24,
+          "end_line": 33,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 35,
+          "end_line": 53,
+          "docstring": null,
+          "args": [
+            "agent",
+            "lead_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "lead_enrichment_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 27,
+          "constructor": "Agent",
+          "role": "Lead Enrichment & Intelligence Specialist",
+          "goal": "Normalize contact and company fields using verified internal registry records.",
+          "backstory": "A CRM operations specialist normalizing inbound sales records against known company databases.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 49,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 26,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_enrichment",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Retrieves synthetic company firmographic details from local files."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 1: Lead Enrichment Agent (Sales Lead Qualification)\nEnriches lead records with firmographic and company data from local synthetic datasets.\n",
+          "line": 1
+        },
+        {
+          "value": "Retrieves synthetic company firmographic details from local files.",
+          "line": 15
+        },
+        {
+          "value": "Strictly valid JSON containing lead_id, enriched_lead_profile, and missing_attributes.",
+          "line": 48
+        },
+        {
+          "value": "Enrich this inbound sales lead record.\nInbound Lead Data:\n",
+          "line": 39
+        },
+        {
+          "value": "\n\nSynthetic Company Profile from Internal Database:\n",
+          "line": 40
+        },
+        {
+          "value": "\n\nInstructions:\n1. Normalize lead contact name, title, company industry, employee count, and annual revenue.\n2. Retain company_id and lead_id references.\n3. Note: Do not make external web searches or invent missing attributes.\nReturn strictly valid JSON with keys: 'lead_id', 'enriched_lead_profile', and 'missing_attributes'.",
+          "line": 41
+        },
+        {
+          "value": "Lead Enrichment & Intelligence Specialist",
+          "line": 28
+        },
+        {
+          "value": "Normalize contact and company fields using verified internal registry records.",
+          "line": 29
+        },
+        {
+          "value": "A CRM operations specialist normalizing inbound sales records against known company databases.",
+          "line": 30
+        }
+      ]
+    },
+    {
+      "file": "Agents/sales_lead_qualification/lead_fit_agent.py",
+      "filename": "lead_fit_agent.py",
+      "stem": "lead_fit_agent",
+      "sha256": "0592e475e8e8955cc062f4abcd1f57f4e656adfeebfcfca92014d598d4009ad0",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "deterministic_icp_check",
+          "line": 14,
+          "end_line": 49,
+          "docstring": "Evaluates rule-based ICP thresholds deterministically.",
+          "args": [
+            "lead_data",
+            "company_data"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 51,
+          "end_line": 60,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 62,
+          "end_line": 80,
+          "docstring": null,
+          "args": [
+            "agent",
+            "lead_data",
+            "company_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "lead_fit_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 54,
+          "constructor": "Agent",
+          "role": "Ideal Customer Profile (ICP) Fit Evaluator",
+          "goal": "Audit lead firmographics against ICP criteria to identify ideal buyers and flag unsuitable prospects.",
+          "backstory": "A revenue operations specialist assessing inbound lead market segment fit.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 76,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 53,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_icp_check",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Evaluates rule-based ICP thresholds deterministically."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 2: Lead Fit Agent (Sales Lead Qualification)\nAssesses account and persona alignment against the synthetic Ideal Customer Profile (ICP).\n",
+          "line": 1
+        },
+        {
+          "value": "Evaluates rule-based ICP thresholds deterministically.",
+          "line": 15
+        },
+        {
+          "value": "Strictly valid JSON containing fit_category, industry_fit_score, company_size_fit_score, and fit_rationale.",
+          "line": 75
+        },
+        {
+          "value": "Evaluate the ICP fit for this sales lead.\nLead Profile:\n",
+          "line": 65
+        },
+        {
+          "value": "\n\nDeterministic ICP Rule Evaluation from Python:\n",
+          "line": 67
+        },
+        {
+          "value": "\n\nInstructions:\n1. Evaluate industry fit, employee size, and decision-maker seniority.\n2. Categorize fit: 'STRONG_FIT', 'MODERATE_FIT', or 'DISQUALIFIED'.\n3. Highlight specific reasons supporting the fit classification.\nReturn strictly valid JSON with keys: 'fit_category', 'industry_fit_score', 'company_size_fit_score', and 'fit_rationale'.",
+          "line": 68
+        },
+        {
+          "value": "Ideal Customer Profile (ICP) Fit Evaluator",
+          "line": 55
+        },
+        {
+          "value": "Audit lead firmographics against ICP criteria to identify ideal buyers and flag unsuitable prospects.",
+          "line": 56
+        },
+        {
+          "value": "A revenue operations specialist assessing inbound lead market segment fit.",
+          "line": 57
+        },
+        {
+          "value": "' is in disqualified industries or company size (",
+          "line": 35
+        },
+        {
+          "value": " employees) is below micro-threshold.",
+          "line": 35
+        }
+      ]
+    },
+    {
+      "file": "Agents/sales_lead_qualification/lead_scoring_agent.py",
+      "filename": "lead_scoring_agent.py",
+      "stem": "lead_scoring_agent",
+      "sha256": "ac64c0932e4ca2ebc554e904704540272267bf7b04dca04ece3c95a1e642e4fe",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "deterministic_lead_score",
+          "line": 12,
+          "end_line": 93,
+          "docstring": "Calculates deterministic points (0-100) based on predefined weights.",
+          "args": [
+            "lead_data",
+            "company_data",
+            "events"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 95,
+          "end_line": 104,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 106,
+          "end_line": 121,
+          "docstring": null,
+          "args": [
+            "agent",
+            "lead_data",
+            "company_data",
+            "events"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "lead_scoring_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 98,
+          "constructor": "Agent",
+          "role": "Lead Qualification Scoring Specialist",
+          "goal": "Apply mathematical scoring models to evaluate and grade inbound prospect readiness.",
+          "backstory": "A RevOps scoring architect quantifying inbound lead potential using rigorous rubrics.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 117,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 97,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_lead_score",
+          "line": 12,
+          "classification": "function_candidate",
+          "docstring": "Calculates deterministic points (0-100) based on predefined weights."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 4: Lead Scoring Agent (Sales Lead Qualification)\nPerforms deterministic multi-signal numeric scoring for inbound leads.\n",
+          "line": 1
+        },
+        {
+          "value": "Calculates deterministic points (0-100) based on predefined weights.",
+          "line": 13
+        },
+        {
+          "value": "Strictly valid JSON containing total_score, qualification_tier, component_scores, and scoring_rationale.",
+          "line": 116
+        },
+        {
+          "value": "Review and formalize the lead scoring breakdown.\nDeterministic Scoring Model Results from Python:\n",
+          "line": 109
+        },
+        {
+          "value": "\n\nInstructions:\n1. Explain the score calculation and tier classification ('SALES_QUALIFIED_LEAD', 'MARKETING_NURTURE', 'DISQUALIFIED').\n2. Identify the highest-scoring and lowest-scoring dimensions.\nReturn strictly valid JSON with keys: 'total_score', 'qualification_tier', 'component_scores', and 'scoring_rationale'.",
+          "line": 110
+        },
+        {
+          "value": "Lead Qualification Scoring Specialist",
+          "line": 99
+        },
+        {
+          "value": "Apply mathematical scoring models to evaluate and grade inbound prospect readiness.",
+          "line": 100
+        },
+        {
+          "value": "A RevOps scoring architect quantifying inbound lead potential using rigorous rubrics.",
+          "line": 101
+        }
+      ]
+    },
+    {
+      "file": "Agents/sales_lead_qualification/next_action_agent.py",
+      "filename": "next_action_agent.py",
+      "stem": "next_action_agent",
+      "sha256": "41b369051603778e64aeace6c3416c1824bffe9c025694b020808140f20f12eb",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "deterministic_action_rule",
+          "line": 12,
+          "end_line": 31,
+          "docstring": "Provides deterministic baseline recommendation based on score tier.",
+          "args": [
+            "qualification_tier"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 33,
+          "end_line": 42,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 44,
+          "end_line": 63,
+          "docstring": null,
+          "args": [
+            "agent",
+            "upstream_evidence"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "next_action_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 36,
+          "constructor": "Agent",
+          "role": "Sales Engagement Strategy Lead",
+          "goal": "Prescribe the highest-ROI next action without wasting expensive sales rep bandwidth on unfit leads.",
+          "backstory": "An inside sales director orchestrating outbound sequences and qualification handoffs.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 59,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 35,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_action_rule",
+          "line": 12,
+          "classification": "function_candidate",
+          "docstring": "Provides deterministic baseline recommendation based on score tier."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 6: Next Action Agent (Sales Lead Qualification)\nRecommends targeted next steps, sales follow-up, or lead disqualification.\n",
+          "line": 1
+        },
+        {
+          "value": "Provides deterministic baseline recommendation based on score tier.",
+          "line": 13
+        },
+        {
+          "value": "Strictly valid JSON containing recommended_action, target_team, priority, and action_justification.",
+          "line": 58
+        },
+        {
+          "value": "Recommend the specific next commercial action for this sales lead.\nUpstream Evidence:\n",
+          "line": 49
+        },
+        {
+          "value": "\n\nInstructions:\n1. Choose action: 'schedule_executive_demo', 'request_missing_info', 'marketing_nurture', or 'disqualify_lead'.\n2. Explain why this action is optimal given budget, timeline, and fit.\n3. Note: Never send real emails or update live external CRMs.\nReturn strictly valid JSON with keys: 'recommended_action', 'target_team', 'priority', and 'action_justification'.",
+          "line": 51
+        },
+        {
+          "value": "Prescribe the highest-ROI next action without wasting expensive sales rep bandwidth on unfit leads.",
+          "line": 38
+        },
+        {
+          "value": "An inside sales director orchestrating outbound sequences and qualification handoffs.",
+          "line": 39
+        }
+      ]
+    },
+    {
+      "file": "Agents/sales_lead_qualification/opportunity_assessment_agent.py",
+      "filename": "opportunity_assessment_agent.py",
+      "stem": "opportunity_assessment_agent",
+      "sha256": "0b1fd30c1defd034bbccc615db430eb983c303130bf47a342ba4e930be009b9d",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 37,
+          "docstring": null,
+          "args": [
+            "agent",
+            "upstream_evidence"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "opportunity_assessment_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Commercial Opportunity Assessor",
+          "goal": "Synthesize fit, intent, and scoring into a commercial deal viability assessment.",
+          "backstory": "A strategic account director evaluating enterprise deal feasibility and sales viability.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 33,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 14,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 5: Opportunity Assessment Agent (Sales Lead Qualification)\nAssesses overall commercial opportunity viability and strategic value.\n",
+          "line": 1
+        },
+        {
+          "value": "Strictly valid JSON containing opportunity_viability, estimated_deal_size, pipeline_stage, and key_risks.",
+          "line": 32
+        },
+        {
+          "value": "Evaluate the commercial opportunity viability for this lead.\nConsolidated Lead Evidence:\n",
+          "line": 25
+        },
+        {
+          "value": "\n\nInstructions:\n1. Evaluate whether this opportunity is high-potential, nurture-track, or fundamentally unviable.\n2. Note whether any missing information blocks advancing the deal.\nReturn strictly valid JSON with keys: 'opportunity_viability' ('HIGH', 'MEDIUM', 'UNVIABLE'), 'estimated_deal_size', 'pipeline_stage', and 'key_risks'.",
+          "line": 26
+        },
+        {
+          "value": "Synthesize fit, intent, and scoring into a commercial deal viability assessment.",
+          "line": 17
+        },
+        {
+          "value": "A strategic account director evaluating enterprise deal feasibility and sales viability.",
+          "line": 18
+        }
+      ]
+    },
+    {
+      "file": "Agents/sales_lead_qualification/workflow.py",
+      "filename": "workflow.py",
+      "stem": "workflow",
+      "sha256": "1c25eb82803157f73bb0cd63c636ae3b44a44b8e34db05b654175eae0d8d5d12",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "time",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "json",
+          "asname": null,
+          "line": 7
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Dict",
+            "Any",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Crew"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.tracing",
+          "level": 0,
+          "names": [
+            "WorkflowRunTracker",
+            "init_phoenix",
+            "extract_token_usage"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "common.api_key_manager",
+          "level": 0,
+          "names": [
+            "get_key_for_agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "Agents.sales_lead_qualification.lead_enrichment_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "deterministic_enrichment",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_enrichment_agent",
+            "create_task": "create_enrichment_task",
+            "AGENT_ID": "AGENT_ENRICHMENT_ID"
+          },
+          "line": 14
+        },
+        {
+          "module": "Agents.sales_lead_qualification.lead_fit_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "deterministic_icp_check",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_fit_agent",
+            "create_task": "create_fit_task",
+            "AGENT_ID": "AGENT_FIT_ID"
+          },
+          "line": 20
+        },
+        {
+          "module": "Agents.sales_lead_qualification.intent_analysis_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "deterministic_intent_lookup",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_intent_agent",
+            "create_task": "create_intent_task",
+            "AGENT_ID": "AGENT_INTENT_ID"
+          },
+          "line": 26
+        },
+        {
+          "module": "Agents.sales_lead_qualification.lead_scoring_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "deterministic_lead_score",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_scoring_agent",
+            "create_task": "create_scoring_task",
+            "AGENT_ID": "AGENT_SCORING_ID"
+          },
+          "line": 32
+        },
+        {
+          "module": "Agents.sales_lead_qualification.opportunity_assessment_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_opportunity_agent",
+            "create_task": "create_opportunity_task",
+            "AGENT_ID": "AGENT_OPPORTUNITY_ID"
+          },
+          "line": 38
+        },
+        {
+          "module": "Agents.sales_lead_qualification.next_action_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "deterministic_action_rule",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_action_agent",
+            "create_task": "create_action_task",
+            "AGENT_ID": "AGENT_ACTION_ID"
+          },
+          "line": 43
+        },
+        {
+          "module": "Agents.sales_lead_qualification.final_review_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_review_agent",
+            "create_task": "create_review_task",
+            "AGENT_ID": "AGENT_REVIEW_ID"
+          },
+          "line": 49
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "run_sales_lead_workflow",
+          "line": 57,
+          "end_line": 193,
+          "docstring": "Executes the 7-agent sequential Sales Lead Qualification baseline workflow.",
+          "args": [
+            "lead_data",
+            "run_id"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [
+        {
+          "line": 81,
+          "agents_expression": "[agent1]",
+          "tasks_expression": "[task1]",
+          "process_expression": ""
+        },
+        {
+          "line": 96,
+          "agents_expression": "[agent2]",
+          "tasks_expression": "[task2]",
+          "process_expression": ""
+        },
+        {
+          "line": 111,
+          "agents_expression": "[agent3]",
+          "tasks_expression": "[task3]",
+          "process_expression": ""
+        },
+        {
+          "line": 126,
+          "agents_expression": "[agent4]",
+          "tasks_expression": "[task4]",
+          "process_expression": ""
+        },
+        {
+          "line": 140,
+          "agents_expression": "[agent5]",
+          "tasks_expression": "[task5]",
+          "process_expression": ""
+        },
+        {
+          "line": 154,
+          "agents_expression": "[agent6]",
+          "tasks_expression": "[task6]",
+          "process_expression": ""
+        },
+        {
+          "line": 168,
+          "agents_expression": "[agent7]",
+          "tasks_expression": "[task7]",
+          "process_expression": ""
+        }
+      ],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_sales_lead_workflow",
+          "line": 57,
+          "classification": "function_candidate",
+          "docstring": "Executes the 7-agent sequential Sales Lead Qualification baseline workflow."
+        }
+      ],
+      "execution_calls": [
+        {
+          "call": "crew1.kickoff",
+          "line": 82
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 86
+        },
+        {
+          "call": "crew2.kickoff",
+          "line": 97
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 101
+        },
+        {
+          "call": "crew3.kickoff",
+          "line": 112
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 116
+        },
+        {
+          "call": "crew4.kickoff",
+          "line": 127
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 131
+        },
+        {
+          "call": "crew5.kickoff",
+          "line": 141
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 145
+        },
+        {
+          "call": "crew6.kickoff",
+          "line": 155
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 159
+        },
+        {
+          "call": "crew7.kickoff",
+          "line": 169
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 173
+        }
+      ],
+      "string_literals": [
+        {
+          "value": "\nWorkflow 4: Sales Lead Qualification Orchestrator.\nSequential 7-Agent Baseline System.\n",
+          "line": 1
+        },
+        {
+          "value": "\n    Executes the 7-agent sequential Sales Lead Qualification baseline workflow.\n    ",
+          "line": 61
+        },
+        {
+          "value": "\n========================================================",
+          "line": 67
+        },
+        {
+          "value": "========================================================",
+          "line": 70
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "file": "runs/sales_lead_qualification/live_20261023_070410_sales_.json",
+      "filename": "live_20261023_070410_sales_.json",
+      "suffix": ".json",
+      "workflow_name": "sales_lead_qualification",
+      "run_id": "live_20261023_070410_sales_",
+      "status": "SUCCESS",
+      "total_duration_seconds": 23.176,
+      "agent_count": null,
+      "total_tokens": 10862,
+      "estimated_cost_usd": 0.003311
+    },
+    {
+      "file": "runs/sales_lead_qualification/sales_lead_qualification_20261023_044003_dd3df9.json",
+      "filename": "sales_lead_qualification_20261023_044003_dd3df9.json",
+      "suffix": ".json",
+      "workflow_name": "sales_lead_qualification",
+      "run_id": "sales_lead_qualification_20261023_044003_dd3df9",
+      "status": "SUCCESS",
+      "total_duration_seconds": 21.192,
+      "agent_count": null,
+      "total_tokens": 10554,
+      "estimated_cost_usd": 0.003185
+    },
+    {
+      "file": "runs/sales_lead_qualification/test_sales_run_01.json",
+      "filename": "test_sales_run_01.json",
+      "suffix": ".json",
+      "workflow_name": "sales_lead_qualification",
+      "run_id": "test_sales_run_01",
+      "status": "SUCCESS",
+      "total_duration_seconds": 0.132,
+      "agent_count": null,
+      "total_tokens": 0,
+      "estimated_cost_usd": 0.0
+    }
+  ]
+}

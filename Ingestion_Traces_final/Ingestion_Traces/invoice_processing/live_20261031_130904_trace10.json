@@ -1,0 +1,336 @@
+{
+  "run_id": "live_20261031_130904_trace10",
+  "workflow_name": "invoice_processing",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 17.498,
+  "agent_execution_count": 8,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 2.027,
+      "tokens": 1263,
+      "prompt_tokens": 571,
+      "completion_tokens": 692,
+      "output": {
+        "extracted_invoice": {
+          "invoice_number": "INV-2026-0010",
+          "supplier_id": "SUP-110",
+          "supplier_name": "Silverline Logistics",
+          "po_reference": "PO-2026-0010",
+          "invoice_date": "2026-09-01",
+          "due_date": "2026-10-01",
+          "currency": "USD",
+          "line_items": [
+            {
+              "description": "High-Performance Server Blade",
+              "quantity": 19,
+              "unit_price": 3500.0,
+              "line_total": 66500.0
+            },
+            {
+              "description": "Pallet Storage Monthly Rental",
+              "quantity": 11,
+              "unit_price": 650.0,
+              "line_total": 7150.0
+            },
+            {
+              "description": "Automated Conveyor Belt Sensor",
+              "quantity": 13,
+              "unit_price": 890.0,
+              "line_total": 11570.0
+            }
+          ],
+          "subtotal": 85220.0,
+          "tax": 6817.6,
+          "discount": 0.0,
+          "total_amount": 92187.6
+        },
+        "extraction_flags": {
+          "arithmetic_mismatch": true,
+          "missing_fields": [],
+          "ambiguous_fields": []
+        }
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "invoice_extraction_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.646,
+      "tokens": 1182,
+      "prompt_tokens": 624,
+      "completion_tokens": 558,
+      "output": {
+        "validation_status": "FAILED",
+        "math_audit": {
+          "is_arithmetic_valid": false,
+          "calculated_subtotal": 85220.0,
+          "calculated_total": 92037.6,
+          "stated_total": 92187.6,
+          "discrepancy_amount": 150.0,
+          "line_discrepancies": []
+        },
+        "validation_errors": [
+          "All required fields are present.",
+          "Arithmetic validation failed: total_amount discrepancy of 150.0 (calculated 92037.6 vs stated 92187.6)."
+        ]
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "invoice_validation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.116,
+      "tokens": 1145,
+      "prompt_tokens": 872,
+      "completion_tokens": 273,
+      "output": {
+        "po_match_status": "DISCREPANCY_DETECTED",
+        "matched_po_id": "PO-2026-0010",
+        "discrepancies": [
+          "Total amount mismatch: Invoice total $92187.60 differs from PO total $92037.60"
+        ],
+        "matching_confidence": 0.95
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "po_matching_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 1.909,
+      "tokens": 1146,
+      "prompt_tokens": 663,
+      "completion_tokens": 483,
+      "output": {
+        "is_compliant": false,
+        "applied_policy_ids": [
+          "POL-AP-001",
+          "POL-AP-002",
+          "POL-AP-003"
+        ],
+        "violations": [
+          {
+            "policy_id": "POL-AP-003",
+            "rule": "Invoices totaling over $25,000 require executive financial review.",
+            "severity": "medium",
+            "detail": "Total amount $92187.60 exceeds high-value threshold ($25,000).",
+            "classification": "secondary_signoff_required"
+          }
+        ],
+        "compliance_summary": "Invoice exceeds $25,000 threshold per POL-AP-003; requires executive financial review before processing. No fatal violations detected."
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "policy_compliance_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 1.068,
+      "tokens": 791,
+      "prompt_tokens": 578,
+      "completion_tokens": 213,
+      "output": {
+        "duplicate_status": "NONE",
+        "matching_records": [],
+        "risk_assessment": {
+          "risk_level": "LOW",
+          "reason": "No exact or potential matches found in historical data; invoice amounts and line items do not correspond to any prior records."
+        }
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "duplicate_detection_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 2.255,
+      "tokens": 1839,
+      "prompt_tokens": 1013,
+      "completion_tokens": 826,
+      "output": {
+        "has_exceptions": true,
+        "exception_count": 3,
+        "critical_exceptions": [],
+        "detailed_exceptions": [
+          {
+            "exception_type": "Math Discrepancy",
+            "description": "Invoice total_amount $92,187.60 does not match calculated total $92,037.60 (difference $150.00).",
+            "severity": "MEDIUM",
+            "resolvable": true,
+            "blocker": false,
+            "recommended_action": "Re‑calculate line item totals and tax; correct the invoice or PO to resolve the $150 discrepancy."
+          },
+          {
+            "exception_type": "PO Total Mismatch",
+            "description": "Invoice total $92,187.60 differs from PO total $92,037.60.",
+            "severity": "MEDIUM",
+            "resolvable": true,
+            "blocker": false,
+            "recommended_action": "Confirm the correct amount with the supplier and update either the PO or the invoice accordingly."
+          },
+          {
+            "exception_type": "Policy Violation - High Value Invoice",
+            "description": "Invoice exceeds $25,000 threshold per POL-AP-003, requiring executive financial review.",
+            "severity": "HIGH",
+            "resolvable": true,
+            "blocker": false,
+            "recommended_action": "Obtain the required executive sign‑off before proceeding with payment."
+          }
+        ]
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "exception_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 1.508,
+      "tokens": 1780,
+      "prompt_tokens": 1358,
+      "completion_tokens": 422,
+      "output": {
+        "recommendation": "rejected",
+        "justification": "The invoice fails arithmetic validation: calculated total $92,037.60 differs from the stated total $92,187.60 (Δ $150). PO matching reports a total amount mismatch with PO-2026-0010. Policy POL-AP-003 flags the invoice as high‑value requiring executive review, but the arithmetic error is a blocker. Although no duplicate was detected, the arithmetic discrepancy alone mandates rejection per the deterministic decision guidance.",
+        "conditions": {
+          "arithmetic_mismatch": true,
+          "po_total_mismatch": true,
+          "policy_violation_high_value": true,
+          "duplicate_status": "NONE"
+        }
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "approval_recommendation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_8 (gsk_yt...AwPO)",
+      "duration_seconds": 4.179,
+      "tokens": 2828,
+      "prompt_tokens": 1480,
+      "completion_tokens": 1348,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "invoice_id": "INV-2026-0010",
+        "final_recommendation": "rejected",
+        "risk_level": "MEDIUM",
+        "summary_report": "The invoice fails arithmetic validation (stated total $92,187.60 vs calculated $92,037.60, Δ $150). PO matching also reports a total amount mismatch with PO-2026-0010. Policy POL-AP-003 flags the invoice as high‑value, requiring executive sign‑off, but the arithmetic error is a blocker per deterministic decision rules. No duplicate risk detected. No critical exceptions remain unresolved. Consequently, the invoice is rejected pending correction of the math discrepancy and alignment with the PO.",
+        "audit_findings": {
+          "extraction_flags": {
+            "arithmetic_mismatch": true,
+            "missing_fields": [],
+            "ambiguous_fields": []
+          },
+          "validation": {
+            "validation_status": "FAILED",
+            "is_arithmetic_valid": false,
+            "calculated_subtotal": 85220.0,
+            "calculated_total": 92037.6,
+            "stated_total": 92187.6,
+            "discrepancy_amount": 150.0,
+            "validation_errors": [
+              "All required fields are present.",
+              "Arithmetic validation failed: total_amount discrepancy of 150.0 (calculated 92037.6 vs stated 92187.6)."
+            ]
+          },
+          "po_matching": {
+            "po_match_status": "DISCREPANCY_DETECTED",
+            "matched_po_id": "PO-2026-0010",
+            "discrepancies": [
+              "Total amount mismatch: Invoice total $92187.60 differs from PO total $92037.60"
+            ],
+            "matching_confidence": 0.95
+          },
+          "policy_compliance": {
+            "is_compliant": false,
+            "applied_policy_ids": [
+              "POL-AP-001",
+              "POL-AP-002",
+              "POL-AP-003"
+            ],
+            "violations": [
+              {
+                "policy_id": "POL-AP-003",
+                "rule": "Invoices totaling over $25,000 require executive financial review.",
+                "severity": "medium",
+                "detail": "Total amount $92187.60 exceeds high-value threshold ($25,000).",
+                "classification": "secondary_signoff_required"
+              }
+            ],
+            "compliance_summary": "Invoice exceeds $25,000 threshold per POL-AP-003; requires executive financial review before processing. No fatal violations detected."
+          },
+          "duplicate_detection": {
+            "duplicate_status": "NONE",
+            "matching_records": [],
+            "risk_assessment": {
+              "risk_level": "LOW",
+              "reason": "No exact or potential matches found in historical data; invoice amounts and line items do not correspond to any prior records."
+            }
+          },
+          "exception_analysis": {
+            "has_exceptions": true,
+            "exception_count": 3,
+            "critical_exceptions": [],
+            "detailed_exceptions": [
+              {
+                "exception_type": "Math Discrepancy",
+                "description": "Invoice total_amount $92,187.60 does not match calculated total $92,037.60 (difference $150.00).",
+                "severity": "MEDIUM",
+                "resolvable": true,
+                "blocker": false,
+                "recommended_action": "Re‑calculate line item totals and tax; correct the invoice or PO to resolve the $150 discrepancy."
+              },
+              {
+                "exception_type": "PO Total Mismatch",
+                "description": "Invoice total $92,187.60 differs from PO total $92,037.60.",
+                "severity": "MEDIUM",
+                "resolvable": true,
+                "blocker": false,
+                "recommended_action": "Confirm the correct amount with the supplier and update either the PO or the invoice accordingly."
+              },
+              {
+                "exception_type": "Policy Violation - High Value Invoice",
+                "description": "Invoice exceeds $25,000 threshold per POL-AP-003, requiring executive financial review.",
+                "severity": "HIGH",
+                "resolvable": true,
+                "blocker": false,
+                "recommended_action": "Obtain the required executive sign‑off before proceeding with payment."
+              }
+            ]
+          },
+          "approval_recommendation": {
+            "recommendation": "rejected",
+            "justification": "The invoice fails arithmetic validation: calculated total $92,037.60 differs from the stated total $92,187.60 (Δ $150). PO matching reports a total amount mismatch with PO-2026-0010. Policy POL-AP-003 flags the invoice as high‑value requiring executive review, but the arithmetic error is a blocker. Although no duplicate was detected, the arithmetic discrepancy alone mandates rejection per the deterministic decision guidance.",
+            "conditions": {
+              "arithmetic_mismatch": true,
+              "po_total_mismatch": true,
+              "policy_violation_high_value": true,
+              "duplicate_status": "NONE"
+            }
+          }
+        }
+      },
+      "notes": "",
+      "order": 8,
+      "agent_id": "final_review_agent_invoice"
+    }
+  ],
+  "total_tokens": 11974,
+  "prompt_tokens": 7159,
+  "completion_tokens": 4815,
+  "estimated_cost_usd": 0.008028,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"invoice_id\": \"INV-2026-0010\",\n  \"final_recommendation\": \"rejected\",\n  \"risk_level\": \"MEDIUM\",\n  \"summary_report\": \"The invoice fails arithmetic validation (stated total $92,187.60 vs calculated $92,037.60, \\u0394 $150). PO matching also reports a total amount mismatch with PO-2026-0010. Policy POL-AP-003 flags the invoice as high\\u2011value, requiring executive sign\\u2011off, but the arithmetic error is a blocker per deterministic decision rules. No duplicate risk detected. No critical exceptions remain unresolved. Consequently, the invoice is rejected pending correction of the math discrepancy and alignment with the PO.\",\n  \"audit_findings\": {\n    \"extraction_flags\": {\n      \"arithmetic_mismatch\": true,\n      \"missing_fields\": [],\n      \"ambiguous_fields\": []\n    },\n    \"validation\": {\n      \"validation_status\": \"FAILED\",\n      \"is_arithmetic_valid\": false,\n      \"calculated_subtotal\": 85220.0,\n      \"calculated_total\": 92037.6,\n      \"stated_total\": 92187.6,\n      \"discrepancy_amount\": 150.0,\n      \"validation_errors\": [\n        \"All required fields are present.\",\n        \"Arithmetic validation failed: total_amount discrepancy of 150.0 (calculated 92037.6 vs stated 92187.6).\"\n      ]\n    },\n    \"po_matching\": {\n      \"po_match_status\": \"DISCREPANCY_DETECTED\",\n      \"matched_po_id\": \"PO-2026-0010\",\n      \"discrepancies\": [\n        \"Total amount mismatch: Invoice total $92187.60 differs from PO total $92037.60\"\n      ],\n      \"matching_confidence\": 0.95\n    },\n    \"policy_compliance\": {\n      \"is_compliant\": false,\n      \"applied_policy_ids\": [\n        \"POL-AP-001\",\n        \"POL-AP-002\",\n        \"POL-AP-003\"\n      ],\n      \"violations\": [\n        {\n          \"policy_id\": \"POL-AP-003\",\n          \"rule\": \"Invoices totaling over $25,000 require executive financial review.\",\n          \"severity\": \"medium\",\n          \"detail\": \"Total amount $92187.60 exceeds high-value threshold ($25,000).\",\n          \"classification\": \"secondary_signoff_required\"\n        }\n      ],\n      \"compliance_summary\": \"Invoice exceeds $25,000 threshold per POL-AP-003; requires executive financial review before processing. No fatal violations detected.\"\n    },\n    \"duplicate_detection\": {\n      \"duplicate_status\": \"NONE\",\n      \"matching_records\": [],\n      \"risk_assessment\": {\n        \"risk_level\": \"LOW\",\n        \"reason\": \"No exact or potential matches found in historical data; invoice amounts and line items do not correspond to any prior records.\"\n      }\n    },\n    \"exception_analysis\": {\n      \"has_exceptions\": true,\n      \"exception_count\": 3,\n      \"critical_exceptions\": [],\n      \"detailed_exceptions\": [\n        {\n          \"exception_type\": \"Math Discrepancy\",\n          \"description\": \"Invoice total_amount $92,187.60 does not match calculated total $92,037.60 (difference $150.00).\",\n          \"severity\": \"MEDIUM\",\n          \"resolvable\": true,\n          \"blocker\": false,\n          \"recommended_action\": \"Re\\u2011calculate line item totals and tax; correct the invoice or PO to resolve the $150 discrepancy.\"\n        },\n        {\n          \"exception_type\": \"PO Total Mismatch\",\n          \"description\": \"Invoice total $92,187.60 differs from PO total $92,037.60.\",\n          \"severity\": \"MEDIUM\",\n          \"resolvable\": true,\n          \"blocker\": false,\n          \"recommended_action\": \"Confirm the correct amount with the supplier and update either the PO or the invoice accordingly.\"\n        },\n        {\n          \"exception_type\": \"Policy Violation - High Value Invoice\",\n          \"description\": \"Invoice exceeds $25,000 threshold per POL-AP-003, requiring executive financial review.\",\n          \"severity\": \"HIGH\",\n          \"resolvable\": true,\n          \"blocker\": false,\n          \"recommended_action\": \"Obtain the required executive sign\\u2011off before proceeding with payment.\"\n        }\n      ]\n    },\n    \"approval_recommendation\": {\n      \"recommendation\": \"rejected\",\n      \"justification\": \"The invoice fails arithmetic validation: calculated total $92,037.60 differs from the stated total $92,187.60 (\\u0394 $150). PO matching reports a total amount mismatch with PO-2026-0010. Policy POL-AP-003 flags the invoice as high\\u2011value requiring executive review, but the arithmetic error is a blocker. Although no duplicate was detected, the arithmetic discrepancy alone mandates rejection per the deterministic decision guidance.\",\n      \"conditions\": {\n        \"arithmetic_mismatch\": true,\n        \"po_total_mismatch\": true,\n        \"policy_violation_high_value\": true,\n        \"duplicate_status\": \"NONE\"\n      }\n    }\n  }\n}",
+  "timestamp": "2026-10-31T13:09:21.801605+00:00"
+}

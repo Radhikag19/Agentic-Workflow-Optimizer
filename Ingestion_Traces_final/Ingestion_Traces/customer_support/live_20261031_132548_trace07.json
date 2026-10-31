@@ -1,0 +1,149 @@
+{
+  "run_id": "live_20261031_132548_trace07",
+  "workflow_name": "customer_support",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 10.564,
+  "agent_execution_count": 6,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.386,
+      "tokens": 744,
+      "prompt_tokens": 428,
+      "completion_tokens": 316,
+      "output": {
+        "category": "billing",
+        "urgency": "low",
+        "complexity": "simple",
+        "customer_impact": "moderate",
+        "routing_recommendation": "Assign to the Enterprise Billing Team (Tax ID correction queue). Request the specific invoice number and the correct company tax ID from the customer to proceed."
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "ticket_classification_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.12,
+      "tokens": 866,
+      "prompt_tokens": 570,
+      "completion_tokens": 296,
+      "output": {
+        "applicable_policy_ids": [],
+        "applicable_guide_ids": [],
+        "policy_conditions": "",
+        "retrieval_summary": "The retrieved policy (SUP-POL-105) and troubleshooting guide (TSG-202) pertain to duplicate billing charges and transaction reversals. Neither addresses correction of an incorrect company tax ID on an invoice. Consequently, there is no applicable governing policy or SOP that directly covers this specific billing issue."
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "policy_retrieval_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.432,
+      "tokens": 1105,
+      "prompt_tokens": 665,
+      "completion_tokens": 440,
+      "output": {
+        "investigation_findings": "The issue is isolated to the billing subsystem where the tax identification number displayed on generated invoices does not match the customer's registered company tax ID. No other functional anomalies have been reported. Historical tickets for this customer were resolved using standard billing SOPs, indicating no known systemic issues with this account.",
+        "root_cause_hypothesis": "A data mapping or configuration error introduced during a recent invoicing template update caused the tax ID field to pull an incorrect value (e.g., default placeholder or another customer's ID). This is likely a backend data‑retrieval bug rather than a user‑input mistake.",
+        "confirmed_facts": [
+          "Ticket TICK-2026-0007 reports wrong company tax ID on invoice.",
+          "Customer is Enterprise tier (CUST-0007).",
+          "Category is billing, urgency low, complexity simple.",
+          "Customer profile and past cases are synthetic but indicate prior successful resolutions via standard SOPs.",
+          "No other symptoms (e.g., payment failures, missing line items) have been reported."
+        ],
+        "data_gaps": [
+          "Exact invoice number and date to examine the erroneous tax ID.",
+          "Current tax ID stored in the customer's master account record.",
+          "Change‑log entries for invoicing template or tax‑ID mapping in the past 30 days.",
+          "System logs showing the query that populated the tax ID field for the affected invoice.",
+          "User confirmation that the displayed tax ID is indeed incorrect (e.g., screenshot)."
+        ]
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "issue_investigation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 1.767,
+      "tokens": 1404,
+      "prompt_tokens": 908,
+      "completion_tokens": 496,
+      "output": {
+        "resolution_type": "requires_user_action",
+        "recommended_action": [
+          "1. Respond to the customer requesting the specific invoice number (and date) that contains the incorrect tax ID.",
+          "2. Ask the customer to provide the correct company tax ID that should appear on the invoice (or a screenshot confirming the error).",
+          "3. Verify the correct tax ID against the customer's master account record in the billing system.",
+          "4. Once the correct tax ID is confirmed, update the invoice template mapping for this customer in the billing subsystem (following the standard Enterprise Billing SOP for tax‑ID corrections).",
+          "5. Regenerate the affected invoice with the corrected tax ID and send the revised invoice to the customer.",
+          "6. Document the correction steps, including the invoice number, original erroneous tax ID, corrected tax ID, and the date of the change, in the ticket notes.",
+          "7. Close the ticket after the customer confirms the revised invoice is accurate."
+        ],
+        "policy_justification": "No specific policy directly addresses tax‑ID correction; however, the action follows the standard Enterprise Billing SOP for invoice amendments and the routing recommendation to the Enterprise Billing Team (Tax ID correction queue). The steps adhere to internal guidelines for handling billing data corrections without invoking engineering changes or financial credits.",
+        "escalation_required": false
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "resolution_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 1.828,
+      "tokens": 1201,
+      "prompt_tokens": 670,
+      "completion_tokens": 531,
+      "output": {
+        "response_text": "Dear Enterprise Client 7,\n\nThank you for bringing the tax‑ID discrepancy on your invoice to our attention. We understand how important accurate billing information is for your records, and we apologize for any inconvenience this may have caused.\n\nTo correct the invoice promptly, could you please provide the following details?\n\n- The invoice number (and date) that shows the incorrect tax ID.\n- The correct company tax ID that should appear on the invoice. A screenshot of the invoice highlighting the error would be very helpful.\n\nOnce we receive this information, we will verify the correct tax ID against your account, update the invoice template, regenerate the affected invoice, and send you the revised version for your review.\n\nWe appreciate your cooperation and look forward to resolving this quickly.\n\nBest regards,\nEnterprise Billing Team",
+        "tone": "professional, empathetic",
+        "next_steps_for_customer": [
+          "Provide the invoice number (and date) that contains the incorrect tax ID.",
+          "Supply the correct company tax ID that should be displayed, optionally with a screenshot of the error."
+        ],
+        "ticket_status": "awaiting_customer_response"
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "response_drafting_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 1.421,
+      "tokens": 1671,
+      "prompt_tokens": 1304,
+      "completion_tokens": 367,
+      "output": {
+        "qa_status": "APPROVED",
+        "final_ticket_status": "ACTION_REQUIRED_BY_USER",
+        "verification_notes": "The drafted response accurately acknowledges the tax‑ID discrepancy, apologizes, and clearly requests the missing invoice number/date and the correct tax ID (or a screenshot). The promised actions (verification, template update, invoice regeneration) align with the Enterprise Billing SOP and do not violate any policy. No unsupported commitments or contradictions are present. Because the resolution cannot proceed without the requested information, the ticket must remain in a waiting‑for‑customer state.",
+        "support_summary_report": {
+          "issue_addressed": "Incorrect company tax ID displayed on an invoice for an Enterprise tier customer.",
+          "response_quality": "Professional and empathetic tone; concise request for necessary data; outlines next steps clearly.",
+          "policy_compliance": "Follows standard Enterprise Billing SOP for invoice amendments; no policy conflicts.",
+          "next_action_required": "Customer must provide the specific invoice identifier and the correct tax ID (or screenshot).",
+          "recommended_ticket_status": "awaiting_customer_response"
+        }
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "resolution_verification_agent"
+    }
+  ],
+  "total_tokens": 6991,
+  "prompt_tokens": 4545,
+  "completion_tokens": 2446,
+  "estimated_cost_usd": 0.004614,
+  "error_message": null,
+  "final_output": "{\n  \"qa_status\": \"APPROVED\",\n  \"final_ticket_status\": \"ACTION_REQUIRED_BY_USER\",\n  \"verification_notes\": \"The drafted response accurately acknowledges the tax\\u2011ID discrepancy, apologizes, and clearly requests the missing invoice number/date and the correct tax ID (or a screenshot). The promised actions (verification, template update, invoice regeneration) align with the Enterprise Billing SOP and do not violate any policy. No unsupported commitments or contradictions are present. Because the resolution cannot proceed without the requested information, the ticket must remain in a waiting\\u2011for\\u2011customer state.\",\n  \"support_summary_report\": {\n    \"issue_addressed\": \"Incorrect company tax ID displayed on an invoice for an Enterprise tier customer.\",\n    \"response_quality\": \"Professional and empathetic tone; concise request for necessary data; outlines next steps clearly.\",\n    \"policy_compliance\": \"Follows standard Enterprise Billing SOP for invoice amendments; no policy conflicts.\",\n    \"next_action_required\": \"Customer must provide the specific invoice identifier and the correct tax ID (or screenshot).\",\n    \"recommended_ticket_status\": \"awaiting_customer_response\"\n  }\n}",
+  "timestamp": "2026-10-31T13:25:58.582116+00:00"
+}

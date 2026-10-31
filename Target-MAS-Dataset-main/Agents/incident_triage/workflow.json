@@ -1,0 +1,102 @@
+{
+  "workflow_name": "incident_triage",
+  "version": "1.0.0",
+  "description": "Baseline 7-agent sequential IT incident triage and remediation workflow.",
+  "fixed_model": "openai/gpt-oss-120b",
+  "total_agents": 7,
+  "model_configuration": {
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "enforce_fixed_model": true
+  },
+  "execution_order": [
+    "intake_agent",
+    "classification_agent",
+    "runbook_agent",
+    "symptom_agent",
+    "severity_agent",
+    "remediation_agent",
+    "incident_review_agent"
+  ],
+  "agents": [
+    {
+      "id": "intake_agent",
+      "name": "Incident Intake Specialist",
+      "assigned_key": "GROQ_API_KEY_8",
+      "file": "intake_agent.py",
+      "dependencies": [],
+      "inputs": ["raw_ticket_text", "service", "reported_impact", "timestamp"],
+      "outputs": ["normalized_title", "affected_service", "symptoms", "timestamps", "reported_impact_users", "outage_minutes", "missing_fields"],
+      "parallelizable": false
+    },
+    {
+      "id": "classification_agent",
+      "name": "Incident Classification Engineer",
+      "assigned_key": "GROQ_API_KEY_9",
+      "file": "classification_agent.py",
+      "dependencies": ["intake_agent"],
+      "inputs": ["normalized_telemetry"],
+      "outputs": ["category", "apparent_complexity", "classification_reasoning"],
+      "parallelizable": false
+    },
+    {
+      "id": "runbook_agent",
+      "name": "Runbook Retrieval Specialist",
+      "assigned_key": "GROQ_API_KEY_10",
+      "file": "runbook_agent.py",
+      "dependencies": ["classification_agent"],
+      "inputs": ["category", "symptoms"],
+      "outputs": ["selected_runbook_id", "match_confidence", "prerequisites", "safety_notes"],
+      "parallelizable": true,
+      "parallel_group": "diagnostic_branch"
+    },
+    {
+      "id": "symptom_agent",
+      "name": "Diagnostic & Symptom Correlation Specialist",
+      "assigned_key": "GROQ_API_KEY_11",
+      "file": "symptom_agent.py",
+      "dependencies": ["classification_agent"],
+      "inputs": ["service", "category", "symptoms"],
+      "outputs": ["correlated_incident_ids", "recurring_patterns", "diagnostic_stage_assessment"],
+      "parallelizable": true,
+      "parallel_group": "diagnostic_branch",
+      "pruning_candidate": "Can be bypassed by optimizer for Simple incidents"
+    },
+    {
+      "id": "severity_agent",
+      "name": "Severity Assessment Specialist",
+      "assigned_key": "GROQ_API_KEY_12",
+      "file": "severity_agent.py",
+      "dependencies": ["symptom_agent", "runbook_agent"],
+      "inputs": ["impact_users", "service_tier", "outage_minutes", "diagnostic_context"],
+      "outputs": ["severity_level", "governing_sla_rule", "justification"],
+      "parallelizable": false
+    },
+    {
+      "id": "remediation_agent",
+      "name": "Remediation Planning Engineer",
+      "assigned_key": "GROQ_API_KEY_13",
+      "file": "remediation_agent.py",
+      "dependencies": ["severity_agent", "runbook_agent"],
+      "inputs": ["selected_runbook", "severity_level", "diagnosis"],
+      "outputs": ["remediation_steps", "rollback_plan", "safety_verification"],
+      "parallelizable": false
+    },
+    {
+      "id": "incident_review_agent",
+      "name": "Incident Quality Reviewer",
+      "assigned_key": "GROQ_API_KEY_14",
+      "file": "review_agent.py",
+      "dependencies": ["remediation_agent"],
+      "inputs": ["all_previous_stages"],
+      "outputs": ["final_structured_incident_report"],
+      "parallelizable": false
+    }
+  ],
+  "optimization_opportunities": [
+    "Dynamic routing for simple vs complex incidents",
+    "Bypassing symptom diagnostic branch for low-complexity / known-issue incidents",
+    "Parallel execution of runbook retrieval and symptom correlation",
+    "Early stopping when runbook confidence exceeds 0.95 and severity is SEV-4"
+  ]
+}

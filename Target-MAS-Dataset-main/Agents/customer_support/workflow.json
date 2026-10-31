@@ -1,0 +1,75 @@
+{
+  "workflow_name": "customer_support",
+  "version": "1.0.0",
+  "description": "Baseline Customer Support Ticket Resolution Multi-Agent Workflow",
+  "fixed_model": "openai/gpt-oss-120b",
+  "assigned_groq_key_env": "GROQ_API_KEY_2",
+  "total_agents": 6,
+  "execution_mode": "sequential",
+  "execution_order": [
+    "ticket_classification_agent",
+    "policy_retrieval_agent",
+    "issue_investigation_agent",
+    "resolution_agent",
+    "response_drafting_agent",
+    "resolution_verification_agent"
+  ],
+  "agents": [
+    {
+      "agent_id": "ticket_classification_agent",
+      "role": "Customer Support Triage Specialist",
+      "assigned_key_env": "GROQ_API_KEY_2",
+      "dependencies": [],
+      "inputs": ["raw_ticket_record"],
+      "outputs": ["category", "urgency", "complexity", "customer_impact", "routing_recommendation"]
+    },
+    {
+      "agent_id": "policy_retrieval_agent",
+      "role": "Customer Policy & Knowledge Base Specialist",
+      "assigned_key_env": "GROQ_API_KEY_2",
+      "dependencies": ["ticket_classification_agent"],
+      "inputs": ["ticket_category", "policies.json", "troubleshooting_guides.json"],
+      "outputs": ["applicable_policy_ids", "applicable_guide_ids", "policy_conditions", "retrieval_summary"]
+    },
+    {
+      "agent_id": "issue_investigation_agent",
+      "role": "Technical Support Investigator",
+      "assigned_key_env": "GROQ_API_KEY_2",
+      "dependencies": ["policy_retrieval_agent"],
+      "inputs": ["ticket_data", "customers.json", "historical_resolutions.json"],
+      "outputs": ["investigation_findings", "root_cause_hypothesis", "confirmed_facts", "data_gaps"],
+      "optimization_note": "Candidate for early stopping/pruning on simple, low-complexity tickets."
+    },
+    {
+      "agent_id": "resolution_agent",
+      "role": "Customer Resolution Strategist",
+      "assigned_key_env": "GROQ_API_KEY_2",
+      "dependencies": ["issue_investigation_agent", "policy_retrieval_agent"],
+      "inputs": ["ticket_data", "investigation_findings", "retrieved_policies"],
+      "outputs": ["resolution_type", "recommended_action", "policy_justification", "escalation_required"]
+    },
+    {
+      "agent_id": "response_drafting_agent",
+      "role": "Customer Communications Specialist",
+      "assigned_key_env": "GROQ_API_KEY_2",
+      "dependencies": ["resolution_agent"],
+      "inputs": ["ticket_context", "approved_resolution"],
+      "outputs": ["response_text", "tone", "next_steps_for_customer", "ticket_status"]
+    },
+    {
+      "agent_id": "resolution_verification_agent",
+      "role": "Support QA & Verification Auditor",
+      "assigned_key_env": "GROQ_API_KEY_2",
+      "dependencies": ["response_drafting_agent"],
+      "inputs": ["full_support_audit_trail"],
+      "outputs": ["qa_status", "final_ticket_status", "verification_notes", "support_summary_report"],
+      "optimization_note": "Candidate for conditional pruning on low-risk standard tickets."
+    }
+  ],
+  "optimization_opportunities": [
+    "Dynamic routing: Route simple tickets directly from Policy Retrieval to Response Drafting, bypassing Investigation",
+    "Early stopping: Stop execution when straightforward standard SOP guide matches completely",
+    "Pruning redundant verification stages for low-risk, verified inquiries",
+    "Prompt compression to minimize ticket and policy context re-evaluations"
+  ]
+}

@@ -1,0 +1,485 @@
+{
+  "run_id": "live_20261031_115900_trace03",
+  "workflow_name": "contract_review",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 31.082,
+  "agent_execution_count": 10,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.844,
+      "tokens": 900,
+      "prompt_tokens": 300,
+      "completion_tokens": 600,
+      "output": {
+        "document_id": "DOC-20261031-0001",
+        "contract_id": "CTR-2026-0003",
+        "contract_title": "Vendor Procurement Agreement with Enterprise Partner 003 LLC",
+        "contract_type": "Vendor Procurement Agreement",
+        "contract_version": "1.0",
+        "policy_id": "POL-CORP-LGL-03",
+        "policy_version": "1.8",
+        "document_complete": true,
+        "section_count": 5,
+        "source_metadata": {
+          "extracted_fields": [
+            "Contract ID",
+            "Title",
+            "Type",
+            "Version",
+            "Parties",
+            "Effective Date",
+            "Expiration Date",
+            "Clause Count",
+            "Policy ID",
+            "Policy Version"
+          ],
+          "ingestion_timestamp": "2026-10-31T12:00:00Z",
+          "source_format": "plain_text"
+        },
+        "intake_warnings": []
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "contract_intake_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.834,
+      "tokens": 1295,
+      "prompt_tokens": 739,
+      "completion_tokens": 556,
+      "output": {
+        "contract_id": "CTR-2026-0003",
+        "clauses": [
+          {
+            "clause_id": "CLS-0003-PAY",
+            "clause_type": "payment_terms",
+            "clause_title": "Section 3: Invoicing and Payment Terms",
+            "clause_text": "Customer shall pay all undisputed invoice amounts within thirty (30) days of invoice date.",
+            "section_reference": "Section 3.1"
+          },
+          {
+            "clause_id": "CLS-0003-DATA",
+            "clause_type": "data_protection",
+            "clause_title": "Section 8: Security & Breach Notification",
+            "clause_text": "Vendor shall notify Customer in writing within twenty-four (24) hours of becoming aware of any confirmed Data Breach.",
+            "section_reference": "Section 8.2"
+          },
+          {
+            "clause_id": "CLS-0003-LIAB",
+            "clause_type": "liability_cap",
+            "clause_title": "Section 10: Limitation of Liability",
+            "clause_text": "Each party's maximum aggregate liability shall be strictly limited to the total fees paid under this Agreement in the preceding twelve (12) months.",
+            "section_reference": "Section 10.1"
+          },
+          {
+            "clause_id": "CLS-0003-TERM",
+            "clause_type": "termination",
+            "clause_title": "Section 12: Term and Termination",
+            "clause_text": "Either party may terminate this Agreement for convenience upon providing thirty (30) days prior written notice.",
+            "section_reference": "Section 12.1"
+          },
+          {
+            "clause_id": "CLS-0003-REN",
+            "clause_type": "renewal",
+            "clause_title": "Section 12: Renewal Provisions",
+            "clause_text": "This Agreement shall automatically renew for successive two-year periods and CANNOT be terminated for convenience prior to full term expiration.",
+            "section_reference": "Section 12.4"
+          }
+        ],
+        "absent_clause_types": [],
+        "extraction_notes": [
+          "Document extracted once for downstream policy comparison"
+        ]
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "clause_extraction_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.62,
+      "tokens": 892,
+      "prompt_tokens": 354,
+      "completion_tokens": 538,
+      "output": {
+        "policy_id": "POL-CORP-LGL-03",
+        "policy_version": "1.8",
+        "policy_name": "Legal Liability & Indemnification Standards",
+        "mandatory_requirements": [
+          {
+            "requirement_id": "REQ-LGL-01",
+            "clause_type": "liability_cap",
+            "description": "Aggregate liability cap must not exceed 12 months of total fees paid or payable.",
+            "threshold": "12 months fees cap"
+          },
+          {
+            "requirement_id": "REQ-LGL-02",
+            "clause_type": "termination",
+            "description": "Customer must have the right to terminate for convenience with no more than 30 days prior written notice.",
+            "threshold": "30 days convenience termination"
+          }
+        ],
+        "recommended_requirements": [],
+        "ambiguities_in_policy": [
+          "Definition of \"total fees paid or payable\" for calculating the 12‑month liability cap is not specified (e.g., includes recurring fees, one‑time fees, taxes, discounts?).",
+          "Method for measuring \"12 months of fees\" (calendar months vs. 30‑day periods) is unclear.",
+          "Interpretation of \"no more than 30 days prior written notice\" could be read as exactly 30 days, any period up to 30 days, or a maximum of 30 days; the policy does not clarify which is intended.",
+          "What constitutes acceptable \"written notice\" (email, physical letter, electronic signature) is not defined."
+        ]
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "policy_interpretation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 6.89,
+      "tokens": 1530,
+      "prompt_tokens": 754,
+      "completion_tokens": 776,
+      "output": {
+        "contract_id": "CTR-2026-0003",
+        "policy_id": "CorporatePolicy",
+        "mappings": [
+          {
+            "clause_id": "CLS-0003-LIAB",
+            "requirement_id": "REQ-LGL-01",
+            "mapping_status": "satisfied"
+          },
+          {
+            "clause_id": "CLS-0003-TERM",
+            "requirement_id": "REQ-LGL-02",
+            "mapping_status": "satisfied"
+          }
+        ],
+        "coverage_percentage": 100
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "clause_mapping_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 0.927,
+      "tokens": 601,
+      "prompt_tokens": 404,
+      "completion_tokens": 197,
+      "output": {
+        "contract_id": "CTR-2026-0003",
+        "deviations": [],
+        "has_critical_deviations": false
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "compliance_deviation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 2.879,
+      "tokens": 1714,
+      "prompt_tokens": 636,
+      "completion_tokens": 1078,
+      "output": {
+        "contract_id": "CTR-2026-0003",
+        "risk_findings": [
+          {
+            "finding_id": "R001",
+            "clause_id": "CLS-0003-DATA",
+            "risk_category": "vague_wording_undefined_event",
+            "ambiguity_description": "The phrase \"becoming aware of any confirmed Data Breach\" is undefined; criteria for \"confirmed\" and the point of awareness are not specified, creating uncertainty in compliance timing.",
+            "severity": "High",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R002",
+            "clause_id": "CLS-0003-LIAB",
+            "risk_category": "one_sided_liability_cap",
+            "ambiguity_description": "Liability is capped at total fees paid in the preceding twelve months, which may be insufficient to cover potential damages (e.g., data breach penalties) and disproportionately favors the Vendor.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R003",
+            "clause_id": "CLS-0003-REN",
+            "risk_category": "latent_operational_risk_conflicting_termination",
+            "ambiguity_description": "Automatic renewal for two-year periods combined with a clause prohibiting termination for convenience before term expiration conflicts with the earlier termination provision and creates an indefinite commitment without clear exit rights.",
+            "severity": "High",
+            "human_interpretation_needed": true
+          }
+        ]
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "risk_ambiguity_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 1.583,
+      "tokens": 1715,
+      "prompt_tokens": 1188,
+      "completion_tokens": 527,
+      "output": {
+        "contract_id": "CTR-2026-0003",
+        "is_internally_consistent": false,
+        "inconsistencies": [
+          {
+            "clause_ids": [
+              "CLS-0003-TERM",
+              "CLS-0003-REN"
+            ],
+            "description": "Termination clause permits either party to terminate for convenience with 30 days prior written notice, whereas the renewal clause states the agreement cannot be terminated for convenience prior to full term expiration, creating a direct conflict."
+          },
+          {
+            "clause_ids": [
+              "CLS-0003-TERM",
+              "CLS-0003-REN"
+            ],
+            "description": "Renewal clause mandates automatic renewal for successive two‑year periods, but the contract's defined term is only one year (effective 2026‑01‑01 to expiration 2027‑01‑01), resulting in a chronological inconsistency."
+          }
+        ]
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "cross_clause_consistency_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_8 (gsk_yt...AwPO)",
+      "duration_seconds": 2.162,
+      "tokens": 1635,
+      "prompt_tokens": 939,
+      "completion_tokens": 696,
+      "output": {
+        "contract_id": "CTR-2026-0003",
+        "all_citations_valid": true,
+        "verified_finding_ids": [
+          "R001",
+          "R002",
+          "R003"
+        ],
+        "invalid_or_unsupported_findings": [],
+        "evidence_notes": {
+          "R001": "Clause CLS-0003-DATA contains the phrase \"becoming aware of any confirmed Data Breach\" without definition, directly supporting the claim of vague wording.",
+          "R002": "Clause CLS-0003-LIAB limits each party's liability to fees paid in the prior twelve months, confirming the existence of a potentially insufficient, one‑sided cap.",
+          "R003": "Clause CLS-0003-TERM permits termination for convenience with 30‑day notice, while Clause CLS-0003-REN imposes automatic two‑year renewals and prohibits such termination, creating a direct conflict as described."
+        }
+      },
+      "notes": "",
+      "order": 8,
+      "agent_id": "evidence_validation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_9 (gsk_Oz...k7Gf)",
+      "duration_seconds": 2.453,
+      "tokens": 1477,
+      "prompt_tokens": 710,
+      "completion_tokens": 767,
+      "output": {
+        "contract_id": "CTR-2026-0003",
+        "calibrated_deviations": [],
+        "calibrated_risks": [
+          {
+            "finding_id": "R001",
+            "clause_id": "CLS-0003-DATA",
+            "risk_category": "vague_wording_undefined_event",
+            "ambiguity_description": "The phrase \"becoming aware of any confirmed Data Breach\" is undefined; criteria for \"confirmed\" and the point of awareness are not specified, creating uncertainty in compliance timing.",
+            "calibrated_severity": "High",
+            "human_interpretation_needed": true,
+            "review_comment": "Severity unchanged; lack of definition could delay breach notification and expose both parties to regulatory risk."
+          },
+          {
+            "finding_id": "R002",
+            "clause_id": "CLS-0003-LIAB",
+            "risk_category": "one_sided_liability_cap",
+            "ambiguity_description": "Liability is capped at total fees paid in the preceding twelve months, which may be insufficient to cover potential damages (e.g., data breach penalties) and disproportionately favors the Vendor.",
+            "calibrated_severity": "High",
+            "human_interpretation_needed": true,
+            "review_comment": "Upgraded from Medium to High due to potential exposure to statutory fines and third‑party damages that can far exceed the fee cap."
+          },
+          {
+            "finding_id": "R003",
+            "clause_id": "CLS-0003-REN",
+            "risk_category": "latent_operational_risk_conflicting_termination",
+            "ambiguity_description": "Automatic renewal for two-year periods combined with a clause prohibiting termination for convenience before term expiration conflicts with the earlier termination provision and creates an indefinite commitment without clear exit rights.",
+            "calibrated_severity": "High",
+            "human_interpretation_needed": true,
+            "review_comment": "Severity remains High; conflicting renewal and termination language creates operational lock‑in risk."
+          }
+        ],
+        "review_notes": {
+          "deduplication": "No redundant findings identified; each risk addresses a distinct contractual issue.",
+          "severity_calibration": "R002 severity upgraded to High to reflect greater potential financial exposure. R001 and R003 retain High severity.",
+          "human_review": "All three findings flagged for human interpretation; recommend legal counsel review definitions, liability cap adequacy, and renewal/termination clauses.",
+          "overall_assessment": "Contract contains significant ambiguities that could materially affect compliance and risk exposure. Prioritize amendment of undefined breach‑notification language, negotiate a more balanced liability cap, and resolve the renewal/termination conflict."
+        }
+      },
+      "notes": "",
+      "order": 9,
+      "agent_id": "contract_independent_review_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_10 (gsk_jW...DBpq)",
+      "duration_seconds": 5.598,
+      "tokens": 3744,
+      "prompt_tokens": 1594,
+      "completion_tokens": 2150,
+      "output": {
+        "run_id": "a1b2c3d4-5678-90ab-cdef-1234567890ab",
+        "contract_id": "CTR-2026-0003",
+        "contract_version": "1.0",
+        "policy_id": "POL-CORP-LGL-03",
+        "policy_version": "1.8",
+        "contract_type": "Vendor Procurement Agreement",
+        "executive_summary": "The Vendor Procurement Agreement (CTR-2026-0003) meets the corporate legal policy in terms of mapping coverage (100%). However, three high‑severity risks were identified: (1) undefined breach‑notification language, (2) a one‑sided liability cap that may be insufficient for statutory penalties, and (3) contradictory termination and renewal provisions that create an indefinite lock‑in. All three findings require immediate legal review and amendment before the agreement is executed.",
+        "policy_coverage": {
+          "coverage_percentage": 100,
+          "mapped_requirements": [
+            {
+              "clause_id": "CLS-0003-LIAB",
+              "requirement_id": "REQ-LGL-01",
+              "mapping_status": "satisfied"
+            },
+            {
+              "clause_id": "CLS-0003-TERM",
+              "requirement_id": "REQ-LGL-02",
+              "mapping_status": "satisfied"
+            }
+          ]
+        },
+        "clause_inventory": [
+          {
+            "clause_id": "CLS-0003-PAY",
+            "clause_type": "payment_terms",
+            "clause_title": "Section 3: Invoicing and Payment Terms",
+            "clause_text": "Customer shall pay all undisputed invoice amounts within thirty (30) days of invoice date.",
+            "section_reference": "Section 3.1"
+          },
+          {
+            "clause_id": "CLS-0003-DATA",
+            "clause_type": "data_protection",
+            "clause_title": "Section 8: Security & Breach Notification",
+            "clause_text": "Vendor shall notify Customer in writing within twenty-four (24) hours of becoming aware of any confirmed Data Breach.",
+            "section_reference": "Section 8.2"
+          },
+          {
+            "clause_id": "CLS-0003-LIAB",
+            "clause_type": "liability_cap",
+            "clause_title": "Section 10: Limitation of Liability",
+            "clause_text": "Each party's maximum aggregate liability shall be strictly limited to the total fees paid under this Agreement in the preceding twelve (12) months.",
+            "section_reference": "Section 10.1"
+          },
+          {
+            "clause_id": "CLS-0003-TERM",
+            "clause_type": "termination",
+            "clause_title": "Section 12: Term and Termination",
+            "clause_text": "Either party may terminate this Agreement for convenience upon providing thirty (30) days prior written notice.",
+            "section_reference": "Section 12.1"
+          },
+          {
+            "clause_id": "CLS-0003-REN",
+            "clause_type": "renewal",
+            "clause_title": "Section 12: Renewal Provisions",
+            "clause_text": "This Agreement shall automatically renew for successive two-year periods and CANNOT be terminated for convenience prior to full term expiration.",
+            "section_reference": "Section 12.4"
+          }
+        ],
+        "compliance_findings": [
+          {
+            "clause_id": "CLS-0003-LIAB",
+            "requirement_id": "REQ-LGL-01",
+            "mapping_status": "satisfied"
+          },
+          {
+            "clause_id": "CLS-0003-TERM",
+            "requirement_id": "REQ-LGL-02",
+            "mapping_status": "satisfied"
+          }
+        ],
+        "risk_findings": [
+          {
+            "finding_id": "R001",
+            "clause_id": "CLS-0003-DATA",
+            "risk_category": "vague_wording_undefined_event",
+            "severity": "High",
+            "ambiguity_description": "The phrase \"becoming aware of any confirmed Data Breach\" is undefined; criteria for \"confirmed\" and the point of awareness are not specified, creating uncertainty in compliance timing.",
+            "human_interpretation_needed": true,
+            "review_comment": "Severity unchanged; lack of definition could delay breach notification and expose both parties to regulatory risk."
+          },
+          {
+            "finding_id": "R002",
+            "clause_id": "CLS-0003-LIAB",
+            "risk_category": "one_sided_liability_cap",
+            "severity": "High",
+            "ambiguity_description": "Liability is capped at total fees paid in the preceding twelve months, which may be insufficient to cover potential damages (e.g., data breach penalties) and disproportionately favors the Vendor.",
+            "human_interpretation_needed": true,
+            "review_comment": "Upgraded from Medium to High due to potential exposure to statutory fines and third‑party damages that can far exceed the fee cap."
+          },
+          {
+            "finding_id": "R003",
+            "clause_id": "CLS-0003-REN",
+            "risk_category": "latent_operational_risk_conflicting_termination",
+            "severity": "High",
+            "ambiguity_description": "Automatic renewal for two-year periods combined with a clause prohibiting termination for convenience before term expiration conflicts with the earlier termination provision and creates an indefinite commitment without clear exit rights.",
+            "human_interpretation_needed": true,
+            "review_comment": "Severity remains High; conflicting renewal and termination language creates operational lock‑in risk."
+          }
+        ],
+        "cross_clause_inconsistencies": [
+          {
+            "inconsistent_clauses": [
+              "CLS-0003-TERM",
+              "CLS-0003-REN"
+            ],
+            "description": "Clause 12.1 permits termination for convenience with 30‑day notice, while Clause 12.4 imposes an automatic two‑year renewal and expressly forbids termination for convenience before the renewed term ends. The two provisions are mutually exclusive and generate legal uncertainty.",
+            "potential_impact": "Indefinite contractual lock‑in, inability to exit the relationship without breach, and exposure to continued obligations despite changing business needs."
+          }
+        ],
+        "evidence_validation": {
+          "intake_warnings": [],
+          "document_complete": true,
+          "section_count": 5,
+          "source_format": "plain_text",
+          "mapping_coverage": "100% of identified policy requirements are mapped.",
+          "calibrated_deviations": [],
+          "validation_status": "All source metadata verified; no ingestion anomalies detected."
+        },
+        "unresolved_questions": [
+          "What constitutes a \"confirmed\" data breach and at what point is the Vendor considered \"aware\"?",
+          "Is the liability cap of fees paid in the prior 12 months acceptable given potential statutory fines and third‑party damages?",
+          "Which clause governs termination when the automatic renewal period has begun – the convenience termination right or the renewal prohibition?"
+        ],
+        "recommended_actions": [
+          "Amend Section 8.2 to define \"confirmed Data Breach\" and specify the exact trigger point for Vendor awareness (e.g., receipt of a formal breach report).",
+          "Negotiate a more balanced liability cap, such as a minimum of $X million or uncapped liability for breaches of data protection obligations.",
+          "Resolve the conflict between Sections 12.1 and 12.4 by either removing the prohibition on convenience termination during renewal periods or providing a mutually agreeable early‑exit mechanism.",
+          "Obtain formal legal counsel sign‑off on the revised language before execution."
+        ],
+        "human_review_required": true,
+        "validation_warnings": [],
+        "legal_disclaimer": "This report is generated for informational purposes only and does not constitute legal advice. The findings and recommendations are based on the supplied contract text and the referenced corporate policy. Parties should consult qualified legal counsel to confirm compliance, assess risk, and implement any contractual amendments."
+      },
+      "notes": "",
+      "order": 10,
+      "agent_id": "final_compliance_report_agent"
+    }
+  ],
+  "total_tokens": 15503,
+  "prompt_tokens": 7618,
+  "completion_tokens": 7885,
+  "estimated_cost_usd": 0.010724,
+  "error_message": null,
+  "final_output": "{\n  \"run_id\": \"a1b2c3d4-5678-90ab-cdef-1234567890ab\",\n  \"contract_id\": \"CTR-2026-0003\",\n  \"contract_version\": \"1.0\",\n  \"policy_id\": \"POL-CORP-LGL-03\",\n  \"policy_version\": \"1.8\",\n  \"contract_type\": \"Vendor Procurement Agreement\",\n  \"executive_summary\": \"The Vendor Procurement Agreement (CTR-2026-0003) meets the corporate legal policy in terms of mapping coverage (100%). However, three high\\u2011severity risks were identified: (1) undefined breach\\u2011notification language, (2) a one\\u2011sided liability cap that may be insufficient for statutory penalties, and (3) contradictory termination and renewal provisions that create an indefinite lock\\u2011in. All three findings require immediate legal review and amendment before the agreement is executed.\",\n  \"policy_coverage\": {\n    \"coverage_percentage\": 100,\n    \"mapped_requirements\": [\n      {\n        \"clause_id\": \"CLS-0003-LIAB\",\n        \"requirement_id\": \"REQ-LGL-01\",\n        \"mapping_status\": \"satisfied\"\n      },\n      {\n        \"clause_id\": \"CLS-0003-TERM\",\n        \"requirement_id\": \"REQ-LGL-02\",\n        \"mapping_status\": \"satisfied\"\n      }\n    ]\n  },\n  \"clause_inventory\": [\n    {\n      \"clause_id\": \"CLS-0003-PAY\",\n      \"clause_type\": \"payment_terms\",\n      \"clause_title\": \"Section 3: Invoicing and Payment Terms\",\n      \"clause_text\": \"Customer shall pay all undisputed invoice amounts within thirty (30) days of invoice date.\",\n      \"section_reference\": \"Section 3.1\"\n    },\n    {\n      \"clause_id\": \"CLS-0003-DATA\",\n      \"clause_type\": \"data_protection\",\n      \"clause_title\": \"Section 8: Security & Breach Notification\",\n      \"clause_text\": \"Vendor shall notify Customer in writing within twenty-four (24) hours of becoming aware of any confirmed Data Breach.\",\n      \"section_reference\": \"Section 8.2\"\n    },\n    {\n      \"clause_id\": \"CLS-0003-LIAB\",\n      \"clause_type\": \"liability_cap\",\n      \"clause_title\": \"Section 10: Limitation of Liability\",\n      \"clause_text\": \"Each party's maximum aggregate liability shall be strictly limited to the total fees paid under this Agreement in the preceding twelve (12) months.\",\n      \"section_reference\": \"Section 10.1\"\n    },\n    {\n      \"clause_id\": \"CLS-0003-TERM\",\n      \"clause_type\": \"termination\",\n      \"clause_title\": \"Section 12: Term and Termination\",\n      \"clause_text\": \"Either party may terminate this Agreement for convenience upon providing thirty (30) days prior written notice.\",\n      \"section_reference\": \"Section 12.1\"\n    },\n    {\n      \"clause_id\": \"CLS-0003-REN\",\n      \"clause_type\": \"renewal\",\n      \"clause_title\": \"Section 12: Renewal Provisions\",\n      \"clause_text\": \"This Agreement shall automatically renew for successive two-year periods and CANNOT be terminated for convenience prior to full term expiration.\",\n      \"section_reference\": \"Section 12.4\"\n    }\n  ],\n  \"compliance_findings\": [\n    {\n      \"clause_id\": \"CLS-0003-LIAB\",\n      \"requirement_id\": \"REQ-LGL-01\",\n      \"mapping_status\": \"satisfied\"\n    },\n    {\n      \"clause_id\": \"CLS-0003-TERM\",\n      \"requirement_id\": \"REQ-LGL-02\",\n      \"mapping_status\": \"satisfied\"\n    }\n  ],\n  \"risk_findings\": [\n    {\n      \"finding_id\": \"R001\",\n      \"clause_id\": \"CLS-0003-DATA\",\n      \"risk_category\": \"vague_wording_undefined_event\",\n      \"severity\": \"High\",\n      \"ambiguity_description\": \"The phrase \\\"becoming aware of any confirmed Data Breach\\\" is undefined; criteria for \\\"confirmed\\\" and the point of awareness are not specified, creating uncertainty in compliance timing.\",\n      \"human_interpretation_needed\": true,\n      \"review_comment\": \"Severity unchanged; lack of definition could delay breach notification and expose both parties to regulatory risk.\"\n    },\n    {\n      \"finding_id\": \"R002\",\n      \"clause_id\": \"CLS-0003-LIAB\",\n      \"risk_category\": \"one_sided_liability_cap\",\n      \"severity\": \"High\",\n      \"ambiguity_description\": \"Liability is capped at total fees paid in the preceding twelve months, which may be insufficient to cover potential damages (e.g., data breach penalties) and disproportionately favors the Vendor.\",\n      \"human_interpretation_needed\": true,\n      \"review_comment\": \"Upgraded from Medium to High due to potential exposure to statutory fines and third\\u2011party damages that can far exceed the fee cap.\"\n    },\n    {\n      \"finding_id\": \"R003\",\n      \"clause_id\": \"CLS-0003-REN\",\n      \"risk_category\": \"latent_operational_risk_conflicting_termination\",\n      \"severity\": \"High\",\n      \"ambiguity_description\": \"Automatic renewal for two-year periods combined with a clause prohibiting termination for convenience before term expiration conflicts with the earlier termination provision and creates an indefinite commitment without clear exit rights.\",\n      \"human_interpretation_needed\": true,\n      \"review_comment\": \"Severity remains High; conflicting renewal and termination language creates operational lock\\u2011in risk.\"\n    }\n  ],\n  \"cross_clause_inconsistencies\": [\n    {\n      \"inconsistent_clauses\": [\n        \"CLS-0003-TERM\",\n        \"CLS-0003-REN\"\n      ],\n      \"description\": \"Clause 12.1 permits termination for convenience with 30\\u2011day notice, while Clause 12.4 imposes an automatic two\\u2011year renewal and expressly forbids termination for convenience before the renewed term ends. The two provisions are mutually exclusive and generate legal uncertainty.\",\n      \"potential_impact\": \"Indefinite contractual lock\\u2011in, inability to exit the relationship without breach, and exposure to continued obligations despite changing business needs.\"\n    }\n  ],\n  \"evidence_validation\": {\n    \"intake_warnings\": [],\n    \"document_complete\": true,\n    \"section_count\": 5,\n    \"source_format\": \"plain_text\",\n    \"mapping_coverage\": \"100% of identified policy requirements are mapped.\",\n    \"calibrated_deviations\": [],\n    \"validation_status\": \"All source metadata verified; no ingestion anomalies detected.\"\n  },\n  \"unresolved_questions\": [\n    \"What constitutes a \\\"confirmed\\\" data breach and at what point is the Vendor considered \\\"aware\\\"?\",\n    \"Is the liability cap of fees paid in the prior 12 months acceptable given potential statutory fines and third\\u2011party damages?\",\n    \"Which clause governs termination when the automatic renewal period has begun \\u2013 the convenience termination right or the renewal prohibition?\"\n  ],\n  \"recommended_actions\": [\n    \"Amend Section 8.2 to define \\\"confirmed Data Breach\\\" and specify the exact trigger point for Vendor awareness (e.g., receipt of a formal breach report).\",\n    \"Negotiate a more balanced liability cap, such as a minimum of $X million or uncapped liability for breaches of data protection obligations.\",\n    \"Resolve the conflict between Sections 12.1 and 12.4 by either removing the prohibition on convenience termination during renewal periods or providing a mutually agreeable early\\u2011exit mechanism.\",\n    \"Obtain formal legal counsel sign\\u2011off on the revised language before execution.\"\n  ],\n  \"human_review_required\": true,\n  \"validation_warnings\": [],\n  \"legal_disclaimer\": \"This report is generated for informational purposes only and does not constitute legal advice. The findings and recommendations are based on the supplied contract text and the referenced corporate policy. Parties should consult qualified legal counsel to confirm compliance, assess risk, and implement any contractual amendments.\"\n}",
+  "timestamp": "2026-10-31T11:59:31.648859+00:00"
+}

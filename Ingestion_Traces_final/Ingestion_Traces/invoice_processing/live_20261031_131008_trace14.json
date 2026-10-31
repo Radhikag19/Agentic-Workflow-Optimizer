@@ -1,0 +1,310 @@
+{
+  "run_id": "live_20261031_131008_trace14",
+  "workflow_name": "invoice_processing",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 17.435,
+  "agent_execution_count": 8,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.696,
+      "tokens": 1001,
+      "prompt_tokens": 517,
+      "completion_tokens": 484,
+      "output": {
+        "extracted_invoice": {
+          "invoice_number": "INV-2026-0014",
+          "supplier_id": "SUP-104",
+          "supplier_name": "CyberShield Security Ltd.",
+          "po_reference": "PO-2026-0014",
+          "invoice_date": "2026-09-04",
+          "due_date": "2026-10-04",
+          "currency": "USD",
+          "line_items": [
+            {
+              "description": "Bulk Whiteboard Markers Pack",
+              "quantity": 4,
+              "unit_price": 45.0,
+              "line_total": 180.0
+            },
+            {
+              "description": "Industrial Lathe Component",
+              "quantity": 7,
+              "unit_price": 4200.0,
+              "line_total": 29400.0
+            }
+          ],
+          "subtotal": 29580.0,
+          "tax": 2366.4,
+          "discount": 0.0,
+          "total_amount": 31946.4
+        },
+        "extraction_flags": {
+          "missing_fields": [],
+          "ambiguous_fields": [],
+          "inconsistent_fields": []
+        }
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "invoice_extraction_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.452,
+      "tokens": 908,
+      "prompt_tokens": 570,
+      "completion_tokens": 338,
+      "output": {
+        "validation_status": "PASSED",
+        "math_audit": {
+          "is_arithmetic_valid": true,
+          "calculated_subtotal": 29580.0,
+          "calculated_total": 31946.4,
+          "stated_total": 31946.4,
+          "discrepancy_amount": 0.0,
+          "line_discrepancies": []
+        },
+        "validation_errors": []
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "invoice_validation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.41,
+      "tokens": 956,
+      "prompt_tokens": 738,
+      "completion_tokens": 218,
+      "output": {
+        "po_match_status": "EXACT_MATCH",
+        "matched_po_id": "PO-2026-0014",
+        "discrepancies": [],
+        "matching_confidence": 1.0
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "po_matching_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 1.978,
+      "tokens": 1007,
+      "prompt_tokens": 609,
+      "completion_tokens": 398,
+      "output": {
+        "is_compliant": false,
+        "applied_policy_ids": [
+          "POL-AP-001",
+          "POL-AP-002",
+          "POL-AP-003"
+        ],
+        "violations": [
+          {
+            "policy_id": "POL-AP-003",
+            "rule": "Invoices totaling over $25,000 require executive financial review.",
+            "severity": "medium",
+            "detail": "Total amount $31,946.40 exceeds high‑value threshold ($25,000).",
+            "classification": "secondary_sign_off_required"
+          }
+        ],
+        "compliance_summary": "The invoice exceeds the $25,000 high‑value threshold and triggers POL-AP-003, requiring executive financial review before approval. All other applied policies (POL-AP-001, POL-AP-002) are satisfied. Until the required executive sign‑off is obtained, the invoice remains non‑compliant."
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "policy_compliance_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 1.516,
+      "tokens": 958,
+      "prompt_tokens": 597,
+      "completion_tokens": 361,
+      "output": {
+        "duplicate_status": "EXACT_DUPLICATE",
+        "matching_records": [
+          {
+            "historical_invoice_id": "INV-HIST-0013",
+            "matched_fields": [
+              "invoice_number",
+              "supplier_id",
+              "po_reference",
+              "total_amount"
+            ]
+          }
+        ],
+        "risk_assessment": {
+          "risk_level": "HIGH",
+          "recommendation": "Reject payment and flag for further investigation.",
+          "justification": "Exact duplicate of a previously processed invoice with identical supplier, PO reference, and total amount."
+        }
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "duplicate_detection_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 2.545,
+      "tokens": 1884,
+      "prompt_tokens": 1011,
+      "completion_tokens": 873,
+      "output": {
+        "has_exceptions": true,
+        "exception_count": 2,
+        "critical_exceptions": [
+          {
+            "exception_type": "Duplicate Invoice",
+            "severity": "HIGH",
+            "blocker": true,
+            "resolvable": false,
+            "recommendation": "Reject payment and flag for investigation.",
+            "reference": {
+              "historical_invoice_id": "INV-HIST-0013",
+              "invoice_number": "INV-2026-0014"
+            }
+          }
+        ],
+        "detailed_exceptions": [
+          {
+            "exception_type": "Policy Violation",
+            "policy_id": "POL-AP-003",
+            "rule": "Invoices totaling over $25,000 require executive financial review.",
+            "severity": "MEDIUM",
+            "blocker": false,
+            "resolvable": true,
+            "recommendation": "Obtain executive financial sign‑off before approval.",
+            "detail": "Total amount $31,946.40 exceeds high‑value threshold."
+          },
+          {
+            "exception_type": "Duplicate Invoice",
+            "severity": "HIGH",
+            "blocker": true,
+            "resolvable": false,
+            "recommendation": "Reject payment and flag for further investigation.",
+            "detail": "Exact duplicate of previously processed invoice INV-HIST-0013."
+          }
+        ]
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "exception_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 1.895,
+      "tokens": 1855,
+      "prompt_tokens": 1343,
+      "completion_tokens": 512,
+      "output": {
+        "recommendation": "rejected",
+        "justification": "Invoice INV-2026-0014 is identified as an exact duplicate of historical invoice INV-HIST-0014 (matching invoice number, supplier ID, PO reference, and total amount). Duplicate detection assigns a HIGH risk level and explicitly recommends rejection and flagging for investigation. This duplicate exception is a blocker (severity HIGH, not resolvable). Additionally, the invoice exceeds the $25,000 high‑value threshold, triggering policy POL-AP-003 which would require executive financial sign‑off, but the duplicate issue overrides any possible approval path. Consequently, the invoice must be rejected.",
+        "conditions": [
+          "Exact duplicate detected (duplicate_status: EXACT_DUPLICATE)",
+          "High risk level per duplicate detection",
+          "Policy violation POL-AP-003 (total > $25,000) requiring executive review",
+          "Math audit passed (no arithmetic discrepancy) but duplicate overrides approval"
+        ]
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "approval_recommendation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_8 (gsk_yt...AwPO)",
+      "duration_seconds": 3.101,
+      "tokens": 2498,
+      "prompt_tokens": 1518,
+      "completion_tokens": 980,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "invoice_id": "INV-2026-0014",
+        "final_recommendation": "rejected",
+        "risk_level": "HIGH",
+        "summary_report": "The invoice passes all arithmetic checks and matches the purchase order exactly. However, it exceeds the $25,000 high‑value threshold, triggering policy POL-AP-003 which requires executive financial review. More critically, duplicate detection identified this invoice as an exact duplicate of a previously processed invoice (INV-HIST-0013) with identical invoice number, supplier, PO reference, and total amount. The duplicate exception is classified as HIGH severity, non‑resolvable, and a blocker. Given the HIGH risk level and blocker status, the invoice must be rejected and flagged for investigation.",
+        "audit_findings": {
+          "extraction": {
+            "invoice_number": "INV-2026-0014",
+            "supplier_id": "SUP-104",
+            "po_reference": "PO-2026-0014",
+            "total_amount": 31946.4
+          },
+          "validation": {
+            "validation_status": "PASSED",
+            "is_arithmetic_valid": true,
+            "calculated_subtotal": 29580.0,
+            "calculated_total": 31946.4,
+            "discrepancy_amount": 0.0
+          },
+          "po_matching": {
+            "po_match_status": "EXACT_MATCH",
+            "matched_po_id": "PO-2026-0014",
+            "matching_confidence": 1.0
+          },
+          "policy_compliance": {
+            "is_compliant": false,
+            "violations": [
+              {
+                "policy_id": "POL-AP-003",
+                "rule": "Invoices totaling over $25,000 require executive financial review.",
+                "severity": "medium",
+                "detail": "Total amount $31,946.40 exceeds high‑value threshold ($25,000)."
+              }
+            ]
+          },
+          "duplicate_detection": {
+            "duplicate_status": "EXACT_DUPLICATE",
+            "historical_invoice_id": "INV-HIST-0013",
+            "risk_level": "HIGH",
+            "recommendation": "Reject payment and flag for further investigation."
+          },
+          "exception_analysis": {
+            "critical_exceptions": [
+              {
+                "exception_type": "Duplicate Invoice",
+                "severity": "HIGH",
+                "blocker": true,
+                "resolvable": false,
+                "recommendation": "Reject payment and flag for investigation."
+              }
+            ],
+            "non_critical_exceptions": [
+              {
+                "exception_type": "Policy Violation",
+                "policy_id": "POL-AP-003",
+                "severity": "MEDIUM",
+                "blocker": false,
+                "resolvable": true,
+                "recommendation": "Obtain executive financial sign‑off before approval."
+              }
+            ]
+          },
+          "approval_recommendation": {
+            "recommendation": "rejected",
+            "justification": "Exact duplicate detected with HIGH risk and blocker status; policy violation also present but secondary to duplicate issue."
+          }
+        }
+      },
+      "notes": "",
+      "order": 8,
+      "agent_id": "final_review_agent_invoice"
+    }
+  ],
+  "total_tokens": 11067,
+  "prompt_tokens": 6903,
+  "completion_tokens": 4164,
+  "estimated_cost_usd": 0.007362,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"invoice_id\": \"INV-2026-0014\",\n  \"final_recommendation\": \"rejected\",\n  \"risk_level\": \"HIGH\",\n  \"summary_report\": \"The invoice passes all arithmetic checks and matches the purchase order exactly. However, it exceeds the $25,000 high\\u2011value threshold, triggering policy POL-AP-003 which requires executive financial review. More critically, duplicate detection identified this invoice as an exact duplicate of a previously processed invoice (INV-HIST-0013) with identical invoice number, supplier, PO reference, and total amount. The duplicate exception is classified as HIGH severity, non\\u2011resolvable, and a blocker. Given the HIGH risk level and blocker status, the invoice must be rejected and flagged for investigation.\",\n  \"audit_findings\": {\n    \"extraction\": {\n      \"invoice_number\": \"INV-2026-0014\",\n      \"supplier_id\": \"SUP-104\",\n      \"po_reference\": \"PO-2026-0014\",\n      \"total_amount\": 31946.4\n    },\n    \"validation\": {\n      \"validation_status\": \"PASSED\",\n      \"is_arithmetic_valid\": true,\n      \"calculated_subtotal\": 29580.0,\n      \"calculated_total\": 31946.4,\n      \"discrepancy_amount\": 0.0\n    },\n    \"po_matching\": {\n      \"po_match_status\": \"EXACT_MATCH\",\n      \"matched_po_id\": \"PO-2026-0014\",\n      \"matching_confidence\": 1.0\n    },\n    \"policy_compliance\": {\n      \"is_compliant\": false,\n      \"violations\": [\n        {\n          \"policy_id\": \"POL-AP-003\",\n          \"rule\": \"Invoices totaling over $25,000 require executive financial review.\",\n          \"severity\": \"medium\",\n          \"detail\": \"Total amount $31,946.40 exceeds high\\u2011value threshold ($25,000).\"\n        }\n      ]\n    },\n    \"duplicate_detection\": {\n      \"duplicate_status\": \"EXACT_DUPLICATE\",\n      \"historical_invoice_id\": \"INV-HIST-0013\",\n      \"risk_level\": \"HIGH\",\n      \"recommendation\": \"Reject payment and flag for further investigation.\"\n    },\n    \"exception_analysis\": {\n      \"critical_exceptions\": [\n        {\n          \"exception_type\": \"Duplicate Invoice\",\n          \"severity\": \"HIGH\",\n          \"blocker\": true,\n          \"resolvable\": false,\n          \"recommendation\": \"Reject payment and flag for investigation.\"\n        }\n      ],\n      \"non_critical_exceptions\": [\n        {\n          \"exception_type\": \"Policy Violation\",\n          \"policy_id\": \"POL-AP-003\",\n          \"severity\": \"MEDIUM\",\n          \"blocker\": false,\n          \"resolvable\": true,\n          \"recommendation\": \"Obtain executive financial sign\\u2011off before approval.\"\n        }\n      ]\n    },\n    \"approval_recommendation\": {\n      \"recommendation\": \"rejected\",\n      \"justification\": \"Exact duplicate detected with HIGH risk and blocker status; policy violation also present but secondary to duplicate issue.\"\n    }\n  }\n}",
+  "timestamp": "2026-10-31T13:10:25.699130+00:00"
+}

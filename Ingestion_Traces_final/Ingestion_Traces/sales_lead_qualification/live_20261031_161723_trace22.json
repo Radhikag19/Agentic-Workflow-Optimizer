@@ -1,0 +1,170 @@
+{
+  "run_id": "live_20261031_161723_trace22",
+  "workflow_name": "sales_lead_qualification",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 12.466,
+  "agent_execution_count": 7,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_11 (gsk_A9...C3BP)",
+      "duration_seconds": 2.114,
+      "tokens": 964,
+      "prompt_tokens": 395,
+      "completion_tokens": 569,
+      "output": {
+        "lead_id": "LEAD-2026-0002",
+        "enriched_lead_profile": {
+          "contact_name": "Bob Miller",
+          "contact_email": "bob@cornerbakeryexpress.com",
+          "job_title": "Store Owner",
+          "company_name": "Corner Bakery Express",
+          "industry": "Retail & Food Services",
+          "employee_count": 6,
+          "annual_revenue_usd": 350000,
+          "region": "North America",
+          "stated_budget": 200.0,
+          "purchase_timeline": "Unknown / Someday"
+        },
+        "missing_attributes": [
+          "purchase_timeline (value unknown)",
+          "company data flagged as synthetic/unverified"
+        ]
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "lead_enrichment_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_12 (gsk_5G...OStT)",
+      "duration_seconds": 1.07,
+      "tokens": 773,
+      "prompt_tokens": 583,
+      "completion_tokens": 190,
+      "output": {
+        "fit_category": "DISQUALIFIED",
+        "industry_fit_score": 0,
+        "company_size_fit_score": 0,
+        "fit_rationale": "The prospect operates in 'Retail & Food Services', which is listed among disqualified industries. Additionally, the company has only 6 employees, far below the minimum threshold of 200 employees required by the ICP. Both industry and size criteria are unmet, resulting in a disqualified status."
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "lead_fit_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_13 (gsk_i9...Ujsn)",
+      "duration_seconds": 1.256,
+      "tokens": 651,
+      "prompt_tokens": 398,
+      "completion_tokens": 253,
+      "output": {
+        "intent_level": "LOW_INTENT",
+        "intent_score": 10,
+        "high_value_signals": [],
+        "behavioral_summary": "Bob Miller, a store owner, signed up for the general newsletter on 2026-09-01, providing a single low‑engagement touchpoint. No demo requests, pricing page visits, or content downloads were recorded. The lead is flagged as synthetic and marked with a disqualification tag, indicating it is not a qualified prospect. Budget is modest ($200) and the purchase timeline is undefined, further supporting a low intent assessment."
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "intent_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_14 (gsk_6G...l7b1)",
+      "duration_seconds": 2.063,
+      "tokens": 877,
+      "prompt_tokens": 306,
+      "completion_tokens": 571,
+      "output": {
+        "total_score": 7,
+        "qualification_tier": "DISQUALIFIED",
+        "component_scores": {
+          "industry_fit": 0,
+          "company_size_fit": 0,
+          "role_authority": 2,
+          "intent_signals": 5,
+          "budget_timeline": 0
+        },
+        "scoring_rationale": "Score Calculation:\n- Each dimension has a predefined maximum (industry_fit:5, company_size_fit:5, role_authority:3, intent_signals:7, budget_timeline:5).\n- The prospect received points only where criteria were met: role_authority (2/3) and intent_signals (5/7). All other dimensions scored 0.\n- Total = 2 + 5 = 7.\n\nTier Classification:\n- SALES_QUALIFIED_LEAD (SQL): total_score >= 15\n- MARKETING_NURTURE (MN): total_score between 8 and 14 (inclusive)\n- DISQUALIFIED: total_score <= 7\n- With a total of 7, the prospect falls into the DISQUALIFIED tier.\n\nHighest‑Scoring Dimension:\n- intent_signals (5 points) – indicates strong buying intent signals.\n\nLowest‑Scoring Dimensions:\n- industry_fit, company_size_fit, and budget_timeline each scored 0 – the prospect does not match target industry, size, or demonstrated budget/timeline readiness."
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "lead_scoring_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_15 (gsk_3b...vKIi)",
+      "duration_seconds": 2.066,
+      "tokens": 1439,
+      "prompt_tokens": 978,
+      "completion_tokens": 461,
+      "output": {
+        "opportunity_viability": "LOW",
+        "estimated_deal_size": 200,
+        "pipeline_stage": "Disqualified",
+        "key_risks": [
+          "Industry (Retail & Food Services) is outside target ICP",
+          "Company size (6 employees) far below minimum threshold",
+          "Stated budget ($200) insufficient for typical solution",
+          "Purchase timeline unknown / indefinite",
+          "Lead flagged as synthetic/unverified data",
+          "Low intent signals and minimal engagement"
+        ]
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "opportunity_assessment_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_16 (gsk_ID...uEx3)",
+      "duration_seconds": 2.233,
+      "tokens": 1321,
+      "prompt_tokens": 1104,
+      "completion_tokens": 217,
+      "output": {
+        "recommended_action": "Log disqualification reason and archive",
+        "target_team": "Lead Management / Data Quality Team",
+        "priority": "Low",
+        "action_justification": "The lead falls into the DISQUALIFIED tier (total_score 7). It fails core ICP criteria: industry (Retail & Food Services) is disallowed, company size (6 employees) is far below the 200‑employee minimum, budget ($200) is insufficient, and purchase timeline is undefined. Additionally, the data is flagged as synthetic/unverified and engagement is minimal (single newsletter signup). Given these high‑risk factors, no sales outreach is warranted; the lead should be recorded with disqualification reasons and archived."
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "next_action_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.656,
+      "tokens": 1669,
+      "prompt_tokens": 1236,
+      "completion_tokens": 433,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "lead_id": "LEAD-2026-0002",
+        "final_qualification_tier": "DISQUALIFIED",
+        "final_score": 7,
+        "summary_report": "The lead (Bob Miller, Corner Bakery Express) was evaluated against the ICP and scoring rubric. Industry (Retail & Food Services) and company size (6 employees) both fall outside the target parameters, resulting in zero points for industry_fit and company_size_fit. Role authority earned 2 of 3 points, and intent signals contributed 5 of 7 points, while budget/timeline contributed none. The aggregate score of 7 places the lead in the DISQUALIFIED tier (<=7). All downstream recommendations—logging the disqualification, archiving the record, and routing to the Lead Management/Data Quality Team—are consistent with the scoring outcome. No contradictory routing decisions were identified.",
+        "audit_findings": [
+          "ICP fit classification (DISQUALIFIED) aligns with industry and size thresholds.",
+          "Scoring rubric calculations are accurate: total_score = 2 (role) + 5 (intent) = 7.",
+          "Qualification tier derived from total_score matches the defined tier thresholds.",
+          "Recommended action (log disqualification, archive) is consistent with DISQUALIFIED tier.",
+          "No conflicting routing or escalation instructions detected."
+        ]
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "final_review_agent_sales"
+    }
+  ],
+  "total_tokens": 7694,
+  "prompt_tokens": 5000,
+  "completion_tokens": 2694,
+  "estimated_cost_usd": 0.005078,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"lead_id\": \"LEAD-2026-0002\",\n  \"final_qualification_tier\": \"DISQUALIFIED\",\n  \"final_score\": 7,\n  \"summary_report\": \"The lead (Bob Miller, Corner Bakery Express) was evaluated against the ICP and scoring rubric. Industry (Retail & Food Services) and company size (6 employees) both fall outside the target parameters, resulting in zero points for industry_fit and company_size_fit. Role authority earned 2 of 3 points, and intent signals contributed 5 of 7 points, while budget/timeline contributed none. The aggregate score of 7 places the lead in the DISQUALIFIED tier (<=7). All downstream recommendations\\u2014logging the disqualification, archiving the record, and routing to the Lead Management/Data Quality Team\\u2014are consistent with the scoring outcome. No contradictory routing decisions were identified.\",\n  \"audit_findings\": [\n    \"ICP fit classification (DISQUALIFIED) aligns with industry and size thresholds.\",\n    \"Scoring rubric calculations are accurate: total_score = 2 (role) + 5 (intent) = 7.\",\n    \"Qualification tier derived from total_score matches the defined tier thresholds.\",\n    \"Recommended action (log disqualification, archive) is consistent with DISQUALIFIED tier.\",\n    \"No conflicting routing or escalation instructions detected.\"\n  ]\n}",
+  "timestamp": "2026-10-31T16:17:35.533692+00:00"
+}

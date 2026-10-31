@@ -1,0 +1,369 @@
+[
+  {
+    "agent_id": "invoice_extraction_agent",
+    "agent_name": "Senior Invoice Extraction Specialist",
+    "definition_type": "constructor_call",
+    "framework": "CrewAI",
+    "role": "Senior Invoice Extraction Specialist",
+    "goal": "Accurately extract all structured invoice fields (supplier, PO, line items, dates, totals) without hallucinating missing data.",
+    "backstory": "An expert document processor specialized in parsing accounts payable documents into structured formats.",
+    "configuration": {
+      "verbose": "False"
+    },
+    "relevant_methods": [
+      "create_agent",
+      "create_task"
+    ],
+    "model_references": [
+      {
+        "provider": "Groq",
+        "model_name": "AGENT_ID",
+        "parameters": {},
+        "init_call": "create_groq_llm_for_agent",
+        "direct_llm_invocations": [],
+        "source_ref": {
+          "file": "invoice_extraction_agent.py",
+          "start_line": 14,
+          "end_line": 14
+        },
+        "status": "STATICALLY_RESOLVED"
+      }
+    ],
+    "prompt_references": [
+      {
+        "prompt_type": "task_instruction",
+        "template_text": "description",
+        "placeholders": [],
+        "source_ref": {
+          "file": "invoice_extraction_agent.py",
+          "start_line": 35,
+          "end_line": 39
+        },
+        "status": "EXPLICIT",
+        "evidence_id": null
+      }
+    ],
+    "tool_references": [],
+    "helper_functions": [],
+    "execution_pattern": {
+      "direct_llm_calls": [],
+      "agent_execution_calls": [],
+      "workflow_execution_calls": [],
+      "tool_execution_calls": []
+    },
+    "inputs": [
+      {
+        "name": "invoice_data",
+        "function": "create_task",
+        "line": 23,
+        "status": "EXPLICIT"
+      }
+    ],
+    "task_expected_outputs": [
+      {
+        "type": "task_expected_output",
+        "description": "Strictly valid JSON containing extracted_invoice and extraction_flags.",
+        "line": 35,
+        "status": "EXPLICIT"
+      }
+    ],
+    "return_schemas": [],
+    "source_ref": {
+      "file": "invoice_extraction_agent.py",
+      "start_line": 15,
+      "end_line": 21
+    },
+    "evidence_ids": [
+      "ev_invoice_extraction_agent_agent_init",
+      "ev_invoice_extraction_agent_task_exec_create_task"
+    ],
+    "extraction_method": "crewai_agent_constructor_visitor",
+    "evidence_status": "EXPLICIT",
+    "unresolved_references": []
+  },
+  {
+    "agent_id": "invoice_validation_agent",
+    "agent_name": "Invoice Validation Auditor",
+    "definition_type": "constructor_call",
+    "framework": "CrewAI",
+    "role": "Invoice Validation Auditor",
+    "goal": "Verify invoice field integrity, validate calculations against deterministic math checks, and document discrepancies.",
+    "backstory": "A meticulous compliance auditor specializing in accounts payable fraud and mathematical discrepancy detection.",
+    "configuration": {
+      "verbose": "False"
+    },
+    "relevant_methods": [
+      "deterministic_arithmetic_check",
+      "create_agent",
+      "create_task"
+    ],
+    "model_references": [
+      {
+        "provider": "Groq",
+        "model_name": "AGENT_ID",
+        "parameters": {},
+        "init_call": "create_groq_llm_for_agent",
+        "direct_llm_invocations": [],
+        "source_ref": {
+          "file": "invoice_validation_agent.py",
+          "start_line": 53,
+          "end_line": 53
+        },
+        "status": "STATICALLY_RESOLVED"
+      }
+    ],
+    "prompt_references": [
+      {
+        "prompt_type": "task_instruction",
+        "template_text": "description",
+        "placeholders": [],
+        "source_ref": {
+          "file": "invoice_validation_agent.py",
+          "start_line": 75,
+          "end_line": 79
+        },
+        "status": "EXPLICIT",
+        "evidence_id": null
+      }
+    ],
+    "tool_references": [],
+    "helper_functions": [
+      "deterministic_arithmetic_check"
+    ],
+    "execution_pattern": {
+      "direct_llm_calls": [],
+      "agent_execution_calls": [],
+      "workflow_execution_calls": [],
+      "tool_execution_calls": [
+        "deterministic_arithmetic_check (line 63)"
+      ]
+    },
+    "inputs": [
+      {
+        "name": "invoice_data",
+        "function": "create_task",
+        "line": 62,
+        "status": "EXPLICIT"
+      }
+    ],
+    "task_expected_outputs": [
+      {
+        "type": "task_expected_output",
+        "description": "Strictly valid JSON containing validation_status, math_audit, and validation_errors.",
+        "line": 75,
+        "status": "EXPLICIT"
+      }
+    ],
+    "return_schemas": [
+      {
+        "function": "deterministic_arithmetic_check",
+        "return_type": "{\n        \"is_arithmetic_valid\": is_arithmetic_valid,\n        \"calculated_subtotal\": calc_subtotal,\n",
+        "line": 49,
+        "status": "STATICALLY_RESOLVED"
+      }
+    ],
+    "source_ref": {
+      "file": "invoice_validation_agent.py",
+      "start_line": 54,
+      "end_line": 60
+    },
+    "evidence_ids": [
+      "ev_invoice_validation_agent_agent_init",
+      "ev_invoice_validation_agent_task_exec_create_task",
+      "ev_invoice_validation_agent_helper_deterministic_arithmetic_check"
+    ],
+    "extraction_method": "crewai_agent_constructor_visitor",
+    "evidence_status": "EXPLICIT",
+    "unresolved_references": []
+  },
+  {
+    "agent_id": "po_matching_agent",
+    "agent_name": "Purchase Order Reconciliation Specialist",
+    "definition_type": "constructor_call",
+    "framework": "CrewAI",
+    "role": "Purchase Order Reconciliation Specialist",
+    "goal": "Match invoice line items, pricing, quantities, and terms against authorized purchase orders.",
+    "backstory": "An accounts payable specialist ensuring invoices only get paid if backed by approved purchase orders.",
+    "configuration": {
+      "verbose": "False"
+    },
+    "relevant_methods": [
+      "deterministic_po_match",
+      "create_agent",
+      "create_task"
+    ],
+    "model_references": [
+      {
+        "provider": "Groq",
+        "model_name": "AGENT_ID",
+        "parameters": {},
+        "init_call": "create_groq_llm_for_agent",
+        "direct_llm_invocations": [],
+        "source_ref": {
+          "file": "po_matching_agent.py",
+          "start_line": 79,
+          "end_line": 79
+        },
+        "status": "STATICALLY_RESOLVED"
+      }
+    ],
+    "prompt_references": [
+      {
+        "prompt_type": "task_instruction",
+        "template_text": "description",
+        "placeholders": [],
+        "source_ref": {
+          "file": "po_matching_agent.py",
+          "start_line": 100,
+          "end_line": 104
+        },
+        "status": "EXPLICIT",
+        "evidence_id": null
+      }
+    ],
+    "tool_references": [],
+    "helper_functions": [
+      "deterministic_po_match"
+    ],
+    "execution_pattern": {
+      "direct_llm_calls": [],
+      "agent_execution_calls": [],
+      "workflow_execution_calls": [],
+      "tool_execution_calls": [
+        "deterministic_po_match (line 89)"
+      ]
+    },
+    "inputs": [
+      {
+        "name": "invoice_data",
+        "function": "create_task",
+        "line": 88,
+        "status": "EXPLICIT"
+      }
+    ],
+    "task_expected_outputs": [
+      {
+        "type": "task_expected_output",
+        "description": "Strictly valid JSON containing po_match_status, matched_po_id, discrepancies, and matching_confidence.",
+        "line": 100,
+        "status": "EXPLICIT"
+      }
+    ],
+    "return_schemas": [
+      {
+        "function": "deterministic_po_match",
+        "return_type": "{\n        \"match_status\": match_status,\n        \"matched_po_id\": po_ref,\n        \"matched_po_data\": ",
+        "line": 75,
+        "status": "STATICALLY_RESOLVED"
+      }
+    ],
+    "source_ref": {
+      "file": "po_matching_agent.py",
+      "start_line": 80,
+      "end_line": 86
+    },
+    "evidence_ids": [
+      "ev_po_matching_agent_agent_init",
+      "ev_po_matching_agent_task_exec_create_task",
+      "ev_po_matching_agent_helper_deterministic_po_match"
+    ],
+    "extraction_method": "crewai_agent_constructor_visitor",
+    "evidence_status": "EXPLICIT",
+    "unresolved_references": []
+  },
+  {
+    "agent_id": "policy_compliance_agent",
+    "agent_name": "Corporate Accounts Payable Compliance Officer",
+    "definition_type": "constructor_call",
+    "framework": "CrewAI",
+    "role": "Corporate Accounts Payable Compliance Officer",
+    "goal": "Audit invoice against corporate purchasing policies, threshold limits, and vendor eligibility.",
+    "backstory": "An uncompromising governance officer ensuring adherence to internal procurement policies and SOX controls.",
+    "configuration": {
+      "verbose": "False"
+    },
+    "relevant_methods": [
+      "deterministic_policy_check",
+      "create_agent",
+      "create_task"
+    ],
+    "model_references": [
+      {
+        "provider": "Groq",
+        "model_name": "AGENT_ID",
+        "parameters": {},
+        "init_call": "create_groq_llm_for_agent",
+        "direct_llm_invocations": [],
+        "source_ref": {
+          "file": "policy_compliance_agent.py",
+          "start_line": 74,
+          "end_line": 74
+        },
+        "status": "STATICALLY_RESOLVED"
+      }
+    ],
+    "prompt_references": [
+      {
+        "prompt_type": "task_instruction",
+        "template_text": "description",
+        "placeholders": [],
+        "source_ref": {
+          "file": "policy_compliance_agent.py",
+          "start_line": 96,
+          "end_line": 100
+        },
+        "status": "EXPLICIT",
+        "evidence_id": null
+      }
+    ],
+    "tool_references": [],
+    "helper_functions": [
+      "deterministic_policy_check"
+    ],
+    "execution_pattern": {
+      "direct_llm_calls": [],
+      "agent_execution_calls": [],
+      "workflow_execution_calls": [],
+      "tool_execution_calls": [
+        "deterministic_policy_check (line 84)"
+      ]
+    },
+    "inputs": [
+      {
+        "name": "invoice_data",
+        "function": "create_task",
+        "line": 83,
+        "status": "EXPLICIT"
+      }
+    ],
+    "task_expected_outputs": [
+      {
+        "type": "task_expected_output",
+        "description": "Strictly valid JSON containing is_compliant, applied_policy_ids, violations, and compliance_summary.",
+        "line": 96,
+        "status": "EXPLICIT"
+      }
+    ],
+    "return_schemas": [
+      {
+        "function": "deterministic_policy_check",
+        "return_type": "{\n        \"applied_policy_ids\": applied_policy_ids,\n        \"violations\": violations,\n        \"is_co",
+        "line": 70,
+        "status": "STATICALLY_RESOLVED"
+      }
+    ],
+    "source_ref": {
+      "file": "policy_compliance_agent.py",
+      "start_line": 75,
+      "end_line": 81
+    },
+    "evidence_ids": [
+      "ev_policy_compliance_agent_agent_init",
+      "ev_policy_compliance_agent_task_exec_create_task",
+      "ev_policy_compliance_agent_helper_deterministic_policy_check"
+    ],
+    "extraction_method": "crewai_agent_constructor_visitor",
+    "evidence_status": "EXPLICIT",
+    "unresolved_references": []
+  }
+]

@@ -1,0 +1,306 @@
+{
+  "run_id": "live_20261031_130813_trace07",
+  "workflow_name": "invoice_processing",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 15.348,
+  "agent_execution_count": 8,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.878,
+      "tokens": 1016,
+      "prompt_tokens": 515,
+      "completion_tokens": 501,
+      "output": {
+        "extracted_invoice": {
+          "invoice_number": "INV-2026-0007",
+          "supplier_id": "SUP-107",
+          "supplier_name": "Echo Data Solutions",
+          "po_reference": "PO-2026-0007",
+          "invoice_date": "2026-08-24",
+          "due_date": "2026-09-23",
+          "currency": "USD",
+          "line_items": [
+            {
+              "description": "Ergonomic Office Chair",
+              "quantity": 12,
+              "unit_price": 250.0,
+              "line_total": 3000.0
+            },
+            {
+              "description": "Bulk Whiteboard Markers Pack",
+              "quantity": 5,
+              "unit_price": 45.0,
+              "line_total": 225.0
+            }
+          ],
+          "subtotal": 3225.0,
+          "tax": 258.0,
+          "discount": 0.0,
+          "total_amount": 3483.0
+        },
+        "extraction_flags": {
+          "missing_fields": [],
+          "ambiguous_fields": [],
+          "inconsistent_fields": []
+        }
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "invoice_extraction_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.317,
+      "tokens": 811,
+      "prompt_tokens": 568,
+      "completion_tokens": 243,
+      "output": {
+        "validation_status": "PASSED",
+        "math_audit": {
+          "is_arithmetic_valid": true,
+          "calculated_subtotal": 3225.0,
+          "calculated_total": 3483.0,
+          "stated_total": 3483.0,
+          "discrepancy_amount": 0.0,
+          "line_discrepancies": []
+        },
+        "validation_errors": []
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "invoice_validation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.006,
+      "tokens": 864,
+      "prompt_tokens": 734,
+      "completion_tokens": 130,
+      "output": {
+        "po_match_status": "EXACT_MATCH",
+        "matched_po_id": "PO-2026-0007",
+        "discrepancies": [],
+        "matching_confidence": 1.0
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "po_matching_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 1.89,
+      "tokens": 1091,
+      "prompt_tokens": 543,
+      "completion_tokens": 548,
+      "output": {
+        "is_compliant": true,
+        "applied_policy_ids": [
+          "POL-AP-001",
+          "POL-AP-002",
+          "POL-AP-003"
+        ],
+        "violations": [
+          {
+            "policy_id": "POL-AP-001",
+            "description": "Quantity of ergonomic office chairs (12) exceeds the standard threshold of 10 units per line item; requires secondary manager sign‑off.",
+            "severity": "secondary_signoff"
+          }
+        ],
+        "compliance_summary": "Invoice meets all monetary and vendor eligibility thresholds. The only issue is a quantity flag on line item 1 that does not constitute a fatal violation but must be reviewed and approved by a secondary authority before payment can be processed."
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "policy_compliance_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 1.486,
+      "tokens": 963,
+      "prompt_tokens": 595,
+      "completion_tokens": 368,
+      "output": {
+        "duplicate_status": "EXACT_DUPLICATE",
+        "matching_records": [
+          {
+            "historical_invoice_id": "INV-HIST-0006",
+            "matched_fields": [
+              "invoice_number",
+              "supplier_id",
+              "po_reference",
+              "total_amount"
+            ]
+          }
+        ],
+        "risk_assessment": {
+          "risk_level": "HIGH",
+          "recommendation": "Reject payment pending further verification",
+          "justification": "Exact duplicate detected with identical invoice number, supplier, PO reference, and total amount."
+        }
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "duplicate_detection_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 1.763,
+      "tokens": 1517,
+      "prompt_tokens": 962,
+      "completion_tokens": 555,
+      "output": {
+        "has_exceptions": true,
+        "exception_count": 2,
+        "critical_exceptions": [
+          "Duplicate Invoice Detected"
+        ],
+        "detailed_exceptions": [
+          {
+            "type": "Policy Violation",
+            "description": "Quantity of ergonomic office chairs (12) exceeds the standard threshold of 10 units per line item; requires secondary manager sign‑off.",
+            "severity": "MEDIUM",
+            "resolution": "Requires secondary manager approval; not a fatal blocker."
+          },
+          {
+            "type": "Duplicate Invoice",
+            "description": "Exact duplicate detected with identical invoice number, supplier, PO reference, and total amount (matched historical invoice INV-HIST-0006).",
+            "severity": "HIGH",
+            "resolution": "Fatal blocker; payment must be rejected pending verification."
+          }
+        ]
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "exception_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 1.618,
+      "tokens": 1598,
+      "prompt_tokens": 1185,
+      "completion_tokens": 413,
+      "output": {
+        "recommendation": "rejected",
+        "justification": "The invoice passes extraction, arithmetic validation, and PO exact match, and complies with monetary policies except for a medium‑severity quantity flag that only requires secondary sign‑off. However, duplicate detection identified an exact duplicate (invoice number, supplier, PO reference, and total amount) with a historical record (INV-HIST-0006). The duplicate risk assessment assigns a HIGH risk level and explicitly recommends rejecting payment pending verification. The duplicate finding is a fatal blocker that overrides the secondary sign‑off requirement.",
+        "conditions": {
+          "po_match_status": "EXACT_MATCH",
+          "math_audit": {
+            "is_arithmetic_valid": true,
+            "calculated_total": 3483.0,
+            "stated_total": 3483.0
+          },
+          "policy_violations": [
+            {
+              "policy_id": "POL-AP-001",
+              "severity": "secondary_signoff",
+              "description": "Quantity of ergonomic office chairs (12) exceeds threshold of 10 units per line item."
+            }
+          ],
+          "duplicate_detection": {
+            "duplicate_status": "EXACT_DUPLICATE",
+            "risk_level": "HIGH",
+            "historical_invoice_id": "INV-HIST-0006"
+          }
+        }
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "approval_recommendation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_8 (gsk_yt...AwPO)",
+      "duration_seconds": 2.599,
+      "tokens": 2306,
+      "prompt_tokens": 1438,
+      "completion_tokens": 868,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "invoice_id": "INV-2026-0007",
+        "final_recommendation": "rejected",
+        "risk_level": "HIGH",
+        "summary_report": "The invoice passes extraction, arithmetic validation, and PO exact‑match checks. Policy compliance is satisfied except for a medium‑severity quantity flag that requires secondary manager sign‑off. However, duplicate detection identified an exact duplicate (invoice number, supplier, PO reference, total amount) with historical invoice INV-HIST-0006, assigning a HIGH risk level and a fatal blocker recommendation. Consequently, the overall recommendation is to reject payment pending further verification.",
+        "audit_findings": {
+          "extraction": {
+            "invoice_number": "INV-2026-0007",
+            "supplier_id": "SUP-107",
+            "po_reference": "PO-2026-0007",
+            "extraction_flags": {
+              "missing_fields": [],
+              "ambiguous_fields": [],
+              "inconsistent_fields": []
+            }
+          },
+          "validation": {
+            "validation_status": "PASSED",
+            "is_arithmetic_valid": true,
+            "calculated_subtotal": 3225.0,
+            "calculated_total": 3483.0,
+            "stated_total": 3483.0,
+            "discrepancy_amount": 0.0
+          },
+          "po_matching": {
+            "po_match_status": "EXACT_MATCH",
+            "matched_po_id": "PO-2026-0007",
+            "matching_confidence": 1.0
+          },
+          "policy_compliance": {
+            "is_compliant": true,
+            "violations": [
+              {
+                "policy_id": "POL-AP-001",
+                "description": "Quantity of ergonomic office chairs (12) exceeds the standard threshold of 10 units per line item; requires secondary manager sign‑off.",
+                "severity": "secondary_signoff"
+              }
+            ],
+            "overall_severity": "MEDIUM"
+          },
+          "duplicate_detection": {
+            "duplicate_status": "EXACT_DUPLICATE",
+            "historical_invoice_id": "INV-HIST-0006",
+            "risk_level": "HIGH",
+            "recommendation": "Reject payment pending further verification"
+          },
+          "exception_analysis": {
+            "has_exceptions": true,
+            "critical_exceptions": [
+              "Duplicate Invoice Detected"
+            ],
+            "detailed_exceptions": [
+              {
+                "type": "Policy Violation",
+                "description": "Quantity of ergonomic office chairs (12) exceeds the standard threshold of 10 units per line item; requires secondary manager sign‑off.",
+                "severity": "MEDIUM",
+                "resolution": "Requires secondary manager approval; not a fatal blocker."
+              },
+              {
+                "type": "Duplicate Invoice",
+                "description": "Exact duplicate detected with identical invoice number, supplier, PO reference, and total amount (matched historical invoice INV-HIST-0006).",
+                "severity": "HIGH",
+                "resolution": "Fatal blocker; payment must be rejected pending verification."
+              }
+            ]
+          }
+        }
+      },
+      "notes": "",
+      "order": 8,
+      "agent_id": "final_review_agent_invoice"
+    }
+  ],
+  "total_tokens": 10166,
+  "prompt_tokens": 6540,
+  "completion_tokens": 3626,
+  "estimated_cost_usd": 0.006723,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"invoice_id\": \"INV-2026-0007\",\n  \"final_recommendation\": \"rejected\",\n  \"risk_level\": \"HIGH\",\n  \"summary_report\": \"The invoice passes extraction, arithmetic validation, and PO exact\\u2011match checks. Policy compliance is satisfied except for a medium\\u2011severity quantity flag that requires secondary manager sign\\u2011off. However, duplicate detection identified an exact duplicate (invoice number, supplier, PO reference, total amount) with historical invoice INV-HIST-0006, assigning a HIGH risk level and a fatal blocker recommendation. Consequently, the overall recommendation is to reject payment pending further verification.\",\n  \"audit_findings\": {\n    \"extraction\": {\n      \"invoice_number\": \"INV-2026-0007\",\n      \"supplier_id\": \"SUP-107\",\n      \"po_reference\": \"PO-2026-0007\",\n      \"extraction_flags\": {\n        \"missing_fields\": [],\n        \"ambiguous_fields\": [],\n        \"inconsistent_fields\": []\n      }\n    },\n    \"validation\": {\n      \"validation_status\": \"PASSED\",\n      \"is_arithmetic_valid\": true,\n      \"calculated_subtotal\": 3225.0,\n      \"calculated_total\": 3483.0,\n      \"stated_total\": 3483.0,\n      \"discrepancy_amount\": 0.0\n    },\n    \"po_matching\": {\n      \"po_match_status\": \"EXACT_MATCH\",\n      \"matched_po_id\": \"PO-2026-0007\",\n      \"matching_confidence\": 1.0\n    },\n    \"policy_compliance\": {\n      \"is_compliant\": true,\n      \"violations\": [\n        {\n          \"policy_id\": \"POL-AP-001\",\n          \"description\": \"Quantity of ergonomic office chairs (12) exceeds the standard threshold of 10 units per line item; requires secondary manager sign\\u2011off.\",\n          \"severity\": \"secondary_signoff\"\n        }\n      ],\n      \"overall_severity\": \"MEDIUM\"\n    },\n    \"duplicate_detection\": {\n      \"duplicate_status\": \"EXACT_DUPLICATE\",\n      \"historical_invoice_id\": \"INV-HIST-0006\",\n      \"risk_level\": \"HIGH\",\n      \"recommendation\": \"Reject payment pending further verification\"\n    },\n    \"exception_analysis\": {\n      \"has_exceptions\": true,\n      \"critical_exceptions\": [\n        \"Duplicate Invoice Detected\"\n      ],\n      \"detailed_exceptions\": [\n        {\n          \"type\": \"Policy Violation\",\n          \"description\": \"Quantity of ergonomic office chairs (12) exceeds the standard threshold of 10 units per line item; requires secondary manager sign\\u2011off.\",\n          \"severity\": \"MEDIUM\",\n          \"resolution\": \"Requires secondary manager approval; not a fatal blocker.\"\n        },\n        {\n          \"type\": \"Duplicate Invoice\",\n          \"description\": \"Exact duplicate detected with identical invoice number, supplier, PO reference, and total amount (matched historical invoice INV-HIST-0006).\",\n          \"severity\": \"HIGH\",\n          \"resolution\": \"Fatal blocker; payment must be rejected pending verification.\"\n        }\n      ]\n    }\n  }\n}",
+  "timestamp": "2026-10-31T13:08:28.484337+00:00"
+}

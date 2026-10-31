@@ -1,0 +1,175 @@
+{
+  "run_id": "live_20261031_161801_trace25",
+  "workflow_name": "sales_lead_qualification",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 17.196,
+  "agent_execution_count": 7,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_11 (gsk_A9...C3BP)",
+      "duration_seconds": 3.575,
+      "tokens": 1172,
+      "prompt_tokens": 390,
+      "completion_tokens": 782,
+      "output": {
+        "lead_id": "LEAD-2026-0005",
+        "enriched_lead_profile": {
+          "contact_name": "Tom Bodega",
+          "contact_email": "tom@acmebodega.com",
+          "job_title": "Cashier",
+          "stated_budget": 50.0,
+          "purchase_timeline": "None",
+          "test_case_tag": "unsuitable_wrong_role_wrong_size",
+          "company_name": "Acme Local Bodega",
+          "industry": "Retail",
+          "employee_count": 2,
+          "annual_revenue_usd": 120000,
+          "region": "North America",
+          "lead_is_synthetic": true,
+          "company_is_synthetic": true
+        },
+        "missing_attributes": [
+          "purchase_timeline",
+          "lead_is_synthetic",
+          "company_is_synthetic"
+        ]
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "lead_enrichment_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_12 (gsk_5G...OStT)",
+      "duration_seconds": 1.735,
+      "tokens": 776,
+      "prompt_tokens": 609,
+      "completion_tokens": 167,
+      "output": {
+        "fit_category": "DISQUALIFIED",
+        "industry_fit_score": 0,
+        "company_size_fit_score": 0,
+        "fit_rationale": "The prospect operates in the Retail industry, which is listed among disqualified industries, and the company has only 2 employees, far below the minimum threshold of 200 employees required by the ICP. Both industry and size criteria are unmet, resulting in a disqualified status."
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "lead_fit_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_13 (gsk_i9...Ujsn)",
+      "duration_seconds": 1.438,
+      "tokens": 553,
+      "prompt_tokens": 356,
+      "completion_tokens": 197,
+      "output": {
+        "intent_level": "NO_SIGNALS",
+        "intent_score": 0,
+        "high_value_signals": [],
+        "behavioral_summary": "The lead is synthetic and represents a cashier role with a very low stated budget ($50) and no purchase timeline. No digital touchpoint events have been recorded, resulting in no observable intent signals. Given the mismatch in role, budget, and lack of engagement, the lead is not qualified for further sales outreach."
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "intent_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_14 (gsk_6G...l7b1)",
+      "duration_seconds": 5.223,
+      "tokens": 757,
+      "prompt_tokens": 306,
+      "completion_tokens": 451,
+      "output": {
+        "total_score": 0,
+        "qualification_tier": "DISQUALIFIED",
+        "component_scores": {
+          "industry_fit": 0,
+          "company_size_fit": 0,
+          "role_authority": 0,
+          "intent_signals": 0,
+          "budget_timeline": 0
+        },
+        "scoring_rationale": "The deterministic model assigns points to five core dimensions (industry_fit, company_size_fit, role_authority, intent_signals, budget_timeline). Each dimension contributes a weighted score that is summed to produce the total_score. In this case, every dimension evaluated to 0, resulting in a total_score of 0. Tier classification follows predefined thresholds: \n- total_score >= 80 → SALES_QUALIFIED_LEAD (high readiness)\n- total_score between 30 and 79 → MARKETING_NURTURE (moderate interest, needs further engagement)\n- total_score < 30 → DISQUALIFIED (insufficient fit or intent). \nBecause the total_score is 0, the lead falls into the DISQUALIFIED tier. All dimensions are tied for both the highest and lowest scores at 0, indicating no positive signals were detected across any evaluated criteria."
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "lead_scoring_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_15 (gsk_3b...vKIi)",
+      "duration_seconds": 1.354,
+      "tokens": 1192,
+      "prompt_tokens": 922,
+      "completion_tokens": 270,
+      "output": {
+        "opportunity_viability": "LOW",
+        "estimated_deal_size": 50.0,
+        "pipeline_stage": "Disqualified",
+        "key_risks": [
+          "Synthetic lead and company data – likely not a real prospect",
+          "Role mismatch (Cashier) with no purchasing authority",
+          "Stated budget ($50) far below minimum viable deal size",
+          "No purchase timeline or intent signals",
+          "Company size (2 employees) below ICP threshold of 200",
+          "Industry (Retail) is on the disqualified list"
+        ]
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "opportunity_assessment_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_16 (gsk_ID...uEx3)",
+      "duration_seconds": 1.502,
+      "tokens": 1297,
+      "prompt_tokens": 1068,
+      "completion_tokens": 229,
+      "output": {
+        "recommended_action": "Log disqualification reason and archive",
+        "target_team": "Lead Management / Data Quality",
+        "priority": "Low",
+        "action_justification": "The lead is classified as DISQUALIFIED with a total score of 0. Key factors include synthetic lead and company data, a cashier role lacking purchasing authority, a stated budget of $50 far below the minimum viable deal size, no purchase timeline or intent signals, a company size of 2 employees (below the ICP threshold of 200), and an industry (Retail) that is on the disqualified list. These combined deficiencies warrant archiving rather than further sales engagement."
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "next_action_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 2.36,
+      "tokens": 1868,
+      "prompt_tokens": 1185,
+      "completion_tokens": 683,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "lead_id": "LEAD-2026-0005",
+        "final_qualification_tier": "DISQUALIFIED",
+        "final_score": 0,
+        "summary_report": "The lead LEAD-2026-0005 was evaluated against the ICP and scoring rubric. All fit criteria (industry, company size, role authority, budget/timeline, and intent) returned zero scores, resulting in a total_score of 0 and classification as DISQUALIFIED. The recommended action to log the disqualification reason and archive the record aligns with the scoring tier and opportunity viability (LOW, Disqualified). No contradictory routing decisions were detected. Missing attributes (purchase_timeline, lead_is_synthetic, company_is_synthetic) were flagged but do not alter the disqualification outcome.",
+        "audit_findings": [
+          "Fit assessment matches ICP thresholds: industry and company size are disqualified.",
+          "Scoring components all zero, total_score 0, tier DISQUALIFIED per rubric.",
+          "Opportunity viability marked LOW and pipeline stage Disqualified, consistent with score.",
+          "Recommended action (archive) aligns with DISQUALIFIED tier; no higher-level routing required.",
+          "Missing attributes identified but do not affect disqualification decision.",
+          "No contradictory routing decisions found."
+        ]
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "final_review_agent_sales"
+    }
+  ],
+  "total_tokens": 7615,
+  "prompt_tokens": 4836,
+  "completion_tokens": 2779,
+  "estimated_cost_usd": 0.005049,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"lead_id\": \"LEAD-2026-0005\",\n  \"final_qualification_tier\": \"DISQUALIFIED\",\n  \"final_score\": 0,\n  \"summary_report\": \"The lead LEAD-2026-0005 was evaluated against the ICP and scoring rubric. All fit criteria (industry, company size, role authority, budget/timeline, and intent) returned zero scores, resulting in a total_score of 0 and classification as DISQUALIFIED. The recommended action to log the disqualification reason and archive the record aligns with the scoring tier and opportunity viability (LOW, Disqualified). No contradictory routing decisions were detected. Missing attributes (purchase_timeline, lead_is_synthetic, company_is_synthetic) were flagged but do not alter the disqualification outcome.\",\n  \"audit_findings\": [\n    \"Fit assessment matches ICP thresholds: industry and company size are disqualified.\",\n    \"Scoring components all zero, total_score 0, tier DISQUALIFIED per rubric.\",\n    \"Opportunity viability marked LOW and pipeline stage Disqualified, consistent with score.\",\n    \"Recommended action (archive) aligns with DISQUALIFIED tier; no higher-level routing required.\",\n    \"Missing attributes identified but do not affect disqualification decision.\",\n    \"No contradictory routing decisions found.\"\n  ]\n}",
+  "timestamp": "2026-10-31T16:18:18.370540+00:00"
+}

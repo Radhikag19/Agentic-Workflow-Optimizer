@@ -1,0 +1,2599 @@
+{
+  "metadata": {
+    "workflow_id": "contract_review",
+    "workflow_name": "contract_review",
+    "evidence_schema_version": "1.0",
+    "generated_at": "2026-10-31T21:20:01.956934+00:00",
+    "traces_discovered": 30,
+    "traces_processed": 30,
+    "traces_failed": 0,
+    "input_files": {
+      "workflow_json": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\contract_review\\workflow.json",
+      "workflow_context_json": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\contract_review\\workflow_context.json",
+      "traces_directory": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Ingestion_Traces_final\\Ingestion_Traces\\contract_review",
+      "trace_files": [
+        "live_20261031_115354_trace01.json",
+        "live_20261031_115834_trace02.json",
+        "live_20261031_115900_trace03.json",
+        "live_20261031_115931_trace04.json",
+        "live_20261031_120114_trace06.json",
+        "live_20261031_120143_trace07.json",
+        "live_20261031_120213_trace08.json",
+        "live_20261031_120244_trace09.json",
+        "live_20261031_120542_trace11.json",
+        "live_20261031_120608_trace12.json",
+        "live_20261031_120635_trace13.json",
+        "live_20261031_120724_trace14.json",
+        "live_20261031_121335_trace16.json",
+        "live_20261031_121405_trace17.json",
+        "live_20261031_121436_trace18.json",
+        "live_20261031_121506_trace19.json",
+        "live_20261031_121534_trace20.json",
+        "live_20261031_121658_trace21.json",
+        "live_20261031_121724_trace22.json",
+        "live_20261031_121801_trace23.json",
+        "live_20261031_121832_trace24.json",
+        "live_20261031_121915_trace25.json",
+        "live_20261031_122610_trace26.json",
+        "live_20261031_122648_trace27.json",
+        "live_20261031_122714_trace28.json",
+        "live_20261031_122748_trace29.json",
+        "live_20261031_122858_trace30.json",
+        "live_20261031_123310_trace05.json",
+        "live_20261031_123339_trace10.json",
+        "live_20261031_123408_trace15.json"
+      ]
+    },
+    "aggregation_status": "complete"
+  },
+  "workflow_definition": {
+    "description": "Baseline 10-agent contract review and compliance workflow with evidence linking.",
+    "version": "1.0.0",
+    "declared_agents": [
+      {
+        "agent_id": "contract_intake_agent",
+        "name": "Contract Intake Agent",
+        "role": "Contract Intake and Ingestion Specialist",
+        "responsibilities": "Validate document completeness, catalog contract metadata, versioning, and parties.",
+        "declared_inputs": [
+          "contract_id",
+          "title",
+          "contract_type",
+          "version",
+          "clauses",
+          "policy_id"
+        ],
+        "declared_outputs": [
+          "document_id",
+          "contract_id",
+          "contract_type",
+          "document_complete",
+          "section_count"
+        ],
+        "declared_dependencies": [],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "clause_extraction_agent",
+        "name": "Clause Extraction Agent",
+        "role": "Contract Clause Extraction Specialist",
+        "responsibilities": "Extract discrete legal clauses with stable clause IDs and section references once.",
+        "declared_inputs": [
+          "clauses",
+          "contract_id"
+        ],
+        "declared_outputs": [
+          "clauses",
+          "absent_clause_types",
+          "extraction_notes"
+        ],
+        "declared_dependencies": [
+          "contract_intake_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "policy_interpretation_agent",
+        "name": "Policy Interpretation Agent",
+        "role": "Policy Interpretation Specialist",
+        "responsibilities": "Deconstruct compliance policy into discrete mandatory and recommended requirements with thresholds.",
+        "declared_inputs": [
+          "policy_id",
+          "policy_name",
+          "requirements"
+        ],
+        "declared_outputs": [
+          "policy_id",
+          "policy_version",
+          "mandatory_requirements",
+          "recommended_requirements"
+        ],
+        "declared_dependencies": [
+          "contract_intake_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "clause_mapping_agent",
+        "name": "Clause-to-Policy Mapping Agent",
+        "role": "Clause-to-Policy Mapping Specialist",
+        "responsibilities": "Align extracted clauses to applicable policy requirements and classify status.",
+        "declared_inputs": [
+          "clauses",
+          "mandatory_requirements",
+          "recommended_requirements"
+        ],
+        "declared_outputs": [
+          "mappings",
+          "coverage_percentage"
+        ],
+        "declared_dependencies": [
+          "clause_extraction_agent",
+          "policy_interpretation_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "compliance_deviation_agent",
+        "name": "Compliance Deviation Agent",
+        "role": "Contract Compliance Deviation Evaluator",
+        "responsibilities": "Identify deviations, missing protections, incompatible terms, and assign severity.",
+        "declared_inputs": [
+          "mappings",
+          "mandatory_requirements"
+        ],
+        "declared_outputs": [
+          "deviations",
+          "has_critical_deviations"
+        ],
+        "declared_dependencies": [
+          "clause_mapping_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "risk_ambiguity_agent",
+        "name": "Risk and Ambiguity Agent",
+        "role": "Contract Risk and Ambiguity Analyst",
+        "responsibilities": "Detect vague phrasing, undefined timelines, and latent operational risks.",
+        "declared_inputs": [
+          "clauses"
+        ],
+        "declared_outputs": [
+          "risk_findings"
+        ],
+        "declared_dependencies": [
+          "clause_extraction_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "cross_clause_consistency_agent",
+        "name": "Cross-Clause Consistency Agent",
+        "role": "Contract Inter-Clause Consistency Auditor",
+        "responsibilities": "Detect internal contradictions across clauses such as termination vs auto-renewal lock-in.",
+        "declared_inputs": [
+          "clauses",
+          "effective_date",
+          "expiration_date"
+        ],
+        "declared_outputs": [
+          "inconsistencies"
+        ],
+        "declared_dependencies": [
+          "clause_extraction_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "evidence_validation_agent",
+        "name": "Evidence and Citation Validation Agent",
+        "role": "Legal Evidence and Citation Validator",
+        "responsibilities": "Verify all findings reference real clause IDs and that quoted excerpts support claims.",
+        "declared_inputs": [
+          "deviations",
+          "risk_findings",
+          "inconsistencies",
+          "clauses",
+          "requirements"
+        ],
+        "declared_outputs": [
+          "all_citations_valid",
+          "verified_finding_ids",
+          "invalid_or_unsupported_findings"
+        ],
+        "declared_dependencies": [
+          "compliance_deviation_agent",
+          "risk_ambiguity_agent",
+          "cross_clause_consistency_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "contract_independent_review_agent",
+        "name": "Independent Review Agent",
+        "role": "Senior Contract Compliance Reviewer",
+        "responsibilities": "Deduplicate findings, calibrate severity ratings, and highlight issues needing legal counsel.",
+        "declared_inputs": [
+          "deviations",
+          "risk_findings",
+          "inconsistencies",
+          "all_citations_valid"
+        ],
+        "declared_outputs": [
+          "review_status",
+          "duplicate_findings_merged",
+          "severity_adjustments",
+          "unresolved_matters"
+        ],
+        "declared_dependencies": [
+          "evidence_validation_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "final_compliance_report_agent",
+        "name": "Final Compliance Report Agent",
+        "role": "Lead Contract Compliance Report Author",
+        "responsibilities": "Produce executive summary, policy coverage, clause inventory, findings, and disclaimers.",
+        "declared_inputs": [
+          "deviations",
+          "risk_findings",
+          "inconsistencies",
+          "coverage",
+          "unresolved_matters"
+        ],
+        "declared_outputs": [
+          "run_id",
+          "contract_id",
+          "contract_version",
+          "policy_id",
+          "policy_version",
+          "contract_type",
+          "executive_summary",
+          "policy_coverage",
+          "clause_inventory",
+          "compliance_findings",
+          "risk_findings",
+          "cross_clause_inconsistencies",
+          "evidence_validation",
+          "unresolved_questions",
+          "recommended_actions",
+          "human_review_required",
+          "validation_warnings"
+        ],
+        "declared_dependencies": [
+          "contract_independent_review_agent"
+        ],
+        "assigned_key_env": null
+      }
+    ],
+    "declared_dependencies": [
+      {
+        "source": "contract_intake_agent",
+        "target": "clause_extraction_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "contract_intake_agent",
+        "target": "policy_interpretation_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "clause_extraction_agent",
+        "target": "clause_mapping_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "policy_interpretation_agent",
+        "target": "clause_mapping_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "clause_mapping_agent",
+        "target": "compliance_deviation_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "clause_extraction_agent",
+        "target": "risk_ambiguity_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "clause_extraction_agent",
+        "target": "cross_clause_consistency_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "compliance_deviation_agent",
+        "target": "evidence_validation_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "risk_ambiguity_agent",
+        "target": "evidence_validation_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "cross_clause_consistency_agent",
+        "target": "evidence_validation_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "evidence_validation_agent",
+        "target": "contract_independent_review_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "contract_independent_review_agent",
+        "target": "final_compliance_report_agent",
+        "relationship_type": "declared_dependency"
+      }
+    ],
+    "declared_execution_order": [
+      "contract_intake_agent",
+      "clause_extraction_agent",
+      "policy_interpretation_agent",
+      "clause_mapping_agent",
+      "compliance_deviation_agent",
+      "risk_ambiguity_agent",
+      "cross_clause_consistency_agent",
+      "evidence_validation_agent",
+      "contract_independent_review_agent",
+      "final_compliance_report_agent"
+    ],
+    "declared_model_configuration": {
+      "model": "openai/gpt-oss-120b",
+      "provider": "Groq",
+      "assigned_groq_key_env": "GROQ_API_KEY_7"
+    },
+    "optimizer_annotations": {
+      "optimizer_annotations": {
+        "potential_parallel_branches": [
+          [
+            "compliance_deviation_agent",
+            "risk_ambiguity_agent",
+            "cross_clause_consistency_agent"
+          ]
+        ],
+        "consolidation_candidates": [
+          [
+            "clause_mapping_agent",
+            "compliance_deviation_agent"
+          ],
+          [
+            "risk_ambiguity_agent",
+            "cross_clause_consistency_agent"
+          ],
+          [
+            "evidence_validation_agent",
+            "contract_independent_review_agent"
+          ]
+        ],
+        "pruning_candidates": [
+          "evidence_validation_agent",
+          "contract_independent_review_agent"
+        ],
+        "routing_conditions": {
+          "standard_nda_bypass": "For short standard bilateral NDAs without custom IP terms, skip cross-clause deep audit and route directly to summary."
+        }
+      },
+      "optimization_opportunities": {
+        "potential_parallel_branches": [
+          [
+            "compliance_deviation_agent",
+            "risk_ambiguity_agent",
+            "cross_clause_consistency_agent"
+          ]
+        ],
+        "consolidation_candidates": [
+          [
+            "clause_mapping_agent",
+            "compliance_deviation_agent"
+          ],
+          [
+            "risk_ambiguity_agent",
+            "cross_clause_consistency_agent"
+          ],
+          [
+            "evidence_validation_agent",
+            "contract_independent_review_agent"
+          ]
+        ],
+        "pruning_candidates": [
+          "evidence_validation_agent",
+          "contract_independent_review_agent"
+        ]
+      },
+      "hypothesis_disclaimer": "Declared candidate hypothesis from workflow specification, not an empirical or validated optimization opportunity."
+    }
+  },
+  "static_implementation_context": {
+    "source_files": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "agents": [
+      {
+        "agent_id": "clause_extraction_agent",
+        "role": "Contract Clause Extraction Specialist",
+        "goal": "Extract discrete legal clauses from contract text, tagging them with standardized clause types and stable clause identifiers while preserving source excerpts.",
+        "backstory": "You are a legal operations clause specialist. You systematically inventory contractual provisions, assigning unique IDs and recording precise section citations without modifying the legal text.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'''\\nContract ID: {c_id}\\nContract Text Clauses:\\n{raw_clauses}\\n\\nExtract each discrete clause:\\n- Assign stable clause_id (e.g. CLS-xxxx-PAY, CLS-xxxx-TERM).\\n- Clause type ('payment_terms', 'data_protection', 'liability_cap', 'termination', 'renewal').\\n- Section title and section reference.\\n- Full verbatim clause_text excerpt.\\n- Identify absent standard clause types if any.\\n\\nReturn structured JSON matching:\\n{{\\n  \"contract_id\": \"{c_id}\",\\n  \"clauses\": [\\n    {{\\n      \"clause_id\": \"CLS-xxxx-PAY\",\\n      \"clause_type\": \"payment_terms\",\\n      \"clause_title\": \"Section 3: Invoicing and Payment Terms\",\\n      \"clause_text\": \"...\",\\n      \"section_reference\": \"Section 3.1\"\\n    }}\\n  ],\\n  \"absent_clause_types\": [],\\n  \"extraction_notes\": [\"Document extracted once for downstream policy comparison\"]\\n}}\\n'''",
+            "expected_output": "Valid JSON matching ClauseExtractionOutput schema.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'''\\nContract ID: {c_id}\\nContract Text Clauses:\\n{raw_clauses}\\n\\nExtract each discrete clause:\\n- Assign stable clause_id (e.g. CLS-xxxx-PAY, CLS-xxxx-TERM).\\n- Clause type ('payment_terms', 'data_protection', 'liability_cap', 'termination', 'renewal').\\n- Section title and section reference.\\n- Full verbatim clause_text excerpt.\\n- Identify absent standard clause types if any.\\n\\nReturn structured JSON matching:\\n{{\\n  \"contract_id\": \"{c_id}\",\\n  \"clauses\": [\\n    {{\\n      \"clause_id\": \"CLS-xxxx-PAY\",\\n      \"clause_type\": \"payment_terms\",\\n      \"clause_title\": \"Section 3: Invoicing and Payment Terms\",\\n      \"clause_text\": \"...\",\\n      \"section_reference\": \"Section 3.1\"\\n    }}\\n  ],\\n  \"absent_clause_types\": [],\\n  \"extraction_notes\": [\"Document extracted once for downstream policy comparison\"]\\n}}\\n'''",
+          "Backstory: You are a legal operations clause specialist. You systematically inventory contractual provisions, assigning unique IDs and recording precise section citations without modifying the legal text."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\contract_review\\clause_extraction_agent.py",
+        "start_line": 30,
+        "end_line": 37,
+        "evidence_refs": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "agent_id": "clause_mapping_agent",
+        "role": "Clause-to-Policy Mapping Specialist",
+        "goal": "Align extracted contract clauses against structured corporate policy requirements, classifying compliance alignment status while preserving bidirectional citation IDs.",
+        "backstory": "You are a legal compliance auditor. You map contract provisions to policy mandates, determining whether each requirement is satisfied, partially satisfied, unaddressed, or in conflict.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'''\\nContract ID: {contract_id}\\nPolicy ID: {policy_id}\\n\\nPolicy Requirements to Map:\\n{all_reqs}\\n\\nExtracted Contract Clauses:\\n{clauses}\\n\\nMap each requirement to matching contract clause(s):\\n- Set mapping_status to one of: 'satisfied', 'partially_satisfied', 'conflicting', 'unaddressed'.\\n- Link clause_id (or null if unaddressed/missing).\\n- Provide supporting_clause_text excerpt.\\n- Note any specific threshold comparisons (e.g. Net 90 vs policy Net 45).\\n\\nReturn structured JSON matching:\\n{{\\n  \"contract_id\": \"{contract_id}\",\\n  \"policy_id\": \"{policy_id}\",\\n  \"mappings\": [\\n    {{\\n      \"mapping_id\": \"MAP-01\",\\n      \"clause_id\": \"CLS-xxxx-PAY\",\\n      \"requirement_id\": \"REQ-FIN-01\",\\n      \"mapping_status\": \"conflicting\",\\n      \"supporting_clause_text\": \"Invoices shall be payable within ninety (90) days...\",\\n      \"notes\": \"Contract specifies Net 90 which conflicts with Net 45 policy limit.\"\\n    }}\\n  ],\\n  \"coverage_percentage\": 100.0\\n}}\\n'''",
+            "expected_output": "Valid JSON matching ClauseMappingOutput schema.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'''\\nContract ID: {contract_id}\\nPolicy ID: {policy_id}\\n\\nPolicy Requirements to Map:\\n{all_reqs}\\n\\nExtracted Contract Clauses:\\n{clauses}\\n\\nMap each requirement to matching contract clause(s):\\n- Set mapping_status to one of: 'satisfied', 'partially_satisfied', 'conflicting', 'unaddressed'.\\n- Link clause_id (or null if unaddressed/missing).\\n- Provide supporting_clause_text excerpt.\\n- Note any specific threshold comparisons (e.g. Net 90 vs policy Net 45).\\n\\nReturn structured JSON matching:\\n{{\\n  \"contract_id\": \"{contract_id}\",\\n  \"policy_id\": \"{policy_id}\",\\n  \"mappings\": [\\n    {{\\n      \"mapping_id\": \"MAP-01\",\\n      \"clause_id\": \"CLS-xxxx-PAY\",\\n      \"requirement_id\": \"REQ-FIN-01\",\\n      \"mapping_status\": \"conflicting\",\\n      \"supporting_clause_text\": \"Invoices shall be payable within ninety (90) days...\",\\n      \"notes\": \"Contract specifies Net 90 which conflicts with Net 45 policy limit.\"\\n    }}\\n  ],\\n  \"coverage_percentage\": 100.0\\n}}\\n'''",
+          "Backstory: You are a legal compliance auditor. You map contract provisions to policy mandates, determining whether each requirement is satisfied, partially satisfied, unaddressed, or in conflict."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\contract_review\\clause_mapping_agent.py",
+        "start_line": 29,
+        "end_line": 36,
+        "evidence_refs": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "agent_id": "cross_clause_consistency_agent",
+        "role": "Contract Inter-Clause Consistency Auditor",
+        "goal": "Identify mutual incompatibilities, conflicting terms, and chronological contradictions across separate clauses within the same contract.",
+        "backstory": "You are a contract harmony specialist. You scrutinize the interplay between disparate sections—such as an unrestricted termination right in Section 12 vs an unconditional 2-year lock-in in Section 14—to uncover conflicting provisions.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'\\nContract ID: {contract_id}\\nEffective Date: {eff_date}\\nExpiration Date: {exp_date}\\nExtracted Clauses:\\n{clauses}\\n\\nAudit for internal contradictions:\\n1. Check date consistency: Does expiration date precede effective date?\\n2. Check termination vs renewal: Does one clause grant 30-day convenience termination while another states contract CANNOT be terminated prior to term?\\n3. Check liability vs indemnification: Are liability caps nullified or contradicted by broad indemnity clauses?\\n\\nReturn structured JSON matching:\\n{{\\n  \"contract_id\": \"{contract_id}\",\\n  \"inconsistencies\": [\\n    {{\\n      \"issue_id\": \"INC-01\",\\n      \"clause_id_a\": \"CLS-xxxx-TERM\",\\n      \"clause_id_b\": \"CLS-xxxx-REN\",\\n      \"description\": \"Termination clause allows 30-day convenience exit but renewal clause states contract cannot be terminated prior to full term expiration.\",\\n      \"interaction_type\": \"termination_vs_renewal\",\\n      \"evidence_a\": \"Either party may terminate for convenience...\",\\n      \"evidence_b\": \"Agreement automatically renews and CANNOT be terminated...\"\\n    }}\\n  ]\\n}}\\n'",
+            "expected_output": "Valid JSON matching CrossClauseConsistencyOutput schema.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'\\nContract ID: {contract_id}\\nEffective Date: {eff_date}\\nExpiration Date: {exp_date}\\nExtracted Clauses:\\n{clauses}\\n\\nAudit for internal contradictions:\\n1. Check date consistency: Does expiration date precede effective date?\\n2. Check termination vs renewal: Does one clause grant 30-day convenience termination while another states contract CANNOT be terminated prior to term?\\n3. Check liability vs indemnification: Are liability caps nullified or contradicted by broad indemnity clauses?\\n\\nReturn structured JSON matching:\\n{{\\n  \"contract_id\": \"{contract_id}\",\\n  \"inconsistencies\": [\\n    {{\\n      \"issue_id\": \"INC-01\",\\n      \"clause_id_a\": \"CLS-xxxx-TERM\",\\n      \"clause_id_b\": \"CLS-xxxx-REN\",\\n      \"description\": \"Termination clause allows 30-day convenience exit but renewal clause states contract cannot be terminated prior to full term expiration.\",\\n      \"interaction_type\": \"termination_vs_renewal\",\\n      \"evidence_a\": \"Either party may terminate for convenience...\",\\n      \"evidence_b\": \"Agreement automatically renews and CANNOT be terminated...\"\\n    }}\\n  ]\\n}}\\n'",
+          "Backstory: You are a contract harmony specialist. You scrutinize the interplay between disparate sections—such as an unrestricted termination right in Section 12 vs an unconditional 2-year lock-in in Section 14—to uncover conflicting provisions."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\contract_review\\consistency_agent.py",
+        "start_line": 30,
+        "end_line": 37,
+        "evidence_refs": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "agent_id": "compliance_deviation_agent",
+        "role": "Contract Compliance Deviation Evaluator",
+        "goal": "Identify and grade specific deviations where contractual terms fall short of or contradict corporate policy requirements, detailing factual evidence and severity.",
+        "backstory": "You are a regulatory and corporate compliance reviewer. You inspect clause alignments, pinpointing precise contractual shortfalls and assigning structured severity levels without legal speculation.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'''\\nContract ID: {contract_id}\\nClause Mappings: {mappings}\\n\\nIdentify all compliance deviations:\\n- For any mapping with status 'conflicting' or 'unaddressed' (on a mandatory requirement):\\n  - Assign severity: 'critical' (for mandatory breach notification or unlimited liability), 'high' (for payment term violations > 30 days deviation), 'medium', or 'low'.\\n  - Provide deviation_summary.\\n  - Quote supporting_evidence.\\n  - Recommend clear remediation language.\\n\\nReturn structured JSON matching:\\n{{\\n  \"contract_id\": \"{contract_id}\",\\n  \"deviations\": [\\n    {{\\n      \"deviation_id\": \"DEV-01\",\\n      \"requirement_id\": \"REQ-FIN-01\",\\n      \"clause_id\": \"CLS-xxxx-PAY\",\\n      \"severity\": \"high\",\\n      \"deviation_summary\": \"Payment term of Net 90 exceeds policy ceiling of Net 45.\",\\n      \"supporting_evidence\": \"Invoices shall be payable within ninety (90) days...\",\\n      \"recommended_remediation\": \"Amend payment terms to Net 45 or shorter.\"\\n    }}\\n  ],\\n  \"has_critical_deviations\": false\\n}}\\n'''",
+            "expected_output": "Valid JSON matching ComplianceDeviationOutput schema.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'''\\nContract ID: {contract_id}\\nClause Mappings: {mappings}\\n\\nIdentify all compliance deviations:\\n- For any mapping with status 'conflicting' or 'unaddressed' (on a mandatory requirement):\\n  - Assign severity: 'critical' (for mandatory breach notification or unlimited liability), 'high' (for payment term violations > 30 days deviation), 'medium', or 'low'.\\n  - Provide deviation_summary.\\n  - Quote supporting_evidence.\\n  - Recommend clear remediation language.\\n\\nReturn structured JSON matching:\\n{{\\n  \"contract_id\": \"{contract_id}\",\\n  \"deviations\": [\\n    {{\\n      \"deviation_id\": \"DEV-01\",\\n      \"requirement_id\": \"REQ-FIN-01\",\\n      \"clause_id\": \"CLS-xxxx-PAY\",\\n      \"severity\": \"high\",\\n      \"deviation_summary\": \"Payment term of Net 90 exceeds policy ceiling of Net 45.\",\\n      \"supporting_evidence\": \"Invoices shall be payable within ninety (90) days...\",\\n      \"recommended_remediation\": \"Amend payment terms to Net 45 or shorter.\"\\n    }}\\n  ],\\n  \"has_critical_deviations\": false\\n}}\\n'''",
+          "Backstory: You are a regulatory and corporate compliance reviewer. You inspect clause alignments, pinpointing precise contractual shortfalls and assigning structured severity levels without legal speculation."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\contract_review\\deviation_agent.py",
+        "start_line": 29,
+        "end_line": 36,
+        "evidence_refs": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "agent_id": "evidence_validation_agent",
+        "role": "Legal Evidence and Citation Validator",
+        "goal": "Audit all generated deviations, risks, and contradictions to confirm every finding cites a real, verified clause ID and that quoted excerpts directly support the claim.",
+        "backstory": "You are a forensic legal proofreader. You verify that cited sections and IDs exist in the source contract and policy, catching any hallucinated clause numbers or unsupported conclusions.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'\\nContract ID: {contract_id}\\nValid Clause IDs in Document: {valid_clause_ids}\\nValid Policy Requirement IDs: {valid_req_ids}\\n\\nFindings to Validate:\\n- Deviations: {deviations}\\n- Risks: {risks}\\n- Inconsistencies: {inconsistencies}\\n\\nVerify evidence integrity:\\n1. Check that clause_id in each finding is among Valid Clause IDs (or null if missing clause).\\n2. Check that requirement_id is among Valid Policy Requirement IDs.\\n3. Confirm whether all citations are valid.\\n4. Return verified finding IDs and note any invalid or unsupported references.\\n\\nReturn structured JSON matching:\\n{{\\n  \"contract_id\": \"{contract_id}\",\\n  \"all_citations_valid\": true,\\n  \"verified_finding_ids\": [\"DEV-01\", \"RSK-01\", \"INC-01\"],\\n  \"invalid_or_unsupported_findings\": [],\\n  \"evidence_notes\": [\"All cited clauses verified against primary document inventory.\"]\\n}}\\n'",
+            "expected_output": "Valid JSON matching EvidenceValidationOutput schema.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'\\nContract ID: {contract_id}\\nValid Clause IDs in Document: {valid_clause_ids}\\nValid Policy Requirement IDs: {valid_req_ids}\\n\\nFindings to Validate:\\n- Deviations: {deviations}\\n- Risks: {risks}\\n- Inconsistencies: {inconsistencies}\\n\\nVerify evidence integrity:\\n1. Check that clause_id in each finding is among Valid Clause IDs (or null if missing clause).\\n2. Check that requirement_id is among Valid Policy Requirement IDs.\\n3. Confirm whether all citations are valid.\\n4. Return verified finding IDs and note any invalid or unsupported references.\\n\\nReturn structured JSON matching:\\n{{\\n  \"contract_id\": \"{contract_id}\",\\n  \"all_citations_valid\": true,\\n  \"verified_finding_ids\": [\"DEV-01\", \"RSK-01\", \"INC-01\"],\\n  \"invalid_or_unsupported_findings\": [],\\n  \"evidence_notes\": [\"All cited clauses verified against primary document inventory.\"]\\n}}\\n'",
+          "Backstory: You are a forensic legal proofreader. You verify that cited sections and IDs exist in the source contract and policy, catching any hallucinated clause numbers or unsupported conclusions."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\contract_review\\evidence_validation_agent.py",
+        "start_line": 29,
+        "end_line": 36,
+        "evidence_refs": [
+          "ev_agent_010"
+        ]
+      },
+      {
+        "agent_id": "final_compliance_report_agent",
+        "role": "Lead Contract Compliance Report Author",
+        "goal": "Assemble and author the definitive, evidence-backed contract compliance report, structuring deviations, risks, and recommended actions with explicit disclaimers stating that AI review does not replace licensed legal counsel.",
+        "backstory": "You are an executive legal operations director. You synthesize multi-agent review findings into polished, structured governance reports that enable corporate risk and legal teams to make informed contracting decisions.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'''\\nAssemble the definitive final contract review report:\\n- Run ID: {run_id}\\n- Contract ID: {c_id} (Version {c_ver}, Type: {c_type})\\n- Policy ID: {p_id} (Version {p_ver})\\n- Clause Count: {len(clauses)}\\n- Policy Coverage: {coverage}\\n- Compliance Deviations: {deviations}\\n- Operational Risks & Ambiguities: {risks}\\n- Cross-Clause Contradictions: {inconsistencies}\\n- Evidence Validation: {ev_val}\\n- Review Reviewer Notes: {independent_review_data.get('unresolved_matters')}\\n\\nRequirements:\\n1. Executive summary synthesizing contract compliance posture.\\n2. Distinct sections for explicit policy deviations vs ambiguous concerns.\\n3. Recommended follow-up actions for counsel/procurement.\\n4. Set human_review_required: true if deviations or risks exist.\\n5. Emphasize that zero detected issues does NOT constitute a warranty of legal validity.\\n\\nReturn structured JSON matching:\\n{{\\n  \"run_id\": \"{run_id}\",\\n  \"contract_id\": \"{c_id}\",\\n  \"contract_version\": \"{c_ver}\",\\n  \"policy_id\": \"{p_id}\",\\n  \"policy_version\": \"{p_ver}\",\\n  \"contract_type\": \"{c_type}\",\\n  \"executive_summary\": \"...\",\\n  \"policy_coverage\": {coverage},\\n  \"clause_inventory\": {clauses},\\n  \"compliance_findings\": {deviations},\\n  \"risk_findings\": {risks},\\n  \"cross_clause_inconsistencies\": {inconsistencies},\\n  \"evidence_validation\": {ev_val},\\n  \"unresolved_questions\": [\"Requires confirmation of whether payment terms can be adjusted to Net 45\"],\\n  \"recommended_actions\": [\"Request amendment to align payment terms with corporate policy\"],\\n  \"human_review_required\": {str(has_issues).lower()},\\n  \"validation_warnings\": [],\\n  \"legal_disclaimer\": \"This AI-assisted review is for preliminary compliance screening only and is NOT a substitute for qualified legal or compliance counsel. No detected issues does NOT imply complete legal validity.\"\\n}}\\n'''",
+            "expected_output": "Valid JSON matching ContractFinalReportOutput schema.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'''\\nAssemble the definitive final contract review report:\\n- Run ID: {run_id}\\n- Contract ID: {c_id} (Version {c_ver}, Type: {c_type})\\n- Policy ID: {p_id} (Version {p_ver})\\n- Clause Count: {len(clauses)}\\n- Policy Coverage: {coverage}\\n- Compliance Deviations: {deviations}\\n- Operational Risks & Ambiguities: {risks}\\n- Cross-Clause Contradictions: {inconsistencies}\\n- Evidence Validation: {ev_val}\\n- Review Reviewer Notes: {independent_review_data.get('unresolved_matters')}\\n\\nRequirements:\\n1. Executive summary synthesizing contract compliance posture.\\n2. Distinct sections for explicit policy deviations vs ambiguous concerns.\\n3. Recommended follow-up actions for counsel/procurement.\\n4. Set human_review_required: true if deviations or risks exist.\\n5. Emphasize that zero detected issues does NOT constitute a warranty of legal validity.\\n\\nReturn structured JSON matching:\\n{{\\n  \"run_id\": \"{run_id}\",\\n  \"contract_id\": \"{c_id}\",\\n  \"contract_version\": \"{c_ver}\",\\n  \"policy_id\": \"{p_id}\",\\n  \"policy_version\": \"{p_ver}\",\\n  \"contract_type\": \"{c_type}\",\\n  \"executive_summary\": \"...\",\\n  \"policy_coverage\": {coverage},\\n  \"clause_inventory\": {clauses},\\n  \"compliance_findings\": {deviations},\\n  \"risk_findings\": {risks},\\n  \"cross_clause_inconsistencies\": {inconsistencies},\\n  \"evidence_validation\": {ev_val},\\n  \"unresolved_questions\": [\"Requires confirmation of whether payment terms can be adjusted to Net 45\"],\\n  \"recommended_actions\": [\"Request amendment to align payment terms with corporate policy\"],\\n  \"human_review_required\": {str(has_issues).lower()},\\n  \"validation_warnings\": [],\\n  \"legal_disclaimer\": \"This AI-assisted review is for preliminary compliance screening only and is NOT a substitute for qualified legal or compliance counsel. No detected issues does NOT imply complete legal validity.\"\\n}}\\n'''",
+          "Backstory: You are an executive legal operations director. You synthesize multi-agent review findings into polished, structured governance reports that enable corporate risk and legal teams to make informed contracting decisions."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\contract_review\\final_report_agent.py",
+        "start_line": 32,
+        "end_line": 39,
+        "evidence_refs": [
+          "ev_agent_012"
+        ]
+      },
+      {
+        "agent_id": "contract_intake_agent",
+        "role": "Contract Intake and Ingestion Specialist",
+        "goal": "Ingest and validate the structure, metadata, versioning, and completeness of the target contract and associated compliance policy.",
+        "backstory": "You are a contract operations analyst. You catalogue legal documents, verifying effective dates, executing parties, clause inventory count, and document completeness without ever assuming or injecting unstated terms.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'''\\nContract Record:\\n- Contract ID: {c_id}\\n- Title: {c_title}\\n- Type: {c_type}\\n- Version: {c_ver}\\n- Parties: {contract_data.get('party_a')} and {contract_data.get('party_b')}\\n- Effective Date: {contract_data.get('effective_date')}\\n- Expiration Date: {contract_data.get('expiration_date')}\\n- Clause Count: {len(clauses)}\\n\\nTarget Policy Record:\\n- Policy ID: {p_id}\\n- Policy Version: {p_ver}\\n\\nValidate document structure and completeness.\\nReturn structured JSON matching:\\n{{\\n  \"document_id\": \"DOC-{c_id}\",\\n  \"contract_id\": \"{c_id}\",\\n  \"contract_title\": \"{c_title}\",\\n  \"contract_type\": \"{c_type}\",\\n  \"contract_version\": \"{c_ver}\",\\n  \"policy_id\": \"{p_id}\",\\n  \"policy_version\": \"{p_ver}\",\\n  \"document_complete\": {str(complete).lower()},\\n  \"section_count\": {len(clauses)},\\n  \"source_metadata\": {{\\n    \"party_a\": \"{contract_data.get('party_a')}\",\\n    \"party_b\": \"{contract_data.get('party_b')}\",\\n    \"effective_date\": \"{contract_data.get('effective_date')}\",\\n    \"expiration_date\": \"{contract_data.get('expiration_date')}\"\\n  }},\\n  \"intake_warnings\": []\\n}}\\n'''",
+            "expected_output": "Valid JSON matching ContractIntakeOutput schema.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'''\\nContract Record:\\n- Contract ID: {c_id}\\n- Title: {c_title}\\n- Type: {c_type}\\n- Version: {c_ver}\\n- Parties: {contract_data.get('party_a')} and {contract_data.get('party_b')}\\n- Effective Date: {contract_data.get('effective_date')}\\n- Expiration Date: {contract_data.get('expiration_date')}\\n- Clause Count: {len(clauses)}\\n\\nTarget Policy Record:\\n- Policy ID: {p_id}\\n- Policy Version: {p_ver}\\n\\nValidate document structure and completeness.\\nReturn structured JSON matching:\\n{{\\n  \"document_id\": \"DOC-{c_id}\",\\n  \"contract_id\": \"{c_id}\",\\n  \"contract_title\": \"{c_title}\",\\n  \"contract_type\": \"{c_type}\",\\n  \"contract_version\": \"{c_ver}\",\\n  \"policy_id\": \"{p_id}\",\\n  \"policy_version\": \"{p_ver}\",\\n  \"document_complete\": {str(complete).lower()},\\n  \"section_count\": {len(clauses)},\\n  \"source_metadata\": {{\\n    \"party_a\": \"{contract_data.get('party_a')}\",\\n    \"party_b\": \"{contract_data.get('party_b')}\",\\n    \"effective_date\": \"{contract_data.get('effective_date')}\",\\n    \"expiration_date\": \"{contract_data.get('expiration_date')}\"\\n  }},\\n  \"intake_warnings\": []\\n}}\\n'''",
+          "Backstory: You are a contract operations analyst. You catalogue legal documents, verifying effective dates, executing parties, clause inventory count, and document completeness without ever assuming or injecting unstated terms."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\contract_review\\intake_agent.py",
+        "start_line": 30,
+        "end_line": 37,
+        "evidence_refs": [
+          "ev_agent_014"
+        ]
+      },
+      {
+        "agent_id": "policy_interpretation_agent",
+        "role": "Policy Interpretation Specialist",
+        "goal": "Deconstruct internal organizational compliance policies into structured, discrete requirements with explicit thresholds, strictly avoiding external legal assumptions.",
+        "backstory": "You are a compliance standards officer. You translate corporate governance policies into machine-actionable benchmarks, separating mandatory constraints from guidance recommendations.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'''\\nPolicy ID: {p_id}\\nPolicy Name: {p_name}\\nVersion: {p_ver}\\nPolicy Text Requirements:\\n{requirements}\\n\\nParse each policy rule:\\n- Assign stable requirement_id (e.g. REQ-SEC-01, REQ-FIN-01).\\n- Identify target clause_type ('data_protection', 'payment_terms', 'liability_cap', 'termination').\\n- Mark is_mandatory: true or false.\\n- Extract concrete requirement_text and measurable threshold_or_condition.\\n\\nReturn structured JSON matching:\\n{{\\n  \"policy_id\": \"{p_id}\",\\n  \"policy_version\": \"{p_ver}\",\\n  \"policy_name\": \"{p_name}\",\\n  \"mandatory_requirements\": [\\n    {{\\n      \"requirement_id\": \"REQ-SEC-01\",\\n      \"clause_type\": \"data_protection\",\\n      \"is_mandatory\": true,\\n      \"requirement_text\": \"...\",\\n      \"threshold_or_condition\": \"48 hours notification\",\\n      \"exception_rules\": []\\n    }}\\n  ],\\n  \"recommended_requirements\": [],\\n  \"ambiguities_in_policy\": []\\n}}\\n'''",
+            "expected_output": "Valid JSON matching PolicyInterpretationOutput schema.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'''\\nPolicy ID: {p_id}\\nPolicy Name: {p_name}\\nVersion: {p_ver}\\nPolicy Text Requirements:\\n{requirements}\\n\\nParse each policy rule:\\n- Assign stable requirement_id (e.g. REQ-SEC-01, REQ-FIN-01).\\n- Identify target clause_type ('data_protection', 'payment_terms', 'liability_cap', 'termination').\\n- Mark is_mandatory: true or false.\\n- Extract concrete requirement_text and measurable threshold_or_condition.\\n\\nReturn structured JSON matching:\\n{{\\n  \"policy_id\": \"{p_id}\",\\n  \"policy_version\": \"{p_ver}\",\\n  \"policy_name\": \"{p_name}\",\\n  \"mandatory_requirements\": [\\n    {{\\n      \"requirement_id\": \"REQ-SEC-01\",\\n      \"clause_type\": \"data_protection\",\\n      \"is_mandatory\": true,\\n      \"requirement_text\": \"...\",\\n      \"threshold_or_condition\": \"48 hours notification\",\\n      \"exception_rules\": []\\n    }}\\n  ],\\n  \"recommended_requirements\": [],\\n  \"ambiguities_in_policy\": []\\n}}\\n'''",
+          "Backstory: You are a compliance standards officer. You translate corporate governance policies into machine-actionable benchmarks, separating mandatory constraints from guidance recommendations."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\contract_review\\policy_interpretation_agent.py",
+        "start_line": 30,
+        "end_line": 37,
+        "evidence_refs": [
+          "ev_agent_016"
+        ]
+      },
+      {
+        "agent_id": "contract_independent_review_agent",
+        "role": "Senior Contract Compliance Reviewer",
+        "goal": "Perform a critical second-pass quality review across all extracted issues, deduplicating redundant findings, calibrating severity ratings, and highlighting human review items.",
+        "backstory": "You are a managing corporate legal auditor. You sanity check the work of junior reviewers, ensuring findings are succinct, severity levels are proportional, and genuine legal ambiguities are escalated to human attorneys.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'''\\nContract ID: {contract_id}\\nDeviations Count: {len(deviations)} ({deviations})\\nRisks Count: {len(risks)} ({risks})\\nInconsistencies Count: {len(inconsistencies)} ({inconsistencies})\\nEvidence Verification Status: {ev_valid}\\n\\nConduct comprehensive QA review:\\n1. Merge any duplicate or overlapping findings.\\n2. Verify severity consistency (e.g., critical breaches vs minor payment delays).\\n3. Identify unresolved matters requiring human legal review.\\n4. Set review_status to 'approved_for_report' if findings are sound.\\n\\nReturn structured JSON matching:\\n{{\\n  \"contract_id\": \"{contract_id}\",\\n  \"review_status\": \"approved_for_report\",\\n  \"duplicate_findings_merged\": 0,\\n  \"severity_adjustments\": [],\\n  \"unresolved_matters\": [\"Formal legal review required for identified deviations and risk clauses\"]\\n}}\\n'''",
+            "expected_output": "Valid JSON matching IndependentReviewOutput schema.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'''\\nContract ID: {contract_id}\\nDeviations Count: {len(deviations)} ({deviations})\\nRisks Count: {len(risks)} ({risks})\\nInconsistencies Count: {len(inconsistencies)} ({inconsistencies})\\nEvidence Verification Status: {ev_valid}\\n\\nConduct comprehensive QA review:\\n1. Merge any duplicate or overlapping findings.\\n2. Verify severity consistency (e.g., critical breaches vs minor payment delays).\\n3. Identify unresolved matters requiring human legal review.\\n4. Set review_status to 'approved_for_report' if findings are sound.\\n\\nReturn structured JSON matching:\\n{{\\n  \"contract_id\": \"{contract_id}\",\\n  \"review_status\": \"approved_for_report\",\\n  \"duplicate_findings_merged\": 0,\\n  \"severity_adjustments\": [],\\n  \"unresolved_matters\": [\"Formal legal review required for identified deviations and risk clauses\"]\\n}}\\n'''",
+          "Backstory: You are a managing corporate legal auditor. You sanity check the work of junior reviewers, ensuring findings are succinct, severity levels are proportional, and genuine legal ambiguities are escalated to human attorneys."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\contract_review\\review_agent.py",
+        "start_line": 30,
+        "end_line": 37,
+        "evidence_refs": [
+          "ev_agent_018"
+        ]
+      },
+      {
+        "agent_id": "risk_ambiguity_agent",
+        "role": "Contract Risk and Ambiguity Analyst",
+        "goal": "Detect vague wording, undefined timelines, one-sided covenants, and latent operational risks within contractual text, highlighting issues requiring human legal counsel.",
+        "backstory": "You are an operational risk analyst. You flag loose phrasing such as 'best commercial efforts', 'reasonable timeframe', or vague indemnity scopes that expose the organization to unexpected liabilities.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'''\\nContract ID: {contract_id}\\nContract Clauses to Inspect for Ambiguity:\\n{clauses}\\n\\nIdentify ambiguous phrases, vague timelines, or open-ended liabilities:\\n- Look for non-committal language (e.g. 'endeavor to report in reasonable timeframe').\\n- Flag unquantified risk categories ('operational', 'legal_exposure', 'vague_terms', 'renewal_trap').\\n- Assign severity ('low', 'medium', 'high').\\n- Set human_interpretation_needed: true.\\n\\nReturn structured JSON matching:\\n{{\\n  \"contract_id\": \"{contract_id}\",\\n  \"risk_findings\": [\\n    {{\\n      \"finding_id\": \"RSK-01\",\\n      \"clause_id\": \"CLS-xxxx-DATA\",\\n      \"risk_category\": \"vague_terms\",\\n      \"ambiguity_description\": \"Phrase 'reasonable timeframe' lacks defined hours/days threshold for security incidents.\",\\n      \"severity\": \"medium\",\\n      \"human_interpretation_needed\": true\\n    }}\\n  ]\\n}}\\n'''",
+            "expected_output": "Valid JSON matching RiskAmbiguityOutput schema.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'''\\nContract ID: {contract_id}\\nContract Clauses to Inspect for Ambiguity:\\n{clauses}\\n\\nIdentify ambiguous phrases, vague timelines, or open-ended liabilities:\\n- Look for non-committal language (e.g. 'endeavor to report in reasonable timeframe').\\n- Flag unquantified risk categories ('operational', 'legal_exposure', 'vague_terms', 'renewal_trap').\\n- Assign severity ('low', 'medium', 'high').\\n- Set human_interpretation_needed: true.\\n\\nReturn structured JSON matching:\\n{{\\n  \"contract_id\": \"{contract_id}\",\\n  \"risk_findings\": [\\n    {{\\n      \"finding_id\": \"RSK-01\",\\n      \"clause_id\": \"CLS-xxxx-DATA\",\\n      \"risk_category\": \"vague_terms\",\\n      \"ambiguity_description\": \"Phrase 'reasonable timeframe' lacks defined hours/days threshold for security incidents.\",\\n      \"severity\": \"medium\",\\n      \"human_interpretation_needed\": true\\n    }}\\n  ]\\n}}\\n'''",
+          "Backstory: You are an operational risk analyst. You flag loose phrasing such as 'best commercial efforts', 'reasonable timeframe', or vague indemnity scopes that expose the organization to unexpected liabilities."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\contract_review\\risk_ambiguity_agent.py",
+        "start_line": 29,
+        "end_line": 36,
+        "evidence_refs": [
+          "ev_agent_020"
+        ]
+      }
+    ],
+    "invocation_relationships": [],
+    "data_handoffs": [],
+    "conditional_branches": [],
+    "tools_and_helpers": {
+      "registered_tools": [],
+      "explicit_code_invocations": [],
+      "helper_functions": [
+        "load_sample_contract_input",
+        "run_contract_review_workflow"
+      ],
+      "runtime_llm_tool_selection": {
+        "observable": false,
+        "reason": "Runtime LLM tool selection is unobservable via static AST analysis"
+      }
+    },
+    "analysis_limitations": {
+      "unresolved_references": [],
+      "dynamic_expressions": [],
+      "unsupported_patterns": [],
+      "static_analysis_limitations": [
+        "Dynamic runtime LLM decisions and tool selection cannot be observed via static AST",
+        "Procedural workflow statement order does not imply internal framework agent scheduling"
+      ]
+    }
+  },
+  "runtime_observations": {
+    "total_runs": 30,
+    "successful_runs": 30,
+    "failed_runs": 0,
+    "observed_models": [
+      "openai/gpt-oss-120b"
+    ],
+    "key_distribution": {
+      "GROQ_API_KEY_1": 30,
+      "GROQ_API_KEY_2": 30,
+      "GROQ_API_KEY_3": 30,
+      "GROQ_API_KEY_4": 30,
+      "GROQ_API_KEY_5": 30,
+      "GROQ_API_KEY_6": 30,
+      "GROQ_API_KEY_7": 30,
+      "GROQ_API_KEY_8": 30,
+      "GROQ_API_KEY_9": 30,
+      "GROQ_API_KEY_10": 30
+    },
+    "workflow_latency": {
+      "mean_seconds": 57.1346,
+      "median_seconds": 30.655,
+      "min_seconds": 26.008,
+      "max_seconds": 415.336,
+      "observation_count": 30
+    },
+    "workflow_tokens": {
+      "total_tokens": 525440,
+      "mean_tokens": 17514.7,
+      "min_tokens": 14860,
+      "max_tokens": 20078,
+      "total_prompt_tokens": 261075,
+      "mean_prompt_tokens": 8702.5,
+      "total_completion_tokens": 264365,
+      "mean_completion_tokens": 8812.2,
+      "observation_count": 30
+    },
+    "workflow_cost": {
+      "total_cost_usd": 0.36288,
+      "mean_cost_usd": 0.012096,
+      "pricing_source": "trace_telemetry_estimates",
+      "observation_count": 30
+    },
+    "agent_metrics": {
+      "contract_intake_agent": {
+        "agent_id": "contract_intake_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          1
+        ],
+        "latency": {
+          "mean_seconds": 1.8081,
+          "median_seconds": 1.684,
+          "min_seconds": 1.185,
+          "max_seconds": 5.474,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 22683,
+          "mean_tokens": 756.1,
+          "min_tokens": 618,
+          "max_tokens": 951,
+          "total_prompt_tokens": 9099,
+          "mean_prompt_tokens": 303.3,
+          "total_completion_tokens": 13584,
+          "mean_completion_tokens": 452.8,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_1"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "document_id": "DOC-CTR-2026-0001-POL-CORP-SEC-01",
+          "contract_id": "CTR-2026-0001",
+          "contract_title": "Vendor Procurement Agreement with Enterprise Partner 001 LLC",
+          "contract_type": "Vendor Procurement Agreement",
+          "contract_version": "1.0",
+          "policy_id": "POL-CORP-SEC-01",
+          "policy_version": "2.4",
+          "document_complete": true,
+          "section_count": 5,
+          "source_metadata": {
+            "effective_date": "2026-01-01",
+            "expiration_date": "2027-01-01",
+            "parties": [
+              "AWO Enterprise Corp",
+              "Enterprise Partner 001 LLC"
+            ]
+          },
+          "intake_warnings": []
+        },
+        "error_count": 0
+      },
+      "clause_extraction_agent": {
+        "agent_id": "clause_extraction_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          2
+        ],
+        "latency": {
+          "mean_seconds": 1.9594,
+          "median_seconds": 1.853,
+          "min_seconds": 1.594,
+          "max_seconds": 5.466,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 38488,
+          "mean_tokens": 1282.9,
+          "min_tokens": 1120,
+          "max_tokens": 1427,
+          "total_prompt_tokens": 21974,
+          "mean_prompt_tokens": 732.5,
+          "total_completion_tokens": 16514,
+          "mean_completion_tokens": 550.5,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_2"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "contract_id": "CTR-2026-0001",
+          "clauses": [
+            {
+              "clause_id": "CLS-0001-PAY",
+              "clause_type": "payment_terms",
+              "clause_title": "Section 3: Invoicing and Payment Terms",
+              "clause_text": "Invoices shall be payable within ninety (90) days of receipt by Customer.",
+              "section_reference": "Section 3.1"
+            },
+            {
+              "clause_id": "CLS-0001-DATA",
+              "clause_type": "data_protection",
+              "clause_title": "Section 8: Security & Breach Notification",
+              "clause_text": "Vendor shall notify Customer in writing within twenty-four (24) hours of becoming aware of any confirmed Data Breach.",
+              "section_reference": "Section 8.2"
+            },
+            {
+              "clause_id": "CLS-0001-LIAB",
+              "clause_type": "liability_cap",
+              "clause_title": "Section 10: Limitation of Liability",
+              "clause_text": "Each party's maximum aggregate liability shall be strictly limited to the total fees paid under this Agreement in the preceding twelve (12) months.",
+              "section_reference": "Section 10.1"
+            },
+            {
+              "clause_id": "CLS-0001-TERM",
+              "clause_type": "termination",
+              "clause_title": "Section 12: Term and Termination",
+              "clause_text": "Either party may terminate this Agreement for convenience upon providing thirty (30) days prior written notice.",
+              "section_reference": "Section 12.1"
+            },
+            {
+              "clause_id": "CLS-0001-REN",
+              "clause_type": "renewal",
+              "clause_title": "Section 12: Renewal Provisions",
+              "clause_text": "This Agreement renews on an annual basis unless either party gives notice of non-renewal at least 30 days prior.",
+              "section_reference": "Section 12.4"
+            }
+          ],
+          "absent_clause_types": [],
+          "extraction_notes": [
+            "Document extracted once for downstream policy comparison"
+          ]
+        },
+        "error_count": 0
+      },
+      "policy_interpretation_agent": {
+        "agent_id": "policy_interpretation_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          3
+        ],
+        "latency": {
+          "mean_seconds": 3.672,
+          "median_seconds": 1.9675,
+          "min_seconds": 1.179,
+          "max_seconds": 52.298,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 29169,
+          "mean_tokens": 972.3,
+          "min_tokens": 692,
+          "max_tokens": 1317,
+          "total_prompt_tokens": 10610,
+          "mean_prompt_tokens": 353.7,
+          "total_completion_tokens": 18559,
+          "mean_completion_tokens": 618.6,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_3"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "policy_id": "POL-CORP-SEC-01",
+          "policy_version": "2.4",
+          "policy_name": "Corporate Data Protection & Security Standard",
+          "mandatory_requirements": [
+            {
+              "requirement_id": "REQ-SEC-01",
+              "clause_type": "data_protection",
+              "text": "Vendor must notify customer of any security breach within 48 hours of discovery.",
+              "threshold": "48 hours"
+            },
+            {
+              "requirement_id": "REQ-SEC-02",
+              "clause_type": "data_protection",
+              "text": "Data must be encrypted in transit using TLS 1.3 and at rest using AES-256.",
+              "threshold": "TLS 1.3 / AES-256"
+            }
+          ],
+          "recommended_requirements": [],
+          "ambiguities_in_policy": []
+        },
+        "error_count": 0
+      },
+      "clause_mapping_agent": {
+        "agent_id": "clause_mapping_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          4
+        ],
+        "latency": {
+          "mean_seconds": 2.5691,
+          "median_seconds": 2.215,
+          "min_seconds": 1.324,
+          "max_seconds": 6.89,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 45366,
+          "mean_tokens": 1512.2,
+          "min_tokens": 957,
+          "max_tokens": 2113,
+          "total_prompt_tokens": 22516,
+          "mean_prompt_tokens": 750.5,
+          "total_completion_tokens": 22850,
+          "mean_completion_tokens": 761.7,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_4"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "contract_id": "CTR-2026-0001",
+          "policy_id": "DATA_PROTECTION",
+          "mappings": [
+            {
+              "requirement_id": "REQ-SEC-01",
+              "clause_id": "CLS-0001-DATA",
+              "mapping_status": "satisfied",
+              "notes": "Clause requires notification within 24 hours, which meets the 48‑hour threshold."
+            },
+            {
+              "requirement_id": "REQ-SEC-02",
+              "clause_id": null,
+              "mapping_status": "unaddressed",
+              "notes": "No clause references encryption standards for data in transit or at rest."
+            }
+          ],
+          "coverage_percentage": 50.0
+        },
+        "error_count": 0
+      },
+      "compliance_deviation_agent": {
+        "agent_id": "compliance_deviation_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          5
+        ],
+        "latency": {
+          "mean_seconds": 1.8464,
+          "median_seconds": 1.406,
+          "min_seconds": 0.741,
+          "max_seconds": 6.088,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 27873,
+          "mean_tokens": 929.1,
+          "min_tokens": 462,
+          "max_tokens": 1606,
+          "total_prompt_tokens": 14376,
+          "mean_prompt_tokens": 479.2,
+          "total_completion_tokens": 13497,
+          "mean_completion_tokens": 449.9,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_5"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "contract_id": "CTR-2026-0001",
+          "deviations": [
+            {
+              "requirement_id": "REQ-SEC-02",
+              "clause_id": null,
+              "severity": "high",
+              "supporting_evidence": "Mapping status is 'unaddressed'; the contract contains no clause referencing encryption standards for data in transit or at rest, which directly violates the policy requirement for TLS 1.3 and AES-256 encryption.",
+              "recommended_remediation": "Insert a data protection clause that mandates encryption of all data in transit using TLS 1.3 and encryption of data at rest using AES-256, with compliance monitoring and audit rights."
+            }
+          ],
+          "has_critical_deviations": false
+        },
+        "error_count": 0
+      },
+      "risk_ambiguity_agent": {
+        "agent_id": "risk_ambiguity_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          6
+        ],
+        "latency": {
+          "mean_seconds": 3.0361,
+          "median_seconds": 2.978,
+          "min_seconds": 1.81,
+          "max_seconds": 4.376,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 52614,
+          "mean_tokens": 1753.8,
+          "min_tokens": 1167,
+          "max_tokens": 2392,
+          "total_prompt_tokens": 18884,
+          "mean_prompt_tokens": 629.5,
+          "total_completion_tokens": 33730,
+          "mean_completion_tokens": 1124.3,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_6"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "contract_id": "CTR-2026-0001",
+          "risk_findings": [
+            {
+              "finding_id": "R001",
+              "clause_id": "CLS-0001-PAY",
+              "risk_category": "latent_operational_risk",
+              "ambiguity_description": "Payment term of 90 days may create cash‑flow strain for the Vendor; no early‑payment discount or interest for late payment is specified.",
+              "severity": "Medium",
+              "human_interpretation_needed": false
+            },
+            {
+              "finding_id": "R002",
+              "clause_id": "CLS-0001-DATA",
+              "risk_category": "vague_wording",
+              "ambiguity_description": "Term 'confirmed Data Breach' is not defined, leaving the scope of the breach ambiguous.",
+              "severity": "High",
+              "human_interpretation_needed": true
+            },
+            {
+              "finding_id": "R003",
+              "clause_id": "CLS-0001-DATA",
+              "risk_category": "undefined_timeline",
+              "ambiguity_description": "Notification must be within 24 hours of 'becoming aware' of a breach, but 'becoming aware' is not defined, potentially delaying reporting.",
+              "severity": "High",
+              "human_interpretation_needed": true
+            },
+            {
+              "finding_id": "R004",
+              "clause_id": "CLS-0001-LIAB",
+              "risk_category": "one_sided_covenant",
+              "ambiguity_description": "Liability cap limited to total fees paid in the preceding 12 months may be insufficient for high‑impact losses; the cap applies equally to both parties, potentially disadvantaging the Customer.",
+              "severity": "High",
+              "human_interpretation_needed": true
+            },
+            {
+              "finding_id": "R005",
+              "clause_id": "CLS-0001-LIAB",
+              "risk_category": "vague_wording",
+              "ambiguity_description": "Phrase 'preceding twelve (12) months' is unclear if the contract duration is less than 12 months.",
+              "severity": "Medium",
+              "human_interpretation_needed": true
+            },
+            {
+              "finding_id": "R006",
+              "clause_id": "CLS-0001-REN",
+              "risk_category": "latent_operational_risk",
+              "ambiguity_description": "Automatic annual renewal without a price‑adjustment mechanism may lead to unexpected cost increases.",
+              "severity": "Medium",
+              "human_interpretation_needed": false
+            },
+            {
+              "finding_id": "R007",
+              "clause_id": "CLS-0001-REN",
+              "risk_category": "undefined_timeline",
+              "ambiguity_description": "Renewal notice period is defined (30 days) but there is no end date or limit on the number of renewals, creating an indefinite term.",
+              "severity": "Low",
+              "human_interpretation_needed": false
+            }
+          ]
+        },
+        "error_count": 0
+      },
+      "cross_clause_consistency_agent": {
+        "agent_id": "cross_clause_consistency_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          7
+        ],
+        "latency": {
+          "mean_seconds": 1.9013,
+          "median_seconds": 1.7965,
+          "min_seconds": 1.372,
+          "max_seconds": 2.794,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 52373,
+          "mean_tokens": 1745.8,
+          "min_tokens": 1419,
+          "max_tokens": 2218,
+          "total_prompt_tokens": 35293,
+          "mean_prompt_tokens": 1176.4,
+          "total_completion_tokens": 17080,
+          "mean_completion_tokens": 569.3,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_7"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "contract_id": "CTR-2026-0001",
+          "inconsistencies": []
+        },
+        "error_count": 0
+      },
+      "evidence_validation_agent": {
+        "agent_id": "evidence_validation_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          8
+        ],
+        "latency": {
+          "mean_seconds": 1.9872,
+          "median_seconds": 1.8235,
+          "min_seconds": 1.248,
+          "max_seconds": 3.75,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 57704,
+          "mean_tokens": 1923.5,
+          "min_tokens": 1455,
+          "max_tokens": 2850,
+          "total_prompt_tokens": 39622,
+          "mean_prompt_tokens": 1320.7,
+          "total_completion_tokens": 18082,
+          "mean_completion_tokens": 602.7,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_8"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "contract_id": "CTR-2026-0001",
+          "all_citations_valid": true,
+          "verified_finding_ids": [
+            "R001",
+            "R002",
+            "R003",
+            "R004",
+            "R005",
+            "R006",
+            "R007"
+          ],
+          "invalid_or_unsupported_findings": [],
+          "evidence_notes": [
+            "Finding R001 cites clause CLS-0001-PAY, which exists in the contract (Section 3.1).",
+            "Finding R002 cites clause CLS-0001-DATA, which exists in the contract (Section 8.2).",
+            "Finding R003 cites clause CLS-0001-DATA, which exists in the contract (Section 8.2).",
+            "Finding R004 cites clause CLS-0001-LIAB, which exists in the contract (Section 10.1).",
+            "Finding R005 cites clause CLS-0001-LIAB, which exists in the contract (Section 10.1).",
+            "Finding R006 cites clause CLS-0001-REN, which exists in the contract (Section 12.4).",
+            "Finding R007 cites clause CLS-0001-REN, which exists in the contract (Section 12.4)."
+          ]
+        },
+        "error_count": 0
+      },
+      "contract_independent_review_agent": {
+        "agent_id": "contract_independent_review_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          9
+        ],
+        "latency": {
+          "mean_seconds": 3.6738,
+          "median_seconds": 3.621,
+          "min_seconds": 2.343,
+          "max_seconds": 5.57,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 75498,
+          "mean_tokens": 2516.6,
+          "min_tokens": 1477,
+          "max_tokens": 3811,
+          "total_prompt_tokens": 33073,
+          "mean_prompt_tokens": 1102.4,
+          "total_completion_tokens": 42425,
+          "mean_completion_tokens": 1414.2,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_9"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "contract_id": "CTR-2026-0001",
+          "calibrated_deviations": [
+            {
+              "requirement_id": "REQ-SEC-02",
+              "clause_id": null,
+              "severity": "high",
+              "supporting_evidence": "Mapping status is 'unaddressed'; the contract contains no clause referencing encryption standards for data in transit or at rest, which directly violates the policy requirement for TLS 1.3 and AES-256 encryption.",
+              "recommended_remediation": "Insert a data protection clause that mandates encryption of all data in transit using TLS 1.3 and encryption of data at rest using AES-256, with compliance monitoring and audit rights."
+            }
+          ],
+          "calibrated_risks": [
+            {
+              "finding_id": "R001",
+              "clause_id": "CLS-0001-PAY",
+              "risk_category": "latent_operational_risk",
+              "ambiguity_description": "Payment term of 90 days may create cash‑flow strain for the Vendor; no early‑payment discount or interest for late payment is specified.",
+              "severity": "medium",
+              "human_interpretation_needed": false
+            },
+            {
+              "finding_id": "R002",
+              "clause_id": "CLS-0001-DATA",
+              "risk_category": "vague_wording",
+              "ambiguity_description": "Term 'confirmed Data Breach' is not defined, leaving the scope of the breach ambiguous.",
+              "severity": "high",
+              "human_interpretation_needed": true
+            },
+            {
+              "finding_id": "R003",
+              "clause_id": "CLS-0001-DATA",
+              "risk_category": "undefined_timeline",
+              "ambiguity_description": "Notification must be within 24 hours of 'becoming aware' of a breach, but 'becoming aware' is not defined, potentially delaying reporting.",
+              "severity": "high",
+              "human_interpretation_needed": true
+            },
+            {
+              "finding_id": "R004",
+              "clause_id": "CLS-0001-LIAB",
+              "risk_category": "one_sided_covenant",
+              "ambiguity_description": "Liability cap limited to total fees paid in the preceding 12 months may be insufficient for high‑impact losses; the cap applies equally to both parties, potentially disadvantaging the Customer.",
+              "severity": "high",
+              "human_interpretation_needed": true
+            },
+            {
+              "finding_id": "R005",
+              "clause_id": "CLS-0001-LIAB",
+              "risk_category": "vague_wording",
+              "ambiguity_description": "Phrase 'preceding twelve (12) months' is unclear if the contract duration is less than 12 months.",
+              "severity": "medium",
+              "human_interpretation_needed": true
+            },
+            {
+              "finding_id": "R006",
+              "clause_id": "CLS-0001-REN",
+              "risk_category": "latent_operational_risk",
+              "ambiguity_description": "Automatic annual renewal without a price‑adjustment mechanism may lead to unexpected cost increases.",
+              "severity": "medium",
+              "human_interpretation_needed": false
+            },
+            {
+              "finding_id": "R007",
+              "clause_id": "CLS-0001-REN",
+              "risk_category": "undefined_timeline",
+              "ambiguity_description": "Renewal notice period is defined (30 days) but there is no end date or limit on the number of renewals, creating an indefinite term.",
+              "severity": "low",
+              "human_interpretation_needed": false
+            }
+          ],
+          "review_notes": [
+            "No duplicate risk entries were found; each finding addresses a distinct ambiguity or exposure despite sharing clause references.",
+            "Severity ratings were reviewed against risk categories and evidence. All original severities were retained as they align with the potential impact (high for undefined breach terms and liability caps, medium for payment cash‑flow and renewal cost risk, low for indefinite renewal term).",
+            "Human review is required for findings R002, R003, R004, and R005 because they involve interpretive judgments about undefined terms and covenant fairness.",
+            "Deviation REQ-SEC-02 remains high severity due to direct non‑compliance with mandatory encryption standards."
+          ]
+        },
+        "error_count": 0
+      },
+      "final_compliance_report_agent": {
+        "agent_id": "final_compliance_report_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          10
+        ],
+        "latency": {
+          "mean_seconds": 31.5437,
+          "median_seconds": 5.7395,
+          "min_seconds": 4.281,
+          "max_seconds": 395.222,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 123672,
+          "mean_tokens": 4122.4,
+          "min_tokens": 3403,
+          "max_tokens": 4777,
+          "total_prompt_tokens": 55628,
+          "mean_prompt_tokens": 1854.3,
+          "total_completion_tokens": 68044,
+          "mean_completion_tokens": 2268.1,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_10"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "run_id": "RUN-20231031-001",
+          "contract_id": "CTR-2026-0001",
+          "contract_version": "1.0",
+          "policy_id": "POL-CORP-SEC-01",
+          "policy_version": "2.4",
+          "contract_type": "Vendor Procurement Agreement",
+          "executive_summary": "The Vendor Procurement Agreement (CTR-2026-0001) satisfies 50% of the data‑protection policy requirements. A critical non‑addressed requirement (REQ-SEC-02) concerning encryption standards creates a high‑severity compliance deviation. Several high‑severity risk findings relate to ambiguous breach‑notification language and a potentially inadequate liability cap. Medium‑severity operational risks are identified in payment terms and automatic renewal without price‑adjustment provisions. Human legal review is required for four high‑severity risk items. Recommended remedial actions are provided to close the gaps and mitigate identified risks.",
+          "policy_coverage": {
+            "coverage_percentage": 50.0,
+            "covered_requirements": [
+              "REQ-SEC-01"
+            ],
+            "uncovered_requirements": [
+              "REQ-SEC-02"
+            ]
+          },
+          "clause_inventory": [
+            {
+              "clause_id": "CLS-0001-PAY",
+              "clause_type": "payment_terms",
+              "clause_title": "Section 3: Invoicing and Payment Terms",
+              "clause_text": "Invoices shall be payable within ninety (90) days of receipt by Customer.",
+              "section_reference": "Section 3.1"
+            },
+            {
+              "clause_id": "CLS-0001-DATA",
+              "clause_type": "data_protection",
+              "clause_title": "Section 8: Security & Breach Notification",
+              "clause_text": "Vendor shall notify Customer in writing within twenty-four (24) hours of becoming aware of any confirmed Data Breach.",
+              "section_reference": "Section 8.2"
+            },
+            {
+              "clause_id": "CLS-0001-LIAB",
+              "clause_type": "liability_cap",
+              "clause_title": "Section 10: Limitation of Liability",
+              "clause_text": "Each party's maximum aggregate liability shall be strictly limited to the total fees paid under this Agreement in the preceding twelve (12) months.",
+              "section_reference": "Section 10.1"
+            },
+            {
+              "clause_id": "CLS-0001-TERM",
+              "clause_type": "termination",
+              "clause_title": "Section 12: Term and Termination",
+              "clause_text": "Either party may terminate this Agreement for convenience upon providing thirty (30) days prior written notice.",
+              "section_reference": "Section 12.1"
+            },
+            {
+              "clause_id": "CLS-0001-REN",
+              "clause_type": "renewal",
+              "clause_title": "Section 12: Renewal Provisions",
+              "clause_text": "This Agreement renews on an annual basis unless either party gives notice of non-renewal at least 30 days prior.",
+              "section_reference": "Section 12.4"
+            }
+          ],
+          "compliance_findings": [
+            {
+              "requirement_id": "REQ-SEC-02",
+              "clause_id": null,
+              "mapping_status": "unaddressed",
+              "severity": "high",
+              "supporting_evidence": "Mapping status is 'unaddressed'; the contract contains no clause referencing encryption standards for data in transit or at rest, which directly violates the policy requirement for TLS 1.3 and AES-256 encryption.",
+              "recommended_remediation": "Insert a data protection clause that mandates encryption of all data in transit using TLS 1.3 and encryption of data at rest using AES-256, with compliance monitoring and audit rights."
+            }
+          ],
+          "risk_findings": [
+            {
+              "finding_id": "R001",
+              "clause_id": "CLS-0001-PAY",
+              "risk_category": "latent_operational_risk",
+              "ambiguity_description": "Payment term of 90 days may create cash‑flow strain for the Vendor; no early‑payment discount or interest for late payment is specified.",
+              "severity": "medium",
+              "human_interpretation_needed": false
+            },
+            {
+              "finding_id": "R002",
+              "clause_id": "CLS-0001-DATA",
+              "risk_category": "vague_wording",
+              "ambiguity_description": "Term 'confirmed Data Breach' is not defined, leaving the scope of the breach ambiguous.",
+              "severity": "high",
+              "human_interpretation_needed": true
+            },
+            {
+              "finding_id": "R003",
+              "clause_id": "CLS-0001-DATA",
+              "risk_category": "undefined_timeline",
+              "ambiguity_description": "Notification must be within 24 hours of 'becoming aware' of a breach, but 'becoming aware' is not defined, potentially delaying reporting.",
+              "severity": "high",
+              "human_interpretation_needed": true
+            },
+            {
+              "finding_id": "R004",
+              "clause_id": "CLS-0001-LIAB",
+              "risk_category": "one_sided_covenant",
+              "ambiguity_description": "Liability cap limited to total fees paid in the preceding 12 months may be insufficient for high‑impact losses; the cap applies equally to both parties, potentially disadvantaging the Customer.",
+              "severity": "high",
+              "human_interpretation_needed": true
+            },
+            {
+              "finding_id": "R005",
+              "clause_id": "CLS-0001-LIAB",
+              "risk_category": "vague_wording",
+              "ambiguity_description": "Phrase 'preceding twelve (12) months' is unclear if the contract duration is less than 12 months.",
+              "severity": "medium",
+              "human_interpretation_needed": true
+            },
+            {
+              "finding_id": "R006",
+              "clause_id": "CLS-0001-REN",
+              "risk_category": "latent_operational_risk",
+              "ambiguity_description": "Automatic annual renewal without a price‑adjustment mechanism may lead to unexpected cost increases.",
+              "severity": "medium",
+              "human_interpretation_needed": false
+            },
+            {
+              "finding_id": "R007",
+              "clause_id": "CLS-0001-REN",
+              "risk_category": "undefined_timeline",
+              "ambiguity_description": "Renewal notice period is defined (30 days) but there is no end date or limit on the number of renewals, creating an indefinite term.",
+              "severity": "low",
+              "human_interpretation_needed": false
+            }
+          ],
+          "cross_clause_inconsistencies": [],
+          "evidence_validation": {
+            "intake_verified": true,
+            "clause_extraction_verified": true,
+            "mapping_status_verified": true,
+            "risk_assessment_methodology": "Calibrated deviation and risk matrix applied per corporate policy POL-CORP-SEC-01."
+          },
+          "unresolved_questions": [
+            "Definition of 'confirmed Data Breach' for breach‑notification purposes.",
+            "Definition of 'becoming aware' of a breach and the process for determining awareness.",
+            "Applicability of the liability cap when the contract term is less than twelve months.",
+            "Whether a price‑adjustment mechanism should be added to the renewal provision."
+          ],
+          "recommended_actions": [
+            "Add a data‑encryption clause meeting TLS 1.3 for data in transit and AES‑256 for data at rest.",
+            "Define 'confirmed Data Breach' and 'becoming aware' within the security clause.",
+            "Consider including an early‑payment discount or interest‑on‑late‑payment provision to mitigate cash‑flow risk.",
+            "Re‑evaluate the liability cap; consider a higher cap or carve‑outs for high‑impact events.",
+            "Clarify the calculation period for the liability cap when contract duration < 12 months.",
+            "Introduce a price‑adjustment mechanism tied to an index or market rate for each renewal cycle.",
+            "Specify a maximum number of automatic renewals or an explicit end‑date to avoid indefinite terms."
+          ],
+          "human_review_required": [
+            "R002",
+            "R003",
+            "R004",
+            "R005"
+          ],
+          "legal_disclaimer": "This compliance report is generated for informational purposes only and does not constitute legal advice. The findings are based on the supplied contract text and the referenced corporate policy as of the report date. Parties should consult qualified legal counsel to interpret the findings, assess contractual obligations, and implement recommended actions. The author and the organization assume no liability for any decisions made based on this report."
+        },
+        "error_count": 0
+      }
+    },
+    "runs_summary": [
+      {
+        "run_id": "live_20261031_115354_trace01",
+        "status": "SUCCESS",
+        "duration_seconds": 30.008,
+        "total_tokens": 17787,
+        "prompt_tokens": 9029,
+        "completion_tokens": 8758,
+        "estimated_cost_usd": 0.012246,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T11:54:24.603751+00:00",
+        "trace_file": "live_20261031_115354_trace01.json"
+      },
+      {
+        "run_id": "live_20261031_115834_trace02",
+        "status": "SUCCESS",
+        "duration_seconds": 26.008,
+        "total_tokens": 14860,
+        "prompt_tokens": 7484,
+        "completion_tokens": 7376,
+        "estimated_cost_usd": 0.010243,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T11:59:00.556143+00:00",
+        "trace_file": "live_20261031_115834_trace02.json"
+      },
+      {
+        "run_id": "live_20261031_115900_trace03",
+        "status": "SUCCESS",
+        "duration_seconds": 31.082,
+        "total_tokens": 15503,
+        "prompt_tokens": 7618,
+        "completion_tokens": 7885,
+        "estimated_cost_usd": 0.010724,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T11:59:31.648859+00:00",
+        "trace_file": "live_20261031_115900_trace03.json"
+      },
+      {
+        "run_id": "live_20261031_115931_trace04",
+        "status": "SUCCESS",
+        "duration_seconds": 31.119,
+        "total_tokens": 16770,
+        "prompt_tokens": 8009,
+        "completion_tokens": 8761,
+        "estimated_cost_usd": 0.011647,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:00:02.776233+00:00",
+        "trace_file": "live_20261031_115931_trace04.json"
+      },
+      {
+        "run_id": "live_20261031_120114_trace06",
+        "status": "SUCCESS",
+        "duration_seconds": 28.692,
+        "total_tokens": 17226,
+        "prompt_tokens": 8289,
+        "completion_tokens": 8937,
+        "estimated_cost_usd": 0.011951,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:01:43.418215+00:00",
+        "trace_file": "live_20261031_120114_trace06.json"
+      },
+      {
+        "run_id": "live_20261031_120143_trace07",
+        "status": "SUCCESS",
+        "duration_seconds": 29.656,
+        "total_tokens": 17907,
+        "prompt_tokens": 8954,
+        "completion_tokens": 8953,
+        "estimated_cost_usd": 0.012356,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:02:13.077340+00:00",
+        "trace_file": "live_20261031_120143_trace07.json"
+      },
+      {
+        "run_id": "live_20261031_120213_trace08",
+        "status": "SUCCESS",
+        "duration_seconds": 31.872,
+        "total_tokens": 16131,
+        "prompt_tokens": 8415,
+        "completion_tokens": 7716,
+        "estimated_cost_usd": 0.01106,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:02:44.972212+00:00",
+        "trace_file": "live_20261031_120213_trace08.json"
+      },
+      {
+        "run_id": "live_20261031_120244_trace09",
+        "status": "SUCCESS",
+        "duration_seconds": 62.031,
+        "total_tokens": 16429,
+        "prompt_tokens": 8146,
+        "completion_tokens": 8283,
+        "estimated_cost_usd": 0.01135,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:03:47.011484+00:00",
+        "trace_file": "live_20261031_120244_trace09.json"
+      },
+      {
+        "run_id": "live_20261031_120542_trace11",
+        "status": "SUCCESS",
+        "duration_seconds": 26.157,
+        "total_tokens": 16980,
+        "prompt_tokens": 8954,
+        "completion_tokens": 8026,
+        "estimated_cost_usd": 0.011623,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:06:08.432988+00:00",
+        "trace_file": "live_20261031_120542_trace11.json"
+      },
+      {
+        "run_id": "live_20261031_120608_trace12",
+        "status": "SUCCESS",
+        "duration_seconds": 27.27,
+        "total_tokens": 17568,
+        "prompt_tokens": 8828,
+        "completion_tokens": 8740,
+        "estimated_cost_usd": 0.012113,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:06:35.707770+00:00",
+        "trace_file": "live_20261031_120608_trace12.json"
+      },
+      {
+        "run_id": "live_20261031_120635_trace13",
+        "status": "SUCCESS",
+        "duration_seconds": 48.382,
+        "total_tokens": 18335,
+        "prompt_tokens": 8925,
+        "completion_tokens": 9410,
+        "estimated_cost_usd": 0.0127,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:07:24.095798+00:00",
+        "trace_file": "live_20261031_120635_trace13.json"
+      },
+      {
+        "run_id": "live_20261031_120724_trace14",
+        "status": "SUCCESS",
+        "duration_seconds": 294.515,
+        "total_tokens": 18706,
+        "prompt_tokens": 9108,
+        "completion_tokens": 9598,
+        "estimated_cost_usd": 0.012956,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:12:18.624563+00:00",
+        "trace_file": "live_20261031_120724_trace14.json"
+      },
+      {
+        "run_id": "live_20261031_121335_trace16",
+        "status": "SUCCESS",
+        "duration_seconds": 30.189,
+        "total_tokens": 19369,
+        "prompt_tokens": 9198,
+        "completion_tokens": 10171,
+        "estimated_cost_usd": 0.013462,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:14:05.966627+00:00",
+        "trace_file": "live_20261031_121335_trace16.json"
+      },
+      {
+        "run_id": "live_20261031_121405_trace17",
+        "status": "SUCCESS",
+        "duration_seconds": 30.804,
+        "total_tokens": 17406,
+        "prompt_tokens": 8849,
+        "completion_tokens": 8557,
+        "estimated_cost_usd": 0.011981,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:14:36.782817+00:00",
+        "trace_file": "live_20261031_121405_trace17.json"
+      },
+      {
+        "run_id": "live_20261031_121436_trace18",
+        "status": "SUCCESS",
+        "duration_seconds": 29.261,
+        "total_tokens": 18487,
+        "prompt_tokens": 8781,
+        "completion_tokens": 9706,
+        "estimated_cost_usd": 0.012849,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:15:06.054359+00:00",
+        "trace_file": "live_20261031_121436_trace18.json"
+      },
+      {
+        "run_id": "live_20261031_121506_trace19",
+        "status": "SUCCESS",
+        "duration_seconds": 28.532,
+        "total_tokens": 16485,
+        "prompt_tokens": 8135,
+        "completion_tokens": 8350,
+        "estimated_cost_usd": 0.011396,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:15:34.602794+00:00",
+        "trace_file": "live_20261031_121506_trace19.json"
+      },
+      {
+        "run_id": "live_20261031_121534_trace20",
+        "status": "SUCCESS",
+        "duration_seconds": 83.706,
+        "total_tokens": 17075,
+        "prompt_tokens": 8340,
+        "completion_tokens": 8735,
+        "estimated_cost_usd": 0.011821,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:16:58.318136+00:00",
+        "trace_file": "live_20261031_121534_trace20.json"
+      },
+      {
+        "run_id": "live_20261031_121658_trace21",
+        "status": "SUCCESS",
+        "duration_seconds": 26.368,
+        "total_tokens": 16405,
+        "prompt_tokens": 8108,
+        "completion_tokens": 8297,
+        "estimated_cost_usd": 0.011338,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:17:24.698134+00:00",
+        "trace_file": "live_20261031_121658_trace21.json"
+      },
+      {
+        "run_id": "live_20261031_121724_trace22",
+        "status": "SUCCESS",
+        "duration_seconds": 37.07,
+        "total_tokens": 19141,
+        "prompt_tokens": 9663,
+        "completion_tokens": 9478,
+        "estimated_cost_usd": 0.013189,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:18:01.774108+00:00",
+        "trace_file": "live_20261031_121724_trace22.json"
+      },
+      {
+        "run_id": "live_20261031_121801_trace23",
+        "status": "SUCCESS",
+        "duration_seconds": 30.506,
+        "total_tokens": 20078,
+        "prompt_tokens": 9689,
+        "completion_tokens": 10389,
+        "estimated_cost_usd": 0.013924,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:18:32.287050+00:00",
+        "trace_file": "live_20261031_121801_trace23.json"
+      },
+      {
+        "run_id": "live_20261031_121832_trace24",
+        "status": "SUCCESS",
+        "duration_seconds": 43.066,
+        "total_tokens": 17636,
+        "prompt_tokens": 9046,
+        "completion_tokens": 8590,
+        "estimated_cost_usd": 0.012123,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:19:15.372154+00:00",
+        "trace_file": "live_20261031_121832_trace24.json"
+      },
+      {
+        "run_id": "live_20261031_121915_trace25",
+        "status": "SUCCESS",
+        "duration_seconds": 415.336,
+        "total_tokens": 16429,
+        "prompt_tokens": 8799,
+        "completion_tokens": 7630,
+        "estimated_cost_usd": 0.011219,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:26:10.721448+00:00",
+        "trace_file": "live_20261031_121915_trace25.json"
+      },
+      {
+        "run_id": "live_20261031_122610_trace26",
+        "status": "SUCCESS",
+        "duration_seconds": 37.764,
+        "total_tokens": 18657,
+        "prompt_tokens": 9418,
+        "completion_tokens": 9239,
+        "estimated_cost_usd": 0.012855,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:26:48.498655+00:00",
+        "trace_file": "live_20261031_122610_trace26.json"
+      },
+      {
+        "run_id": "live_20261031_122648_trace27",
+        "status": "SUCCESS",
+        "duration_seconds": 26.233,
+        "total_tokens": 16026,
+        "prompt_tokens": 8151,
+        "completion_tokens": 7875,
+        "estimated_cost_usd": 0.01103,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:27:14.762765+00:00",
+        "trace_file": "live_20261031_122648_trace27.json"
+      },
+      {
+        "run_id": "live_20261031_122714_trace28",
+        "status": "SUCCESS",
+        "duration_seconds": 33.975,
+        "total_tokens": 18515,
+        "prompt_tokens": 9407,
+        "completion_tokens": 9108,
+        "estimated_cost_usd": 0.012745,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:27:48.745285+00:00",
+        "trace_file": "live_20261031_122714_trace28.json"
+      },
+      {
+        "run_id": "live_20261031_122748_trace29",
+        "status": "SUCCESS",
+        "duration_seconds": 69.429,
+        "total_tokens": 15935,
+        "prompt_tokens": 8335,
+        "completion_tokens": 7600,
+        "estimated_cost_usd": 0.010922,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:28:58.186196+00:00",
+        "trace_file": "live_20261031_122748_trace29.json"
+      },
+      {
+        "run_id": "live_20261031_122858_trace30",
+        "status": "SUCCESS",
+        "duration_seconds": 36.376,
+        "total_tokens": 19336,
+        "prompt_tokens": 9134,
+        "completion_tokens": 10202,
+        "estimated_cost_usd": 0.013449,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:29:34.576290+00:00",
+        "trace_file": "live_20261031_122858_trace30.json"
+      },
+      {
+        "run_id": "live_20261031_123310_trace05",
+        "status": "SUCCESS",
+        "duration_seconds": 28.885,
+        "total_tokens": 16814,
+        "prompt_tokens": 8173,
+        "completion_tokens": 8641,
+        "estimated_cost_usd": 0.011648,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:33:39.010862+00:00",
+        "trace_file": "live_20261031_123310_trace05.json"
+      },
+      {
+        "run_id": "live_20261031_123339_trace10",
+        "status": "SUCCESS",
+        "duration_seconds": 29.476,
+        "total_tokens": 18559,
+        "prompt_tokens": 8950,
+        "completion_tokens": 9609,
+        "estimated_cost_usd": 0.012872,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:34:08.516188+00:00",
+        "trace_file": "live_20261031_123339_trace10.json"
+      },
+      {
+        "run_id": "live_20261031_123408_trace15",
+        "status": "SUCCESS",
+        "duration_seconds": 30.271,
+        "total_tokens": 18885,
+        "prompt_tokens": 9140,
+        "completion_tokens": 9745,
+        "estimated_cost_usd": 0.013091,
+        "agent_count": 10,
+        "timestamp": "2026-10-31T12:34:38.792616+00:00",
+        "trace_file": "live_20261031_123408_trace15.json"
+      }
+    ]
+  },
+  "workflow_graph": {
+    "nodes": [
+      {
+        "id": "workflow:contract_review",
+        "type": "workflow",
+        "name": "contract_review",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:clause_extraction_agent",
+        "type": "agent",
+        "name": "clause_extraction_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:clause_mapping_agent",
+        "type": "agent",
+        "name": "clause_mapping_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:compliance_deviation_agent",
+        "type": "agent",
+        "name": "compliance_deviation_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:contract_independent_review_agent",
+        "type": "agent",
+        "name": "contract_independent_review_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:contract_intake_agent",
+        "type": "agent",
+        "name": "contract_intake_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:cross_clause_consistency_agent",
+        "type": "agent",
+        "name": "cross_clause_consistency_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:evidence_validation_agent",
+        "type": "agent",
+        "name": "evidence_validation_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:final_compliance_report_agent",
+        "type": "agent",
+        "name": "final_compliance_report_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:policy_interpretation_agent",
+        "type": "agent",
+        "name": "policy_interpretation_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:risk_ambiguity_agent",
+        "type": "agent",
+        "name": "risk_ambiguity_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "task:clause_extraction_agent_task",
+        "type": "task",
+        "name": "clause_extraction_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:clause_mapping_agent_task",
+        "type": "task",
+        "name": "clause_mapping_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:cross_clause_consistency_agent_task",
+        "type": "task",
+        "name": "cross_clause_consistency_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:compliance_deviation_agent_task",
+        "type": "task",
+        "name": "compliance_deviation_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:evidence_validation_agent_task",
+        "type": "task",
+        "name": "evidence_validation_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:final_compliance_report_agent_task",
+        "type": "task",
+        "name": "final_compliance_report_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:contract_intake_agent_task",
+        "type": "task",
+        "name": "contract_intake_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:policy_interpretation_agent_task",
+        "type": "task",
+        "name": "policy_interpretation_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:contract_independent_review_agent_task",
+        "type": "task",
+        "name": "contract_independent_review_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:risk_ambiguity_agent_task",
+        "type": "task",
+        "name": "risk_ambiguity_agent_task",
+        "source": "statically_observed"
+      }
+    ],
+    "edges": [
+      {
+        "source": "agent:clause_extraction_agent",
+        "target": "task:clause_extraction_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "source": "agent:clause_mapping_agent",
+        "target": "task:clause_mapping_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "source": "agent:cross_clause_consistency_agent",
+        "target": "task:cross_clause_consistency_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "source": "agent:compliance_deviation_agent",
+        "target": "task:compliance_deviation_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "source": "agent:evidence_validation_agent",
+        "target": "task:evidence_validation_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_010"
+        ]
+      },
+      {
+        "source": "agent:final_compliance_report_agent",
+        "target": "task:final_compliance_report_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_012"
+        ]
+      },
+      {
+        "source": "agent:contract_intake_agent",
+        "target": "task:contract_intake_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_014"
+        ]
+      },
+      {
+        "source": "agent:policy_interpretation_agent",
+        "target": "task:policy_interpretation_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_016"
+        ]
+      },
+      {
+        "source": "agent:contract_independent_review_agent",
+        "target": "task:contract_independent_review_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_018"
+        ]
+      },
+      {
+        "source": "agent:risk_ambiguity_agent",
+        "target": "task:risk_ambiguity_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_020"
+        ]
+      },
+      {
+        "source": "workflow:contract_review",
+        "target": "agent:contract_intake_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:contract_review",
+        "target": "agent:clause_extraction_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:contract_review",
+        "target": "agent:cross_clause_consistency_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:contract_review",
+        "target": "agent:final_compliance_report_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:contract_review",
+        "target": "agent:clause_mapping_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:contract_review",
+        "target": "agent:policy_interpretation_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:contract_review",
+        "target": "agent:risk_ambiguity_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:contract_review",
+        "target": "agent:contract_independent_review_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:contract_review",
+        "target": "agent:compliance_deviation_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:contract_review",
+        "target": "agent:evidence_validation_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "agent:contract_intake_agent",
+        "target": "agent:clause_extraction_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:contract_intake_agent",
+        "target": "agent:policy_interpretation_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:clause_extraction_agent",
+        "target": "agent:clause_mapping_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:policy_interpretation_agent",
+        "target": "agent:clause_mapping_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:clause_mapping_agent",
+        "target": "agent:compliance_deviation_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:clause_extraction_agent",
+        "target": "agent:risk_ambiguity_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:clause_extraction_agent",
+        "target": "agent:cross_clause_consistency_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:compliance_deviation_agent",
+        "target": "agent:evidence_validation_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:risk_ambiguity_agent",
+        "target": "agent:evidence_validation_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:cross_clause_consistency_agent",
+        "target": "agent:evidence_validation_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:evidence_validation_agent",
+        "target": "agent:contract_independent_review_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:contract_independent_review_agent",
+        "target": "agent:final_compliance_report_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:contract_intake_agent",
+        "target": "agent:clause_extraction_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:clause_extraction_agent",
+        "target": "agent:policy_interpretation_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:policy_interpretation_agent",
+        "target": "agent:clause_mapping_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:clause_mapping_agent",
+        "target": "agent:compliance_deviation_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:compliance_deviation_agent",
+        "target": "agent:risk_ambiguity_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:risk_ambiguity_agent",
+        "target": "agent:cross_clause_consistency_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:cross_clause_consistency_agent",
+        "target": "agent:evidence_validation_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:evidence_validation_agent",
+        "target": "agent:contract_independent_review_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:contract_independent_review_agent",
+        "target": "agent:final_compliance_report_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      }
+    ]
+  },
+  "reconciliation_and_limitations": {
+    "agent_reconciliation": [
+      {
+        "agent_id": "clause_extraction_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "clause_mapping_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "compliance_deviation_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "contract_independent_review_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "contract_intake_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "cross_clause_consistency_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "evidence_validation_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "final_compliance_report_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "policy_interpretation_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "risk_ambiguity_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      }
+    ],
+    "dependency_reconciliation": [
+      {
+        "source": "contract_intake_agent",
+        "target": "clause_extraction_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "contract_intake_agent",
+        "target": "policy_interpretation_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "clause_extraction_agent",
+        "target": "clause_mapping_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "policy_interpretation_agent",
+        "target": "clause_mapping_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "clause_mapping_agent",
+        "target": "compliance_deviation_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "clause_extraction_agent",
+        "target": "risk_ambiguity_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "clause_extraction_agent",
+        "target": "cross_clause_consistency_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "compliance_deviation_agent",
+        "target": "evidence_validation_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "risk_ambiguity_agent",
+        "target": "evidence_validation_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "cross_clause_consistency_agent",
+        "target": "evidence_validation_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "evidence_validation_agent",
+        "target": "contract_independent_review_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "contract_independent_review_agent",
+        "target": "final_compliance_report_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      }
+    ],
+    "model_reconciliation": {
+      "declared_model": "openai/gpt-oss-120b",
+      "statically_extracted_model": null,
+      "runtime_observed_model": "openai/gpt-oss-120b",
+      "status": "matching",
+      "notes": "Declared model 'openai/gpt-oss-120b' matches runtime enforced model 'openai/gpt-oss-120b'."
+    },
+    "limitations": [
+      "Per-agent cost in traces is not tracked individually; only workflow-level cost is recorded.",
+      "Dynamic runtime branch outcomes and retry loops are recorded as sequential executions.",
+      "Static prompt text reflects task description parameters; dynamic LLM runtime prompt interpolations are reflected in trace prompt tokens.",
+      "Static AST dependency graph was a flat star topology; inter-agent dependencies are reconciled from workflow.json and runtime trace sequences."
+    ]
+  }
+}

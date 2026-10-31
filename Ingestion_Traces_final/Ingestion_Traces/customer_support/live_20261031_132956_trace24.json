@@ -1,0 +1,152 @@
+{
+  "run_id": "live_20261031_132956_trace24",
+  "workflow_name": "customer_support",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 18.312,
+  "agent_execution_count": 6,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.676,
+      "tokens": 920,
+      "prompt_tokens": 432,
+      "completion_tokens": 488,
+      "output": {
+        "category": "technical_failure",
+        "urgency": "critical",
+        "complexity": "complex",
+        "customer_impact": "high",
+        "routing_recommendation": "Assign to Enterprise Technical Support Tier 2/3 Database Engineering team with immediate attention and priority handling."
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "ticket_classification_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.392,
+      "tokens": 861,
+      "prompt_tokens": 507,
+      "completion_tokens": 354,
+      "output": {
+        "applicable_policy_ids": [],
+        "applicable_guide_ids": [
+          "TSG-203"
+        ],
+        "policy_conditions": {
+          "coverage_note": "No specific governing policy was found for this issue; therefore standard enterprise support terms apply.",
+          "eligibility": "Enterprise tier customers with high urgency technical_failure tickets are eligible for priority handling.",
+          "sla": {
+            "initial_response_time": "2 business hours",
+            "target_resolution_time": "8 business hours for high urgency technical_failure",
+            "escalation_timeframe": "If not resolved within target, escalate to Engineering within 4 business hours."
+          },
+          "restrictions": "None beyond standard enterprise contract limits; synthetic test tickets follow same SLA but may be deprioritized if identified as non‑production."
+        },
+        "retrieval_summary": "Policy search returned no matching policies; one synthetic troubleshooting guide (TSG-203) was found covering technical_failure steps. Applied standard enterprise SLA as no specific policy governs this scenario."
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "policy_retrieval_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.916,
+      "tokens": 1257,
+      "prompt_tokens": 669,
+      "completion_tokens": 588,
+      "output": {
+        "investigation_findings": "The export operation consistently stalls at 99% completion, indicating the query execution reaches a final processing stage but cannot finish. In enterprise environments this pattern often correlates with resource saturation (CPU, I/O, memory), lock contention on large tables, or missing/inefficient indexes that cause the optimizer to choose a sub‑optimal plan for the final data chunk. No evidence of application‑level bugs is present in the ticket, but the synthetic nature of the case suggests it mirrors known real‑world failures that were previously resolved via SOP TSG‑203.",
+        "root_cause_hypothesis": "The most probable cause is a database performance bottleneck triggered by either (a) lock contention on a heavily accessed table during the export’s final batch, or (b) an inefficient execution plan caused by missing or outdated indexes on columns used in the export query’s WHERE/ORDER BY clauses. Both conditions can cause the query to appear stuck at 99% while the engine waits for resources to become available.",
+        "confirmed_facts": [
+          "Ticket ID TICK-2026-0024 reports a database export query hanging at 99%.",
+          "Customer is Enterprise tier (CUST-0024) with synthetic profile.",
+          "Category is technical_failure with high urgency and complex apparent complexity.",
+          "Past technical_failure case (HIST-RES-0003) was resolved using SOP guide TSG-203.",
+          "The issue is synthetic, mirroring a known pattern."
+        ],
+        "data_gaps": [
+          "Exact SQL export query text and any parameters used.",
+          "Execution plan and query statistics (e.g., rows processed, time per step).",
+          "Database server resource metrics during the export (CPU, memory, I/O, disk latency).",
+          "Lock and transaction information at the time of the hang (e.g., blocking sessions).",
+          "Recent schema changes, index modifications, or data volume growth.",
+          "Version and configuration of the export tool or client application."
+        ]
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "issue_investigation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 2.257,
+      "tokens": 1878,
+      "prompt_tokens": 1134,
+      "completion_tokens": 744,
+      "output": {
+        "resolution_type": "requires_user_action",
+        "recommended_action": "1. Ask the customer to capture the exact SQL export statement (including any WHERE/ORDER BY clauses) and share it.\n2. Request the latest execution plan (EXPLAIN ANALYZE) for the export query and any query statistics (rows processed, time per step).\n3. Instruct the customer to collect database server resource metrics during the export run (CPU, memory, I/O, disk latency) using their monitoring tools (e.g., perfmon, vmstat, iostat).\n4. Have the customer run a lock‑status query (e.g., SELECT * FROM pg_locks WHERE NOT granted; or equivalent for their DB) at the moment the export stalls and provide the blocking session details.\n5. Verify whether any schema changes or index modifications have been applied in the last 7 days; request a list of recent DDL operations.\n6. As a temporary mitigation, suggest running the export in smaller batches (e.g., using LIMIT/OFFSET or exporting per table) to see if the hang still occurs at 99%.\n7. If the customer identifies missing or outdated indexes on columns used in the WHERE/ORDER BY clauses, advise them to create or rebuild those indexes, but only after confirming with their DBA and scheduling a maintenance window.\n8. Once the above data is gathered, the support engineer will analyze the execution plan and resource metrics to confirm the root cause and provide a definitive fix.\n9. Document all findings and actions taken in the ticket for audit and future reference.",
+        "policy_justification": "The ticket is classified as a high‑urgency, complex technical_failure for an Enterprise tier customer. Per the retrieved policy, standard enterprise support terms apply with a 2‑hour initial response and an 8‑hour target resolution. No specific governing policy exists, so we must follow the standard SLA and prioritize the case. Collecting detailed query, execution plan, and resource metrics is required before any database changes can be recommended, aligning with the policy’s restriction against unauthorized alterations. The recommended steps are designed to be completed within the SLA window and enable a rapid diagnosis without violating any policy constraints.",
+        "escalation_required": false
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "resolution_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 2.687,
+      "tokens": 1608,
+      "prompt_tokens": 867,
+      "completion_tokens": 741,
+      "output": {
+        "response_text": "Dear Enterprise Client 24,\n\nThank you for contacting us regarding the database export query that stalls at 99%. We understand how critical timely data exports are for your operations, and we’re committed to resolving this issue as quickly as possible.\n\nTo diagnose the root cause, we need a few details from your environment. Please provide the following information at your earliest convenience:\n\n- The exact SQL export statement you are using, including any WHERE or ORDER BY clauses.\n- The full execution plan (e.g., EXPLAIN ANALYZE) for the export query, along with any query statistics such as rows processed and time per step.\n- Database server resource metrics captured during the export run (CPU, memory, I/O, disk latency) using your monitoring tools (e.g., perfmon, vmstat, iostat).\n- The output of a lock‑status query (e.g., SELECT * FROM pg_locks WHERE NOT granted; or the equivalent for your DBMS) taken at the moment the export stalls, including details of any blocking sessions.\n- A list of any schema changes or index modifications applied in the last 7 days (DDL operations).\n- As a temporary mitigation, try running the export in smaller batches (using LIMIT/OFFSET or exporting per table) to see if the issue persists.\n- If you discover missing or outdated indexes on columns used in the WHERE/ORDER BY clauses, please coordinate with your DBA to create or rebuild those indexes during a scheduled maintenance window.\n\nOnce we have this information, our support engineer will analyze the execution plan and resource metrics, confirm the root cause, and provide a definitive fix.\n\nWe appreciate your cooperation and will keep this ticket a top priority. Please let us know if you need any assistance gathering the requested data.\n\nBest regards,\nTechnical Support Team",
+        "tone": "professional and empathetic",
+        "next_steps_for_customer": [
+          "Provide the exact SQL export statement (including WHERE/ORDER BY clauses).",
+          "Send the latest execution plan (EXPLAIN ANALYZE) and query statistics.",
+          "Collect and share database server resource metrics (CPU, memory, I/O, disk latency) during the export run.",
+          "Run a lock‑status query at the moment of the stall and provide details of any blocking sessions.",
+          "List any schema changes or index modifications made in the past 7 days.",
+          "Attempt the export in smaller batches (using LIMIT/OFFSET or per‑table export) as a temporary mitigation.",
+          "If missing or outdated indexes are identified, coordinate with your DBA to create or rebuild them during a maintenance window."
+        ],
+        "ticket_status": "awaiting_customer_action"
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "response_drafting_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 4.762,
+      "tokens": 2489,
+      "prompt_tokens": 2100,
+      "completion_tokens": 389,
+      "output": {
+        "qa_status": "APPROVED",
+        "final_ticket_status": "ACTION_REQUIRED_BY_USER",
+        "verification_notes": "The drafted response accurately reflects the investigation findings and requests all necessary data (SQL statement, execution plan, resource metrics, lock status, recent DDL changes) before a definitive fix can be provided. It includes a safe temporary mitigation (batch export) and advises coordination with the customer's DBA for any index changes, which complies with policy restrictions against unauthorized modifications. No unsupported promises or policy contradictions are present. The response is professional, empathetic, and aligns with the enterprise SLA. Since the issue cannot be resolved without additional customer-provided information, the ticket remains pending user action.",
+        "support_summary_report": "Audit confirms the response is complete, policy‑compliant, and appropriately scoped. The ticket should stay open with status awaiting customer input. No escalation is required at this stage."
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "resolution_verification_agent"
+    }
+  ],
+  "total_tokens": 9013,
+  "prompt_tokens": 5709,
+  "completion_tokens": 3304,
+  "estimated_cost_usd": 0.005978,
+  "error_message": null,
+  "final_output": "{\n  \"qa_status\": \"APPROVED\",\n  \"final_ticket_status\": \"ACTION_REQUIRED_BY_USER\",\n  \"verification_notes\": \"The drafted response accurately reflects the investigation findings and requests all necessary data (SQL statement, execution plan, resource metrics, lock status, recent DDL changes) before a definitive fix can be provided. It includes a safe temporary mitigation (batch export) and advises coordination with the customer's DBA for any index changes, which complies with policy restrictions against unauthorized modifications. No unsupported promises or policy contradictions are present. The response is professional, empathetic, and aligns with the enterprise SLA. Since the issue cannot be resolved without additional customer-provided information, the ticket remains pending user action.\",\n  \"support_summary_report\": \"Audit confirms the response is complete, policy\\u2011compliant, and appropriately scoped. The ticket should stay open with status awaiting customer input. No escalation is required at this stage.\"\n}",
+  "timestamp": "2026-10-31T13:30:14.545521+00:00"
+}

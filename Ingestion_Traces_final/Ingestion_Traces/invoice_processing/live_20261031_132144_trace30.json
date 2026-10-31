@@ -1,0 +1,334 @@
+{
+  "run_id": "live_20261031_132144_trace30",
+  "workflow_name": "invoice_processing",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 18.347,
+  "agent_execution_count": 8,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.659,
+      "tokens": 1061,
+      "prompt_tokens": 559,
+      "completion_tokens": 502,
+      "output": {
+        "extracted_invoice": {
+          "invoice_number": "INV-2026-0030",
+          "supplier_id": "SUP-110",
+          "supplier_name": "Silverline Logistics",
+          "po_reference": "",
+          "invoice_date": "2026-10-14",
+          "due_date": "2026-11-13",
+          "currency": "USD",
+          "line_items": [
+            {
+              "description": "Corrugated Shipping Cartons (500)",
+              "quantity": 17,
+              "unit_price": 175.0,
+              "line_total": 2975.0
+            },
+            {
+              "description": "Cloud Infrastructure Tier A",
+              "quantity": 2,
+              "unit_price": 1200.0,
+              "line_total": 2400.0
+            },
+            {
+              "description": "Annual Security License Seat",
+              "quantity": 5,
+              "unit_price": 180.0,
+              "line_total": 900.0
+            }
+          ],
+          "subtotal": 6275.0,
+          "tax": 502.0,
+          "discount": 0.0,
+          "total_amount": 6777.0
+        },
+        "extraction_flags": {
+          "missing_fields": [
+            "po_reference"
+          ],
+          "ambiguous_fields": [],
+          "inconsistent_fields": []
+        }
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "invoice_extraction_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.196,
+      "tokens": 850,
+      "prompt_tokens": 612,
+      "completion_tokens": 238,
+      "output": {
+        "validation_status": "PASSED",
+        "math_audit": {
+          "is_arithmetic_valid": true,
+          "calculated_subtotal": 6275.0,
+          "calculated_total": 6777.0,
+          "stated_total": 6777.0,
+          "discrepancy_amount": 0.0,
+          "line_discrepancies": []
+        },
+        "validation_errors": []
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "invoice_validation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.125,
+      "tokens": 786,
+      "prompt_tokens": 568,
+      "completion_tokens": 218,
+      "output": {
+        "po_match_status": "MISSING_PO_REFERENCE",
+        "matched_po_id": null,
+        "discrepancies": [
+          "No purchase order reference specified in invoice.",
+          "Unable to verify line item quantities, unit prices, or terms without a linked purchase order."
+        ],
+        "matching_confidence": 0.1
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "po_matching_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 1.548,
+      "tokens": 1025,
+      "prompt_tokens": 651,
+      "completion_tokens": 374,
+      "output": {
+        "is_compliant": false,
+        "applied_policy_ids": [
+          "POL-AP-001",
+          "POL-AP-002",
+          "POL-AP-003"
+        ],
+        "violations": [
+          {
+            "policy_id": "POL-AP-001",
+            "rule": "Every invoice above $1,000 must strictly match a valid Purchase Order.",
+            "severity": "high",
+            "classification": "fatal",
+            "detail": "Invoice amount is $6,777.00 but PO reference is missing."
+          }
+        ],
+        "compliance_summary": "The invoice fails compliance due to a fatal violation of POL-AP-001 (missing PO for amount > $1,000). No other policy violations detected; however, the invoice must be rejected or corrected before any further processing."
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "policy_compliance_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 1.534,
+      "tokens": 1022,
+      "prompt_tokens": 633,
+      "completion_tokens": 389,
+      "output": {
+        "duplicate_status": "POTENTIAL_DUPLICATE",
+        "matching_records": [
+          {
+            "historical_invoice_id": "INV-HIST-0029",
+            "matched_fields": [
+              "supplier_id",
+              "total_amount"
+            ],
+            "notes": "Same supplier (SUP-110) and identical total_amount (6777.0 USD)."
+          }
+        ],
+        "risk_assessment": "Potential duplicate billing risk. Identical amount and supplier suggest possible re‑submission; missing PO reference increases risk. Recommend manual review and supplier confirmation before payment."
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "duplicate_detection_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 2.455,
+      "tokens": 1913,
+      "prompt_tokens": 1046,
+      "completion_tokens": 867,
+      "output": {
+        "has_exceptions": true,
+        "exception_count": 3,
+        "critical_exceptions": [
+          "POLICY_VIOLATION_POL-AP-001"
+        ],
+        "detailed_exceptions": [
+          {
+            "exception_id": "PO_MISMATCH_001",
+            "category": "Purchase Order Mismatch",
+            "severity": "HIGH",
+            "description": "Invoice amount $6,777.00 exceeds $1,000 threshold but no PO reference is provided.",
+            "resolvable": true,
+            "blocker": true,
+            "recommended_action": "Obtain and attach a valid PO or request the supplier to re‑issue the invoice with a PO reference before any payment processing."
+          },
+          {
+            "exception_id": "POLICY_VIOLATION_POL-AP-001",
+            "category": "Policy Violation",
+            "severity": "CRITICAL",
+            "description": "Violation of POL-AP-001: every invoice above $1,000 must strictly match a valid Purchase Order. PO reference is missing.",
+            "resolvable": false,
+            "blocker": true,
+            "recommended_action": "Reject the invoice outright until a compliant PO is supplied; do not proceed with payment."
+          },
+          {
+            "exception_id": "DUPLICATE_ALERT_001",
+            "category": "Duplicate Detection",
+            "severity": "MEDIUM",
+            "description": "Potential duplicate billing: same supplier (SUP-110) and identical total amount ($6,777.00) as historical invoice INV-HIST-0029.",
+            "resolvable": true,
+            "blocker": false,
+            "recommended_action": "Conduct manual review and confirm with the supplier whether this is a re‑submission or a distinct transaction before releasing funds."
+          }
+        ]
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "exception_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 1.713,
+      "tokens": 1959,
+      "prompt_tokens": 1469,
+      "completion_tokens": 490,
+      "output": {
+        "recommendation": "needs_review",
+        "justification": "The invoice total of $6,777.00 exceeds the $1,000 threshold and lacks a purchase order reference (po_match_status = MISSING_PO_REFERENCE). This triggers a fatal violation of policy POL-AP-001, which requires every invoice above $1,000 to strictly match a valid PO. Although the arithmetic validation passed (math_audit.is_arithmetic_valid = true, no discrepancies), duplicate detection flagged a potential duplicate (same supplier SUP-110 and identical total amount as historical invoice INV-HIST-0029). Given the high‑severity policy breach and the medium‑severity duplicate risk, the invoice cannot be approved outright and must be reviewed by a manager or the supplier for PO attachment and duplicate confirmation before any payment can be considered.",
+        "conditions": [
+          "Missing PO reference (po_match_status = MISSING_PO_REFERENCE)",
+          "Fatal policy violation POL-AP-001 (invoice > $1,000 without PO)",
+          "Potential duplicate billing (matching supplier_id and total_amount with INV-HIST-0029)",
+          "Math audit passed (no arithmetic discrepancies)"
+        ]
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "approval_recommendation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_8 (gsk_yt...AwPO)",
+      "duration_seconds": 3.156,
+      "tokens": 2833,
+      "prompt_tokens": 1685,
+      "completion_tokens": 1148,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "invoice_id": "INV-2026-0030",
+        "final_recommendation": "needs_review",
+        "risk_level": "HIGH",
+        "summary_report": "The invoice passes arithmetic validation but fails critical policy compliance because it exceeds $1,000 without a Purchase Order reference. A potential duplicate billing issue is also flagged due to identical supplier and total amount to a historical invoice. Consequently, the invoice cannot be approved and requires managerial review, PO attachment, and supplier confirmation before any payment.",
+        "audit_findings": {
+          "math_audit": {
+            "is_arithmetic_valid": true,
+            "calculated_subtotal": 6275.0,
+            "calculated_total": 6777.0,
+            "discrepancy_amount": 0.0,
+            "status": "PASSED"
+          },
+          "po_matching": {
+            "po_match_status": "MISSING_PO_REFERENCE",
+            "matched_po_id": null,
+            "discrepancies": [
+              "No purchase order reference specified in invoice.",
+              "Unable to verify line item quantities, unit prices, or terms without a linked purchase order."
+            ],
+            "matching_confidence": 0.1
+          },
+          "policy_compliance": {
+            "is_compliant": false,
+            "violations": [
+              {
+                "policy_id": "POL-AP-001",
+                "rule": "Every invoice above $1,000 must strictly match a valid Purchase Order.",
+                "severity": "high",
+                "classification": "fatal",
+                "detail": "Invoice amount is $6,777.00 but PO reference is missing."
+              }
+            ],
+            "compliance_summary": "Fatal violation of POL-AP-001; invoice must be rejected or corrected before further processing."
+          },
+          "duplicate_detection": {
+            "duplicate_status": "POTENTIAL_DUPLICATE",
+            "matching_records": [
+              {
+                "historical_invoice_id": "INV-HIST-0029",
+                "matched_fields": [
+                  "supplier_id",
+                  "total_amount"
+                ],
+                "notes": "Same supplier (SUP-110) and identical total_amount (6777.0 USD)."
+              }
+            ],
+            "risk_assessment": "Potential duplicate billing risk; recommend manual review and supplier confirmation."
+          },
+          "exceptions": {
+            "has_exceptions": true,
+            "exception_count": 3,
+            "critical_exceptions": [
+              "POLICY_VIOLATION_POL-AP-001"
+            ],
+            "detailed_exceptions": [
+              {
+                "exception_id": "PO_MISMATCH_001",
+                "category": "Purchase Order Mismatch",
+                "severity": "HIGH",
+                "description": "Invoice amount $6,777.00 exceeds $1,000 threshold but no PO reference is provided.",
+                "resolvable": true,
+                "blocker": true,
+                "recommended_action": "Obtain and attach a valid PO or request the supplier to re‑issue the invoice with a PO reference before any payment processing."
+              },
+              {
+                "exception_id": "POLICY_VIOLATION_POL-AP-001",
+                "category": "Policy Violation",
+                "severity": "CRITICAL",
+                "description": "Violation of POL-AP-001: every invoice above $1,000 must strictly match a valid Purchase Order. PO reference is missing.",
+                "resolvable": false,
+                "blocker": true,
+                "recommended_action": "Reject the invoice outright until a compliant PO is supplied; do not proceed with payment."
+              },
+              {
+                "exception_id": "DUPLICATE_ALERT_001",
+                "category": "Duplicate Detection",
+                "severity": "MEDIUM",
+                "description": "Potential duplicate billing: same supplier (SUP-110) and identical total amount ($6,777.00) as historical invoice INV-HIST-0029.",
+                "resolvable": true,
+                "blocker": false,
+                "recommended_action": "Conduct manual review and confirm with the supplier whether this is a re‑submission or a distinct transaction before releasing funds."
+              }
+            ]
+          }
+        }
+      },
+      "notes": "",
+      "order": 8,
+      "agent_id": "final_review_agent_invoice"
+    }
+  ],
+  "total_tokens": 11449,
+  "prompt_tokens": 7223,
+  "completion_tokens": 4226,
+  "estimated_cost_usd": 0.0076,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"invoice_id\": \"INV-2026-0030\",\n  \"final_recommendation\": \"needs_review\",\n  \"risk_level\": \"HIGH\",\n  \"summary_report\": \"The invoice passes arithmetic validation but fails critical policy compliance because it exceeds $1,000 without a Purchase Order reference. A potential duplicate billing issue is also flagged due to identical supplier and total amount to a historical invoice. Consequently, the invoice cannot be approved and requires managerial review, PO attachment, and supplier confirmation before any payment.\",\n  \"audit_findings\": {\n    \"math_audit\": {\n      \"is_arithmetic_valid\": true,\n      \"calculated_subtotal\": 6275.0,\n      \"calculated_total\": 6777.0,\n      \"discrepancy_amount\": 0.0,\n      \"status\": \"PASSED\"\n    },\n    \"po_matching\": {\n      \"po_match_status\": \"MISSING_PO_REFERENCE\",\n      \"matched_po_id\": null,\n      \"discrepancies\": [\n        \"No purchase order reference specified in invoice.\",\n        \"Unable to verify line item quantities, unit prices, or terms without a linked purchase order.\"\n      ],\n      \"matching_confidence\": 0.1\n    },\n    \"policy_compliance\": {\n      \"is_compliant\": false,\n      \"violations\": [\n        {\n          \"policy_id\": \"POL-AP-001\",\n          \"rule\": \"Every invoice above $1,000 must strictly match a valid Purchase Order.\",\n          \"severity\": \"high\",\n          \"classification\": \"fatal\",\n          \"detail\": \"Invoice amount is $6,777.00 but PO reference is missing.\"\n        }\n      ],\n      \"compliance_summary\": \"Fatal violation of POL-AP-001; invoice must be rejected or corrected before further processing.\"\n    },\n    \"duplicate_detection\": {\n      \"duplicate_status\": \"POTENTIAL_DUPLICATE\",\n      \"matching_records\": [\n        {\n          \"historical_invoice_id\": \"INV-HIST-0029\",\n          \"matched_fields\": [\n            \"supplier_id\",\n            \"total_amount\"\n          ],\n          \"notes\": \"Same supplier (SUP-110) and identical total_amount (6777.0 USD).\"\n        }\n      ],\n      \"risk_assessment\": \"Potential duplicate billing risk; recommend manual review and supplier confirmation.\"\n    },\n    \"exceptions\": {\n      \"has_exceptions\": true,\n      \"exception_count\": 3,\n      \"critical_exceptions\": [\n        \"POLICY_VIOLATION_POL-AP-001\"\n      ],\n      \"detailed_exceptions\": [\n        {\n          \"exception_id\": \"PO_MISMATCH_001\",\n          \"category\": \"Purchase Order Mismatch\",\n          \"severity\": \"HIGH\",\n          \"description\": \"Invoice amount $6,777.00 exceeds $1,000 threshold but no PO reference is provided.\",\n          \"resolvable\": true,\n          \"blocker\": true,\n          \"recommended_action\": \"Obtain and attach a valid PO or request the supplier to re\\u2011issue the invoice with a PO reference before any payment processing.\"\n        },\n        {\n          \"exception_id\": \"POLICY_VIOLATION_POL-AP-001\",\n          \"category\": \"Policy Violation\",\n          \"severity\": \"CRITICAL\",\n          \"description\": \"Violation of POL-AP-001: every invoice above $1,000 must strictly match a valid Purchase Order. PO reference is missing.\",\n          \"resolvable\": false,\n          \"blocker\": true,\n          \"recommended_action\": \"Reject the invoice outright until a compliant PO is supplied; do not proceed with payment.\"\n        },\n        {\n          \"exception_id\": \"DUPLICATE_ALERT_001\",\n          \"category\": \"Duplicate Detection\",\n          \"severity\": \"MEDIUM\",\n          \"description\": \"Potential duplicate billing: same supplier (SUP-110) and identical total amount ($6,777.00) as historical invoice INV-HIST-0029.\",\n          \"resolvable\": true,\n          \"blocker\": false,\n          \"recommended_action\": \"Conduct manual review and confirm with the supplier whether this is a re\\u2011submission or a distinct transaction before releasing funds.\"\n        }\n      ]\n    }\n  }\n}",
+  "timestamp": "2026-10-31T13:22:03.250764+00:00"
+}

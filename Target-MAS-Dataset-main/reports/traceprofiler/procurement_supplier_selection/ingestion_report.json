@@ -1,0 +1,4142 @@
+{
+  "workflow_name": "procurement_supplier_selection",
+  "report_type": "traceprofiler_single_workflow_ingestion",
+  "analysis_mode": "static_ast_non_executing",
+  "metrics": {
+    "declared_agents": 9,
+    "implemented_agents": 9,
+    "python_files": 10,
+    "telemetry_runs": 4,
+    "discrepancy_count": 1
+  },
+  "manifest": {
+    "file": "Agents/procurement_supplier_selection/workflow.json",
+    "dir": "Agents/procurement_supplier_selection",
+    "workflow_name": "procurement_supplier_selection",
+    "version": "1.0.0",
+    "description": "Baseline Procurement and Supplier Selection Multi-Agent Workflow",
+    "fixed_model": "openai/gpt-oss-120b",
+    "total_agents": 9,
+    "execution_mode": "sequential",
+    "execution_order": [
+      "quotation_analysis_agent",
+      "supplier_profile_agent",
+      "delivery_analysis_agent",
+      "supplier_risk_agent",
+      "contract_analysis_agent",
+      "cost_comparison_agent",
+      "weighted_evaluation_agent",
+      "selection_recommendation_agent",
+      "final_review_agent_procurement"
+    ],
+    "optimization_opportunities": [
+      "Parallelize the 5 independent stages: quotation_analysis, supplier_profile, delivery_analysis, supplier_risk, and contract_analysis",
+      "Consolidate cost_comparison_agent directly into weighted_evaluation_agent",
+      "Prompt compression: Aggregate structured numeric evidence rather than re-sending raw bid documents to downstream agents",
+      "Prune contract analysis when standard pre-approved supplier contracts are in place"
+    ],
+    "agents": [
+      {
+        "id": "quotation_analysis_agent",
+        "name": "Senior Quotation Analyst",
+        "role": "Senior Quotation Analyst",
+        "declared_file": null,
+        "dependencies": [],
+        "inputs": [
+          "procurement_request",
+          "quotations"
+        ],
+        "outputs": [
+          "request_id",
+          "normalized_quotations",
+          "extraction_flags"
+        ],
+        "assigned_key": "GROQ_API_KEY_3",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": "Candidate for parallel execution.",
+        "raw": {
+          "agent_id": "quotation_analysis_agent",
+          "role": "Senior Quotation Analyst",
+          "assigned_key_env": "GROQ_API_KEY_3",
+          "dependencies": [],
+          "inputs": [
+            "procurement_request",
+            "quotations"
+          ],
+          "outputs": [
+            "request_id",
+            "normalized_quotations",
+            "extraction_flags"
+          ],
+          "optimization_note": "Candidate for parallel execution."
+        }
+      },
+      {
+        "id": "supplier_profile_agent",
+        "name": "Supplier Intelligence Officer",
+        "role": "Supplier Intelligence Officer",
+        "declared_file": null,
+        "dependencies": [],
+        "inputs": [
+          "supplier_ids",
+          "supplier_profiles.json"
+        ],
+        "outputs": [
+          "evaluated_profiles",
+          "profile_strengths",
+          "operational_concerns"
+        ],
+        "assigned_key": "GROQ_API_KEY_3",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": "Candidate for parallel execution with quotation, delivery, risk, and contract analyses.",
+        "raw": {
+          "agent_id": "supplier_profile_agent",
+          "role": "Supplier Intelligence Officer",
+          "assigned_key_env": "GROQ_API_KEY_3",
+          "dependencies": [],
+          "inputs": [
+            "supplier_ids",
+            "supplier_profiles.json"
+          ],
+          "outputs": [
+            "evaluated_profiles",
+            "profile_strengths",
+            "operational_concerns"
+          ],
+          "optimization_note": "Candidate for parallel execution with quotation, delivery, risk, and contract analyses."
+        }
+      },
+      {
+        "id": "delivery_analysis_agent",
+        "name": "Supply Chain Fulfillment Analyst",
+        "role": "Supply Chain Fulfillment Analyst",
+        "declared_file": null,
+        "dependencies": [],
+        "inputs": [
+          "target_delivery_date",
+          "delivery_schedules.json"
+        ],
+        "outputs": [
+          "delivery_evaluation",
+          "on_time_suppliers",
+          "late_risk_suppliers",
+          "logistics_summary"
+        ],
+        "assigned_key": "GROQ_API_KEY_3",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": "Candidate for parallel execution.",
+        "raw": {
+          "agent_id": "delivery_analysis_agent",
+          "role": "Supply Chain Fulfillment Analyst",
+          "assigned_key_env": "GROQ_API_KEY_3",
+          "dependencies": [],
+          "inputs": [
+            "target_delivery_date",
+            "delivery_schedules.json"
+          ],
+          "outputs": [
+            "delivery_evaluation",
+            "on_time_suppliers",
+            "late_risk_suppliers",
+            "logistics_summary"
+          ],
+          "optimization_note": "Candidate for parallel execution."
+        }
+      },
+      {
+        "id": "supplier_risk_agent",
+        "name": "Procurement Risk & Compliance Auditor",
+        "role": "Procurement Risk & Compliance Auditor",
+        "declared_file": null,
+        "dependencies": [],
+        "inputs": [
+          "supplier_ids",
+          "risk_records.json"
+        ],
+        "outputs": [
+          "supplier_risk_scores",
+          "flagged_suppliers",
+          "risk_mitigation_notes"
+        ],
+        "assigned_key": "GROQ_API_KEY_3",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": "Candidate for parallel execution.",
+        "raw": {
+          "agent_id": "supplier_risk_agent",
+          "role": "Procurement Risk & Compliance Auditor",
+          "assigned_key_env": "GROQ_API_KEY_3",
+          "dependencies": [],
+          "inputs": [
+            "supplier_ids",
+            "risk_records.json"
+          ],
+          "outputs": [
+            "supplier_risk_scores",
+            "flagged_suppliers",
+            "risk_mitigation_notes"
+          ],
+          "optimization_note": "Candidate for parallel execution."
+        }
+      },
+      {
+        "id": "contract_analysis_agent",
+        "name": "Commercial Contracts Specialist",
+        "role": "Commercial Contracts Specialist",
+        "declared_file": null,
+        "dependencies": [],
+        "inputs": [
+          "supplier_ids",
+          "contracts.json"
+        ],
+        "outputs": [
+          "contract_comparison",
+          "best_terms_supplier",
+          "contract_risks"
+        ],
+        "assigned_key": "GROQ_API_KEY_3",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": "Candidate for parallel execution.",
+        "raw": {
+          "agent_id": "contract_analysis_agent",
+          "role": "Commercial Contracts Specialist",
+          "assigned_key_env": "GROQ_API_KEY_3",
+          "dependencies": [],
+          "inputs": [
+            "supplier_ids",
+            "contracts.json"
+          ],
+          "outputs": [
+            "contract_comparison",
+            "best_terms_supplier",
+            "contract_risks"
+          ],
+          "optimization_note": "Candidate for parallel execution."
+        }
+      },
+      {
+        "id": "cost_comparison_agent",
+        "name": "Cost & Financial Analyst",
+        "role": "Cost & Financial Analyst",
+        "declared_file": null,
+        "dependencies": [
+          "quotation_analysis_agent"
+        ],
+        "inputs": [
+          "normalized_quotations"
+        ],
+        "outputs": [
+          "cost_ranking",
+          "lowest_cost_bidder",
+          "cost_spread_percentage",
+          "commercial_summary"
+        ],
+        "assigned_key": "GROQ_API_KEY_3",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": "Candidate for consolidation into weighted_evaluation_agent.",
+        "raw": {
+          "agent_id": "cost_comparison_agent",
+          "role": "Cost & Financial Analyst",
+          "assigned_key_env": "GROQ_API_KEY_3",
+          "dependencies": [
+            "quotation_analysis_agent"
+          ],
+          "inputs": [
+            "normalized_quotations"
+          ],
+          "outputs": [
+            "cost_ranking",
+            "lowest_cost_bidder",
+            "cost_spread_percentage",
+            "commercial_summary"
+          ],
+          "optimization_note": "Candidate for consolidation into weighted_evaluation_agent."
+        }
+      },
+      {
+        "id": "weighted_evaluation_agent",
+        "name": "Multi-Criteria Decision Analysis Specialist",
+        "role": "Multi-Criteria Decision Analysis Specialist",
+        "declared_file": null,
+        "dependencies": [
+          "cost_comparison_agent",
+          "delivery_analysis_agent",
+          "supplier_risk_agent",
+          "supplier_profile_agent",
+          "contract_analysis_agent"
+        ],
+        "inputs": [
+          "cost_ranking",
+          "delivery_eval",
+          "risk_eval",
+          "profile_eval",
+          "contract_eval",
+          "evaluation_criteria.json"
+        ],
+        "outputs": [
+          "weighted_scores",
+          "top_ranked_supplier",
+          "score_spread",
+          "evaluation_rationale"
+        ],
+        "assigned_key": "GROQ_API_KEY_3",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "weighted_evaluation_agent",
+          "role": "Multi-Criteria Decision Analysis Specialist",
+          "assigned_key_env": "GROQ_API_KEY_3",
+          "dependencies": [
+            "cost_comparison_agent",
+            "delivery_analysis_agent",
+            "supplier_risk_agent",
+            "supplier_profile_agent",
+            "contract_analysis_agent"
+          ],
+          "inputs": [
+            "cost_ranking",
+            "delivery_eval",
+            "risk_eval",
+            "profile_eval",
+            "contract_eval",
+            "evaluation_criteria.json"
+          ],
+          "outputs": [
+            "weighted_scores",
+            "top_ranked_supplier",
+            "score_spread",
+            "evaluation_rationale"
+          ]
+        }
+      },
+      {
+        "id": "selection_recommendation_agent",
+        "name": "Strategic Sourcing Committee Chair",
+        "role": "Strategic Sourcing Committee Chair",
+        "declared_file": null,
+        "dependencies": [
+          "weighted_evaluation_agent"
+        ],
+        "inputs": [
+          "consolidated_procurement_evidence"
+        ],
+        "outputs": [
+          "recommended_supplier_id",
+          "commercial_rationale",
+          "risk_acceptance",
+          "next_steps"
+        ],
+        "assigned_key": "GROQ_API_KEY_3",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "selection_recommendation_agent",
+          "role": "Strategic Sourcing Committee Chair",
+          "assigned_key_env": "GROQ_API_KEY_3",
+          "dependencies": [
+            "weighted_evaluation_agent"
+          ],
+          "inputs": [
+            "consolidated_procurement_evidence"
+          ],
+          "outputs": [
+            "recommended_supplier_id",
+            "commercial_rationale",
+            "risk_acceptance",
+            "next_steps"
+          ]
+        }
+      },
+      {
+        "id": "final_review_agent_procurement",
+        "name": "Chief Procurement Officer & Audit Lead",
+        "role": "Chief Procurement Officer & Audit Lead",
+        "declared_file": null,
+        "dependencies": [
+          "selection_recommendation_agent"
+        ],
+        "inputs": [
+          "complete_procurement_audit"
+        ],
+        "outputs": [
+          "workflow_status",
+          "selected_supplier",
+          "compliance_verification",
+          "summary_report",
+          "award_justification"
+        ],
+        "assigned_key": "GROQ_API_KEY_3",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "final_review_agent_procurement",
+          "role": "Chief Procurement Officer & Audit Lead",
+          "assigned_key_env": "GROQ_API_KEY_3",
+          "dependencies": [
+            "selection_recommendation_agent"
+          ],
+          "inputs": [
+            "complete_procurement_audit"
+          ],
+          "outputs": [
+            "workflow_status",
+            "selected_supplier",
+            "compliance_verification",
+            "summary_report",
+            "award_justification"
+          ]
+        }
+      }
+    ]
+  },
+  "agent_inventory": [
+    {
+      "id": "quotation_analysis_agent",
+      "name": "Senior Quotation Analyst",
+      "role": "Senior Quotation Analyst",
+      "workflow": "procurement_supplier_selection",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_3",
+      "dependencies": [],
+      "inputs": [
+        "procurement_request",
+        "quotations"
+      ],
+      "outputs": [
+        "request_id",
+        "normalized_quotations",
+        "extraction_flags"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": "Candidate for parallel execution.",
+      "implementation_found": true,
+      "implementation_file": "Agents/procurement_supplier_selection/quotation_analysis_agent.py",
+      "agent_constructors": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Senior Quotation Analyst",
+          "goal": "Extract, normalize, and validate competing supplier bids and commercial terms.",
+          "backstory": "A procurement analyst specializing in normalizing commercial bids across disparate supplier formats.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 35,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 39,
+          "docstring": null,
+          "args": [
+            "agent",
+            "procurement_request",
+            "quotations"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    },
+    {
+      "id": "supplier_profile_agent",
+      "name": "Supplier Intelligence Officer",
+      "role": "Supplier Intelligence Officer",
+      "workflow": "procurement_supplier_selection",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_3",
+      "dependencies": [],
+      "inputs": [
+        "supplier_ids",
+        "supplier_profiles.json"
+      ],
+      "outputs": [
+        "evaluated_profiles",
+        "profile_strengths",
+        "operational_concerns"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": "Candidate for parallel execution with quotation, delivery, risk, and contract analyses.",
+      "implementation_found": true,
+      "implementation_file": "Agents/procurement_supplier_selection/supplier_profile_agent.py",
+      "agent_constructors": [
+        {
+          "line": 28,
+          "constructor": "Agent",
+          "role": "Supplier Intelligence Officer",
+          "goal": "Evaluate supplier capabilities, manufacturing capacity, and operational standing.",
+          "backstory": "A strategic sourcing specialist who audits supplier corporate health, certifications, and technical capacity.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 47,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "deterministic_profile_lookup",
+          "line": 14,
+          "end_line": 23,
+          "docstring": "Retrieves synthetic supplier profiles from local files.",
+          "args": [
+            "supplier_ids"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 25,
+          "end_line": 34,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 36,
+          "end_line": 51,
+          "docstring": null,
+          "args": [
+            "agent",
+            "supplier_ids"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_profile_lookup",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Retrieves synthetic supplier profiles from local files."
+        }
+      ]
+    },
+    {
+      "id": "delivery_analysis_agent",
+      "name": "Supply Chain Fulfillment Analyst",
+      "role": "Supply Chain Fulfillment Analyst",
+      "workflow": "procurement_supplier_selection",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_3",
+      "dependencies": [],
+      "inputs": [
+        "target_delivery_date",
+        "delivery_schedules.json"
+      ],
+      "outputs": [
+        "delivery_evaluation",
+        "on_time_suppliers",
+        "late_risk_suppliers",
+        "logistics_summary"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": "Candidate for parallel execution.",
+      "implementation_found": true,
+      "implementation_file": "Agents/procurement_supplier_selection/delivery_analysis_agent.py",
+      "agent_constructors": [
+        {
+          "line": 35,
+          "constructor": "Agent",
+          "role": "Supply Chain Fulfillment Analyst",
+          "goal": "Evaluate supplier delivery schedules, shipping transit times, and milestone feasibility.",
+          "backstory": "A logistics specialist focused on critical path analysis and preventing supply chain delays.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 55,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "deterministic_delivery_check",
+          "line": 13,
+          "end_line": 30,
+          "docstring": "Calculates deterministic date differentials and deadline adherence.",
+          "args": [
+            "required_date_str",
+            "delivery_schedules"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 32,
+          "end_line": 41,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 43,
+          "end_line": 59,
+          "docstring": null,
+          "args": [
+            "agent",
+            "required_date_str",
+            "delivery_schedules"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "datetime",
+          "level": 0,
+          "names": [
+            "datetime"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_delivery_check",
+          "line": 13,
+          "classification": "function_candidate",
+          "docstring": "Calculates deterministic date differentials and deadline adherence."
+        }
+      ]
+    },
+    {
+      "id": "supplier_risk_agent",
+      "name": "Procurement Risk & Compliance Auditor",
+      "role": "Procurement Risk & Compliance Auditor",
+      "workflow": "procurement_supplier_selection",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_3",
+      "dependencies": [],
+      "inputs": [
+        "supplier_ids",
+        "risk_records.json"
+      ],
+      "outputs": [
+        "supplier_risk_scores",
+        "flagged_suppliers",
+        "risk_mitigation_notes"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": "Candidate for parallel execution.",
+      "implementation_found": true,
+      "implementation_file": "Agents/procurement_supplier_selection/supplier_risk_agent.py",
+      "agent_constructors": [
+        {
+          "line": 28,
+          "constructor": "Agent",
+          "role": "Procurement Risk & Compliance Auditor",
+          "goal": "Assess supplier quality defect rates, historical failure frequency, and audit status.",
+          "backstory": "A risk governance analyst evaluating supplier reliability and preventing vendor failures.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 48,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "deterministic_risk_lookup",
+          "line": 14,
+          "end_line": 23,
+          "docstring": "Retrieves synthetic risk records from local files.",
+          "args": [
+            "supplier_ids"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 25,
+          "end_line": 34,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 36,
+          "end_line": 52,
+          "docstring": null,
+          "args": [
+            "agent",
+            "supplier_ids"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_risk_lookup",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Retrieves synthetic risk records from local files."
+        }
+      ]
+    },
+    {
+      "id": "contract_analysis_agent",
+      "name": "Commercial Contracts Specialist",
+      "role": "Commercial Contracts Specialist",
+      "workflow": "procurement_supplier_selection",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_3",
+      "dependencies": [],
+      "inputs": [
+        "supplier_ids",
+        "contracts.json"
+      ],
+      "outputs": [
+        "contract_comparison",
+        "best_terms_supplier",
+        "contract_risks"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": "Candidate for parallel execution.",
+      "implementation_found": true,
+      "implementation_file": "Agents/procurement_supplier_selection/contract_analysis_agent.py",
+      "agent_constructors": [
+        {
+          "line": 28,
+          "constructor": "Agent",
+          "role": "Commercial Contracts Specialist",
+          "goal": "Audit legal terms, payment conditions, delay penalties, and warranty protections.",
+          "backstory": "A corporate contract analyst reviewing vendor terms to protect organizational interests.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 47,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "deterministic_contract_lookup",
+          "line": 14,
+          "end_line": 23,
+          "docstring": "Retrieves synthetic contract templates from local files.",
+          "args": [
+            "supplier_ids"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 25,
+          "end_line": 34,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 36,
+          "end_line": 51,
+          "docstring": null,
+          "args": [
+            "agent",
+            "supplier_ids"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_contract_lookup",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Retrieves synthetic contract templates from local files."
+        }
+      ]
+    },
+    {
+      "id": "cost_comparison_agent",
+      "name": "Cost & Financial Analyst",
+      "role": "Cost & Financial Analyst",
+      "workflow": "procurement_supplier_selection",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_3",
+      "dependencies": [
+        "quotation_analysis_agent"
+      ],
+      "inputs": [
+        "normalized_quotations"
+      ],
+      "outputs": [
+        "cost_ranking",
+        "lowest_cost_bidder",
+        "cost_spread_percentage",
+        "commercial_summary"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": "Candidate for consolidation into weighted_evaluation_agent.",
+      "implementation_found": true,
+      "implementation_file": "Agents/procurement_supplier_selection/cost_comparison_agent.py",
+      "agent_constructors": [
+        {
+          "line": 37,
+          "constructor": "Agent",
+          "role": "Cost & Financial Analyst",
+          "goal": "Perform rigorous commercial cost comparison and rank suppliers by total evaluated cost.",
+          "backstory": "A financial procurement analyst calculating total cost of ownership across competing supplier bids.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 56,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "deterministic_cost_ranking",
+          "line": 12,
+          "end_line": 32,
+          "docstring": "Calculates total landed cost and ranks suppliers deterministically.",
+          "args": [
+            "quotations"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 34,
+          "end_line": 43,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 45,
+          "end_line": 60,
+          "docstring": null,
+          "args": [
+            "agent",
+            "quotations"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_cost_ranking",
+          "line": 12,
+          "classification": "function_candidate",
+          "docstring": "Calculates total landed cost and ranks suppliers deterministically."
+        }
+      ]
+    },
+    {
+      "id": "weighted_evaluation_agent",
+      "name": "Multi-Criteria Decision Analysis Specialist",
+      "role": "Multi-Criteria Decision Analysis Specialist",
+      "workflow": "procurement_supplier_selection",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_3",
+      "dependencies": [
+        "cost_comparison_agent",
+        "delivery_analysis_agent",
+        "supplier_risk_agent",
+        "supplier_profile_agent",
+        "contract_analysis_agent"
+      ],
+      "inputs": [
+        "cost_ranking",
+        "delivery_eval",
+        "risk_eval",
+        "profile_eval",
+        "contract_eval",
+        "evaluation_criteria.json"
+      ],
+      "outputs": [
+        "weighted_scores",
+        "top_ranked_supplier",
+        "score_spread",
+        "evaluation_rationale"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/procurement_supplier_selection/weighted_evaluation_agent.py",
+      "agent_constructors": [
+        {
+          "line": 85,
+          "constructor": "Agent",
+          "role": "Multi-Criteria Decision Analysis Specialist",
+          "goal": "Apply formal weighted decision matrices to rank suppliers objectively across all evaluation pillars.",
+          "backstory": "An operations research analyst calculating quantitative scoring models for vendor selection.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 103,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "deterministic_weighted_scoring",
+          "line": 14,
+          "end_line": 80,
+          "docstring": "Computes deterministic multi-criteria score (0-100) per supplier.",
+          "args": [
+            "cost_data",
+            "delivery_data",
+            "risk_data",
+            "profile_data"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 82,
+          "end_line": 91,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 93,
+          "end_line": 107,
+          "docstring": null,
+          "args": [
+            "agent",
+            "scored_results"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_weighted_scoring",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Computes deterministic multi-criteria score (0-100) per supplier."
+        }
+      ]
+    },
+    {
+      "id": "selection_recommendation_agent",
+      "name": "Strategic Sourcing Committee Chair",
+      "role": "Strategic Sourcing Committee Chair",
+      "workflow": "procurement_supplier_selection",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_3",
+      "dependencies": [
+        "weighted_evaluation_agent"
+      ],
+      "inputs": [
+        "consolidated_procurement_evidence"
+      ],
+      "outputs": [
+        "recommended_supplier_id",
+        "commercial_rationale",
+        "risk_acceptance",
+        "next_steps"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/procurement_supplier_selection/selection_recommendation_agent.py",
+      "agent_constructors": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Strategic Sourcing Committee Chair",
+          "goal": "Synthesize technical, delivery, commercial, risk, and scoring evidence into an authoritative supplier recommendation.",
+          "backstory": "An executive procurement director balancing strategic risk, quality, and commercial value.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 34,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 38,
+          "docstring": null,
+          "args": [
+            "agent",
+            "all_procurement_evidence"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    },
+    {
+      "id": "final_review_agent_procurement",
+      "name": "Chief Procurement Officer & Audit Lead",
+      "role": "Chief Procurement Officer & Audit Lead",
+      "workflow": "procurement_supplier_selection",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_3",
+      "dependencies": [
+        "selection_recommendation_agent"
+      ],
+      "inputs": [
+        "complete_procurement_audit"
+      ],
+      "outputs": [
+        "workflow_status",
+        "selected_supplier",
+        "compliance_verification",
+        "summary_report",
+        "award_justification"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/procurement_supplier_selection/final_review_agent.py",
+      "agent_constructors": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Chief Procurement Officer & Audit Lead",
+          "goal": "Verify evaluation integrity, confirm weighted arithmetic, and authorize the final sourcing report.",
+          "backstory": "The final governance authority ensuring procurement awards comply with organizational ethics and policy.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 34,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 38,
+          "docstring": null,
+          "args": [
+            "agent",
+            "complete_procurement_audit"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    }
+  ],
+  "workflow_analysis": {
+    "file": "Agents/procurement_supplier_selection/workflow.py",
+    "classes": [],
+    "entry_points": [
+      {
+        "name": "run_procurement_workflow",
+        "line": 68,
+        "args": [
+          "procurement_case",
+          "run_id"
+        ],
+        "docstring": "Executes the 9-agent sequential Procurement and Supplier Selection baseline workflow."
+      }
+    ],
+    "crew_constructions": [
+      {
+        "line": 97,
+        "source": "Crew(agents=[agent1], tasks=[task1], verbose=False)"
+      },
+      {
+        "line": 112,
+        "source": "Crew(agents=[agent2], tasks=[task2], verbose=False)"
+      },
+      {
+        "line": 127,
+        "source": "Crew(agents=[agent3], tasks=[task3], verbose=False)"
+      },
+      {
+        "line": 142,
+        "source": "Crew(agents=[agent4], tasks=[task4], verbose=False)"
+      },
+      {
+        "line": 157,
+        "source": "Crew(agents=[agent5], tasks=[task5], verbose=False)"
+      },
+      {
+        "line": 172,
+        "source": "Crew(agents=[agent6], tasks=[task6], verbose=False)"
+      },
+      {
+        "line": 187,
+        "source": "Crew(agents=[agent7], tasks=[task7], verbose=False)"
+      },
+      {
+        "line": 201,
+        "source": "Crew(agents=[agent8], tasks=[task8], verbose=False)"
+      },
+      {
+        "line": 215,
+        "source": "Crew(agents=[agent9], tasks=[task9], verbose=False)"
+      }
+    ],
+    "assignments": [
+      {
+        "line": 66,
+        "targets": [
+          "WORKFLOW_NAME"
+        ],
+        "value_names": [],
+        "expression": "\"procurement_supplier_selection\""
+      },
+      {
+        "line": 76,
+        "targets": [
+          "tracker"
+        ],
+        "value_names": [
+          "WORKFLOW_NAME",
+          "WorkflowRunTracker",
+          "run_id"
+        ],
+        "expression": "WorkflowRunTracker(WORKFLOW_NAME, run_id).start()"
+      },
+      {
+        "line": 78,
+        "targets": [
+          "req"
+        ],
+        "value_names": [
+          "procurement_case"
+        ],
+        "expression": "procurement_case.get(\"procurement_request\", {})"
+      },
+      {
+        "line": 79,
+        "targets": [
+          "quotes"
+        ],
+        "value_names": [
+          "procurement_case"
+        ],
+        "expression": "procurement_case.get(\"quotations\", [])"
+      },
+      {
+        "line": 80,
+        "targets": [
+          "schedules"
+        ],
+        "value_names": [
+          "procurement_case"
+        ],
+        "expression": "procurement_case.get(\"delivery_schedules\", [])"
+      },
+      {
+        "line": 81,
+        "targets": [
+          "supplier_ids"
+        ],
+        "value_names": [
+          "q",
+          "quotes"
+        ],
+        "expression": "[q.get(\"supplier_id\") for q in quotes]"
+      },
+      {
+        "line": 82,
+        "targets": [
+          "req_date"
+        ],
+        "value_names": [
+          "req"
+        ],
+        "expression": "req.get(\"target_delivery_date\", \"2026-12-31\")"
+      },
+      {
+        "line": 89,
+        "targets": [
+          "stage_evidence"
+        ],
+        "value_names": [],
+        "expression": "{}"
+      },
+      {
+        "line": 93,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 95,
+        "targets": [
+          "agent1"
+        ],
+        "value_names": [
+          "create_quotation_agent"
+        ],
+        "expression": "create_quotation_agent()"
+      },
+      {
+        "line": 96,
+        "targets": [
+          "task1"
+        ],
+        "value_names": [
+          "agent1",
+          "create_quotation_task",
+          "quotes",
+          "req"
+        ],
+        "expression": "create_quotation_task(agent1, req, quotes)"
+      },
+      {
+        "line": 97,
+        "targets": [
+          "crew1"
+        ],
+        "value_names": [
+          "Crew",
+          "agent1",
+          "task1"
+        ],
+        "expression": "Crew(agents=[agent1], tasks=[task1], verbose=False)"
+      },
+      {
+        "line": 98,
+        "targets": [
+          "res1"
+        ],
+        "value_names": [
+          "crew1"
+        ],
+        "expression": "crew1.kickoff()"
+      },
+      {
+        "line": 99,
+        "targets": [
+          "out1"
+        ],
+        "value_names": [
+          "hasattr",
+          "res1",
+          "str"
+        ],
+        "expression": "res1.raw if hasattr(res1, \"raw\") else str(res1)"
+      },
+      {
+        "line": 101,
+        "targets": [
+          "dur1"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 107,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 109,
+        "targets": [
+          "profile_data"
+        ],
+        "value_names": [
+          "deterministic_profile_lookup",
+          "supplier_ids"
+        ],
+        "expression": "deterministic_profile_lookup(supplier_ids)"
+      },
+      {
+        "line": 110,
+        "targets": [
+          "agent2"
+        ],
+        "value_names": [
+          "create_profile_agent"
+        ],
+        "expression": "create_profile_agent()"
+      },
+      {
+        "line": 111,
+        "targets": [
+          "task2"
+        ],
+        "value_names": [
+          "agent2",
+          "create_profile_task",
+          "supplier_ids"
+        ],
+        "expression": "create_profile_task(agent2, supplier_ids)"
+      },
+      {
+        "line": 112,
+        "targets": [
+          "crew2"
+        ],
+        "value_names": [
+          "Crew",
+          "agent2",
+          "task2"
+        ],
+        "expression": "Crew(agents=[agent2], tasks=[task2], verbose=False)"
+      },
+      {
+        "line": 113,
+        "targets": [
+          "res2"
+        ],
+        "value_names": [
+          "crew2"
+        ],
+        "expression": "crew2.kickoff()"
+      },
+      {
+        "line": 114,
+        "targets": [
+          "out2"
+        ],
+        "value_names": [
+          "hasattr",
+          "res2",
+          "str"
+        ],
+        "expression": "res2.raw if hasattr(res2, \"raw\") else str(res2)"
+      },
+      {
+        "line": 116,
+        "targets": [
+          "dur2"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 122,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 124,
+        "targets": [
+          "deliv_calc"
+        ],
+        "value_names": [
+          "deterministic_delivery_check",
+          "req_date",
+          "schedules"
+        ],
+        "expression": "deterministic_delivery_check(req_date, schedules)"
+      },
+      {
+        "line": 125,
+        "targets": [
+          "agent3"
+        ],
+        "value_names": [
+          "create_delivery_agent"
+        ],
+        "expression": "create_delivery_agent()"
+      },
+      {
+        "line": 126,
+        "targets": [
+          "task3"
+        ],
+        "value_names": [
+          "agent3",
+          "create_delivery_task",
+          "req_date",
+          "schedules"
+        ],
+        "expression": "create_delivery_task(agent3, req_date, schedules)"
+      },
+      {
+        "line": 127,
+        "targets": [
+          "crew3"
+        ],
+        "value_names": [
+          "Crew",
+          "agent3",
+          "task3"
+        ],
+        "expression": "Crew(agents=[agent3], tasks=[task3], verbose=False)"
+      },
+      {
+        "line": 128,
+        "targets": [
+          "res3"
+        ],
+        "value_names": [
+          "crew3"
+        ],
+        "expression": "crew3.kickoff()"
+      },
+      {
+        "line": 129,
+        "targets": [
+          "out3"
+        ],
+        "value_names": [
+          "hasattr",
+          "res3",
+          "str"
+        ],
+        "expression": "res3.raw if hasattr(res3, \"raw\") else str(res3)"
+      },
+      {
+        "line": 131,
+        "targets": [
+          "dur3"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 137,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 139,
+        "targets": [
+          "risk_data"
+        ],
+        "value_names": [
+          "deterministic_risk_lookup",
+          "supplier_ids"
+        ],
+        "expression": "deterministic_risk_lookup(supplier_ids)"
+      },
+      {
+        "line": 140,
+        "targets": [
+          "agent4"
+        ],
+        "value_names": [
+          "create_risk_agent"
+        ],
+        "expression": "create_risk_agent()"
+      },
+      {
+        "line": 141,
+        "targets": [
+          "task4"
+        ],
+        "value_names": [
+          "agent4",
+          "create_risk_task",
+          "supplier_ids"
+        ],
+        "expression": "create_risk_task(agent4, supplier_ids)"
+      },
+      {
+        "line": 142,
+        "targets": [
+          "crew4"
+        ],
+        "value_names": [
+          "Crew",
+          "agent4",
+          "task4"
+        ],
+        "expression": "Crew(agents=[agent4], tasks=[task4], verbose=False)"
+      },
+      {
+        "line": 143,
+        "targets": [
+          "res4"
+        ],
+        "value_names": [
+          "crew4"
+        ],
+        "expression": "crew4.kickoff()"
+      },
+      {
+        "line": 144,
+        "targets": [
+          "out4"
+        ],
+        "value_names": [
+          "hasattr",
+          "res4",
+          "str"
+        ],
+        "expression": "res4.raw if hasattr(res4, \"raw\") else str(res4)"
+      },
+      {
+        "line": 146,
+        "targets": [
+          "dur4"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 152,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 154,
+        "targets": [
+          "contract_data"
+        ],
+        "value_names": [
+          "deterministic_contract_lookup",
+          "supplier_ids"
+        ],
+        "expression": "deterministic_contract_lookup(supplier_ids)"
+      },
+      {
+        "line": 155,
+        "targets": [
+          "agent5"
+        ],
+        "value_names": [
+          "create_contract_agent"
+        ],
+        "expression": "create_contract_agent()"
+      },
+      {
+        "line": 156,
+        "targets": [
+          "task5"
+        ],
+        "value_names": [
+          "agent5",
+          "create_contract_task",
+          "supplier_ids"
+        ],
+        "expression": "create_contract_task(agent5, supplier_ids)"
+      },
+      {
+        "line": 157,
+        "targets": [
+          "crew5"
+        ],
+        "value_names": [
+          "Crew",
+          "agent5",
+          "task5"
+        ],
+        "expression": "Crew(agents=[agent5], tasks=[task5], verbose=False)"
+      },
+      {
+        "line": 158,
+        "targets": [
+          "res5"
+        ],
+        "value_names": [
+          "crew5"
+        ],
+        "expression": "crew5.kickoff()"
+      },
+      {
+        "line": 159,
+        "targets": [
+          "out5"
+        ],
+        "value_names": [
+          "hasattr",
+          "res5",
+          "str"
+        ],
+        "expression": "res5.raw if hasattr(res5, \"raw\") else str(res5)"
+      },
+      {
+        "line": 161,
+        "targets": [
+          "dur5"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 167,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 169,
+        "targets": [
+          "cost_ranking"
+        ],
+        "value_names": [
+          "deterministic_cost_ranking",
+          "quotes"
+        ],
+        "expression": "deterministic_cost_ranking(quotes)"
+      },
+      {
+        "line": 170,
+        "targets": [
+          "agent6"
+        ],
+        "value_names": [
+          "create_cost_agent"
+        ],
+        "expression": "create_cost_agent()"
+      },
+      {
+        "line": 171,
+        "targets": [
+          "task6"
+        ],
+        "value_names": [
+          "agent6",
+          "create_cost_task",
+          "quotes"
+        ],
+        "expression": "create_cost_task(agent6, quotes)"
+      },
+      {
+        "line": 172,
+        "targets": [
+          "crew6"
+        ],
+        "value_names": [
+          "Crew",
+          "agent6",
+          "task6"
+        ],
+        "expression": "Crew(agents=[agent6], tasks=[task6], verbose=False)"
+      },
+      {
+        "line": 173,
+        "targets": [
+          "res6"
+        ],
+        "value_names": [
+          "crew6"
+        ],
+        "expression": "crew6.kickoff()"
+      },
+      {
+        "line": 174,
+        "targets": [
+          "out6"
+        ],
+        "value_names": [
+          "hasattr",
+          "res6",
+          "str"
+        ],
+        "expression": "res6.raw if hasattr(res6, \"raw\") else str(res6)"
+      },
+      {
+        "line": 176,
+        "targets": [
+          "dur6"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 182,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 184,
+        "targets": [
+          "scored_results"
+        ],
+        "value_names": [
+          "cost_ranking",
+          "deliv_calc",
+          "deterministic_weighted_scoring",
+          "profile_data",
+          "risk_data"
+        ],
+        "expression": "deterministic_weighted_scoring(cost_ranking, deliv_calc, risk_data, profile_data)"
+      },
+      {
+        "line": 185,
+        "targets": [
+          "agent7"
+        ],
+        "value_names": [
+          "create_weighted_agent"
+        ],
+        "expression": "create_weighted_agent()"
+      },
+      {
+        "line": 186,
+        "targets": [
+          "task7"
+        ],
+        "value_names": [
+          "agent7",
+          "create_weighted_task",
+          "scored_results"
+        ],
+        "expression": "create_weighted_task(agent7, scored_results)"
+      },
+      {
+        "line": 187,
+        "targets": [
+          "crew7"
+        ],
+        "value_names": [
+          "Crew",
+          "agent7",
+          "task7"
+        ],
+        "expression": "Crew(agents=[agent7], tasks=[task7], verbose=False)"
+      },
+      {
+        "line": 188,
+        "targets": [
+          "res7"
+        ],
+        "value_names": [
+          "crew7"
+        ],
+        "expression": "crew7.kickoff()"
+      },
+      {
+        "line": 189,
+        "targets": [
+          "out7"
+        ],
+        "value_names": [
+          "hasattr",
+          "res7",
+          "str"
+        ],
+        "expression": "res7.raw if hasattr(res7, \"raw\") else str(res7)"
+      },
+      {
+        "line": 191,
+        "targets": [
+          "dur7"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 197,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 199,
+        "targets": [
+          "agent8"
+        ],
+        "value_names": [
+          "create_recommendation_agent"
+        ],
+        "expression": "create_recommendation_agent()"
+      },
+      {
+        "line": 200,
+        "targets": [
+          "task8"
+        ],
+        "value_names": [
+          "agent8",
+          "create_recommendation_task",
+          "stage_evidence"
+        ],
+        "expression": "create_recommendation_task(agent8, stage_evidence)"
+      },
+      {
+        "line": 201,
+        "targets": [
+          "crew8"
+        ],
+        "value_names": [
+          "Crew",
+          "agent8",
+          "task8"
+        ],
+        "expression": "Crew(agents=[agent8], tasks=[task8], verbose=False)"
+      },
+      {
+        "line": 202,
+        "targets": [
+          "res8"
+        ],
+        "value_names": [
+          "crew8"
+        ],
+        "expression": "crew8.kickoff()"
+      },
+      {
+        "line": 203,
+        "targets": [
+          "out8"
+        ],
+        "value_names": [
+          "hasattr",
+          "res8",
+          "str"
+        ],
+        "expression": "res8.raw if hasattr(res8, \"raw\") else str(res8)"
+      },
+      {
+        "line": 205,
+        "targets": [
+          "dur8"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 211,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 213,
+        "targets": [
+          "agent9"
+        ],
+        "value_names": [
+          "create_review_agent"
+        ],
+        "expression": "create_review_agent()"
+      },
+      {
+        "line": 214,
+        "targets": [
+          "task9"
+        ],
+        "value_names": [
+          "agent9",
+          "create_review_task",
+          "stage_evidence"
+        ],
+        "expression": "create_review_task(agent9, stage_evidence)"
+      },
+      {
+        "line": 215,
+        "targets": [
+          "crew9"
+        ],
+        "value_names": [
+          "Crew",
+          "agent9",
+          "task9"
+        ],
+        "expression": "Crew(agents=[agent9], tasks=[task9], verbose=False)"
+      },
+      {
+        "line": 216,
+        "targets": [
+          "res9"
+        ],
+        "value_names": [
+          "crew9"
+        ],
+        "expression": "crew9.kickoff()"
+      },
+      {
+        "line": 217,
+        "targets": [
+          "final_output"
+        ],
+        "value_names": [
+          "hasattr",
+          "res9",
+          "str"
+        ],
+        "expression": "res9.raw if hasattr(res9, \"raw\") else str(res9)"
+      },
+      {
+        "line": 219,
+        "targets": [
+          "dur9"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      }
+    ],
+    "task_handoffs": [],
+    "observed_order": [
+      "quotation_analysis_agent",
+      "supplier_profile_agent",
+      "delivery_analysis_agent",
+      "supplier_risk_agent",
+      "contract_analysis_agent",
+      "cost_comparison_agent",
+      "weighted_evaluation_agent",
+      "selection_recommendation_agent",
+      "final_review_agent_procurement"
+    ],
+    "sequential_kickoffs": 9
+  },
+  "comparison": {
+    "workflow": "procurement_supplier_selection",
+    "manifest_file": "Agents/procurement_supplier_selection/workflow.json",
+    "workflow_source": "Agents/procurement_supplier_selection/workflow.py",
+    "declared_order": [
+      "quotation_analysis_agent",
+      "supplier_profile_agent",
+      "delivery_analysis_agent",
+      "supplier_risk_agent",
+      "contract_analysis_agent",
+      "cost_comparison_agent",
+      "weighted_evaluation_agent",
+      "selection_recommendation_agent",
+      "final_review_agent_procurement"
+    ],
+    "source_observed_order": [
+      "quotation_analysis_agent",
+      "supplier_profile_agent",
+      "delivery_analysis_agent",
+      "supplier_risk_agent",
+      "contract_analysis_agent",
+      "cost_comparison_agent",
+      "weighted_evaluation_agent",
+      "selection_recommendation_agent",
+      "final_review_agent_procurement"
+    ],
+    "declared_agent_count": 9,
+    "observed_agent_count": 9,
+    "discrepancy_count": 1,
+    "findings": [
+      {
+        "type": "MULTIPLE_KICKOFF_CALLS",
+        "severity": "WARNING",
+        "count": 9,
+        "note": "Workflow invokes 9 sequential Crew kickoff calls instead of single execution graph."
+      }
+    ]
+  },
+  "python_files": [
+    {
+      "file": "Agents/procurement_supplier_selection/contract_analysis_agent.py",
+      "filename": "contract_analysis_agent.py",
+      "stem": "contract_analysis_agent",
+      "sha256": "02bca1d46f8c13d6e3abf4520eec5154ad088b2340942d27fce67ec1180734c6",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "deterministic_contract_lookup",
+          "line": 14,
+          "end_line": 23,
+          "docstring": "Retrieves synthetic contract templates from local files.",
+          "args": [
+            "supplier_ids"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 25,
+          "end_line": 34,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 36,
+          "end_line": 51,
+          "docstring": null,
+          "args": [
+            "agent",
+            "supplier_ids"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "contract_analysis_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 28,
+          "constructor": "Agent",
+          "role": "Commercial Contracts Specialist",
+          "goal": "Audit legal terms, payment conditions, delay penalties, and warranty protections.",
+          "backstory": "A corporate contract analyst reviewing vendor terms to protect organizational interests.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 47,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 27,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_contract_lookup",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Retrieves synthetic contract templates from local files."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 5: Contract Analysis Agent (Procurement)\nAnalyzes contractual terms, warranties, penalties, and commercial clauses.\n",
+          "line": 1
+        },
+        {
+          "value": "Retrieves synthetic contract templates from local files.",
+          "line": 15
+        },
+        {
+          "value": "Strictly valid JSON containing contract_comparison, best_terms_supplier, and contract_risks.",
+          "line": 46
+        },
+        {
+          "value": "Analyze contract terms across all competing suppliers.\nContract Terms by Supplier:\n",
+          "line": 39
+        },
+        {
+          "value": "\n\nTasks:\n1. Compare payment terms (e.g. Net 30 vs Net 45), warranty length, and delay penalties.\n2. Identify any unfavorable or restrictive clauses.\nReturn strictly valid JSON with keys: 'contract_comparison', 'best_terms_supplier', and 'contract_risks'.",
+          "line": 40
+        },
+        {
+          "value": "Audit legal terms, payment conditions, delay penalties, and warranty protections.",
+          "line": 30
+        },
+        {
+          "value": "A corporate contract analyst reviewing vendor terms to protect organizational interests.",
+          "line": 31
+        }
+      ]
+    },
+    {
+      "file": "Agents/procurement_supplier_selection/cost_comparison_agent.py",
+      "filename": "cost_comparison_agent.py",
+      "stem": "cost_comparison_agent",
+      "sha256": "bbc1a9a38266343ca0fb6fd0980700ac1b835a0dc483be4c7299f86550fda53e",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "deterministic_cost_ranking",
+          "line": 12,
+          "end_line": 32,
+          "docstring": "Calculates total landed cost and ranks suppliers deterministically.",
+          "args": [
+            "quotations"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 34,
+          "end_line": 43,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 45,
+          "end_line": 60,
+          "docstring": null,
+          "args": [
+            "agent",
+            "quotations"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "cost_comparison_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 37,
+          "constructor": "Agent",
+          "role": "Cost & Financial Analyst",
+          "goal": "Perform rigorous commercial cost comparison and rank suppliers by total evaluated cost.",
+          "backstory": "A financial procurement analyst calculating total cost of ownership across competing supplier bids.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 56,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 36,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_cost_ranking",
+          "line": 12,
+          "classification": "function_candidate",
+          "docstring": "Calculates total landed cost and ranks suppliers deterministically."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 6: Cost Comparison Agent (Procurement)\nPerforms deterministic total cost calculations and price ranking.\n",
+          "line": 1
+        },
+        {
+          "value": "Calculates total landed cost and ranks suppliers deterministically.",
+          "line": 13
+        },
+        {
+          "value": "Strictly valid JSON containing cost_ranking, lowest_cost_bidder, cost_spread_percentage, and commercial_summary.",
+          "line": 55
+        },
+        {
+          "value": "Analyze the total commercial cost of competing supplier quotations.\nDeterministic Landed Cost Ranking from Python:\n",
+          "line": 48
+        },
+        {
+          "value": "\n\nTasks:\n1. Explain the cost breakdown (unit price vs. shipping vs. tax).\n2. Highlight the lowest-cost bidder and the cost variance to other bidders.\nReturn strictly valid JSON with keys: 'cost_ranking', 'lowest_cost_bidder', 'cost_spread_percentage', and 'commercial_summary'.",
+          "line": 49
+        },
+        {
+          "value": "Perform rigorous commercial cost comparison and rank suppliers by total evaluated cost.",
+          "line": 39
+        },
+        {
+          "value": "A financial procurement analyst calculating total cost of ownership across competing supplier bids.",
+          "line": 40
+        }
+      ]
+    },
+    {
+      "file": "Agents/procurement_supplier_selection/delivery_analysis_agent.py",
+      "filename": "delivery_analysis_agent.py",
+      "stem": "delivery_analysis_agent",
+      "sha256": "f17de09c873f29f31c5d0366699566fd87c51499f8039c3be29de65a7ba12a9e",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "datetime",
+          "level": 0,
+          "names": [
+            "datetime"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "deterministic_delivery_check",
+          "line": 13,
+          "end_line": 30,
+          "docstring": "Calculates deterministic date differentials and deadline adherence.",
+          "args": [
+            "required_date_str",
+            "delivery_schedules"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 32,
+          "end_line": 41,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 43,
+          "end_line": 59,
+          "docstring": null,
+          "args": [
+            "agent",
+            "required_date_str",
+            "delivery_schedules"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "delivery_analysis_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 35,
+          "constructor": "Agent",
+          "role": "Supply Chain Fulfillment Analyst",
+          "goal": "Evaluate supplier delivery schedules, shipping transit times, and milestone feasibility.",
+          "backstory": "A logistics specialist focused on critical path analysis and preventing supply chain delays.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 55,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 34,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_delivery_check",
+          "line": 13,
+          "classification": "function_candidate",
+          "docstring": "Calculates deterministic date differentials and deadline adherence."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 3: Delivery Analysis Agent (Procurement)\nAssesses fulfillment timelines, lead times, and delivery schedule compliance.\n",
+          "line": 1
+        },
+        {
+          "value": "Calculates deterministic date differentials and deadline adherence.",
+          "line": 14
+        },
+        {
+          "value": "Strictly valid JSON containing delivery_evaluation, on_time_suppliers, late_risk_suppliers, and logistics_summary.",
+          "line": 54
+        },
+        {
+          "value": "Analyze delivery commitments and schedule risks for this procurement request.\nRequired Target Date: ",
+          "line": 46
+        },
+        {
+          "value": "\nDeterministic Schedule Analysis from Python:\n",
+          "line": 47
+        },
+        {
+          "value": "\n\nInstructions:\n1. Highlight suppliers that meet vs. violate the delivery deadline.\n2. Assess buffer margins and fulfillment risk.\nReturn strictly valid JSON with keys: 'delivery_evaluation', 'on_time_suppliers', 'late_risk_suppliers', and 'logistics_summary'.",
+          "line": 48
+        },
+        {
+          "value": "Evaluate supplier delivery schedules, shipping transit times, and milestone feasibility.",
+          "line": 37
+        },
+        {
+          "value": "A logistics specialist focused on critical path analysis and preventing supply chain delays.",
+          "line": 38
+        }
+      ]
+    },
+    {
+      "file": "Agents/procurement_supplier_selection/final_review_agent.py",
+      "filename": "final_review_agent.py",
+      "stem": "final_review_agent",
+      "sha256": "5f576a74b4f0572290f9cb5cac9f7ec1897fb4acd054ccb17592fce24d4eaa9c",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 38,
+          "docstring": null,
+          "args": [
+            "agent",
+            "complete_procurement_audit"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "final_review_agent_procurement"
+      ],
+      "agent_definitions": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Chief Procurement Officer & Audit Lead",
+          "goal": "Verify evaluation integrity, confirm weighted arithmetic, and authorize the final sourcing report.",
+          "backstory": "The final governance authority ensuring procurement awards comply with organizational ethics and policy.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 34,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 14,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 9: Final Review Agent (Procurement)\nVerifies multi-agent evaluation integrity and produces the final procurement award report.\n",
+          "line": 1
+        },
+        {
+          "value": "Strictly valid JSON containing workflow_status, selected_supplier, compliance_verification, summary_report, and award_justification.",
+          "line": 33
+        },
+        {
+          "value": "Perform the final governance audit on this supplier selection process.\nComplete Sourcing Audit File:\n",
+          "line": 25
+        },
+        {
+          "value": "\n\nTasks:\n1. Verify that the recommended supplier actually meets mandatory criteria and passed weighted evaluation.\n2. Confirm there are no unverified cost calculations or unaddressed risk flags.\n3. Generate the final executive procurement report.\nOutput strictly valid JSON with keys: 'workflow_status' ('COMPLETED'), 'selected_supplier', 'compliance_verification', 'summary_report', and 'award_justification'.",
+          "line": 26
+        },
+        {
+          "value": "Chief Procurement Officer & Audit Lead",
+          "line": 16
+        },
+        {
+          "value": "Verify evaluation integrity, confirm weighted arithmetic, and authorize the final sourcing report.",
+          "line": 17
+        },
+        {
+          "value": "The final governance authority ensuring procurement awards comply with organizational ethics and policy.",
+          "line": 18
+        }
+      ]
+    },
+    {
+      "file": "Agents/procurement_supplier_selection/quotation_analysis_agent.py",
+      "filename": "quotation_analysis_agent.py",
+      "stem": "quotation_analysis_agent",
+      "sha256": "2bd01fd79bcf1c34d1bece5737c642f88937ad843481dcb49fa6ada64f68defe",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 39,
+          "docstring": null,
+          "args": [
+            "agent",
+            "procurement_request",
+            "quotations"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "quotation_analysis_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Senior Quotation Analyst",
+          "goal": "Extract, normalize, and validate competing supplier bids and commercial terms.",
+          "backstory": "A procurement analyst specializing in normalizing commercial bids across disparate supplier formats.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 35,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 14,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 1: Quotation Analysis Agent (Procurement)\nExtracts and normalizes supplier quotations against the procurement request.\n",
+          "line": 1
+        },
+        {
+          "value": "Strictly valid JSON containing request_id, normalized_quotations, and extraction_flags.",
+          "line": 34
+        },
+        {
+          "value": "Analyze and normalize competing quotations for this procurement request.\nProcurement Request:\n",
+          "line": 25
+        },
+        {
+          "value": "\n\nTasks:\n1. Normalize item quantities, unit prices, shipping, and taxes per supplier.\n2. Identify missing pricing elements, validity periods, or currency discrepancies.\n3. Return normalized quotation summaries for all competing bidders.\nReturn strictly valid JSON with keys: 'request_id', 'normalized_quotations', and 'extraction_flags'.",
+          "line": 27
+        },
+        {
+          "value": "Extract, normalize, and validate competing supplier bids and commercial terms.",
+          "line": 17
+        },
+        {
+          "value": "A procurement analyst specializing in normalizing commercial bids across disparate supplier formats.",
+          "line": 18
+        }
+      ]
+    },
+    {
+      "file": "Agents/procurement_supplier_selection/selection_recommendation_agent.py",
+      "filename": "selection_recommendation_agent.py",
+      "stem": "selection_recommendation_agent",
+      "sha256": "a76dfee658ef0a3d8b33b1dc16242727b73874c6c65ad13efdd10b199cc2fc38",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 38,
+          "docstring": null,
+          "args": [
+            "agent",
+            "all_procurement_evidence"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "selection_recommendation_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Strategic Sourcing Committee Chair",
+          "goal": "Synthesize technical, delivery, commercial, risk, and scoring evidence into an authoritative supplier recommendation.",
+          "backstory": "An executive procurement director balancing strategic risk, quality, and commercial value.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 34,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 14,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 8: Selection Recommendation Agent (Procurement)\nAggregates multidimensional evaluation evidence and recommends supplier award.\n",
+          "line": 1
+        },
+        {
+          "value": "Strictly valid JSON containing recommended_supplier_id, commercial_rationale, risk_acceptance, and next_steps.",
+          "line": 33
+        },
+        {
+          "value": "Formulate an authoritative supplier award recommendation.\nConsolidated Procurement Evidence:\n",
+          "line": 25
+        },
+        {
+          "value": "\n\nInstructions:\n1. Recommend the winning supplier or explain why no supplier qualifies.\n2. Explicitly detail trade-offs (e.g. lowest cost vs. delivery buffer).\n3. Note: NEVER issue binding contracts or purchase orders.\nReturn strictly valid JSON with keys: 'recommended_supplier_id', 'commercial_rationale', 'risk_acceptance', and 'next_steps'.",
+          "line": 26
+        },
+        {
+          "value": "Synthesize technical, delivery, commercial, risk, and scoring evidence into an authoritative supplier recommendation.",
+          "line": 17
+        },
+        {
+          "value": "An executive procurement director balancing strategic risk, quality, and commercial value.",
+          "line": 18
+        }
+      ]
+    },
+    {
+      "file": "Agents/procurement_supplier_selection/supplier_profile_agent.py",
+      "filename": "supplier_profile_agent.py",
+      "stem": "supplier_profile_agent",
+      "sha256": "a899bae3370d5c20c38e91c7a6dfa463c46d2c8e152609e442f0a4587315f477",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "deterministic_profile_lookup",
+          "line": 14,
+          "end_line": 23,
+          "docstring": "Retrieves synthetic supplier profiles from local files.",
+          "args": [
+            "supplier_ids"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 25,
+          "end_line": 34,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 36,
+          "end_line": 51,
+          "docstring": null,
+          "args": [
+            "agent",
+            "supplier_ids"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "supplier_profile_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 28,
+          "constructor": "Agent",
+          "role": "Supplier Intelligence Officer",
+          "goal": "Evaluate supplier capabilities, manufacturing capacity, and operational standing.",
+          "backstory": "A strategic sourcing specialist who audits supplier corporate health, certifications, and technical capacity.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 47,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 27,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_profile_lookup",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Retrieves synthetic supplier profiles from local files."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 2: Supplier Profile Agent (Procurement)\nRetrieves and assesses supplier capabilities, capacity, and operational eligibility.\n",
+          "line": 1
+        },
+        {
+          "value": "Retrieves synthetic supplier profiles from local files.",
+          "line": 15
+        },
+        {
+          "value": "Strictly valid JSON containing evaluated_profiles, profile_strengths, and operational_concerns.",
+          "line": 46
+        },
+        {
+          "value": "Evaluate the profiles of competing suppliers.\nTarget Supplier Profiles from Registry:\n",
+          "line": 39
+        },
+        {
+          "value": "\n\nTasks:\n1. Compare technical capability, ISO certifications, and manufacturing capacity.\n2. Note any operational limitations or unverified profile data.\nReturn strictly valid JSON with keys: 'evaluated_profiles', 'profile_strengths', and 'operational_concerns'.",
+          "line": 40
+        },
+        {
+          "value": "Evaluate supplier capabilities, manufacturing capacity, and operational standing.",
+          "line": 30
+        },
+        {
+          "value": "A strategic sourcing specialist who audits supplier corporate health, certifications, and technical capacity.",
+          "line": 31
+        }
+      ]
+    },
+    {
+      "file": "Agents/procurement_supplier_selection/supplier_risk_agent.py",
+      "filename": "supplier_risk_agent.py",
+      "stem": "supplier_risk_agent",
+      "sha256": "aae1f2b3087864d1d5137b5834cb8abe45568425c9cbc102c45a4669bfbbe439",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "deterministic_risk_lookup",
+          "line": 14,
+          "end_line": 23,
+          "docstring": "Retrieves synthetic risk records from local files.",
+          "args": [
+            "supplier_ids"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 25,
+          "end_line": 34,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 36,
+          "end_line": 52,
+          "docstring": null,
+          "args": [
+            "agent",
+            "supplier_ids"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "supplier_risk_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 28,
+          "constructor": "Agent",
+          "role": "Procurement Risk & Compliance Auditor",
+          "goal": "Assess supplier quality defect rates, historical failure frequency, and audit status.",
+          "backstory": "A risk governance analyst evaluating supplier reliability and preventing vendor failures.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 48,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 27,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_risk_lookup",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Retrieves synthetic risk records from local files."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 4: Supplier Risk Agent (Procurement)\nEvaluates supplier quality history, delivery failure rates, and audit compliance.\n",
+          "line": 1
+        },
+        {
+          "value": "Retrieves synthetic risk records from local files.",
+          "line": 15
+        },
+        {
+          "value": "Strictly valid JSON containing supplier_risk_scores, flagged_suppliers, and risk_mitigation_notes.",
+          "line": 47
+        },
+        {
+          "value": "Perform risk assessment across all competing suppliers.\nSynthetic Supplier Risk Records:\n",
+          "line": 39
+        },
+        {
+          "value": "\n\nInstructions:\n1. Evaluate defect rates, delivery failure rates, and audit warnings.\n2. Categorize each supplier's risk ('LOW', 'MEDIUM', 'HIGH').\n3. Highlight red flags that should block supplier selection.\nReturn strictly valid JSON with keys: 'supplier_risk_scores', 'flagged_suppliers', and 'risk_mitigation_notes'.",
+          "line": 40
+        },
+        {
+          "value": "Procurement Risk & Compliance Auditor",
+          "line": 29
+        },
+        {
+          "value": "Assess supplier quality defect rates, historical failure frequency, and audit status.",
+          "line": 30
+        },
+        {
+          "value": "A risk governance analyst evaluating supplier reliability and preventing vendor failures.",
+          "line": 31
+        }
+      ]
+    },
+    {
+      "file": "Agents/procurement_supplier_selection/weighted_evaluation_agent.py",
+      "filename": "weighted_evaluation_agent.py",
+      "stem": "weighted_evaluation_agent",
+      "sha256": "685052745ad71009c5b502b4bee4cb0c199a7d40859cfdbef43be3169ad51a4d",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "deterministic_weighted_scoring",
+          "line": 14,
+          "end_line": 80,
+          "docstring": "Computes deterministic multi-criteria score (0-100) per supplier.",
+          "args": [
+            "cost_data",
+            "delivery_data",
+            "risk_data",
+            "profile_data"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 82,
+          "end_line": 91,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 93,
+          "end_line": 107,
+          "docstring": null,
+          "args": [
+            "agent",
+            "scored_results"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "weighted_evaluation_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 85,
+          "constructor": "Agent",
+          "role": "Multi-Criteria Decision Analysis Specialist",
+          "goal": "Apply formal weighted decision matrices to rank suppliers objectively across all evaluation pillars.",
+          "backstory": "An operations research analyst calculating quantitative scoring models for vendor selection.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 103,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 84,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_weighted_scoring",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Computes deterministic multi-criteria score (0-100) per supplier."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 7: Weighted Evaluation Agent (Procurement)\nCalculates deterministic multi-criteria weighted scores across competing suppliers.\n",
+          "line": 1
+        },
+        {
+          "value": "Computes deterministic multi-criteria score (0-100) per supplier.",
+          "line": 20
+        },
+        {
+          "value": "Strictly valid JSON containing weighted_scores, top_ranked_supplier, score_spread, and evaluation_rationale.",
+          "line": 102
+        },
+        {
+          "value": "Review and explain the multi-criteria weighted scoring across competing suppliers.\nDeterministic Weighted Scores from Python:\n",
+          "line": 95
+        },
+        {
+          "value": "\n\nInstructions:\n1. Explain why the top-ranked supplier achieved the highest score.\n2. Discuss the trade-offs between cost savings and risk/delivery factors.\nReturn strictly valid JSON with keys: 'weighted_scores', 'top_ranked_supplier', 'score_spread', and 'evaluation_rationale'.",
+          "line": 96
+        },
+        {
+          "value": "Multi-Criteria Decision Analysis Specialist",
+          "line": 86
+        },
+        {
+          "value": "Apply formal weighted decision matrices to rank suppliers objectively across all evaluation pillars.",
+          "line": 87
+        },
+        {
+          "value": "An operations research analyst calculating quantitative scoring models for vendor selection.",
+          "line": 88
+        }
+      ]
+    },
+    {
+      "file": "Agents/procurement_supplier_selection/workflow.py",
+      "filename": "workflow.py",
+      "stem": "workflow",
+      "sha256": "6a58d772d2a8006d585f92a0cd52de75a4706e37c375cae8a6e3065f29a3e9fa",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "time",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "json",
+          "asname": null,
+          "line": 7
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Dict",
+            "Any",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Crew"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.tracing",
+          "level": 0,
+          "names": [
+            "WorkflowRunTracker",
+            "init_phoenix",
+            "extract_token_usage"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "common.api_key_manager",
+          "level": 0,
+          "names": [
+            "get_key_for_agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "Agents.procurement_supplier_selection.quotation_analysis_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_quotation_agent",
+            "create_task": "create_quotation_task",
+            "AGENT_ID": "AGENT_QUOTATION_ID"
+          },
+          "line": 14
+        },
+        {
+          "module": "Agents.procurement_supplier_selection.supplier_profile_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "deterministic_profile_lookup",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_profile_agent",
+            "create_task": "create_profile_task",
+            "AGENT_ID": "AGENT_PROFILE_ID"
+          },
+          "line": 19
+        },
+        {
+          "module": "Agents.procurement_supplier_selection.delivery_analysis_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "deterministic_delivery_check",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_delivery_agent",
+            "create_task": "create_delivery_task",
+            "AGENT_ID": "AGENT_DELIVERY_ID"
+          },
+          "line": 25
+        },
+        {
+          "module": "Agents.procurement_supplier_selection.supplier_risk_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "deterministic_risk_lookup",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_risk_agent",
+            "create_task": "create_risk_task",
+            "AGENT_ID": "AGENT_RISK_ID"
+          },
+          "line": 31
+        },
+        {
+          "module": "Agents.procurement_supplier_selection.contract_analysis_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "deterministic_contract_lookup",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_contract_agent",
+            "create_task": "create_contract_task",
+            "AGENT_ID": "AGENT_CONTRACT_ID"
+          },
+          "line": 37
+        },
+        {
+          "module": "Agents.procurement_supplier_selection.cost_comparison_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "deterministic_cost_ranking",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_cost_agent",
+            "create_task": "create_cost_task",
+            "AGENT_ID": "AGENT_COST_ID"
+          },
+          "line": 43
+        },
+        {
+          "module": "Agents.procurement_supplier_selection.weighted_evaluation_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "deterministic_weighted_scoring",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_weighted_agent",
+            "create_task": "create_weighted_task",
+            "AGENT_ID": "AGENT_WEIGHTED_ID"
+          },
+          "line": 49
+        },
+        {
+          "module": "Agents.procurement_supplier_selection.selection_recommendation_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_recommendation_agent",
+            "create_task": "create_recommendation_task",
+            "AGENT_ID": "AGENT_RECOMMENDATION_ID"
+          },
+          "line": 55
+        },
+        {
+          "module": "Agents.procurement_supplier_selection.final_review_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_review_agent",
+            "create_task": "create_review_task",
+            "AGENT_ID": "AGENT_REVIEW_ID"
+          },
+          "line": 60
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "run_procurement_workflow",
+          "line": 68,
+          "end_line": 240,
+          "docstring": "Executes the 9-agent sequential Procurement and Supplier Selection baseline workflow.",
+          "args": [
+            "procurement_case",
+            "run_id"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [
+        {
+          "line": 97,
+          "agents_expression": "[agent1]",
+          "tasks_expression": "[task1]",
+          "process_expression": ""
+        },
+        {
+          "line": 112,
+          "agents_expression": "[agent2]",
+          "tasks_expression": "[task2]",
+          "process_expression": ""
+        },
+        {
+          "line": 127,
+          "agents_expression": "[agent3]",
+          "tasks_expression": "[task3]",
+          "process_expression": ""
+        },
+        {
+          "line": 142,
+          "agents_expression": "[agent4]",
+          "tasks_expression": "[task4]",
+          "process_expression": ""
+        },
+        {
+          "line": 157,
+          "agents_expression": "[agent5]",
+          "tasks_expression": "[task5]",
+          "process_expression": ""
+        },
+        {
+          "line": 172,
+          "agents_expression": "[agent6]",
+          "tasks_expression": "[task6]",
+          "process_expression": ""
+        },
+        {
+          "line": 187,
+          "agents_expression": "[agent7]",
+          "tasks_expression": "[task7]",
+          "process_expression": ""
+        },
+        {
+          "line": 201,
+          "agents_expression": "[agent8]",
+          "tasks_expression": "[task8]",
+          "process_expression": ""
+        },
+        {
+          "line": 215,
+          "agents_expression": "[agent9]",
+          "tasks_expression": "[task9]",
+          "process_expression": ""
+        }
+      ],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_procurement_workflow",
+          "line": 68,
+          "classification": "function_candidate",
+          "docstring": "Executes the 9-agent sequential Procurement and Supplier Selection baseline workflow."
+        }
+      ],
+      "execution_calls": [
+        {
+          "call": "crew1.kickoff",
+          "line": 98
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 102
+        },
+        {
+          "call": "crew2.kickoff",
+          "line": 113
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 117
+        },
+        {
+          "call": "crew3.kickoff",
+          "line": 128
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 132
+        },
+        {
+          "call": "crew4.kickoff",
+          "line": 143
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 147
+        },
+        {
+          "call": "crew5.kickoff",
+          "line": 158
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 162
+        },
+        {
+          "call": "crew6.kickoff",
+          "line": 173
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 177
+        },
+        {
+          "call": "crew7.kickoff",
+          "line": 188
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 192
+        },
+        {
+          "call": "crew8.kickoff",
+          "line": 202
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 206
+        },
+        {
+          "call": "crew9.kickoff",
+          "line": 216
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 220
+        }
+      ],
+      "string_literals": [
+        {
+          "value": "\nWorkflow 3: Procurement and Supplier Selection Orchestrator.\nSequential 9-Agent Baseline System.\n",
+          "line": 1
+        },
+        {
+          "value": "\n    Executes the 9-agent sequential Procurement and Supplier Selection baseline workflow.\n    ",
+          "line": 72
+        },
+        {
+          "value": "\n========================================================",
+          "line": 84
+        },
+        {
+          "value": "========================================================",
+          "line": 87
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "file": "runs/procurement_supplier_selection/live_20261023_070208_procur.json",
+      "filename": "live_20261023_070208_procur.json",
+      "suffix": ".json",
+      "workflow_name": "procurement_supplier_selection",
+      "run_id": "live_20261023_070208_procur",
+      "status": "SUCCESS",
+      "total_duration_seconds": 118.309,
+      "agent_count": null,
+      "total_tokens": 23778,
+      "estimated_cost_usd": 0.007237
+    },
+    {
+      "file": "runs/procurement_supplier_selection/procurement_supplier_selection_20261020_131938_651612.json",
+      "filename": "procurement_supplier_selection_20261020_131938_651612.json",
+      "suffix": ".json",
+      "workflow_name": "procurement_supplier_selection",
+      "run_id": "procurement_supplier_selection_20261020_131938_651612",
+      "status": "SUCCESS",
+      "total_duration_seconds": 124.989,
+      "agent_count": null,
+      "total_tokens": 0,
+      "estimated_cost_usd": 0.0
+    },
+    {
+      "file": "runs/procurement_supplier_selection/procurement_supplier_selection_20261023_043737_0a6f41.json",
+      "filename": "procurement_supplier_selection_20261023_043737_0a6f41.json",
+      "suffix": ".json",
+      "workflow_name": "procurement_supplier_selection",
+      "run_id": "procurement_supplier_selection_20261023_043737_0a6f41",
+      "status": "SUCCESS",
+      "total_duration_seconds": 117.012,
+      "agent_count": null,
+      "total_tokens": 22603,
+      "estimated_cost_usd": 0.006936
+    },
+    {
+      "file": "runs/procurement_supplier_selection/test_pro_run_01.json",
+      "filename": "test_pro_run_01.json",
+      "suffix": ".json",
+      "workflow_name": "procurement_supplier_selection",
+      "run_id": "test_pro_run_01",
+      "status": "SUCCESS",
+      "total_duration_seconds": 0.163,
+      "agent_count": null,
+      "total_tokens": 0,
+      "estimated_cost_usd": 0.0
+    }
+  ]
+}

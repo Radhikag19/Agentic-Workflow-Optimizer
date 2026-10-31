@@ -1,0 +1,114 @@
+{
+  "workflow_name": "expense_reimbursement",
+  "version": "1.0.0",
+  "description": "Baseline 8-agent sequential employee expense reimbursement validation workflow.",
+  "fixed_model": "openai/gpt-oss-120b",
+  "total_agents": 8,
+  "model_configuration": {
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "enforce_fixed_model": true
+  },
+  "execution_order": [
+    "receipt_agent",
+    "normalize_agent",
+    "category_agent",
+    "amount_agent",
+    "policy_agent",
+    "duplicate_agent",
+    "exception_agent",
+    "expense_review_agent"
+  ],
+  "agents": [
+    {
+      "id": "receipt_agent",
+      "name": "Receipt Extraction Specialist",
+      "assigned_key": "GROQ_API_KEY_8",
+      "file": "receipt_agent.py",
+      "dependencies": [],
+      "inputs": ["receipt_text", "raw_claim"],
+      "outputs": ["merchant", "transaction_date", "currency", "subtotal", "tax", "total", "line_items"],
+      "parallelizable": false
+    },
+    {
+      "id": "normalize_agent",
+      "name": "Expense Normalization Specialist",
+      "assigned_key": "GROQ_API_KEY_9",
+      "file": "normalize_agent.py",
+      "dependencies": ["receipt_agent"],
+      "inputs": ["receipt_extracted_data", "claim_input"],
+      "outputs": ["normalized_employee_id", "normalized_merchant", "normalized_date", "currency", "amounts"],
+      "parallelizable": false
+    },
+    {
+      "id": "category_agent",
+      "name": "Expense Categorization Specialist",
+      "assigned_key": "GROQ_API_KEY_10",
+      "file": "category_agent.py",
+      "dependencies": ["normalize_agent"],
+      "inputs": ["normalized_claim"],
+      "outputs": ["category", "classification_confidence", "reasoning"],
+      "parallelizable": false
+    },
+    {
+      "id": "amount_agent",
+      "name": "Expense Arithmetic Specialist",
+      "assigned_key": "GROQ_API_KEY_11",
+      "file": "amount_agent.py",
+      "dependencies": ["normalize_agent"],
+      "inputs": ["subtotal", "tax", "total"],
+      "outputs": ["is_arithmetic_valid", "discrepancy_usd", "verification_notes"],
+      "parallelizable": true,
+      "parallel_group": "compliance_branch"
+    },
+    {
+      "id": "policy_agent",
+      "name": "Reimbursement Policy Compliance Specialist",
+      "assigned_key": "GROQ_API_KEY_12",
+      "file": "policy_agent.py",
+      "dependencies": ["category_agent"],
+      "inputs": ["category", "total", "receipt_presence"],
+      "outputs": ["policy_compliance_status", "cited_policy_ids", "violation_reasons"],
+      "parallelizable": true,
+      "parallel_group": "compliance_branch"
+    },
+    {
+      "id": "duplicate_agent",
+      "name": "Duplicate Claim Detection Specialist",
+      "assigned_key": "GROQ_API_KEY_13",
+      "file": "duplicate_agent.py",
+      "dependencies": ["normalize_agent"],
+      "inputs": ["employee_id", "merchant", "total", "date"],
+      "outputs": ["duplicate_status", "matching_claim_ids", "duplicate_risk_score"],
+      "parallelizable": true,
+      "parallel_group": "compliance_branch"
+    },
+    {
+      "id": "exception_agent",
+      "name": "Expense Exception & Audit Specialist",
+      "assigned_key": "GROQ_API_KEY_14",
+      "file": "exception_agent.py",
+      "dependencies": ["amount_agent", "policy_agent", "duplicate_agent"],
+      "inputs": ["receipt_text", "amount_status", "policy_status", "duplicate_status"],
+      "outputs": ["exceptions_found", "severity_levels", "audit_warnings"],
+      "parallelizable": false,
+      "pruning_candidate": "Prime target for AWO consolidation into Policy and Amount agents"
+    },
+    {
+      "id": "expense_review_agent",
+      "name": "Expense Review & Adjudication Specialist",
+      "assigned_key": "GROQ_API_KEY_8",
+      "file": "review_agent.py",
+      "dependencies": ["exception_agent"],
+      "inputs": ["all_previous_stages"],
+      "outputs": ["final_reimbursement_decision", "decision_reasons", "audit_trail"],
+      "parallelizable": false
+    }
+  ],
+  "optimization_opportunities": [
+    "Pruning exception_agent by merging checks into policy_agent and amount_agent",
+    "Parallelizing amount_agent, policy_agent, and duplicate_agent",
+    "Fast-path routing for recurring verified merchants with subtotal < $25",
+    "Compressing prompts across combined compliance stages"
+  ]
+}

@@ -1,0 +1,560 @@
+{
+  "run_id": "live_20261031_115354_trace01",
+  "workflow_name": "contract_review",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 30.008,
+  "agent_execution_count": 10,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 2.223,
+      "tokens": 682,
+      "prompt_tokens": 300,
+      "completion_tokens": 382,
+      "output": {
+        "document_id": "DOC-CTR-2026-0001-POL-CORP-SEC-01",
+        "contract_id": "CTR-2026-0001",
+        "contract_title": "Vendor Procurement Agreement with Enterprise Partner 001 LLC",
+        "contract_type": "Vendor Procurement Agreement",
+        "contract_version": "1.0",
+        "policy_id": "POL-CORP-SEC-01",
+        "policy_version": "2.4",
+        "document_complete": true,
+        "section_count": 5,
+        "source_metadata": {
+          "effective_date": "2026-01-01",
+          "expiration_date": "2027-01-01",
+          "parties": [
+            "AWO Enterprise Corp",
+            "Enterprise Partner 001 LLC"
+          ]
+        },
+        "intake_warnings": []
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "contract_intake_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.996,
+      "tokens": 1268,
+      "prompt_tokens": 738,
+      "completion_tokens": 530,
+      "output": {
+        "contract_id": "CTR-2026-0001",
+        "clauses": [
+          {
+            "clause_id": "CLS-0001-PAY",
+            "clause_type": "payment_terms",
+            "clause_title": "Section 3: Invoicing and Payment Terms",
+            "clause_text": "Invoices shall be payable within ninety (90) days of receipt by Customer.",
+            "section_reference": "Section 3.1"
+          },
+          {
+            "clause_id": "CLS-0001-DATA",
+            "clause_type": "data_protection",
+            "clause_title": "Section 8: Security & Breach Notification",
+            "clause_text": "Vendor shall notify Customer in writing within twenty-four (24) hours of becoming aware of any confirmed Data Breach.",
+            "section_reference": "Section 8.2"
+          },
+          {
+            "clause_id": "CLS-0001-LIAB",
+            "clause_type": "liability_cap",
+            "clause_title": "Section 10: Limitation of Liability",
+            "clause_text": "Each party's maximum aggregate liability shall be strictly limited to the total fees paid under this Agreement in the preceding twelve (12) months.",
+            "section_reference": "Section 10.1"
+          },
+          {
+            "clause_id": "CLS-0001-TERM",
+            "clause_type": "termination",
+            "clause_title": "Section 12: Term and Termination",
+            "clause_text": "Either party may terminate this Agreement for convenience upon providing thirty (30) days prior written notice.",
+            "section_reference": "Section 12.1"
+          },
+          {
+            "clause_id": "CLS-0001-REN",
+            "clause_type": "renewal",
+            "clause_title": "Section 12: Renewal Provisions",
+            "clause_text": "This Agreement renews on an annual basis unless either party gives notice of non-renewal at least 30 days prior.",
+            "section_reference": "Section 12.4"
+          }
+        ],
+        "absent_clause_types": [],
+        "extraction_notes": [
+          "Document extracted once for downstream policy comparison"
+        ]
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "clause_extraction_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.765,
+      "tokens": 884,
+      "prompt_tokens": 358,
+      "completion_tokens": 526,
+      "output": {
+        "policy_id": "POL-CORP-SEC-01",
+        "policy_version": "2.4",
+        "policy_name": "Corporate Data Protection & Security Standard",
+        "mandatory_requirements": [
+          {
+            "requirement_id": "REQ-SEC-01",
+            "clause_type": "data_protection",
+            "text": "Vendor must notify customer of any security breach within 48 hours of discovery.",
+            "threshold": "48 hours"
+          },
+          {
+            "requirement_id": "REQ-SEC-02",
+            "clause_type": "data_protection",
+            "text": "Data must be encrypted in transit using TLS 1.3 and at rest using AES-256.",
+            "threshold": "TLS 1.3 / AES-256"
+          }
+        ],
+        "recommended_requirements": [],
+        "ambiguities_in_policy": []
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "policy_interpretation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 1.546,
+      "tokens": 1279,
+      "prompt_tokens": 757,
+      "completion_tokens": 522,
+      "output": {
+        "contract_id": "CTR-2026-0001",
+        "policy_id": "DATA_PROTECTION",
+        "mappings": [
+          {
+            "requirement_id": "REQ-SEC-01",
+            "clause_id": "CLS-0001-DATA",
+            "mapping_status": "satisfied",
+            "notes": "Clause requires notification within 24 hours, which meets the 48‑hour threshold."
+          },
+          {
+            "requirement_id": "REQ-SEC-02",
+            "clause_id": null,
+            "mapping_status": "unaddressed",
+            "notes": "No clause references encryption standards for data in transit or at rest."
+          }
+        ],
+        "coverage_percentage": 50.0
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "clause_mapping_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 1.322,
+      "tokens": 766,
+      "prompt_tokens": 444,
+      "completion_tokens": 322,
+      "output": {
+        "contract_id": "CTR-2026-0001",
+        "deviations": [
+          {
+            "requirement_id": "REQ-SEC-02",
+            "clause_id": null,
+            "severity": "high",
+            "supporting_evidence": "Mapping status is 'unaddressed'; the contract contains no clause referencing encryption standards for data in transit or at rest, which directly violates the policy requirement for TLS 1.3 and AES-256 encryption.",
+            "recommended_remediation": "Insert a data protection clause that mandates encryption of all data in transit using TLS 1.3 and encryption of data at rest using AES-256, with compliance monitoring and audit rights."
+          }
+        ],
+        "has_critical_deviations": false
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "compliance_deviation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 4.376,
+      "tokens": 2325,
+      "prompt_tokens": 635,
+      "completion_tokens": 1690,
+      "output": {
+        "contract_id": "CTR-2026-0001",
+        "risk_findings": [
+          {
+            "finding_id": "R001",
+            "clause_id": "CLS-0001-PAY",
+            "risk_category": "latent_operational_risk",
+            "ambiguity_description": "Payment term of 90 days may create cash‑flow strain for the Vendor; no early‑payment discount or interest for late payment is specified.",
+            "severity": "Medium",
+            "human_interpretation_needed": false
+          },
+          {
+            "finding_id": "R002",
+            "clause_id": "CLS-0001-DATA",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "Term 'confirmed Data Breach' is not defined, leaving the scope of the breach ambiguous.",
+            "severity": "High",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R003",
+            "clause_id": "CLS-0001-DATA",
+            "risk_category": "undefined_timeline",
+            "ambiguity_description": "Notification must be within 24 hours of 'becoming aware' of a breach, but 'becoming aware' is not defined, potentially delaying reporting.",
+            "severity": "High",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R004",
+            "clause_id": "CLS-0001-LIAB",
+            "risk_category": "one_sided_covenant",
+            "ambiguity_description": "Liability cap limited to total fees paid in the preceding 12 months may be insufficient for high‑impact losses; the cap applies equally to both parties, potentially disadvantaging the Customer.",
+            "severity": "High",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R005",
+            "clause_id": "CLS-0001-LIAB",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "Phrase 'preceding twelve (12) months' is unclear if the contract duration is less than 12 months.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R006",
+            "clause_id": "CLS-0001-REN",
+            "risk_category": "latent_operational_risk",
+            "ambiguity_description": "Automatic annual renewal without a price‑adjustment mechanism may lead to unexpected cost increases.",
+            "severity": "Medium",
+            "human_interpretation_needed": false
+          },
+          {
+            "finding_id": "R007",
+            "clause_id": "CLS-0001-REN",
+            "risk_category": "undefined_timeline",
+            "ambiguity_description": "Renewal notice period is defined (30 days) but there is no end date or limit on the number of renewals, creating an indefinite term.",
+            "severity": "Low",
+            "human_interpretation_needed": false
+          }
+        ]
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "risk_ambiguity_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 1.6,
+      "tokens": 1695,
+      "prompt_tokens": 1185,
+      "completion_tokens": 510,
+      "output": {
+        "contract_id": "CTR-2026-0001",
+        "inconsistencies": []
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "cross_clause_consistency_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_8 (gsk_yt...AwPO)",
+      "duration_seconds": 1.877,
+      "tokens": 1965,
+      "prompt_tokens": 1395,
+      "completion_tokens": 570,
+      "output": {
+        "contract_id": "CTR-2026-0001",
+        "all_citations_valid": true,
+        "verified_finding_ids": [
+          "R001",
+          "R002",
+          "R003",
+          "R004",
+          "R005",
+          "R006",
+          "R007"
+        ],
+        "invalid_or_unsupported_findings": [],
+        "evidence_notes": [
+          "Finding R001 cites clause CLS-0001-PAY, which exists in the contract (Section 3.1).",
+          "Finding R002 cites clause CLS-0001-DATA, which exists in the contract (Section 8.2).",
+          "Finding R003 cites clause CLS-0001-DATA, which exists in the contract (Section 8.2).",
+          "Finding R004 cites clause CLS-0001-LIAB, which exists in the contract (Section 10.1).",
+          "Finding R005 cites clause CLS-0001-LIAB, which exists in the contract (Section 10.1).",
+          "Finding R006 cites clause CLS-0001-REN, which exists in the contract (Section 12.4).",
+          "Finding R007 cites clause CLS-0001-REN, which exists in the contract (Section 12.4)."
+        ]
+      },
+      "notes": "",
+      "order": 8,
+      "agent_id": "evidence_validation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_9 (gsk_Oz...k7Gf)",
+      "duration_seconds": 3.63,
+      "tokens": 2579,
+      "prompt_tokens": 1240,
+      "completion_tokens": 1339,
+      "output": {
+        "contract_id": "CTR-2026-0001",
+        "calibrated_deviations": [
+          {
+            "requirement_id": "REQ-SEC-02",
+            "clause_id": null,
+            "severity": "high",
+            "supporting_evidence": "Mapping status is 'unaddressed'; the contract contains no clause referencing encryption standards for data in transit or at rest, which directly violates the policy requirement for TLS 1.3 and AES-256 encryption.",
+            "recommended_remediation": "Insert a data protection clause that mandates encryption of all data in transit using TLS 1.3 and encryption of data at rest using AES-256, with compliance monitoring and audit rights."
+          }
+        ],
+        "calibrated_risks": [
+          {
+            "finding_id": "R001",
+            "clause_id": "CLS-0001-PAY",
+            "risk_category": "latent_operational_risk",
+            "ambiguity_description": "Payment term of 90 days may create cash‑flow strain for the Vendor; no early‑payment discount or interest for late payment is specified.",
+            "severity": "medium",
+            "human_interpretation_needed": false
+          },
+          {
+            "finding_id": "R002",
+            "clause_id": "CLS-0001-DATA",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "Term 'confirmed Data Breach' is not defined, leaving the scope of the breach ambiguous.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R003",
+            "clause_id": "CLS-0001-DATA",
+            "risk_category": "undefined_timeline",
+            "ambiguity_description": "Notification must be within 24 hours of 'becoming aware' of a breach, but 'becoming aware' is not defined, potentially delaying reporting.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R004",
+            "clause_id": "CLS-0001-LIAB",
+            "risk_category": "one_sided_covenant",
+            "ambiguity_description": "Liability cap limited to total fees paid in the preceding 12 months may be insufficient for high‑impact losses; the cap applies equally to both parties, potentially disadvantaging the Customer.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R005",
+            "clause_id": "CLS-0001-LIAB",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "Phrase 'preceding twelve (12) months' is unclear if the contract duration is less than 12 months.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R006",
+            "clause_id": "CLS-0001-REN",
+            "risk_category": "latent_operational_risk",
+            "ambiguity_description": "Automatic annual renewal without a price‑adjustment mechanism may lead to unexpected cost increases.",
+            "severity": "medium",
+            "human_interpretation_needed": false
+          },
+          {
+            "finding_id": "R007",
+            "clause_id": "CLS-0001-REN",
+            "risk_category": "undefined_timeline",
+            "ambiguity_description": "Renewal notice period is defined (30 days) but there is no end date or limit on the number of renewals, creating an indefinite term.",
+            "severity": "low",
+            "human_interpretation_needed": false
+          }
+        ],
+        "review_notes": [
+          "No duplicate risk entries were found; each finding addresses a distinct ambiguity or exposure despite sharing clause references.",
+          "Severity ratings were reviewed against risk categories and evidence. All original severities were retained as they align with the potential impact (high for undefined breach terms and liability caps, medium for payment cash‑flow and renewal cost risk, low for indefinite renewal term).",
+          "Human review is required for findings R002, R003, R004, and R005 because they involve interpretive judgments about undefined terms and covenant fairness.",
+          "Deviation REQ-SEC-02 remains high severity due to direct non‑compliance with mandatory encryption standards."
+        ]
+      },
+      "notes": "",
+      "order": 9,
+      "agent_id": "contract_independent_review_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_10 (gsk_jW...DBpq)",
+      "duration_seconds": 6.193,
+      "tokens": 4344,
+      "prompt_tokens": 1977,
+      "completion_tokens": 2367,
+      "output": {
+        "run_id": "RUN-20231031-001",
+        "contract_id": "CTR-2026-0001",
+        "contract_version": "1.0",
+        "policy_id": "POL-CORP-SEC-01",
+        "policy_version": "2.4",
+        "contract_type": "Vendor Procurement Agreement",
+        "executive_summary": "The Vendor Procurement Agreement (CTR-2026-0001) satisfies 50% of the data‑protection policy requirements. A critical non‑addressed requirement (REQ-SEC-02) concerning encryption standards creates a high‑severity compliance deviation. Several high‑severity risk findings relate to ambiguous breach‑notification language and a potentially inadequate liability cap. Medium‑severity operational risks are identified in payment terms and automatic renewal without price‑adjustment provisions. Human legal review is required for four high‑severity risk items. Recommended remedial actions are provided to close the gaps and mitigate identified risks.",
+        "policy_coverage": {
+          "coverage_percentage": 50.0,
+          "covered_requirements": [
+            "REQ-SEC-01"
+          ],
+          "uncovered_requirements": [
+            "REQ-SEC-02"
+          ]
+        },
+        "clause_inventory": [
+          {
+            "clause_id": "CLS-0001-PAY",
+            "clause_type": "payment_terms",
+            "clause_title": "Section 3: Invoicing and Payment Terms",
+            "clause_text": "Invoices shall be payable within ninety (90) days of receipt by Customer.",
+            "section_reference": "Section 3.1"
+          },
+          {
+            "clause_id": "CLS-0001-DATA",
+            "clause_type": "data_protection",
+            "clause_title": "Section 8: Security & Breach Notification",
+            "clause_text": "Vendor shall notify Customer in writing within twenty-four (24) hours of becoming aware of any confirmed Data Breach.",
+            "section_reference": "Section 8.2"
+          },
+          {
+            "clause_id": "CLS-0001-LIAB",
+            "clause_type": "liability_cap",
+            "clause_title": "Section 10: Limitation of Liability",
+            "clause_text": "Each party's maximum aggregate liability shall be strictly limited to the total fees paid under this Agreement in the preceding twelve (12) months.",
+            "section_reference": "Section 10.1"
+          },
+          {
+            "clause_id": "CLS-0001-TERM",
+            "clause_type": "termination",
+            "clause_title": "Section 12: Term and Termination",
+            "clause_text": "Either party may terminate this Agreement for convenience upon providing thirty (30) days prior written notice.",
+            "section_reference": "Section 12.1"
+          },
+          {
+            "clause_id": "CLS-0001-REN",
+            "clause_type": "renewal",
+            "clause_title": "Section 12: Renewal Provisions",
+            "clause_text": "This Agreement renews on an annual basis unless either party gives notice of non-renewal at least 30 days prior.",
+            "section_reference": "Section 12.4"
+          }
+        ],
+        "compliance_findings": [
+          {
+            "requirement_id": "REQ-SEC-02",
+            "clause_id": null,
+            "mapping_status": "unaddressed",
+            "severity": "high",
+            "supporting_evidence": "Mapping status is 'unaddressed'; the contract contains no clause referencing encryption standards for data in transit or at rest, which directly violates the policy requirement for TLS 1.3 and AES-256 encryption.",
+            "recommended_remediation": "Insert a data protection clause that mandates encryption of all data in transit using TLS 1.3 and encryption of data at rest using AES-256, with compliance monitoring and audit rights."
+          }
+        ],
+        "risk_findings": [
+          {
+            "finding_id": "R001",
+            "clause_id": "CLS-0001-PAY",
+            "risk_category": "latent_operational_risk",
+            "ambiguity_description": "Payment term of 90 days may create cash‑flow strain for the Vendor; no early‑payment discount or interest for late payment is specified.",
+            "severity": "medium",
+            "human_interpretation_needed": false
+          },
+          {
+            "finding_id": "R002",
+            "clause_id": "CLS-0001-DATA",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "Term 'confirmed Data Breach' is not defined, leaving the scope of the breach ambiguous.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R003",
+            "clause_id": "CLS-0001-DATA",
+            "risk_category": "undefined_timeline",
+            "ambiguity_description": "Notification must be within 24 hours of 'becoming aware' of a breach, but 'becoming aware' is not defined, potentially delaying reporting.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R004",
+            "clause_id": "CLS-0001-LIAB",
+            "risk_category": "one_sided_covenant",
+            "ambiguity_description": "Liability cap limited to total fees paid in the preceding 12 months may be insufficient for high‑impact losses; the cap applies equally to both parties, potentially disadvantaging the Customer.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R005",
+            "clause_id": "CLS-0001-LIAB",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "Phrase 'preceding twelve (12) months' is unclear if the contract duration is less than 12 months.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R006",
+            "clause_id": "CLS-0001-REN",
+            "risk_category": "latent_operational_risk",
+            "ambiguity_description": "Automatic annual renewal without a price‑adjustment mechanism may lead to unexpected cost increases.",
+            "severity": "medium",
+            "human_interpretation_needed": false
+          },
+          {
+            "finding_id": "R007",
+            "clause_id": "CLS-0001-REN",
+            "risk_category": "undefined_timeline",
+            "ambiguity_description": "Renewal notice period is defined (30 days) but there is no end date or limit on the number of renewals, creating an indefinite term.",
+            "severity": "low",
+            "human_interpretation_needed": false
+          }
+        ],
+        "cross_clause_inconsistencies": [],
+        "evidence_validation": {
+          "intake_verified": true,
+          "clause_extraction_verified": true,
+          "mapping_status_verified": true,
+          "risk_assessment_methodology": "Calibrated deviation and risk matrix applied per corporate policy POL-CORP-SEC-01."
+        },
+        "unresolved_questions": [
+          "Definition of 'confirmed Data Breach' for breach‑notification purposes.",
+          "Definition of 'becoming aware' of a breach and the process for determining awareness.",
+          "Applicability of the liability cap when the contract term is less than twelve months.",
+          "Whether a price‑adjustment mechanism should be added to the renewal provision."
+        ],
+        "recommended_actions": [
+          "Add a data‑encryption clause meeting TLS 1.3 for data in transit and AES‑256 for data at rest.",
+          "Define 'confirmed Data Breach' and 'becoming aware' within the security clause.",
+          "Consider including an early‑payment discount or interest‑on‑late‑payment provision to mitigate cash‑flow risk.",
+          "Re‑evaluate the liability cap; consider a higher cap or carve‑outs for high‑impact events.",
+          "Clarify the calculation period for the liability cap when contract duration < 12 months.",
+          "Introduce a price‑adjustment mechanism tied to an index or market rate for each renewal cycle.",
+          "Specify a maximum number of automatic renewals or an explicit end‑date to avoid indefinite terms."
+        ],
+        "human_review_required": [
+          "R002",
+          "R003",
+          "R004",
+          "R005"
+        ],
+        "legal_disclaimer": "This compliance report is generated for informational purposes only and does not constitute legal advice. The findings are based on the supplied contract text and the referenced corporate policy as of the report date. Parties should consult qualified legal counsel to interpret the findings, assess contractual obligations, and implement recommended actions. The author and the organization assume no liability for any decisions made based on this report."
+      },
+      "notes": "",
+      "order": 10,
+      "agent_id": "final_compliance_report_agent"
+    }
+  ],
+  "total_tokens": 17787,
+  "prompt_tokens": 9029,
+  "completion_tokens": 8758,
+  "estimated_cost_usd": 0.012246,
+  "error_message": null,
+  "final_output": "{\n  \"run_id\": \"RUN-20231031-001\",\n  \"contract_id\": \"CTR-2026-0001\",\n  \"contract_version\": \"1.0\",\n  \"policy_id\": \"POL-CORP-SEC-01\",\n  \"policy_version\": \"2.4\",\n  \"contract_type\": \"Vendor Procurement Agreement\",\n  \"executive_summary\": \"The Vendor Procurement Agreement (CTR-2026-0001) satisfies 50% of the data\\u2011protection policy requirements. A critical non\\u2011addressed requirement (REQ-SEC-02) concerning encryption standards creates a high\\u2011severity compliance deviation. Several high\\u2011severity risk findings relate to ambiguous breach\\u2011notification language and a potentially inadequate liability cap. Medium\\u2011severity operational risks are identified in payment terms and automatic renewal without price\\u2011adjustment provisions. Human legal review is required for four high\\u2011severity risk items. Recommended remedial actions are provided to close the gaps and mitigate identified risks.\",\n  \"policy_coverage\": {\n    \"coverage_percentage\": 50.0,\n    \"covered_requirements\": [\n      \"REQ-SEC-01\"\n    ],\n    \"uncovered_requirements\": [\n      \"REQ-SEC-02\"\n    ]\n  },\n  \"clause_inventory\": [\n    {\n      \"clause_id\": \"CLS-0001-PAY\",\n      \"clause_type\": \"payment_terms\",\n      \"clause_title\": \"Section 3: Invoicing and Payment Terms\",\n      \"clause_text\": \"Invoices shall be payable within ninety (90) days of receipt by Customer.\",\n      \"section_reference\": \"Section 3.1\"\n    },\n    {\n      \"clause_id\": \"CLS-0001-DATA\",\n      \"clause_type\": \"data_protection\",\n      \"clause_title\": \"Section 8: Security & Breach Notification\",\n      \"clause_text\": \"Vendor shall notify Customer in writing within twenty-four (24) hours of becoming aware of any confirmed Data Breach.\",\n      \"section_reference\": \"Section 8.2\"\n    },\n    {\n      \"clause_id\": \"CLS-0001-LIAB\",\n      \"clause_type\": \"liability_cap\",\n      \"clause_title\": \"Section 10: Limitation of Liability\",\n      \"clause_text\": \"Each party's maximum aggregate liability shall be strictly limited to the total fees paid under this Agreement in the preceding twelve (12) months.\",\n      \"section_reference\": \"Section 10.1\"\n    },\n    {\n      \"clause_id\": \"CLS-0001-TERM\",\n      \"clause_type\": \"termination\",\n      \"clause_title\": \"Section 12: Term and Termination\",\n      \"clause_text\": \"Either party may terminate this Agreement for convenience upon providing thirty (30) days prior written notice.\",\n      \"section_reference\": \"Section 12.1\"\n    },\n    {\n      \"clause_id\": \"CLS-0001-REN\",\n      \"clause_type\": \"renewal\",\n      \"clause_title\": \"Section 12: Renewal Provisions\",\n      \"clause_text\": \"This Agreement renews on an annual basis unless either party gives notice of non-renewal at least 30 days prior.\",\n      \"section_reference\": \"Section 12.4\"\n    }\n  ],\n  \"compliance_findings\": [\n    {\n      \"requirement_id\": \"REQ-SEC-02\",\n      \"clause_id\": null,\n      \"mapping_status\": \"unaddressed\",\n      \"severity\": \"high\",\n      \"supporting_evidence\": \"Mapping status is 'unaddressed'; the contract contains no clause referencing encryption standards for data in transit or at rest, which directly violates the policy requirement for TLS 1.3 and AES-256 encryption.\",\n      \"recommended_remediation\": \"Insert a data protection clause that mandates encryption of all data in transit using TLS 1.3 and encryption of data at rest using AES-256, with compliance monitoring and audit rights.\"\n    }\n  ],\n  \"risk_findings\": [\n    {\n      \"finding_id\": \"R001\",\n      \"clause_id\": \"CLS-0001-PAY\",\n      \"risk_category\": \"latent_operational_risk\",\n      \"ambiguity_description\": \"Payment term of 90 days may create cash\\u2011flow strain for the Vendor; no early\\u2011payment discount or interest for late payment is specified.\",\n      \"severity\": \"medium\",\n      \"human_interpretation_needed\": false\n    },\n    {\n      \"finding_id\": \"R002\",\n      \"clause_id\": \"CLS-0001-DATA\",\n      \"risk_category\": \"vague_wording\",\n      \"ambiguity_description\": \"Term 'confirmed Data Breach' is not defined, leaving the scope of the breach ambiguous.\",\n      \"severity\": \"high\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"finding_id\": \"R003\",\n      \"clause_id\": \"CLS-0001-DATA\",\n      \"risk_category\": \"undefined_timeline\",\n      \"ambiguity_description\": \"Notification must be within 24 hours of 'becoming aware' of a breach, but 'becoming aware' is not defined, potentially delaying reporting.\",\n      \"severity\": \"high\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"finding_id\": \"R004\",\n      \"clause_id\": \"CLS-0001-LIAB\",\n      \"risk_category\": \"one_sided_covenant\",\n      \"ambiguity_description\": \"Liability cap limited to total fees paid in the preceding 12 months may be insufficient for high\\u2011impact losses; the cap applies equally to both parties, potentially disadvantaging the Customer.\",\n      \"severity\": \"high\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"finding_id\": \"R005\",\n      \"clause_id\": \"CLS-0001-LIAB\",\n      \"risk_category\": \"vague_wording\",\n      \"ambiguity_description\": \"Phrase 'preceding twelve (12) months' is unclear if the contract duration is less than 12 months.\",\n      \"severity\": \"medium\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"finding_id\": \"R006\",\n      \"clause_id\": \"CLS-0001-REN\",\n      \"risk_category\": \"latent_operational_risk\",\n      \"ambiguity_description\": \"Automatic annual renewal without a price\\u2011adjustment mechanism may lead to unexpected cost increases.\",\n      \"severity\": \"medium\",\n      \"human_interpretation_needed\": false\n    },\n    {\n      \"finding_id\": \"R007\",\n      \"clause_id\": \"CLS-0001-REN\",\n      \"risk_category\": \"undefined_timeline\",\n      \"ambiguity_description\": \"Renewal notice period is defined (30 days) but there is no end date or limit on the number of renewals, creating an indefinite term.\",\n      \"severity\": \"low\",\n      \"human_interpretation_needed\": false\n    }\n  ],\n  \"cross_clause_inconsistencies\": [],\n  \"evidence_validation\": {\n    \"intake_verified\": true,\n    \"clause_extraction_verified\": true,\n    \"mapping_status_verified\": true,\n    \"risk_assessment_methodology\": \"Calibrated deviation and risk matrix applied per corporate policy POL-CORP-SEC-01.\"\n  },\n  \"unresolved_questions\": [\n    \"Definition of 'confirmed Data Breach' for breach\\u2011notification purposes.\",\n    \"Definition of 'becoming aware' of a breach and the process for determining awareness.\",\n    \"Applicability of the liability cap when the contract term is less than twelve months.\",\n    \"Whether a price\\u2011adjustment mechanism should be added to the renewal provision.\"\n  ],\n  \"recommended_actions\": [\n    \"Add a data\\u2011encryption clause meeting TLS 1.3 for data in transit and AES\\u2011256 for data at rest.\",\n    \"Define 'confirmed Data Breach' and 'becoming aware' within the security clause.\",\n    \"Consider including an early\\u2011payment discount or interest\\u2011on\\u2011late\\u2011payment provision to mitigate cash\\u2011flow risk.\",\n    \"Re\\u2011evaluate the liability cap; consider a higher cap or carve\\u2011outs for high\\u2011impact events.\",\n    \"Clarify the calculation period for the liability cap when contract duration < 12 months.\",\n    \"Introduce a price\\u2011adjustment mechanism tied to an index or market rate for each renewal cycle.\",\n    \"Specify a maximum number of automatic renewals or an explicit end\\u2011date to avoid indefinite terms.\"\n  ],\n  \"human_review_required\": [\n    \"R002\",\n    \"R003\",\n    \"R004\",\n    \"R005\"\n  ],\n  \"legal_disclaimer\": \"This compliance report is generated for informational purposes only and does not constitute legal advice. The findings are based on the supplied contract text and the referenced corporate policy as of the report date. Parties should consult qualified legal counsel to interpret the findings, assess contractual obligations, and implement recommended actions. The author and the organization assume no liability for any decisions made based on this report.\"\n}",
+  "timestamp": "2026-10-31T11:54:24.603751+00:00"
+}

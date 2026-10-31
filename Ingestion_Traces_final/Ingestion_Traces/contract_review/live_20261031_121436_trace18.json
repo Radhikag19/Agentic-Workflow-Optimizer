@@ -1,0 +1,568 @@
+{
+  "run_id": "live_20261031_121436_trace18",
+  "workflow_name": "contract_review",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 29.261,
+  "agent_execution_count": 10,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.627,
+      "tokens": 865,
+      "prompt_tokens": 307,
+      "completion_tokens": 558,
+      "output": {
+        "document_id": "DOC-20261031-0001",
+        "contract_id": "CTR-2026-0018",
+        "contract_title": "Master Services Agreement (MSA) with Enterprise Partner 018 LLC",
+        "contract_type": "Master Services Agreement (MSA)",
+        "contract_version": "1.0",
+        "policy_id": "POL-CORP-LGL-03",
+        "policy_version": "1.8",
+        "document_complete": true,
+        "section_count": 5,
+        "source_metadata": {
+          "effective_date": "2026-01-01",
+          "expiration_date": "2027-01-01",
+          "parties": [
+            "AWO Enterprise Corp",
+            "Enterprise Partner 018 LLC"
+          ]
+        },
+        "intake_warnings": []
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "contract_intake_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.664,
+      "tokens": 1296,
+      "prompt_tokens": 739,
+      "completion_tokens": 557,
+      "output": {
+        "contract_id": "CTR-2026-0018",
+        "clauses": [
+          {
+            "clause_id": "CLS-0018-PAY",
+            "clause_type": "payment_terms",
+            "clause_title": "Section 3: Invoicing and Payment Terms",
+            "clause_text": "Customer shall pay all undisputed invoice amounts within thirty (30) days of invoice date.",
+            "section_reference": "Section 3.1"
+          },
+          {
+            "clause_id": "CLS-0018-DATA",
+            "clause_type": "data_protection",
+            "clause_title": "Section 8: Security & Breach Notification",
+            "clause_text": "Vendor shall notify Customer in writing within twenty-four (24) hours of becoming aware of any confirmed Data Breach.",
+            "section_reference": "Section 8.2"
+          },
+          {
+            "clause_id": "CLS-0018-LIAB",
+            "clause_type": "liability_cap",
+            "clause_title": "Section 10: Limitation of Liability",
+            "clause_text": "Each party's maximum aggregate liability shall be strictly limited to the total fees paid under this Agreement in the preceding twelve (12) months.",
+            "section_reference": "Section 10.1"
+          },
+          {
+            "clause_id": "CLS-0018-TERM",
+            "clause_type": "termination",
+            "clause_title": "Section 12: Term and Termination",
+            "clause_text": "Either party may terminate this Agreement for convenience upon providing thirty (30) days prior written notice.",
+            "section_reference": "Section 12.1"
+          },
+          {
+            "clause_id": "CLS-0018-REN",
+            "clause_type": "renewal",
+            "clause_title": "Section 12: Renewal Provisions",
+            "clause_text": "This Agreement shall automatically renew for successive two-year periods and CANNOT be terminated for convenience prior to full term expiration.",
+            "section_reference": "Section 12.4"
+          }
+        ],
+        "absent_clause_types": [],
+        "extraction_notes": [
+          "Document extracted once for downstream policy comparison"
+        ]
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "clause_extraction_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.7,
+      "tokens": 805,
+      "prompt_tokens": 354,
+      "completion_tokens": 451,
+      "output": {
+        "policy_id": "POL-CORP-LGL-03",
+        "policy_version": "1.8",
+        "policy_name": "Legal Liability & Indemnification Standards",
+        "mandatory_requirements": [
+          {
+            "requirement_id": "REQ-LGL-01",
+            "clause_type": "liability_cap",
+            "description": "Aggregate liability cap must not exceed 12 months of total fees paid or payable.",
+            "threshold": "12 months of total fees"
+          },
+          {
+            "requirement_id": "REQ-LGL-02",
+            "clause_type": "termination",
+            "description": "Customer must have the right to terminate for convenience with no more than 30 days prior written notice.",
+            "threshold": "30 days notice"
+          }
+        ],
+        "recommended_requirements": [],
+        "ambiguities_in_policy": [
+          {
+            "requirement_id": "REQ-LGL-01",
+            "issue": "Definition of \"total fees paid or payable\" is not specified (e.g., includes recurring fees, one‑time fees, taxes, discounts?)."
+          },
+          {
+            "requirement_id": "REQ-LGL-02",
+            "issue": "Method and acceptable format for the \"written notice\" (email, postal mail, electronic portal) are not defined."
+          }
+        ]
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "policy_interpretation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 2.864,
+      "tokens": 1568,
+      "prompt_tokens": 754,
+      "completion_tokens": 814,
+      "output": {
+        "contract_id": "CTR-2026-0018",
+        "policy_id": "Corporate-Policy-2026",
+        "mappings": [
+          {
+            "clause_id": "CLS-0018-LIAB",
+            "requirement_id": "REQ-LGL-01",
+            "mapping_status": "satisfied",
+            "notes": "Liability cap exactly matches the 12‑month fee limitation."
+          },
+          {
+            "clause_id": "CLS-0018-TERM",
+            "requirement_id": "REQ-LGL-02",
+            "mapping_status": "satisfied",
+            "notes": "Provides customer (and both parties) a 30‑day convenience termination right, meeting the requirement."
+          },
+          {
+            "clause_id": "CLS-0018-REN",
+            "requirement_id": "REQ-LGL-02",
+            "mapping_status": "conflicting",
+            "notes": "Prohibits termination for convenience before term end, directly contradicting the required 30‑day convenience termination right."
+          }
+        ],
+        "coverage_percentage": 100.0
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "clause_mapping_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 1.592,
+      "tokens": 955,
+      "prompt_tokens": 521,
+      "completion_tokens": 434,
+      "output": {
+        "contract_id": "CTR-2026-0018",
+        "deviations": [
+          {
+            "clause_id": "CLS-0018-REN",
+            "requirement_id": "REQ-LGL-02",
+            "severity": "critical",
+            "supporting_evidence": "Clause CLS-0018-REN prohibits termination for convenience before the term ends, directly contradicting the policy requirement that the customer must have a 30‑day prior written notice right to terminate for convenience.",
+            "recommended_remediation": "Amend or remove clause CLS-0018-REN so that the contract grants the customer a unilateral right to terminate for convenience with at least 30 days written notice, aligning the termination provisions with REQ-LGL-02."
+          }
+        ],
+        "has_critical_deviations": true
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "compliance_deviation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 3.682,
+      "tokens": 2055,
+      "prompt_tokens": 636,
+      "completion_tokens": 1419,
+      "output": {
+        "contract_id": "CTR-2026-0018",
+        "risk_findings": [
+          {
+            "finding_id": "R001",
+            "clause_id": "CLS-0018-PAY",
+            "risk_category": "Ambiguity",
+            "ambiguity_description": "The term \"undisputed invoice amounts\" is not defined, leaving uncertainty about which invoices are payable within 30 days and potentially causing payment delays.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R002",
+            "clause_id": "CLS-0018-DATA",
+            "risk_category": "Ambiguity",
+            "ambiguity_description": "\"Confirmed Data Breach\" is not defined, making it unclear when the vendor's 24‑hour notification obligation is triggered.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R003",
+            "clause_id": "CLS-0018-LIAB",
+            "risk_category": "One-sided Covenant / Liability Limitation",
+            "ambiguity_description": "Limiting aggregate liability to fees paid in the preceding twelve months may be insufficient to cover certain damages, especially third‑party claims, exposing the customer to uncovered risk.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R004",
+            "clause_id": "CLS-0018-TERM",
+            "risk_category": "Contradictory / One-sided Covenant",
+            "ambiguity_description": "The termination‑for‑convenience provision (30‑day notice) conflicts with the renewal clause that prohibits termination for convenience before the full term, creating enforceability and operational uncertainty.",
+            "severity": "High",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R005",
+            "clause_id": "CLS-0018-REN",
+            "risk_category": "One-sided Covenant",
+            "ambiguity_description": "Automatic renewal for successive two‑year periods with a prohibition on termination for convenience locks the customer into long terms without flexibility.",
+            "severity": "High",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R006",
+            "clause_id": "CLS-0018-REN",
+            "risk_category": "Undefined Timeline",
+            "ambiguity_description": "No notice period is specified for opting out of the automatic renewal, leaving the customer without a clear mechanism to prevent unintended extensions.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          }
+        ]
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "risk_ambiguity_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 1.669,
+      "tokens": 1719,
+      "prompt_tokens": 1195,
+      "completion_tokens": 524,
+      "output": {
+        "contract_id": "CTR-2026-0018",
+        "inconsistencies": [
+          {
+            "type": "mutual_incompatibility",
+            "clause_ids": [
+              "CLS-0018-TERM",
+              "CLS-0018-REN"
+            ],
+            "description": "Clause CLS-0018-TERM permits either party to terminate the Agreement for convenience with 30 days' written notice, while Clause CLS-0018-REN states the Agreement cannot be terminated for convenience prior to the full term expiration and automatically renews for successive two‑year periods. These provisions directly conflict regarding the right to terminate for convenience."
+          },
+          {
+            "type": "chronological_contradiction",
+            "clause_ids": [
+              "CLS-0018-TERM",
+              "CLS-0018-REN"
+            ],
+            "description": "The Term clause defines the initial term as one year (2026‑01‑01 to 2027‑01‑01), but the Renewal clause specifies automatic renewal for successive two‑year periods. The renewal period length is inconsistent with the defined initial term length, creating a chronological mismatch."
+          }
+        ],
+        "is_internally_consistent": false
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "cross_clause_consistency_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_8 (gsk_yt...AwPO)",
+      "duration_seconds": 2.156,
+      "tokens": 2109,
+      "prompt_tokens": 1340,
+      "completion_tokens": 769,
+      "output": {
+        "contract_id": "CTR-2026-0018",
+        "all_citations_valid": true,
+        "verified_finding_ids": [
+          "R001",
+          "R002",
+          "R003",
+          "R004",
+          "R005",
+          "R006",
+          "CLS-0018-REN"
+        ],
+        "invalid_or_unsupported_findings": [],
+        "evidence_notes": {
+          "R001": "Clause CLS-0018-PAY is present in the contract.",
+          "R002": "Clause CLS-0018-DATA is present in the contract.",
+          "R003": "Clause CLS-0018-LIAB is present in the contract.",
+          "R004": "Clause CLS-0018-TERM is present in the contract.",
+          "R005": "Clause CLS-0018-REN is present in the contract.",
+          "R006": "Clause CLS-0018-REN is present in the contract.",
+          "CLS-0018-REN": "Deviation cites clause CLS-0018-REN, which exists in the contract."
+        }
+      },
+      "notes": "",
+      "order": 8,
+      "agent_id": "evidence_validation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_9 (gsk_Oz...k7Gf)",
+      "duration_seconds": 4.167,
+      "tokens": 2832,
+      "prompt_tokens": 1138,
+      "completion_tokens": 1694,
+      "output": {
+        "contract_id": "CTR-2026-0018",
+        "calibrated_deviations": [
+          {
+            "clause_id": "CLS-0018-REN",
+            "requirement_id": "REQ-LGL-02",
+            "severity": "critical",
+            "supporting_evidence": "Clause CLS-0018-REN prohibits termination for convenience before the term ends, directly contradicting the policy requirement that the customer must have a 30‑day prior written notice right to terminate for convenience.",
+            "recommended_remediation": "Amend or remove clause CLS-0018-REN so that the contract grants the customer a unilateral right to terminate for convenience with at least 30 days written notice, aligning the termination provisions with REQ-LGL-02."
+          }
+        ],
+        "calibrated_risks": [
+          {
+            "finding_id": "R001",
+            "clause_id": "CLS-0018-PAY",
+            "risk_category": "Ambiguity",
+            "ambiguity_description": "The term \"undisputed invoice amounts\" is not defined, leaving uncertainty about which invoices are payable within 30 days and potentially causing payment delays.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R002",
+            "clause_id": "CLS-0018-DATA",
+            "risk_category": "Ambiguity",
+            "ambiguity_description": "\"Confirmed Data Breach\" is not defined, making it unclear when the vendor's 24‑hour notification obligation is triggered.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R003",
+            "clause_id": "CLS-0018-LIAB",
+            "risk_category": "One-sided Covenant / Liability Limitation",
+            "ambiguity_description": "Limiting aggregate liability to fees paid in the preceding twelve months may be insufficient to cover certain damages, especially third‑party claims, exposing the customer to uncovered risk.",
+            "severity": "High",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R004-REN",
+            "clause_id": "CLS-0018-REN",
+            "risk_category": "Contradictory / One-sided Covenant",
+            "ambiguity_description": "The automatic renewal provision (successive two‑year periods) prohibits termination for convenience and lacks a defined opt‑out notice period, conflicting with the separate termination‑for‑convenience clause that requires 30‑day notice. This creates enforceability and operational uncertainty.",
+            "severity": "High",
+            "human_interpretation_needed": true
+          }
+        ],
+        "review_notes": "Deduplicated overlapping termination/renewal findings (R004, R005, R006) into a single high‑severity risk (R004-REN). Elevated liability limitation risk (R003) to High due to potential exposure to third‑party claims. Other risks retained with original severity. All risks flagged for human interpretation. Deviation remains critical and unchanged."
+      },
+      "notes": "",
+      "order": 9,
+      "agent_id": "contract_independent_review_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_10 (gsk_jW...DBpq)",
+      "duration_seconds": 6.034,
+      "tokens": 4283,
+      "prompt_tokens": 1797,
+      "completion_tokens": 2486,
+      "output": {
+        "run_id": "e3f9c2a1-7b4d-4f9a-9c2e-5d6a8b1c9f3e",
+        "contract_id": "CTR-2026-0018",
+        "contract_version": "1.0",
+        "policy_id": "POL-CORP-LGL-03",
+        "policy_version": "1.8",
+        "contract_type": "Master Services Agreement (MSA)",
+        "executive_summary": "The Master Services Agreement (CTR-2026-0018) achieves full nominal coverage (100%) against Corporate Policy 2026, but a critical deviation exists: the automatic renewal provision (CLS-0018-REN) directly contradicts the required 30‑day convenience termination right (REQ-LGL-02). Additional medium‑severity ambiguities around payment and data‑breach definitions, and a high‑severity exposure from the liability cap, require clarification. Immediate remediation of the renewal clause and definition of ambiguous terms are recommended before final approval.",
+        "policy_coverage": {
+          "coverage_percentage": 100.0,
+          "overall_status": "Partial Non‑Compliance (Critical Deviation Present)"
+        },
+        "clause_inventory": [
+          {
+            "clause_id": "CLS-0018-PAY",
+            "clause_type": "payment_terms",
+            "clause_title": "Section 3: Invoicing and Payment Terms",
+            "clause_text": "Customer shall pay all undisputed invoice amounts within thirty (30) days of invoice date.",
+            "section_reference": "Section 3.1"
+          },
+          {
+            "clause_id": "CLS-0018-DATA",
+            "clause_type": "data_protection",
+            "clause_title": "Section 8: Security & Breach Notification",
+            "clause_text": "Vendor shall notify Customer in writing within twenty-four (24) hours of becoming aware of any confirmed Data Breach.",
+            "section_reference": "Section 8.2"
+          },
+          {
+            "clause_id": "CLS-0018-LIAB",
+            "clause_type": "liability_cap",
+            "clause_title": "Section 10: Limitation of Liability",
+            "clause_text": "Each party's maximum aggregate liability shall be strictly limited to the total fees paid under this Agreement in the preceding twelve (12) months.",
+            "section_reference": "Section 10.1"
+          },
+          {
+            "clause_id": "CLS-0018-TERM",
+            "clause_type": "termination",
+            "clause_title": "Section 12: Term and Termination",
+            "clause_text": "Either party may terminate this Agreement for convenience upon providing thirty (30) days prior written notice.",
+            "section_reference": "Section 12.1"
+          },
+          {
+            "clause_id": "CLS-0018-REN",
+            "clause_type": "renewal",
+            "clause_title": "Section 12: Renewal Provisions",
+            "clause_text": "This Agreement shall automatically renew for successive two-year periods and CANNOT be terminated for convenience prior to full term expiration.",
+            "section_reference": "Section 12.4"
+          }
+        ],
+        "compliance_findings": [
+          {
+            "clause_id": "CLS-0018-LIAB",
+            "requirement_id": "REQ-LGL-01",
+            "mapping_status": "satisfied",
+            "notes": "Liability cap exactly matches the 12‑month fee limitation."
+          },
+          {
+            "clause_id": "CLS-0018-TERM",
+            "requirement_id": "REQ-LGL-02",
+            "mapping_status": "satisfied",
+            "notes": "Provides both parties a 30‑day convenience termination right, meeting the requirement."
+          },
+          {
+            "clause_id": "CLS-0018-REN",
+            "requirement_id": "REQ-LGL-02",
+            "mapping_status": "conflicting",
+            "notes": "Prohibits termination for convenience before term end, directly contradicting the required 30‑day convenience termination right."
+          }
+        ],
+        "risk_findings": [
+          {
+            "finding_id": "R001",
+            "clause_id": "CLS-0018-PAY",
+            "risk_category": "Ambiguity",
+            "ambiguity_description": "The term \"undisputed invoice amounts\" is not defined, leaving uncertainty about which invoices are payable within 30 days and potentially causing payment delays.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R002",
+            "clause_id": "CLS-0018-DATA",
+            "risk_category": "Ambiguity",
+            "ambiguity_description": "\"Confirmed Data Breach\" is not defined, making it unclear when the vendor's 24‑hour notification obligation is triggered.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R003",
+            "clause_id": "CLS-0018-LIAB",
+            "risk_category": "One-sided Covenant / Liability Limitation",
+            "ambiguity_description": "Limiting aggregate liability to fees paid in the preceding twelve months may be insufficient to cover certain damages, especially third‑party claims, exposing the customer to uncovered risk.",
+            "severity": "High",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "R004-REN",
+            "clause_id": "CLS-0018-REN",
+            "risk_category": "Contradictory / One-sided Covenant",
+            "ambiguity_description": "The automatic renewal provision (successive two‑year periods) prohibits termination for convenience and lacks a defined opt‑out notice period, conflicting with the separate termination‑for‑convenience clause that requires 30‑day notice. This creates enforceability and operational uncertainty.",
+            "severity": "High",
+            "human_interpretation_needed": true
+          }
+        ],
+        "cross_clause_inconsistencies": [
+          {
+            "conflict_between": [
+              "CLS-0018-TERM",
+              "CLS-0018-REN"
+            ],
+            "description": "Termination clause grants a 30‑day convenience termination right, while renewal clause bars any convenience termination before the end of each two‑year renewal period, resulting in a direct contractual conflict.",
+            "impact": "Critical – renders the termination right ineffective during renewal periods."
+          }
+        ],
+        "evidence_validation": {
+          "mapping_verification": "All mapping entries were cross‑checked against the policy matrix. Statuses (satisfied, conflicting) reflect the current clause language.",
+          "deviation_validation": "Critical deviation for CLS-0018-REN confirmed by policy requirement REQ-LGL-02."
+        },
+        "unresolved_questions": [
+          {
+            "question_id": "UQ001",
+            "clause_id": "CLS-0018-PAY",
+            "question": "What definition, if any, governs \"undisputed invoice amounts\"?"
+          },
+          {
+            "question_id": "UQ002",
+            "clause_id": "CLS-0018-DATA",
+            "question": "How is a \"confirmed Data Breach\" determined under this agreement?"
+          },
+          {
+            "question_id": "UQ003",
+            "clause_id": "CLS-0018-LIAB",
+            "question": "Is there an exception or supplemental cap for third‑party claims or statutory damages?"
+          },
+          {
+            "question_id": "UQ004",
+            "clause_id": "CLS-0018-REN",
+            "question": "Can the renewal clause be amended to include an opt‑out notice period that aligns with the 30‑day convenience termination right?"
+          }
+        ],
+        "recommended_actions": [
+          {
+            "action_id": "ACT-001",
+            "description": "Amend or remove clause CLS-0018-REN so that the contract grants the customer a unilateral right to terminate for convenience with at least 30 days written notice, aligning with REQ-LGL-02."
+          },
+          {
+            "action_id": "ACT-002",
+            "description": "Define \"undisputed invoice amounts\" in the payment terms to eliminate ambiguity and reduce payment‑delay risk."
+          },
+          {
+            "action_id": "ACT-003",
+            "description": "Provide a clear definition of \"confirmed Data Breach\" and outline the verification process for the vendor."
+          },
+          {
+            "action_id": "ACT-004",
+            "description": "Consider revising the liability cap to include a separate, higher ceiling for third‑party claims or statutory damages, or add an indemnification clause."
+          },
+          {
+            "action_id": "ACT-005",
+            "description": "If the automatic renewal provision is retained, insert an opt‑out notice period (e.g., 90 days prior to renewal) that does not conflict with the 30‑day convenience termination right."
+          }
+        ],
+        "human_review_required": true,
+        "legal_disclaimer": "This compliance report is generated based on the information provided and reflects the author's best professional judgment as of the report date. It does not constitute legal advice. Parties should consult qualified counsel to interpret contractual language, assess legal risk, and implement any recommended amendments. The author and the organization assume no liability for decisions made based on this report."
+      },
+      "notes": "",
+      "order": 10,
+      "agent_id": "final_compliance_report_agent"
+    }
+  ],
+  "total_tokens": 18487,
+  "prompt_tokens": 8781,
+  "completion_tokens": 9706,
+  "estimated_cost_usd": 0.012849,
+  "error_message": null,
+  "final_output": "{\n  \"run_id\": \"e3f9c2a1-7b4d-4f9a-9c2e-5d6a8b1c9f3e\",\n  \"contract_id\": \"CTR-2026-0018\",\n  \"contract_version\": \"1.0\",\n  \"policy_id\": \"POL-CORP-LGL-03\",\n  \"policy_version\": \"1.8\",\n  \"contract_type\": \"Master Services Agreement (MSA)\",\n  \"executive_summary\": \"The Master Services Agreement (CTR-2026-0018) achieves full nominal coverage (100%) against Corporate Policy 2026, but a critical deviation exists: the automatic renewal provision (CLS-0018-REN) directly contradicts the required 30\\u2011day convenience termination right (REQ-LGL-02). Additional medium\\u2011severity ambiguities around payment and data\\u2011breach definitions, and a high\\u2011severity exposure from the liability cap, require clarification. Immediate remediation of the renewal clause and definition of ambiguous terms are recommended before final approval.\",\n  \"policy_coverage\": {\n    \"coverage_percentage\": 100.0,\n    \"overall_status\": \"Partial Non\\u2011Compliance (Critical Deviation Present)\"\n  },\n  \"clause_inventory\": [\n    {\n      \"clause_id\": \"CLS-0018-PAY\",\n      \"clause_type\": \"payment_terms\",\n      \"clause_title\": \"Section 3: Invoicing and Payment Terms\",\n      \"clause_text\": \"Customer shall pay all undisputed invoice amounts within thirty (30) days of invoice date.\",\n      \"section_reference\": \"Section 3.1\"\n    },\n    {\n      \"clause_id\": \"CLS-0018-DATA\",\n      \"clause_type\": \"data_protection\",\n      \"clause_title\": \"Section 8: Security & Breach Notification\",\n      \"clause_text\": \"Vendor shall notify Customer in writing within twenty-four (24) hours of becoming aware of any confirmed Data Breach.\",\n      \"section_reference\": \"Section 8.2\"\n    },\n    {\n      \"clause_id\": \"CLS-0018-LIAB\",\n      \"clause_type\": \"liability_cap\",\n      \"clause_title\": \"Section 10: Limitation of Liability\",\n      \"clause_text\": \"Each party's maximum aggregate liability shall be strictly limited to the total fees paid under this Agreement in the preceding twelve (12) months.\",\n      \"section_reference\": \"Section 10.1\"\n    },\n    {\n      \"clause_id\": \"CLS-0018-TERM\",\n      \"clause_type\": \"termination\",\n      \"clause_title\": \"Section 12: Term and Termination\",\n      \"clause_text\": \"Either party may terminate this Agreement for convenience upon providing thirty (30) days prior written notice.\",\n      \"section_reference\": \"Section 12.1\"\n    },\n    {\n      \"clause_id\": \"CLS-0018-REN\",\n      \"clause_type\": \"renewal\",\n      \"clause_title\": \"Section 12: Renewal Provisions\",\n      \"clause_text\": \"This Agreement shall automatically renew for successive two-year periods and CANNOT be terminated for convenience prior to full term expiration.\",\n      \"section_reference\": \"Section 12.4\"\n    }\n  ],\n  \"compliance_findings\": [\n    {\n      \"clause_id\": \"CLS-0018-LIAB\",\n      \"requirement_id\": \"REQ-LGL-01\",\n      \"mapping_status\": \"satisfied\",\n      \"notes\": \"Liability cap exactly matches the 12\\u2011month fee limitation.\"\n    },\n    {\n      \"clause_id\": \"CLS-0018-TERM\",\n      \"requirement_id\": \"REQ-LGL-02\",\n      \"mapping_status\": \"satisfied\",\n      \"notes\": \"Provides both parties a 30\\u2011day convenience termination right, meeting the requirement.\"\n    },\n    {\n      \"clause_id\": \"CLS-0018-REN\",\n      \"requirement_id\": \"REQ-LGL-02\",\n      \"mapping_status\": \"conflicting\",\n      \"notes\": \"Prohibits termination for convenience before term end, directly contradicting the required 30\\u2011day convenience termination right.\"\n    }\n  ],\n  \"risk_findings\": [\n    {\n      \"finding_id\": \"R001\",\n      \"clause_id\": \"CLS-0018-PAY\",\n      \"risk_category\": \"Ambiguity\",\n      \"ambiguity_description\": \"The term \\\"undisputed invoice amounts\\\" is not defined, leaving uncertainty about which invoices are payable within 30 days and potentially causing payment delays.\",\n      \"severity\": \"Medium\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"finding_id\": \"R002\",\n      \"clause_id\": \"CLS-0018-DATA\",\n      \"risk_category\": \"Ambiguity\",\n      \"ambiguity_description\": \"\\\"Confirmed Data Breach\\\" is not defined, making it unclear when the vendor's 24\\u2011hour notification obligation is triggered.\",\n      \"severity\": \"Medium\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"finding_id\": \"R003\",\n      \"clause_id\": \"CLS-0018-LIAB\",\n      \"risk_category\": \"One-sided Covenant / Liability Limitation\",\n      \"ambiguity_description\": \"Limiting aggregate liability to fees paid in the preceding twelve months may be insufficient to cover certain damages, especially third\\u2011party claims, exposing the customer to uncovered risk.\",\n      \"severity\": \"High\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"finding_id\": \"R004-REN\",\n      \"clause_id\": \"CLS-0018-REN\",\n      \"risk_category\": \"Contradictory / One-sided Covenant\",\n      \"ambiguity_description\": \"The automatic renewal provision (successive two\\u2011year periods) prohibits termination for convenience and lacks a defined opt\\u2011out notice period, conflicting with the separate termination\\u2011for\\u2011convenience clause that requires 30\\u2011day notice. This creates enforceability and operational uncertainty.\",\n      \"severity\": \"High\",\n      \"human_interpretation_needed\": true\n    }\n  ],\n  \"cross_clause_inconsistencies\": [\n    {\n      \"conflict_between\": [\n        \"CLS-0018-TERM\",\n        \"CLS-0018-REN\"\n      ],\n      \"description\": \"Termination clause grants a 30\\u2011day convenience termination right, while renewal clause bars any convenience termination before the end of each two\\u2011year renewal period, resulting in a direct contractual conflict.\",\n      \"impact\": \"Critical \\u2013 renders the termination right ineffective during renewal periods.\"\n    }\n  ],\n  \"evidence_validation\": {\n    \"mapping_verification\": \"All mapping entries were cross\\u2011checked against the policy matrix. Statuses (satisfied, conflicting) reflect the current clause language.\",\n    \"deviation_validation\": \"Critical deviation for CLS-0018-REN confirmed by policy requirement REQ-LGL-02.\"\n  },\n  \"unresolved_questions\": [\n    {\n      \"question_id\": \"UQ001\",\n      \"clause_id\": \"CLS-0018-PAY\",\n      \"question\": \"What definition, if any, governs \\\"undisputed invoice amounts\\\"?\"\n    },\n    {\n      \"question_id\": \"UQ002\",\n      \"clause_id\": \"CLS-0018-DATA\",\n      \"question\": \"How is a \\\"confirmed Data Breach\\\" determined under this agreement?\"\n    },\n    {\n      \"question_id\": \"UQ003\",\n      \"clause_id\": \"CLS-0018-LIAB\",\n      \"question\": \"Is there an exception or supplemental cap for third\\u2011party claims or statutory damages?\"\n    },\n    {\n      \"question_id\": \"UQ004\",\n      \"clause_id\": \"CLS-0018-REN\",\n      \"question\": \"Can the renewal clause be amended to include an opt\\u2011out notice period that aligns with the 30\\u2011day convenience termination right?\"\n    }\n  ],\n  \"recommended_actions\": [\n    {\n      \"action_id\": \"ACT-001\",\n      \"description\": \"Amend or remove clause CLS-0018-REN so that the contract grants the customer a unilateral right to terminate for convenience with at least 30 days written notice, aligning with REQ-LGL-02.\"\n    },\n    {\n      \"action_id\": \"ACT-002\",\n      \"description\": \"Define \\\"undisputed invoice amounts\\\" in the payment terms to eliminate ambiguity and reduce payment\\u2011delay risk.\"\n    },\n    {\n      \"action_id\": \"ACT-003\",\n      \"description\": \"Provide a clear definition of \\\"confirmed Data Breach\\\" and outline the verification process for the vendor.\"\n    },\n    {\n      \"action_id\": \"ACT-004\",\n      \"description\": \"Consider revising the liability cap to include a separate, higher ceiling for third\\u2011party claims or statutory damages, or add an indemnification clause.\"\n    },\n    {\n      \"action_id\": \"ACT-005\",\n      \"description\": \"If the automatic renewal provision is retained, insert an opt\\u2011out notice period (e.g., 90 days prior to renewal) that does not conflict with the 30\\u2011day convenience termination right.\"\n    }\n  ],\n  \"human_review_required\": true,\n  \"legal_disclaimer\": \"This compliance report is generated based on the information provided and reflects the author's best professional judgment as of the report date. It does not constitute legal advice. Parties should consult qualified counsel to interpret contractual language, assess legal risk, and implement any recommended amendments. The author and the organization assume no liability for decisions made based on this report.\"\n}",
+  "timestamp": "2026-10-31T12:15:06.054359+00:00"
+}

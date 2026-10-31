@@ -1,0 +1,2801 @@
+{
+  "workflow_name": "inventory_replenishment",
+  "report_type": "traceprofiler_single_workflow_ingestion",
+  "analysis_mode": "static_ast_non_executing",
+  "metrics": {
+    "declared_agents": 6,
+    "implemented_agents": 6,
+    "python_files": 8,
+    "telemetry_runs": 3,
+    "discrepancy_count": 0
+  },
+  "manifest": {
+    "file": "Agents/inventory_replenishment/workflow.json",
+    "dir": "Agents/inventory_replenishment",
+    "workflow_name": "inventory_replenishment",
+    "version": "1.0.0",
+    "description": "Baseline 6-agent inventory replenishment planning workflow with deterministic arithmetic.",
+    "fixed_model": "openai/gpt-oss-120b",
+    "total_agents": 6,
+    "execution_mode": "sequential",
+    "execution_order": [
+      "inventory_intake_agent",
+      "stock_policy_agent",
+      "demand_forecast_agent",
+      "supplier_agent",
+      "replenishment_planning_agent",
+      "inventory_review_agent"
+    ],
+    "optimization_opportunities": {
+      "parallel_candidates": [
+        "stock_policy_agent + demand_forecast_agent + supplier_agent"
+      ],
+      "pruning_candidates": [
+        "inventory_review_agent"
+      ],
+      "consolidation_candidates": [
+        "stock_policy_agent + replenishment_planning_agent"
+      ]
+    },
+    "agents": [
+      {
+        "id": "inventory_intake_agent",
+        "name": "Inventory Intake Agent",
+        "role": "Inventory Intake Coordinator",
+        "declared_file": null,
+        "dependencies": [],
+        "inputs": [
+          "sku_record",
+          "supplier_record",
+          "policy_record",
+          "sales_record"
+        ],
+        "outputs": [
+          "sku_id",
+          "warehouse_id",
+          "source_record_ids",
+          "raw_inventory_record",
+          "raw_supplier_record"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "inventory_intake_agent",
+          "agent_name": "Inventory Intake Agent",
+          "role": "Inventory Intake Coordinator",
+          "responsibilities": "Normalize identifiers, assemble inventory snapshots, sales history, and vendor terms.",
+          "input_fields": [
+            "sku_record",
+            "supplier_record",
+            "policy_record",
+            "sales_record"
+          ],
+          "output_fields": [
+            "sku_id",
+            "warehouse_id",
+            "source_record_ids",
+            "raw_inventory_record",
+            "raw_supplier_record"
+          ],
+          "dependencies": []
+        }
+      },
+      {
+        "id": "stock_policy_agent",
+        "name": "Stock and Reorder Policy Agent",
+        "role": "Stock Policy and Inventory Level Specialist",
+        "declared_file": null,
+        "dependencies": [
+          "inventory_intake_agent"
+        ],
+        "inputs": [
+          "raw_inventory_record",
+          "warehouse_id"
+        ],
+        "outputs": [
+          "current_stock",
+          "reserved_stock",
+          "incoming_stock",
+          "usable_inventory",
+          "reorder_threshold",
+          "safety_stock",
+          "replenishment_needed"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "stock_policy_agent",
+          "agent_name": "Stock and Reorder Policy Agent",
+          "role": "Stock Policy and Inventory Level Specialist",
+          "responsibilities": "Evaluate usable inventory (current - reserved + incoming) and reorder triggers.",
+          "input_fields": [
+            "raw_inventory_record",
+            "warehouse_id"
+          ],
+          "output_fields": [
+            "current_stock",
+            "reserved_stock",
+            "incoming_stock",
+            "usable_inventory",
+            "reorder_threshold",
+            "safety_stock",
+            "replenishment_needed"
+          ],
+          "dependencies": [
+            "inventory_intake_agent"
+          ]
+        }
+      },
+      {
+        "id": "demand_forecast_agent",
+        "name": "Sales History and Demand Forecast Agent",
+        "role": "Demand Forecasting and Sales History Specialist",
+        "declared_file": null,
+        "dependencies": [
+          "inventory_intake_agent"
+        ],
+        "inputs": [
+          "sales_record",
+          "forecast_horizon_days"
+        ],
+        "outputs": [
+          "historical_avg_daily_demand",
+          "forecast_demand_units",
+          "volatility_metric",
+          "demand_spikes_detected"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "demand_forecast_agent",
+          "agent_name": "Sales History and Demand Forecast Agent",
+          "role": "Demand Forecasting and Sales History Specialist",
+          "responsibilities": "Calculate moving average demand projections and characterize demand volatility.",
+          "input_fields": [
+            "sales_record",
+            "forecast_horizon_days"
+          ],
+          "output_fields": [
+            "historical_avg_daily_demand",
+            "forecast_demand_units",
+            "volatility_metric",
+            "demand_spikes_detected"
+          ],
+          "dependencies": [
+            "inventory_intake_agent"
+          ]
+        }
+      },
+      {
+        "id": "supplier_agent",
+        "name": "Supplier and Lead-Time Agent",
+        "role": "Supplier Lead-Time and Constraints Specialist",
+        "declared_file": null,
+        "dependencies": [
+          "inventory_intake_agent"
+        ],
+        "inputs": [
+          "raw_supplier_record",
+          "planning_date"
+        ],
+        "outputs": [
+          "lead_time_days",
+          "minimum_order_quantity",
+          "pack_size",
+          "expected_arrival_date"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "supplier_agent",
+          "agent_name": "Supplier and Lead-Time Agent",
+          "role": "Supplier Lead-Time and Constraints Specialist",
+          "responsibilities": "Verify vendor lead times, minimum order quantities (MOQ), and pack size increments.",
+          "input_fields": [
+            "raw_supplier_record",
+            "planning_date"
+          ],
+          "output_fields": [
+            "lead_time_days",
+            "minimum_order_quantity",
+            "pack_size",
+            "expected_arrival_date"
+          ],
+          "dependencies": [
+            "inventory_intake_agent"
+          ]
+        }
+      },
+      {
+        "id": "replenishment_planning_agent",
+        "name": "Replenishment Planning Agent",
+        "role": "Replenishment Optimization Planner",
+        "declared_file": null,
+        "dependencies": [
+          "stock_policy_agent",
+          "demand_forecast_agent",
+          "supplier_agent"
+        ],
+        "inputs": [
+          "usable_inventory",
+          "historical_avg_daily_demand",
+          "lead_time_days",
+          "safety_stock",
+          "pack_size",
+          "minimum_order_quantity"
+        ],
+        "outputs": [
+          "base_replenishment_quantity",
+          "recommended_order_quantity",
+          "calculation_breakdown",
+          "stockout_risk"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "replenishment_planning_agent",
+          "agent_name": "Replenishment Planning Agent",
+          "role": "Replenishment Optimization Planner",
+          "responsibilities": "Calculate base replenishment quantity and adjust for pack size and supplier MOQ.",
+          "input_fields": [
+            "usable_inventory",
+            "historical_avg_daily_demand",
+            "lead_time_days",
+            "safety_stock",
+            "pack_size",
+            "minimum_order_quantity"
+          ],
+          "output_fields": [
+            "base_replenishment_quantity",
+            "recommended_order_quantity",
+            "calculation_breakdown",
+            "stockout_risk"
+          ],
+          "dependencies": [
+            "stock_policy_agent",
+            "demand_forecast_agent",
+            "supplier_agent"
+          ]
+        }
+      },
+      {
+        "id": "inventory_review_agent",
+        "name": "Validation and Final Review Agent",
+        "role": "Replenishment Integrity and Compliance Auditor",
+        "declared_file": null,
+        "dependencies": [
+          "replenishment_planning_agent"
+        ],
+        "inputs": [
+          "base_replenishment_quantity",
+          "recommended_order_quantity",
+          "stockout_risk",
+          "stock_policy_data"
+        ],
+        "outputs": [
+          "run_id",
+          "planning_date",
+          "warehouse_id",
+          "sku_id",
+          "current_stock",
+          "reserved_stock",
+          "available_stock",
+          "incoming_stock",
+          "forecast_demand",
+          "forecast_horizon",
+          "supplier_id",
+          "lead_time_days",
+          "safety_stock",
+          "reorder_threshold",
+          "base_replenishment_quantity",
+          "recommended_order_quantity",
+          "expected_arrival_date",
+          "stockout_risk",
+          "reasoning",
+          "source_record_ids",
+          "validation_warnings",
+          "human_review_required"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "inventory_review_agent",
+          "agent_name": "Validation and Final Review Agent",
+          "role": "Replenishment Integrity and Compliance Auditor",
+          "responsibilities": "Audit calculations against double-counting and assemble final verified plan.",
+          "input_fields": [
+            "base_replenishment_quantity",
+            "recommended_order_quantity",
+            "stockout_risk",
+            "stock_policy_data"
+          ],
+          "output_fields": [
+            "run_id",
+            "planning_date",
+            "warehouse_id",
+            "sku_id",
+            "current_stock",
+            "reserved_stock",
+            "available_stock",
+            "incoming_stock",
+            "forecast_demand",
+            "forecast_horizon",
+            "supplier_id",
+            "lead_time_days",
+            "safety_stock",
+            "reorder_threshold",
+            "base_replenishment_quantity",
+            "recommended_order_quantity",
+            "expected_arrival_date",
+            "stockout_risk",
+            "reasoning",
+            "source_record_ids",
+            "validation_warnings",
+            "human_review_required"
+          ],
+          "dependencies": [
+            "replenishment_planning_agent"
+          ]
+        }
+      }
+    ]
+  },
+  "agent_inventory": [
+    {
+      "id": "inventory_intake_agent",
+      "name": "Inventory Intake Agent",
+      "role": "Inventory Intake Coordinator",
+      "workflow": "inventory_replenishment",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [],
+      "inputs": [
+        "sku_record",
+        "supplier_record",
+        "policy_record",
+        "sales_record"
+      ],
+      "outputs": [
+        "sku_id",
+        "warehouse_id",
+        "source_record_ids",
+        "raw_inventory_record",
+        "raw_supplier_record"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/inventory_replenishment/intake_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 31,
+          "end_line": 38,
+          "docstring": "Create the CrewAI Inventory Intake Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_inventory_intake",
+          "line": 41,
+          "end_line": 106,
+          "docstring": "Execute Inventory Intake Agent.",
+          "args": [
+            "request_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "InventoryIntakeOutput"
+          ],
+          "aliases": {},
+          "line": 15
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 16
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_inventory_intake",
+          "line": 41,
+          "classification": "function_candidate",
+          "docstring": "Execute Inventory Intake Agent."
+        }
+      ]
+    },
+    {
+      "id": "stock_policy_agent",
+      "name": "Stock and Reorder Policy Agent",
+      "role": "Stock Policy and Inventory Level Specialist",
+      "workflow": "inventory_replenishment",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [
+        "inventory_intake_agent"
+      ],
+      "inputs": [
+        "raw_inventory_record",
+        "warehouse_id"
+      ],
+      "outputs": [
+        "current_stock",
+        "reserved_stock",
+        "incoming_stock",
+        "usable_inventory",
+        "reorder_threshold",
+        "safety_stock",
+        "replenishment_needed"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/inventory_replenishment/stock_policy_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "calculate_usable_inventory",
+          "line": 30,
+          "end_line": 35,
+          "docstring": "Deterministic calculation of usable inventory.\nUsable Inventory = Current Stock - Reserved Stock + Incoming Stock",
+          "args": [
+            "current_stock",
+            "reserved_stock",
+            "incoming_stock"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 38,
+          "end_line": 45,
+          "docstring": "Create the CrewAI Stock and Reorder Policy Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_stock_policy",
+          "line": 48,
+          "end_line": 111,
+          "docstring": "Execute Stock and Reorder Policy Agent.",
+          "args": [
+            "intake_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "StockPolicyOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "calculate_usable_inventory",
+          "line": 30,
+          "classification": "function_candidate",
+          "docstring": "Deterministic calculation of usable inventory.\nUsable Inventory = Current Stock - Reserved Stock + Incoming Stock"
+        },
+        {
+          "name": "run_stock_policy",
+          "line": 48,
+          "classification": "function_candidate",
+          "docstring": "Execute Stock and Reorder Policy Agent."
+        }
+      ]
+    },
+    {
+      "id": "demand_forecast_agent",
+      "name": "Sales History and Demand Forecast Agent",
+      "role": "Demand Forecasting and Sales History Specialist",
+      "workflow": "inventory_replenishment",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [
+        "inventory_intake_agent"
+      ],
+      "inputs": [
+        "sales_record",
+        "forecast_horizon_days"
+      ],
+      "outputs": [
+        "historical_avg_daily_demand",
+        "forecast_demand_units",
+        "volatility_metric",
+        "demand_spikes_detected"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/inventory_replenishment/demand_forecast_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "calculate_deterministic_forecast",
+          "line": 31,
+          "end_line": 71,
+          "docstring": "Deterministic calculation of daily average and horizon demand.",
+          "args": [
+            "daily_sales",
+            "horizon_days"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 74,
+          "end_line": 81,
+          "docstring": "Create the CrewAI Sales History and Demand Forecast Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_demand_forecast",
+          "line": 84,
+          "end_line": 141,
+          "docstring": "Execute Sales History and Demand Forecast Agent.",
+          "args": [
+            "intake_data",
+            "sales_data",
+            "horizon_days",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "DemandForecastOutput"
+          ],
+          "aliases": {},
+          "line": 15
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 16
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "calculate_deterministic_forecast",
+          "line": 31,
+          "classification": "function_candidate",
+          "docstring": "Deterministic calculation of daily average and horizon demand."
+        },
+        {
+          "name": "run_demand_forecast",
+          "line": 84,
+          "classification": "function_candidate",
+          "docstring": "Execute Sales History and Demand Forecast Agent."
+        }
+      ]
+    },
+    {
+      "id": "supplier_agent",
+      "name": "Supplier and Lead-Time Agent",
+      "role": "Supplier Lead-Time and Constraints Specialist",
+      "workflow": "inventory_replenishment",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [
+        "inventory_intake_agent"
+      ],
+      "inputs": [
+        "raw_supplier_record",
+        "planning_date"
+      ],
+      "outputs": [
+        "lead_time_days",
+        "minimum_order_quantity",
+        "pack_size",
+        "expected_arrival_date"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/inventory_replenishment/supplier_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "calculate_expected_arrival",
+          "line": 30,
+          "end_line": 36,
+          "docstring": "Deterministic calculation of expected arrival date.",
+          "args": [
+            "planning_date_str",
+            "lead_time_days"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 39,
+          "end_line": 46,
+          "docstring": "Create the CrewAI Supplier and Lead-Time Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_supplier_analysis",
+          "line": 49,
+          "end_line": 102,
+          "docstring": "Execute Supplier and Lead-Time Agent.",
+          "args": [
+            "intake_data",
+            "planning_date",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "datetime",
+          "level": 0,
+          "names": [
+            "date",
+            "timedelta"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "SupplierLeadTimeOutput"
+          ],
+          "aliases": {},
+          "line": 15
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 16
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "calculate_expected_arrival",
+          "line": 30,
+          "classification": "function_candidate",
+          "docstring": "Deterministic calculation of expected arrival date."
+        },
+        {
+          "name": "run_supplier_analysis",
+          "line": 49,
+          "classification": "function_candidate",
+          "docstring": "Execute Supplier and Lead-Time Agent."
+        }
+      ]
+    },
+    {
+      "id": "replenishment_planning_agent",
+      "name": "Replenishment Planning Agent",
+      "role": "Replenishment Optimization Planner",
+      "workflow": "inventory_replenishment",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [
+        "stock_policy_agent",
+        "demand_forecast_agent",
+        "supplier_agent"
+      ],
+      "inputs": [
+        "usable_inventory",
+        "historical_avg_daily_demand",
+        "lead_time_days",
+        "safety_stock",
+        "pack_size",
+        "minimum_order_quantity"
+      ],
+      "outputs": [
+        "base_replenishment_quantity",
+        "recommended_order_quantity",
+        "calculation_breakdown",
+        "stockout_risk"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/inventory_replenishment/replenishment_planning_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "calculate_deterministic_replenishment",
+          "line": 32,
+          "end_line": 97,
+          "docstring": "Deterministic calculation for inventory replenishment:\n1. Usable Inventory = Current Stock - Reserved Stock + Incoming Stock\n2. Expected Lead-Time Demand = avg_daily_demand * lead_time_days\n3. Gross Requirement = Expected Lead-Time Demand + Safety Stock\n4. Base Replenishment = max(0, math.ceil(Gross Requirement - Usable Inventory))\n5. Adjusted Order Quantity:\n   - If base > 0: round up to nearest pack_size, then max(rounded, moq).\n   - If base == 0: 0.",
+          "args": [
+            "current_stock",
+            "reserved_stock",
+            "incoming_stock",
+            "avg_daily_demand",
+            "lead_time_days",
+            "safety_stock",
+            "pack_size",
+            "moq"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 100,
+          "end_line": 107,
+          "docstring": "Create the CrewAI Replenishment Planning Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_replenishment_planning",
+          "line": 110,
+          "end_line": 176,
+          "docstring": "Execute Replenishment Planning Agent.",
+          "args": [
+            "sku_id",
+            "stock_policy_data",
+            "demand_forecast_data",
+            "supplier_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "math",
+          "asname": null,
+          "line": 12
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 15
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "ReplenishmentPlanningOutput"
+          ],
+          "aliases": {},
+          "line": 16
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 17
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "calculate_deterministic_replenishment",
+          "line": 32,
+          "classification": "function_candidate",
+          "docstring": "Deterministic calculation for inventory replenishment:\n1. Usable Inventory = Current Stock - Reserved Stock + Incoming Stock\n2. Expected Lead-Time Demand = avg_daily_demand * lead_time_days\n3. Gross Requirement = Expected Lead-Time Demand + Safety Stock\n4. Base Replenishment = max(0, math.ceil(Gross Requirement - Usable Inventory))\n5. Adjusted Order Quantity:\n   - If base > 0: round up to nearest pack_size, then max(rounded, moq).\n   - If base == 0: 0."
+        },
+        {
+          "name": "run_replenishment_planning",
+          "line": 110,
+          "classification": "function_candidate",
+          "docstring": "Execute Replenishment Planning Agent."
+        }
+      ]
+    },
+    {
+      "id": "inventory_review_agent",
+      "name": "Validation and Final Review Agent",
+      "role": "Replenishment Integrity and Compliance Auditor",
+      "workflow": "inventory_replenishment",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [
+        "replenishment_planning_agent"
+      ],
+      "inputs": [
+        "base_replenishment_quantity",
+        "recommended_order_quantity",
+        "stockout_risk",
+        "stock_policy_data"
+      ],
+      "outputs": [
+        "run_id",
+        "planning_date",
+        "warehouse_id",
+        "sku_id",
+        "current_stock",
+        "reserved_stock",
+        "available_stock",
+        "incoming_stock",
+        "forecast_demand",
+        "forecast_horizon",
+        "supplier_id",
+        "lead_time_days",
+        "safety_stock",
+        "reorder_threshold",
+        "base_replenishment_quantity",
+        "recommended_order_quantity",
+        "expected_arrival_date",
+        "stockout_risk",
+        "reasoning",
+        "source_record_ids",
+        "validation_warnings",
+        "human_review_required"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/inventory_replenishment/review_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 30,
+          "end_line": 37,
+          "docstring": "Create the CrewAI Validation and Final Review Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_inventory_review",
+          "line": 40,
+          "end_line": 147,
+          "docstring": "Execute Validation and Final Review Agent.",
+          "args": [
+            "run_id",
+            "planning_date",
+            "intake_data",
+            "stock_policy_data",
+            "demand_forecast_data",
+            "supplier_data",
+            "planning_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "InventoryFinalPlanOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_inventory_review",
+          "line": 40,
+          "classification": "function_candidate",
+          "docstring": "Execute Validation and Final Review Agent."
+        }
+      ]
+    }
+  ],
+  "workflow_analysis": {
+    "file": "Agents/inventory_replenishment/workflow.py",
+    "classes": [
+      {
+        "name": "InventoryReplenishmentWorkflow",
+        "line": 68
+      }
+    ],
+    "entry_points": [
+      {
+        "name": "run_inventory_replenishment_workflow",
+        "line": 190,
+        "args": [
+          "input_data",
+          "run_id"
+        ],
+        "docstring": "Execute inventory replenishment planning workflow."
+      },
+      {
+        "name": "run",
+        "line": 88,
+        "args": [
+          "self",
+          "input_data",
+          "run_id",
+          "runs_base_dir"
+        ],
+        "docstring": "Execute the 6-agent replenishment workflow sequentially."
+      }
+    ],
+    "crew_constructions": [],
+    "assignments": [
+      {
+        "line": 30,
+        "targets": [
+          "WORKFLOW_NAME"
+        ],
+        "value_names": [],
+        "expression": "\"inventory_replenishment\""
+      },
+      {
+        "line": 31,
+        "targets": [
+          "EXPECTED_AGENT_COUNT"
+        ],
+        "value_names": [],
+        "expression": "6"
+      },
+      {
+        "line": 39,
+        "targets": [
+          "skus_path"
+        ],
+        "value_names": [
+          "data_dir",
+          "os"
+        ],
+        "expression": "os.path.join(data_dir, \"inventory_records.json\")"
+      },
+      {
+        "line": 40,
+        "targets": [
+          "suppliers_path"
+        ],
+        "value_names": [
+          "data_dir",
+          "os"
+        ],
+        "expression": "os.path.join(data_dir, \"suppliers.json\")"
+      },
+      {
+        "line": 41,
+        "targets": [
+          "sales_path"
+        ],
+        "value_names": [
+          "data_dir",
+          "os"
+        ],
+        "expression": "os.path.join(data_dir, \"sales_history.json\")"
+      },
+      {
+        "line": 42,
+        "targets": [
+          "policies_path"
+        ],
+        "value_names": [
+          "data_dir",
+          "os"
+        ],
+        "expression": "os.path.join(data_dir, \"policies.json\")"
+      },
+      {
+        "line": 53,
+        "targets": [
+          "sku"
+        ],
+        "value_names": [
+          "len",
+          "sku_index",
+          "skus"
+        ],
+        "expression": "skus[sku_index % len(skus)]"
+      },
+      {
+        "line": 54,
+        "targets": [
+          "sup_id"
+        ],
+        "value_names": [
+          "sku"
+        ],
+        "expression": "sku.get(\"supplier_id\")"
+      },
+      {
+        "line": 55,
+        "targets": [
+          "supplier"
+        ],
+        "value_names": [
+          "next",
+          "s",
+          "sup_id",
+          "suppliers"
+        ],
+        "expression": "next((s for s in suppliers if s[\"supplier_id\"] == sup_id), suppliers[0])"
+      },
+      {
+        "line": 56,
+        "targets": [
+          "sales"
+        ],
+        "value_names": [
+          "sales_hist",
+          "sku"
+        ],
+        "expression": "sales_hist.get(sku[\"sku_id\"], {\"daily_sales\": [], \"recorded_days\": 0})"
+      },
+      {
+        "line": 195,
+        "targets": [
+          "wf"
+        ],
+        "value_names": [
+          "InventoryReplenishmentWorkflow"
+        ],
+        "expression": "InventoryReplenishmentWorkflow(enable_tracing=True)"
+      },
+      {
+        "line": 45,
+        "targets": [
+          "skus"
+        ],
+        "value_names": [
+          "f",
+          "json"
+        ],
+        "expression": "json.load(f)"
+      },
+      {
+        "line": 47,
+        "targets": [
+          "suppliers"
+        ],
+        "value_names": [
+          "f",
+          "json"
+        ],
+        "expression": "json.load(f)"
+      },
+      {
+        "line": 49,
+        "targets": [
+          "sales_hist"
+        ],
+        "value_names": [
+          "f",
+          "json"
+        ],
+        "expression": "json.load(f)"
+      },
+      {
+        "line": 51,
+        "targets": [
+          "policies"
+        ],
+        "value_names": [
+          "f",
+          "json"
+        ],
+        "expression": "json.load(f)"
+      },
+      {
+        "line": 97,
+        "targets": [
+          "active_run_id"
+        ],
+        "value_names": [
+          "run_id",
+          "uuid"
+        ],
+        "expression": "run_id or f\"inv_{uuid.uuid4().hex[:8]}\""
+      },
+      {
+        "line": 98,
+        "targets": [
+          "tracker"
+        ],
+        "value_names": [
+          "MetricsTracker",
+          "WORKFLOW_NAME",
+          "active_run_id"
+        ],
+        "expression": "MetricsTracker(workflow_name=WORKFLOW_NAME, run_id=active_run_id)"
+      },
+      {
+        "line": 103,
+        "targets": [
+          "planning_date"
+        ],
+        "value_names": [
+          "input_data"
+        ],
+        "expression": "input_data.get(\"planning_date\", \"2026-10-15\")"
+      },
+      {
+        "line": 101,
+        "targets": [
+          "input_data"
+        ],
+        "value_names": [
+          "load_sample_inventory_input"
+        ],
+        "expression": "load_sample_inventory_input()"
+      },
+      {
+        "line": 107,
+        "targets": [
+          "intake_res"
+        ],
+        "value_names": [
+          "input_data",
+          "intake_agent",
+          "self",
+          "tracker"
+        ],
+        "expression": "intake_agent.run_inventory_intake(\n                request_data=input_data,\n                agent=self.agent_1_intake,\n                tracker=tracker,\n            )"
+      },
+      {
+        "line": 114,
+        "targets": [
+          "stock_policy_res"
+        ],
+        "value_names": [
+          "intake_res",
+          "self",
+          "stock_policy_agent",
+          "tracker"
+        ],
+        "expression": "stock_policy_agent.run_stock_policy(\n                intake_data=intake_res,\n                agent=self.agent_2_stock_policy,\n                tracker=tracker,\n            )"
+      },
+      {
+        "line": 121,
+        "targets": [
+          "demand_forecast_res"
+        ],
+        "value_names": [
+          "demand_forecast_agent",
+          "input_data",
+          "intake_res",
+          "self",
+          "tracker"
+        ],
+        "expression": "demand_forecast_agent.run_demand_forecast(\n                intake_data=intake_res,\n                sales_data=input_data.get(\"sales_record\", {}),\n                horizon_days=14,\n                agent=self.agent_3_demand_forecast,\n                tracker=tracker,\n            )"
+      },
+      {
+        "line": 130,
+        "targets": [
+          "supplier_res"
+        ],
+        "value_names": [
+          "intake_res",
+          "planning_date",
+          "self",
+          "supplier_agent",
+          "tracker"
+        ],
+        "expression": "supplier_agent.run_supplier_analysis(\n                intake_data=intake_res,\n                planning_date=planning_date,\n                agent=self.agent_4_supplier,\n                tracker=tracker,\n            )"
+      },
+      {
+        "line": 138,
+        "targets": [
+          "planning_res"
+        ],
+        "value_names": [
+          "demand_forecast_res",
+          "intake_res",
+          "replenishment_planning_agent",
+          "self",
+          "stock_policy_res",
+          "supplier_res",
+          "tracker"
+        ],
+        "expression": "replenishment_planning_agent.run_replenishment_planning(\n                sku_id=intake_res.get(\"sku_id\", \"\"),\n                stock_policy_data=stock_policy_res,\n                demand_forecast_data=demand_forecast_res,\n                supplier_data=supplier_res,\n                agent=self.agent_5_p"
+      },
+      {
+        "line": 148,
+        "targets": [
+          "final_plan"
+        ],
+        "value_names": [
+          "active_run_id",
+          "demand_forecast_res",
+          "intake_res",
+          "planning_date",
+          "planning_res",
+          "review_agent",
+          "self",
+          "stock_policy_res",
+          "supplier_res",
+          "tracker"
+        ],
+        "expression": "review_agent.run_inventory_review(\n                run_id=active_run_id,\n                planning_date=planning_date,\n                intake_data=intake_res,\n                stock_policy_data=stock_policy_res,\n                demand_forecast_data=demand_forecast_res,\n                supplier_data=su"
+      },
+      {
+        "line": 161,
+        "targets": [
+          "record"
+        ],
+        "value_names": [
+          "final_plan",
+          "runs_base_dir",
+          "tracker"
+        ],
+        "expression": "tracker.finalize(\n                output=final_plan,\n                status=\"success\",\n                runs_base_dir=runs_base_dir,\n            )"
+      },
+      {
+        "line": 166,
+        "targets": [
+          "output_dict"
+        ],
+        "value_names": [
+          "dict",
+          "final_plan",
+          "hasattr",
+          "isinstance"
+        ],
+        "expression": "dict(final_plan) if isinstance(final_plan, dict) else (final_plan.model_dump() if hasattr(final_plan, \"model_dump\") else {})"
+      }
+    ],
+    "task_handoffs": [],
+    "observed_order": [
+      "inventory_intake_agent",
+      "stock_policy_agent",
+      "demand_forecast_agent",
+      "supplier_agent",
+      "replenishment_planning_agent",
+      "inventory_review_agent"
+    ],
+    "sequential_kickoffs": 0
+  },
+  "comparison": {
+    "workflow": "inventory_replenishment",
+    "manifest_file": "Agents/inventory_replenishment/workflow.json",
+    "workflow_source": "Agents/inventory_replenishment/workflow.py",
+    "declared_order": [
+      "inventory_intake_agent",
+      "stock_policy_agent",
+      "demand_forecast_agent",
+      "supplier_agent",
+      "replenishment_planning_agent",
+      "inventory_review_agent"
+    ],
+    "source_observed_order": [
+      "inventory_intake_agent",
+      "stock_policy_agent",
+      "demand_forecast_agent",
+      "supplier_agent",
+      "replenishment_planning_agent",
+      "inventory_review_agent"
+    ],
+    "declared_agent_count": 6,
+    "observed_agent_count": 6,
+    "discrepancy_count": 0,
+    "findings": []
+  },
+  "python_files": [
+    {
+      "file": "Agents/inventory_replenishment/__init__.py",
+      "filename": "__init__.py",
+      "stem": "__init__",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "agent_id_constants": [],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": []
+    },
+    {
+      "file": "Agents/inventory_replenishment/demand_forecast_agent.py",
+      "filename": "demand_forecast_agent.py",
+      "stem": "demand_forecast_agent",
+      "sha256": "faac7b3bc9804a83664818b1085e5cd8269fe67dbe7c11846c82007ba6fe0530",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "DemandForecastOutput"
+          ],
+          "aliases": {},
+          "line": 15
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 16
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "calculate_deterministic_forecast",
+          "line": 31,
+          "end_line": 71,
+          "docstring": "Deterministic calculation of daily average and horizon demand.",
+          "args": [
+            "daily_sales",
+            "horizon_days"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 74,
+          "end_line": 81,
+          "docstring": "Create the CrewAI Sales History and Demand Forecast Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_demand_forecast",
+          "line": 84,
+          "end_line": 141,
+          "docstring": "Execute Sales History and Demand Forecast Agent.",
+          "args": [
+            "intake_data",
+            "sales_data",
+            "horizon_days",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "demand_forecast_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "calculate_deterministic_forecast",
+          "line": 31,
+          "classification": "function_candidate",
+          "docstring": "Deterministic calculation of daily average and horizon demand."
+        },
+        {
+          "name": "run_demand_forecast",
+          "line": 84,
+          "classification": "function_candidate",
+          "docstring": "Execute Sales History and Demand Forecast Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 3: Sales History and Demand Forecast Agent for Inventory Replenishment Planning.\n\nResponsibilities:\n- Analyze historical sales records.\n- Calculate baseline forecasts using deterministic mathematical moving averages.\n- Identify volatility, demand spikes, and insufficient sales history.\n- Return forecast values, assumptions, horizon, and source IDs.\n- Strictly never invent forecasts when data is insufficient.\n",
+          "line": 1
+        },
+        {
+          "value": "Demand Forecasting and Sales History Specialist",
+          "line": 19
+        },
+        {
+          "value": "Compute transparent, deterministic demand projections from recorded sales history, characterizing demand volatility and flagging anomalies without fabricating numbers.",
+          "line": 21
+        },
+        {
+          "value": "You are a supply chain quantitative demand planner. You calculate moving averages, analyze daily sales variance, detect sudden volume spikes, and declare uncertainty when sample size or historical duration is insufficient.",
+          "line": 25
+        },
+        {
+          "value": "\n    Deterministic calculation of daily average and horizon demand.\n    ",
+          "line": 32
+        },
+        {
+          "value": "Create the CrewAI Sales History and Demand Forecast Agent.",
+          "line": 75
+        },
+        {
+          "value": "Execute Sales History and Demand Forecast Agent.",
+          "line": 91
+        },
+        {
+          "value": "Valid JSON matching DemandForecastOutput schema.",
+          "line": 131
+        },
+        {
+          "value": "\n\nDeterministic Moving Average Calculation:\n- Average Daily Sales: ",
+          "line": 105
+        },
+        {
+          "value": "\n\nStructure the forecast output with documented assumptions:\nReturn structured JSON matching:\n{\n  \"sku_id\": \"",
+          "line": 112
+        },
+        {
+          "value": "\"],\n  \"assumptions\": [\n    \"Baseline forecast computed using ",
+          "line": 124
+        },
+        {
+          "value": "-day arithmetic moving average\",\n    \"Demand volatility classified as ",
+          "line": 126
+        }
+      ]
+    },
+    {
+      "file": "Agents/inventory_replenishment/intake_agent.py",
+      "filename": "intake_agent.py",
+      "stem": "intake_agent",
+      "sha256": "86ae6f249da42f8c8ca7fbb4aca3ec650f3f7d87ee77c51de936f3f7a8115cdf",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "InventoryIntakeOutput"
+          ],
+          "aliases": {},
+          "line": 15
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 16
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 31,
+          "end_line": 38,
+          "docstring": "Create the CrewAI Inventory Intake Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_inventory_intake",
+          "line": 41,
+          "end_line": 106,
+          "docstring": "Execute Inventory Intake Agent.",
+          "args": [
+            "request_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "inventory_intake_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_inventory_intake",
+          "line": 41,
+          "classification": "function_candidate",
+          "docstring": "Execute Inventory Intake Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 1: Inventory Intake Agent for Inventory Replenishment Planning.\n\nResponsibilities:\n- Accept planning request and SKU or warehouse identifiers.\n- Retrieve relevant local inventory, sales, supplier, and policy records.\n- Normalize identifiers and validate required fields.\n- Identify missing or inconsistent information.\n- Return structured input package with source IDs.\n",
+          "line": 1
+        },
+        {
+          "value": "Assemble, normalize, and validate all relevant inventory snapshots, sales history, supplier profiles, and replenishment policies for the target SKU.",
+          "line": 21
+        },
+        {
+          "value": "You are a supply chain data coordinator. You gather inventory levels, outstanding orders, and vendor parameters into a coherent, validated planning package, highlighting any data integrity defects before quantitative planning begins.",
+          "line": 25
+        },
+        {
+          "value": "Create the CrewAI Inventory Intake Agent.",
+          "line": 32
+        },
+        {
+          "value": "Valid JSON matching InventoryIntakeOutput schema.",
+          "line": 96
+        },
+        {
+          "value": "\n\nValidate and structure the intake package:\n1. Normalize SKU ID, Warehouse ID, and product name.\n2. Verify all required fields (current_stock, reserved_stock, lead_time_days) are present.\n3. Check for data quality anomalies (e.g., negative stock, zero lead time, or missing sales).\n4. Catalog all source record IDs (e.g., INV-",
+          "line": 74
+        },
+        {
+          "value": ").\n\nReturn structured JSON matching:\n{\n  \"request_id\": \"",
+          "line": 80
+        }
+      ]
+    },
+    {
+      "file": "Agents/inventory_replenishment/replenishment_planning_agent.py",
+      "filename": "replenishment_planning_agent.py",
+      "stem": "replenishment_planning_agent",
+      "sha256": "2c11df557f329d86569acc1b38674b773c6da80c52c16ca4018034e02f7c7ada",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "math",
+          "asname": null,
+          "line": 12
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 15
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "ReplenishmentPlanningOutput"
+          ],
+          "aliases": {},
+          "line": 16
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 17
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "calculate_deterministic_replenishment",
+          "line": 32,
+          "end_line": 97,
+          "docstring": "Deterministic calculation for inventory replenishment:\n1. Usable Inventory = Current Stock - Reserved Stock + Incoming Stock\n2. Expected Lead-Time Demand = avg_daily_demand * lead_time_days\n3. Gross Requirement = Expected Lead-Time Demand + Safety Stock\n4. Base Replenishment = max(0, math.ceil(Gross Requirement - Usable Inventory))\n5. Adjusted Order Quantity:\n   - If base > 0: round up to nearest pack_size, then max(rounded, moq).\n   - If base == 0: 0.",
+          "args": [
+            "current_stock",
+            "reserved_stock",
+            "incoming_stock",
+            "avg_daily_demand",
+            "lead_time_days",
+            "safety_stock",
+            "pack_size",
+            "moq"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 100,
+          "end_line": 107,
+          "docstring": "Create the CrewAI Replenishment Planning Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_replenishment_planning",
+          "line": 110,
+          "end_line": 176,
+          "docstring": "Execute Replenishment Planning Agent.",
+          "args": [
+            "sku_id",
+            "stock_policy_data",
+            "demand_forecast_data",
+            "supplier_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "replenishment_planning_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "calculate_deterministic_replenishment",
+          "line": 32,
+          "classification": "function_candidate",
+          "docstring": "Deterministic calculation for inventory replenishment:\n1. Usable Inventory = Current Stock - Reserved Stock + Incoming Stock\n2. Expected Lead-Time Demand = avg_daily_demand * lead_time_days\n3. Gross Requirement = Expected Lead-Time Demand + Safety Stock\n4. Base Replenishment = max(0, math.ceil(Gross Requirement - Usable Inventory))\n5. Adjusted Order Quantity:\n   - If base > 0: round up to nearest pack_size, then max(rounded, moq).\n   - If base == 0: 0."
+        },
+        {
+          "name": "run_replenishment_planning",
+          "line": 110,
+          "classification": "function_candidate",
+          "docstring": "Execute Replenishment Planning Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 5: Replenishment Planning Agent for Inventory Replenishment Planning.\n\nResponsibilities:\n- Synthesize inventory snapshots, policy thresholds, demand forecasts, and supplier parameters.\n- Calculate base replenishment quantity using deterministic Python arithmetic.\n- Apply pack-size rounding and minimum order quantities (MOQ).\n- Separate raw unadjusted need from final recommended order quantity.\n- Assess stockout risk and explain adjustments.\n",
+          "line": 1
+        },
+        {
+          "value": "Synthesize stock levels, demand rates, and supplier constraints to compute exact baseline and adjusted order quantities using rigorous deterministic logic.",
+          "line": 22
+        },
+        {
+          "value": "You are a master inventory replenishment planner. You use deterministic arithmetic for supply/demand balances, strictly rounding up to package increments and applying MOQs while explaining every step with absolute transparency.",
+          "line": 26
+        },
+        {
+          "value": "\n    Deterministic calculation for inventory replenishment:\n    1. Usable Inventory = Current Stock - Reserved Stock + Incoming Stock\n    2. Expected Lead-Time Demand = avg_daily_demand * lead_time_days\n    3. Gross Requirement = Expected Lead-Time Demand + Safety Stock\n    4. Base Replenishment = max(0, math.ceil(Gross Requirement - Usable Inventory))\n    5. Adjusted Order Quantity:\n       - If base > 0: round up to nearest pack_size, then max(rounded, moq).\n       - If base == 0: 0.\n    ",
+          "line": 42
+        },
+        {
+          "value": "Create the CrewAI Replenishment Planning Agent.",
+          "line": 101
+        },
+        {
+          "value": "Execute Replenishment Planning Agent.",
+          "line": 118
+        },
+        {
+          "value": "Valid JSON matching ReplenishmentPlanningOutput schema.",
+          "line": 166
+        },
+        {
+          "value": "Net usable inventory satisfies safety stock and projected lead-time demand; no replenishment required.",
+          "line": 87
+        },
+        {
+          "value": "\n\nDeterministic Calculation Breakdown:\n",
+          "line": 147
+        },
+        {
+          "value": "\nRecommended Order Quantity (with MOQ & Pack Size): ",
+          "line": 151
+        },
+        {
+          "value": "\n\nSynthesize the replenishment plan and return structured JSON matching:\n{\n  \"sku_id\": \"",
+          "line": 153
+        },
+        {
+          "value": "\",\n  \"base_replenishment_quantity\": ",
+          "line": 157
+        },
+        {
+          "value": " units was rounded up to pack size multiple of ",
+          "line": 84
+        },
+        {
+          "value": " units), and benchmarked against MOQ of ",
+          "line": 84
+        },
+        {
+          "value": " units, yielding final order recommendation of ",
+          "line": 85
+        }
+      ]
+    },
+    {
+      "file": "Agents/inventory_replenishment/review_agent.py",
+      "filename": "review_agent.py",
+      "stem": "review_agent",
+      "sha256": "09623109289ad9a0fb72240387648984aafd05b2987bfc679cd848791bf22cf6",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "InventoryFinalPlanOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 30,
+          "end_line": 37,
+          "docstring": "Create the CrewAI Validation and Final Review Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_inventory_review",
+          "line": 40,
+          "end_line": 147,
+          "docstring": "Execute Validation and Final Review Agent.",
+          "args": [
+            "run_id",
+            "planning_date",
+            "intake_data",
+            "stock_policy_data",
+            "demand_forecast_data",
+            "supplier_data",
+            "planning_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "inventory_review_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_inventory_review",
+          "line": 40,
+          "classification": "function_candidate",
+          "docstring": "Execute Validation and Final Review Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 6: Validation and Final Review Agent for Inventory Replenishment Planning.\n\nResponsibilities:\n- Independently validate proposed quantities, calculations, stock assumptions, and supplier rules.\n- Check for double-counting of incoming inventory.\n- Identify infeasible, excessive, or risky replenishment recommendations.\n- Output the complete, structured final inventory plan matching Section 6 schema.\n",
+          "line": 1
+        },
+        {
+          "value": "Replenishment Integrity and Compliance Auditor",
+          "line": 18
+        },
+        {
+          "value": "Conduct an independent audit of proposed replenishment quantities, verifying mathematical consistency, constraints compliance, and absence of double-counting before assembling the final plan.",
+          "line": 20
+        },
+        {
+          "value": "You are a supply chain compliance auditor. You cross-examine every proposed order, ensuring available stock arithmetic is sound, minimum pack increments were honored, and warnings are recorded for volatile or stockout-prone items.",
+          "line": 24
+        },
+        {
+          "value": "Create the CrewAI Validation and Final Review Agent.",
+          "line": 31
+        },
+        {
+          "value": "Execute Validation and Final Review Agent.",
+          "line": 51
+        },
+        {
+          "value": "Valid JSON matching InventoryFinalPlanOutput schema.",
+          "line": 137
+        },
+        {
+          "value": "\nAudit and assemble the final structured replenishment plan:\n- Run ID: ",
+          "line": 88
+        },
+        {
+          "value": "\n- Available Stock (Current - Reserved): ",
+          "line": 95
+        },
+        {
+          "value": "\n\nReturn structured JSON strictly matching:\n{\n  \"run_id\": \"",
+          "line": 108
+        },
+        {
+          "value": ",\n  \"disclaimer\": \"Planning tool recommendation only. Does NOT execute real purchases.\"\n}\n",
+          "line": 133
+        },
+        {
+          "value": "CRITICAL: SKU is currently completely stocked out (physical stock = 0).",
+          "line": 80
+        },
+        {
+          "value": "WARNING: Recommended order quantity significantly exceeds 5x horizon forecast.",
+          "line": 82
+        },
+        {
+          "value": "NOTE: Recent demand spikes detected; review for potential non-recurring spike.",
+          "line": 84
+        }
+      ]
+    },
+    {
+      "file": "Agents/inventory_replenishment/stock_policy_agent.py",
+      "filename": "stock_policy_agent.py",
+      "stem": "stock_policy_agent",
+      "sha256": "21e57b054a13a362315c41099adccb24ee4b286e859f790547c196da853a31fe",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "StockPolicyOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "calculate_usable_inventory",
+          "line": 30,
+          "end_line": 35,
+          "docstring": "Deterministic calculation of usable inventory.\nUsable Inventory = Current Stock - Reserved Stock + Incoming Stock",
+          "args": [
+            "current_stock",
+            "reserved_stock",
+            "incoming_stock"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 38,
+          "end_line": 45,
+          "docstring": "Create the CrewAI Stock and Reorder Policy Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_stock_policy",
+          "line": 48,
+          "end_line": 111,
+          "docstring": "Execute Stock and Reorder Policy Agent.",
+          "args": [
+            "intake_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "stock_policy_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "calculate_usable_inventory",
+          "line": 30,
+          "classification": "function_candidate",
+          "docstring": "Deterministic calculation of usable inventory.\nUsable Inventory = Current Stock - Reserved Stock + Incoming Stock"
+        },
+        {
+          "name": "run_stock_policy",
+          "line": 48,
+          "classification": "function_candidate",
+          "docstring": "Execute Stock and Reorder Policy Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 2: Stock and Reorder Policy Agent for Inventory Replenishment Planning.\n\nResponsibilities:\n- Review current stock, reserved stock, available stock, incoming inventory, outstanding POs.\n- Retrieve reorder thresholds and safety stock requirements.\n- Calculate usable inventory using deterministic Python arithmetic.\n- Identify whether the SKU requires replenishment.\n",
+          "line": 1
+        },
+        {
+          "value": "Stock Policy and Inventory Level Specialist",
+          "line": 18
+        },
+        {
+          "value": "Evaluate physical stock, reservations, and incoming orders against safety thresholds, calculating exact usable inventory and determining replenishment need.",
+          "line": 20
+        },
+        {
+          "value": "You are an inventory control analyst. You rigorously calculate usable and available stock using exact mathematical formulas to prevent double-counting of incoming goods, benchmarking net stock against defined reorder triggers.",
+          "line": 24
+        },
+        {
+          "value": "\n    Deterministic calculation of usable inventory.\n    Usable Inventory = Current Stock - Reserved Stock + Incoming Stock\n    ",
+          "line": 31
+        },
+        {
+          "value": "Create the CrewAI Stock and Reorder Policy Agent.",
+          "line": 39
+        },
+        {
+          "value": "Execute Stock and Reorder Policy Agent.",
+          "line": 53
+        },
+        {
+          "value": "Valid JSON matching StockPolicyOutput schema.",
+          "line": 101
+        },
+        {
+          "value": "\nStock Levels:\n- Current Physical Stock: ",
+          "line": 72
+        },
+        {
+          "value": "\n- Incoming Stock (In-Transit / Open POs): ",
+          "line": 75
+        },
+        {
+          "value": "\n\nDeterministic Arithmetic Verified:\n- Usable Inventory = Current (",
+          "line": 78
+        },
+        {
+          "value": "\n- Replenishment Needed = (Usable <= Threshold) = ",
+          "line": 81
+        },
+        {
+          "value": "\n\nAssess policy conformance and return structured JSON matching:\n{\n  \"sku_id\": \"",
+          "line": 82
+        },
+        {
+          "value": ",\n  \"policy_notes\": [\n    \"Usable inventory incorporates incoming purchase orders without double-counting\",\n    \"Current stock is below reorder threshold\" if replenishment_needed else \"Stock is healthy\"\n  ]\n}\n",
+          "line": 94
+        }
+      ]
+    },
+    {
+      "file": "Agents/inventory_replenishment/supplier_agent.py",
+      "filename": "supplier_agent.py",
+      "stem": "supplier_agent",
+      "sha256": "876983fca4528f941257ecf34f9f385cf2b914784bb9dec96375c169d3ec5df4",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "datetime",
+          "level": 0,
+          "names": [
+            "date",
+            "timedelta"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "SupplierLeadTimeOutput"
+          ],
+          "aliases": {},
+          "line": 15
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 16
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "calculate_expected_arrival",
+          "line": 30,
+          "end_line": 36,
+          "docstring": "Deterministic calculation of expected arrival date.",
+          "args": [
+            "planning_date_str",
+            "lead_time_days"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 39,
+          "end_line": 46,
+          "docstring": "Create the CrewAI Supplier and Lead-Time Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_supplier_analysis",
+          "line": 49,
+          "end_line": 102,
+          "docstring": "Execute Supplier and Lead-Time Agent.",
+          "args": [
+            "intake_data",
+            "planning_date",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "supplier_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "calculate_expected_arrival",
+          "line": 30,
+          "classification": "function_candidate",
+          "docstring": "Deterministic calculation of expected arrival date."
+        },
+        {
+          "name": "run_supplier_analysis",
+          "line": 49,
+          "classification": "function_candidate",
+          "docstring": "Execute Supplier and Lead-Time Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 4: Supplier and Lead-Time Agent for Inventory Replenishment Planning.\n\nResponsibilities:\n- Retrieve supplier records, delivery lead times, minimum order quantities, and pack sizes.\n- Calculate expected arrival dates based on planning date and delivery lead time.\n- Identify missing, conflicting, or unreliable supplier parameters.\n- Preserve source record IDs.\n",
+          "line": 1
+        },
+        {
+          "value": "Supplier Lead-Time and Constraints Specialist",
+          "line": 19
+        },
+        {
+          "value": "Extract and validate vendor lead times, order increments (pack size), and minimum order quantities (MOQ), calculating projected shipment arrival dates.",
+          "line": 21
+        },
+        {
+          "value": "You are a procurement vendor manager. You verify supplier performance terms, ensure lead time calculations reflect delivery reality, and safeguard purchasing constraints.",
+          "line": 25
+        },
+        {
+          "value": "Deterministic calculation of expected arrival date.",
+          "line": 31
+        },
+        {
+          "value": "Create the CrewAI Supplier and Lead-Time Agent.",
+          "line": 40
+        },
+        {
+          "value": "Execute Supplier and Lead-Time Agent.",
+          "line": 55
+        },
+        {
+          "value": "Valid JSON matching SupplierLeadTimeOutput schema.",
+          "line": 92
+        },
+        {
+          "value": " days\n- Minimum Order Quantity (MOQ): ",
+          "line": 70
+        },
+        {
+          "value": "\n- Deterministic Expected Arrival Date: ",
+          "line": 74
+        },
+        {
+          "value": "\n\nVerify supplier parameters and constraints.\nReturn structured JSON matching:\n{\n  \"supplier_id\": \"",
+          "line": 75
+        },
+        {
+          "value": "\",\n  \"supplier_reliability_notes\": [\n    \"Supplier reliability rated at ",
+          "line": 84
+        },
+        {
+          "value": " days from order placement\"\n  ],\n  \"source_record_ids\": [\"SUP-",
+          "line": 87
+        }
+      ]
+    },
+    {
+      "file": "Agents/inventory_replenishment/workflow.py",
+      "filename": "workflow.py",
+      "stem": "workflow",
+      "sha256": "ba402832fdc5b9407f8490481fc72ff18b58ec991908466bc227ba165bc9d68d",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 13
+        },
+        {
+          "module": "os",
+          "asname": null,
+          "line": 14
+        },
+        {
+          "module": "uuid",
+          "asname": null,
+          "line": 15
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 16
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 17
+        },
+        {
+          "module": "common.tracing",
+          "level": 0,
+          "names": [
+            "init_tracing"
+          ],
+          "aliases": {},
+          "line": 18
+        },
+        {
+          "module": "Agents.inventory_replenishment",
+          "level": 0,
+          "names": [
+            "intake_agent",
+            "stock_policy_agent",
+            "demand_forecast_agent",
+            "supplier_agent",
+            "replenishment_planning_agent",
+            "review_agent"
+          ],
+          "aliases": {},
+          "line": 21
+        }
+      ],
+      "classes": [
+        {
+          "name": "InventoryReplenishmentWorkflow",
+          "line": 68
+        }
+      ],
+      "functions": [
+        {
+          "name": "load_sample_inventory_input",
+          "line": 34,
+          "end_line": 65,
+          "docstring": "Load sample inventory, supplier, sales, and policy data from local datasets.",
+          "args": [
+            "sku_index",
+            "data_dir"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_inventory_replenishment_workflow",
+          "line": 190,
+          "end_line": 196,
+          "docstring": "Execute inventory replenishment planning workflow.",
+          "args": [
+            "input_data",
+            "run_id"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "__init__",
+          "line": 71,
+          "end_line": 82,
+          "docstring": null,
+          "args": [
+            "self",
+            "llm",
+            "enable_tracing"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "get_agent_count",
+          "line": 84,
+          "end_line": 86,
+          "docstring": "Return the exact number of agents.",
+          "args": [
+            "self"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run",
+          "line": 88,
+          "end_line": 187,
+          "docstring": "Execute the 6-agent replenishment workflow sequentially.",
+          "args": [
+            "self",
+            "input_data",
+            "run_id",
+            "runs_base_dir"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "final_plan.model_dump",
+          "line": 166,
+          "arguments": []
+        },
+        {
+          "call": "m.model_dump",
+          "line": 175,
+          "arguments": []
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_inventory_replenishment_workflow",
+          "line": 190,
+          "classification": "function_candidate",
+          "docstring": "Execute inventory replenishment planning workflow."
+        }
+      ],
+      "execution_calls": [
+        {
+          "call": "wf.run",
+          "line": 196
+        }
+      ],
+      "string_literals": [
+        {
+          "value": "\nWorkflow Orchestrator: Inventory Replenishment Planning (Workflow 2).\n\nExecutes exactly 6 CrewAI agents in sequential baseline order:\n1. Inventory Intake Agent (intake_agent.py)\n2. Stock and Reorder Policy Agent (stock_policy_agent.py)\n3. Sales History and Demand Forecast Agent (demand_forecast_agent.py)\n4. Supplier and Lead-Time Agent (supplier_agent.py)\n5. Replenishment Planning Agent (replenishment_planning_agent.py)\n6. Validation and Final Review Agent (review_agent.py)\n",
+          "line": 1
+        },
+        {
+          "value": "Load sample inventory, supplier, sales, and policy data from local datasets.",
+          "line": 38
+        },
+        {
+          "value": "Manages baseline execution of the 6-agent inventory replenishment workflow.",
+          "line": 69
+        },
+        {
+          "value": "Execute inventory replenishment planning workflow.",
+          "line": 194
+        },
+        {
+          "value": "\n        Execute the 6-agent replenishment workflow sequentially.\n        ",
+          "line": 94
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "file": "runs/inventory_replenishment/inv_00f5bbec.json",
+      "filename": "inv_00f5bbec.json",
+      "suffix": ".json",
+      "workflow_name": "inventory_replenishment",
+      "run_id": "inv_00f5bbec",
+      "status": "success",
+      "total_duration_seconds": 10.074,
+      "agent_count": 6,
+      "total_tokens": null,
+      "estimated_cost_usd": 0.004142
+    },
+    {
+      "file": "runs/inventory_replenishment/live_20261023_070535_invent.json",
+      "filename": "live_20261023_070535_invent.json",
+      "suffix": ".json",
+      "workflow_name": "inventory_replenishment",
+      "run_id": "live_20261023_070535_invent",
+      "status": "success",
+      "total_duration_seconds": 8.704,
+      "agent_count": 6,
+      "total_tokens": null,
+      "estimated_cost_usd": 0.004064
+    },
+    {
+      "file": "runs/inventory_replenishment/summary.jsonl",
+      "filename": "summary.jsonl",
+      "suffix": ".jsonl",
+      "record_count": 2,
+      "first_record_keys": [
+        "run_id",
+        "workflow_name",
+        "start_time",
+        "end_time",
+        "total_duration_seconds",
+        "agent_count",
+        "status",
+        "llm_call_count",
+        "token_usage",
+        "estimated_cost_usd",
+        "validation_warnings_count",
+        "has_error"
+      ],
+      "workflow_name": "inventory_replenishment"
+    }
+  ]
+}

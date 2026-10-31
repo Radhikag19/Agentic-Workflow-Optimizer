@@ -1,0 +1,151 @@
+{
+  "run_id": "live_20261031_133105_trace28",
+  "workflow_name": "customer_support",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 13.822,
+  "agent_execution_count": 6,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.187,
+      "tokens": 695,
+      "prompt_tokens": 440,
+      "completion_tokens": 255,
+      "output": {
+        "category": "refund_request",
+        "urgency": "medium",
+        "complexity": "complex",
+        "customer_impact": "moderate",
+        "routing_recommendation": "Assign to senior Refund & Billing specialist for policy review and resolution; flag for potential escalation if refund eligibility is disputed."
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "ticket_classification_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.601,
+      "tokens": 928,
+      "prompt_tokens": 494,
+      "completion_tokens": 434,
+      "output": {
+        "applicable_policy_ids": [
+          "SUP-POL-101"
+        ],
+        "applicable_guide_ids": [],
+        "policy_conditions": {
+          "eligibility": "Full refunds are only permitted within 30 days of the billing date for services that have not been used.",
+          "post_30_day_restriction": "For requests beyond the 30‑day window, the customer is eligible only for a pro‑rated service credit, which requires approval from a Senior Manager.",
+          "sla": "The policy mandates a response and initial resolution recommendation within 24 business hours of ticket receipt.",
+          "specific_case_note": "The current request is for a full refund 65 days after contract start, which falls outside the 30‑day full‑refund window. Therefore, the request does not qualify for a full refund under SUP-POL-101; only a pro‑rated credit with senior approval is permissible."
+        },
+        "retrieval_summary": "Policy SUP-POL-101 was matched; no troubleshooting guides were found. The policy covers refund requests but restricts full refunds to within 30 days, imposing a pro‑rated credit requirement and senior approval for later requests."
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "policy_retrieval_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.654,
+      "tokens": 1140,
+      "prompt_tokens": 676,
+      "completion_tokens": 464,
+      "output": {
+        "investigation_findings": "The ticket is a refund request submitted 65 days after the contract start date. The customer's tier is Standard, and the ticket is marked as policy_restricted. No technical failure or billing error is indicated; the request is purely procedural. Based on the timing, the request exceeds typical refund windows (commonly 60 days) for Standard tier contracts, suggesting the request will be denied per policy unless an exception applies.",
+        "root_cause_hypothesis": "The likely root cause is a policy enforcement issue: the customer's request falls outside the allowable refund period defined in the service agreement for Standard tier customers.",
+        "confirmed_facts": [
+          "Ticket ID TICK-2026-0028 was created on 2026-09-08.",
+          "Customer ID CUST-0028 is a Standard tier client.",
+          "The request is for a full refund 65 days after contract start.",
+          "Ticket category is 'refund_request' and marked as 'policy_restricted'.",
+          "The customer profile and all past cases are synthetic but indicate a history of successful SOP-based resolutions for billing and technical issues."
+        ],
+        "data_gaps": [
+          "Exact contract start date to verify the 65‑day interval.",
+          "The organization's official refund policy details for Standard tier (e.g., allowed refund window, any exceptions).",
+          "Payment transaction records to confirm if a refund is technically possible.",
+          "Any prior communications with the customer regarding refund eligibility.",
+          "Whether any special terms were negotiated for this specific contract that might override standard policy."
+        ]
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "issue_investigation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 2.044,
+      "tokens": 1685,
+      "prompt_tokens": 1085,
+      "completion_tokens": 600,
+      "output": {
+        "resolution_type": "requires_user_action",
+        "recommended_action": [
+          "1. Request the exact contract start date from the customer to confirm the 65‑day interval.",
+          "2. Obtain the payment transaction record for the original charge to verify the amount paid and the payment method.",
+          "3. Review the customer's contract for any negotiated terms that might override the standard refund policy.",
+          "4. Based on the verified dates and payment details, calculate the pro‑rated service credit amount as defined in SUP‑POL‑101.",
+          "5. Prepare a senior‑manager approval request that includes: contract start date, payment details, calculated credit amount, and a brief justification referencing policy SUP‑POL‑101.",
+          "6. Once senior‑manager approval is obtained, draft a response to the customer stating that a full refund is not eligible because the request exceeds the 30‑day window, but a pro‑rated credit will be issued pending approval.",
+          "7. Log all gathered evidence and the approval decision in the ticket for audit compliance."
+        ],
+        "policy_justification": "Policy SUP-POL-101 permits full refunds only within 30 days of the billing date for unused services. Requests beyond the 30‑day window are eligible solely for a pro‑rated service credit, which requires senior‑manager approval. The customer's request at 65 days falls outside the full‑refund window, so the policy mandates a credit rather than a full refund.",
+        "escalation_required": true
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "resolution_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 2.169,
+      "tokens": 1356,
+      "prompt_tokens": 737,
+      "completion_tokens": 619,
+      "output": {
+        "response_text": "Dear Enterprise Client 28,\n\nThank you for reaching out regarding your refund request. We understand how important it is to resolve this matter promptly, and we appreciate the opportunity to assist you.\n\nOur records indicate that your request was submitted 65 days after the contract start date. According to our refund policy, full refunds are only available within the first 30 days of service. However, we can issue a pro‑rated service credit for the remaining period, pending senior‑manager approval.\n\nTo move forward, we kindly ask you to provide the following information:\n\n- The exact start date of your contract.\n- A copy of the payment transaction record for the original charge (showing the amount paid and payment method).\n- Any contract documents that include negotiated terms that might differ from our standard policy.\n\nOnce we receive these details, we will review the contract, calculate the appropriate credit amount, and submit the necessary approval request. We will keep you informed of the outcome as soon as possible.\n\nThank you for your cooperation. If you have any questions, please do not hesitate to contact us.\n\nSincerely,\nCustomer Support Team",
+        "tone": "empathetic, professional",
+        "next_steps_for_customer": [
+          "Provide the exact contract start date.",
+          "Send the payment transaction record for the original charge (including amount and payment method).",
+          "Share any contract documents that contain negotiated terms that could affect the refund policy."
+        ],
+        "ticket_status": "pending_customer_action"
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "response_drafting_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 1.566,
+      "tokens": 1948,
+      "prompt_tokens": 1603,
+      "completion_tokens": 345,
+      "output": {
+        "qa_status": "APPROVED",
+        "final_ticket_status": "ACTION_REQUIRED_BY_USER",
+        "verification_notes": "The response accurately reflects policy SUP-POL-101, does not make unsupported promises, and clearly outlines the next steps for the customer. It does not fully resolve the refund request because additional information is required, so the ticket remains pending user action. No policy contradictions or missing mandatory instructions were found.",
+        "support_summary_report": "The drafted reply correctly informs the customer that a full refund is not possible after 65 days and offers a pro‑rated credit pending senior‑manager approval. It requests necessary contract and payment details, aligns with the policy, and sets the ticket status to pending customer action. No unsupported commitments or policy violations were identified."
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "resolution_verification_agent"
+    }
+  ],
+  "total_tokens": 7752,
+  "prompt_tokens": 5035,
+  "completion_tokens": 2717,
+  "estimated_cost_usd": 0.005117,
+  "error_message": null,
+  "final_output": "{\n  \"qa_status\": \"APPROVED\",\n  \"final_ticket_status\": \"ACTION_REQUIRED_BY_USER\",\n  \"verification_notes\": \"The response accurately reflects policy SUP-POL-101, does not make unsupported promises, and clearly outlines the next steps for the customer. It does not fully resolve the refund request because additional information is required, so the ticket remains pending user action. No policy contradictions or missing mandatory instructions were found.\",\n  \"support_summary_report\": \"The drafted reply correctly informs the customer that a full refund is not possible after 65 days and offers a pro\\u2011rated credit pending senior\\u2011manager approval. It requests necessary contract and payment details, aligns with the policy, and sets the ticket status to pending customer action. No unsupported commitments or policy violations were identified.\"\n}",
+  "timestamp": "2026-10-31T13:31:19.518831+00:00"
+}

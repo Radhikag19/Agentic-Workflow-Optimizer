@@ -1,0 +1,206 @@
+{
+  "run_id": "live_20261031_161304_trace03",
+  "workflow_name": "sales_lead_qualification",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 12.261,
+  "agent_execution_count": 7,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_11 (gsk_A9...C3BP)",
+      "duration_seconds": 2.403,
+      "tokens": 1179,
+      "prompt_tokens": 399,
+      "completion_tokens": 780,
+      "output": {
+        "lead_id": "LEAD-2026-0003",
+        "enriched_lead_profile": {
+          "lead_id": "LEAD-2026-0003",
+          "contact_name": "Marcus Vance",
+          "contact_email": "mvance@cloudscaledev.com",
+          "job_title": "Head of AI Architecture",
+          "company_id": "COMP-104",
+          "company_name": "CloudScale DevOps Inc",
+          "industry": "Software & Technology",
+          "employee_count": 320,
+          "annual_revenue_usd": 48000000,
+          "region": "Europe",
+          "stated_budget": 60000.0,
+          "purchase_timeline": "Within 6 months",
+          "test_case_tag": "moderate_fit_high_intent"
+        },
+        "missing_attributes": [
+          "phone_number",
+          "address",
+          "company_website",
+          "unverified_is_synthetic_flag_on_lead",
+          "unverified_is_synthetic_flag_on_company"
+        ]
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "lead_enrichment_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_12 (gsk_5G...OStT)",
+      "duration_seconds": 1.357,
+      "tokens": 851,
+      "prompt_tokens": 623,
+      "completion_tokens": 228,
+      "output": {
+        "fit_category": "STRONG_FIT",
+        "industry_fit_score": 10,
+        "company_size_fit_score": 10,
+        "fit_rationale": "The account operates in a target industry (Software & Technology) and meets the size criteria with 320 employees (>=200 and <=100,000). Revenue of $48M exceeds the $20M minimum. The contact role (Head of AI Architecture) aligns with the target role set (Head of AI). No disqualifying industry flags are present, and the stated budget and timeline support a viable purchase opportunity."
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "lead_fit_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_13 (gsk_i9...Ujsn)",
+      "duration_seconds": 1.427,
+      "tokens": 674,
+      "prompt_tokens": 403,
+      "completion_tokens": 271,
+      "output": {
+        "intent_level": "HIGH_INTENT",
+        "intent_score": 82,
+        "high_value_signals": [
+          {
+            "type": "demo_request",
+            "date": "2026-09-14",
+            "details": "Asked about API rate limits and CrewAI compatibility"
+          }
+        ],
+        "behavioral_summary": "Marcus Vance, Head of AI Architecture, has demonstrated strong purchase intent. A demo request was logged on 2026-09-14, focusing on technical specifics (API rate limits, CrewAI compatibility), indicating a deep evaluation phase. The stated budget of $60,000 aligns with typical pricing for the solution, and the purchase timeline of 'within 6 months' suggests a near‑term decision window. Combined with the high‑value demo request, the lead is classified as HIGH_INTENT with an intent score of 82."
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "intent_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_14 (gsk_6G...l7b1)",
+      "duration_seconds": 1.844,
+      "tokens": 752,
+      "prompt_tokens": 310,
+      "completion_tokens": 442,
+      "output": {
+        "total_score": 91,
+        "qualification_tier": "SALES_QUALEND_LEAD",
+        "component_scores": {
+          "industry_fit": 25,
+          "company_size_fit": 18,
+          "role_authority": 20,
+          "intent_signals": 20,
+          "budget_timeline": 8
+        },
+        "scoring_rationale": "The model assigns points per dimension based on predefined weightings (industry fit 25, company size 18, role authority 20, intent signals 20, budget/timeline 8). Summing these yields a total of 91. Tier thresholds are: ≥80 = SALES_QUALIFIED_LEAD, 50‑79 = MARKETING_NURTURE, <50 = DISQUALIFIED. With a score of 91 the prospect is classified as SALES_QUALIFIED_LEAD. The highest‑scoring dimension is 'industry_fit' (25 points), indicating strong alignment with target verticals. The lowest‑scoring dimension is 'budget_timeline' (8 points), suggesting limited disclosed budget or timeline information."
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "lead_scoring_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_15 (gsk_3b...vKIi)",
+      "duration_seconds": 1.437,
+      "tokens": 1326,
+      "prompt_tokens": 1051,
+      "completion_tokens": 275,
+      "output": {
+        "opportunity_viability": "HIGH",
+        "estimated_deal_size": 60000,
+        "pipeline_stage": "Qualified Opportunity",
+        "key_risks": [
+          "Potential competition from established AI platform vendors offering similar API capabilities",
+          "Budget may be at the lower end of the solution's pricing tier, requiring discount negotiations",
+          "Internal approval process could extend beyond the stated 6‑month timeline",
+          "Missing contact details (phone number, address) may delay follow‑up and relationship building",
+          "Unverified synthetic flags on lead/company could indicate data quality concerns"
+        ]
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "opportunity_assessment_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_16 (gsk_ID...uEx3)",
+      "duration_seconds": 1.449,
+      "tokens": 1479,
+      "prompt_tokens": 1198,
+      "completion_tokens": 281,
+      "output": {
+        "recommended_action": "Immediate SDR outreach and AE booking within 2 hours",
+        "target_team": "Enterprise SDR team with handoff to Account Executive (AE) for CloudScale DevOps Inc.",
+        "priority": "High",
+        "action_justification": "The lead is a SALES_QUALIFIED_LEAD with a total score of 91, strong industry and size fit, high‑intent demo request, and a stated budget of $60,000 matching the solution pricing. The contact is the Head of AI Architecture, a decision‑maker role, and the purchase timeline is within 6 months, indicating a near‑term opportunity. Immediate outreach maximizes momentum from the recent demo request and aligns with the SLA for high‑priority qualified opportunities."
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "next_action_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 2.34,
+      "tokens": 2059,
+      "prompt_tokens": 1343,
+      "completion_tokens": 716,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "lead_id": "LEAD-2026-0003",
+        "final_qualification_tier": "SALES_QUALIFIED_LEAD",
+        "final_score": 91,
+        "summary_report": "Lead LEAD-2026-0003 (Marcus Vance, Head of AI Architecture at CloudScale DevOps Inc) meets the Ideal Customer Profile (ICP) with a STRONG_FIT rating: target industry, company size (320 employees), revenue ($48M) and role alignment. Intent signals are HIGH_INTENT (score 82) driven by a recent demo request focusing on technical details. The scoring model correctly aggregates component scores (25+18+20+20+8 = 91) which exceeds the 80‑point threshold for a SALES_QUALIFIED_LEAD. The recommended action—immediate SDR outreach and AE handoff within 2 hours—is consistent with the high‑priority SLA for qualified opportunities. No routing conflicts are detected; the Enterprise SDR team is the appropriate owner. Minor data quality gaps (missing phone/address and unverified synthetic flags) are noted but do not affect the qualification outcome.",
+        "audit_findings": [
+          {
+            "item": "Qualification Tier Consistency",
+            "status": "PASS",
+            "detail": "Scoring rubric yields a tier of SALES_QUALIFIED_LEAD; the original data typo 'SALES_QUALEND_LEAD' was corrected."
+          },
+          {
+            "item": "Component Score Alignment",
+            "status": "PASS",
+            "detail": "Component scores sum to total_score of 91 as documented."
+          },
+          {
+            "item": "ICP Fit Alignment",
+            "status": "PASS",
+            "detail": "Fit category STRONG_FIT aligns with industry, size, revenue, and role criteria."
+          },
+          {
+            "item": "Intent and Action Alignment",
+            "status": "PASS",
+            "detail": "High intent (score 82) justifies immediate outreach per SLA."
+          },
+          {
+            "item": "Routing Decision Consistency",
+            "status": "PASS",
+            "detail": "Recommended target team (Enterprise SDR) matches action and pipeline stage."
+          },
+          {
+            "item": "Data Quality Flags",
+            "status": "WARN",
+            "detail": "Missing phone number, address, and unverified synthetic flags could delay follow‑up; recommend data enrichment verification."
+          }
+        ]
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "final_review_agent_sales"
+    }
+  ],
+  "total_tokens": 8320,
+  "prompt_tokens": 5327,
+  "completion_tokens": 2993,
+  "estimated_cost_usd": 0.005507,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"lead_id\": \"LEAD-2026-0003\",\n  \"final_qualification_tier\": \"SALES_QUALIFIED_LEAD\",\n  \"final_score\": 91,\n  \"summary_report\": \"Lead LEAD-2026-0003 (Marcus Vance, Head of AI Architecture at CloudScale DevOps Inc) meets the Ideal Customer Profile (ICP) with a STRONG_FIT rating: target industry, company size (320 employees), revenue ($48M) and role alignment. Intent signals are HIGH_INTENT (score 82) driven by a recent demo request focusing on technical details. The scoring model correctly aggregates component scores (25+18+20+20+8 = 91) which exceeds the 80\\u2011point threshold for a SALES_QUALIFIED_LEAD. The recommended action\\u2014immediate SDR outreach and AE handoff within 2 hours\\u2014is consistent with the high\\u2011priority SLA for qualified opportunities. No routing conflicts are detected; the Enterprise SDR team is the appropriate owner. Minor data quality gaps (missing phone/address and unverified synthetic flags) are noted but do not affect the qualification outcome.\",\n  \"audit_findings\": [\n    {\n      \"item\": \"Qualification Tier Consistency\",\n      \"status\": \"PASS\",\n      \"detail\": \"Scoring rubric yields a tier of SALES_QUALIFIED_LEAD; the original data typo 'SALES_QUALEND_LEAD' was corrected.\"\n    },\n    {\n      \"item\": \"Component Score Alignment\",\n      \"status\": \"PASS\",\n      \"detail\": \"Component scores sum to total_score of 91 as documented.\"\n    },\n    {\n      \"item\": \"ICP Fit Alignment\",\n      \"status\": \"PASS\",\n      \"detail\": \"Fit category STRONG_FIT aligns with industry, size, revenue, and role criteria.\"\n    },\n    {\n      \"item\": \"Intent and Action Alignment\",\n      \"status\": \"PASS\",\n      \"detail\": \"High intent (score 82) justifies immediate outreach per SLA.\"\n    },\n    {\n      \"item\": \"Routing Decision Consistency\",\n      \"status\": \"PASS\",\n      \"detail\": \"Recommended target team (Enterprise SDR) matches action and pipeline stage.\"\n    },\n    {\n      \"item\": \"Data Quality Flags\",\n      \"status\": \"WARN\",\n      \"detail\": \"Missing phone number, address, and unverified synthetic flags could delay follow\\u2011up; recommend data enrichment verification.\"\n    }\n  ]\n}",
+  "timestamp": "2026-10-31T16:13:16.490033+00:00"
+}

@@ -1,0 +1,252 @@
+{
+  "run_id": "live_20261031_131938_trace23",
+  "workflow_name": "invoice_processing",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 16.737,
+  "agent_execution_count": 8,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.421,
+      "tokens": 886,
+      "prompt_tokens": 464,
+      "completion_tokens": 422,
+      "output": {
+        "extracted_invoice": {
+          "invoice_number": "INV-2026-0023",
+          "supplier_id": "SUP-103",
+          "supplier_name": "Prime Industrial Machinery",
+          "po_reference": "PO-2026-0023",
+          "invoice_date": "2026-09-19",
+          "due_date": "2026-10-19",
+          "currency": "USD",
+          "line_items": [
+            {
+              "description": "Cloud Infrastructure Tier A",
+              "quantity": 5,
+              "unit_price": 1200.0,
+              "line_total": 6000.0
+            }
+          ],
+          "subtotal": 6000.0,
+          "tax": 480.0,
+          "discount": 0.0,
+          "total_amount": 6480.0
+        },
+        "extraction_flags": {
+          "missing_fields": [],
+          "ambiguous_fields": [],
+          "inconsistent_fields": []
+        }
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "invoice_extraction_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.487,
+      "tokens": 822,
+      "prompt_tokens": 517,
+      "completion_tokens": 305,
+      "output": {
+        "validation_status": "PASSED",
+        "math_audit": {
+          "is_arithmetic_valid": true,
+          "calculated_subtotal": 6000.0,
+          "calculated_total": 6480.0,
+          "stated_total": 6480.0,
+          "discrepancy_amount": 0.0,
+          "line_discrepancies": []
+        },
+        "validation_errors": []
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "invoice_validation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.101,
+      "tokens": 812,
+      "prompt_tokens": 632,
+      "completion_tokens": 180,
+      "output": {
+        "po_match_status": "EXACT_MATCH",
+        "matched_po_id": "PO-2026-0023",
+        "discrepancies": [],
+        "matching_confidence": 1.0
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "po_matching_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 1.046,
+      "tokens": 685,
+      "prompt_tokens": 492,
+      "completion_tokens": 193,
+      "output": {
+        "is_compliant": true,
+        "applied_policy_ids": [
+          "POL-AP-001",
+          "POL-AP-002",
+          "POL-AP-003"
+        ],
+        "violations": [],
+        "compliance_summary": "Invoice INV-2026-0023 complies with all applied policies (POL-AP-001, POL-AP-002, POL-AP-003). No fatal violations or secondary sign‑off flags detected."
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "policy_compliance_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 1.462,
+      "tokens": 992,
+      "prompt_tokens": 544,
+      "completion_tokens": 448,
+      "output": {
+        "duplicate_status": "EXACT_DUPLICATE",
+        "matching_records": [
+          {
+            "historical_invoice_id": "INV-HIST-0022",
+            "supplier_id_match": true,
+            "po_reference_match": true,
+            "total_amount_match": true,
+            "notes": "All key fields (supplier, PO reference, total amount) are identical to the current invoice."
+          }
+        ],
+        "risk_assessment": "High – invoice is an exact duplicate of a previously processed invoice. Payment should be blocked pending manual verification."
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "duplicate_detection_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 1.857,
+      "tokens": 1387,
+      "prompt_tokens": 858,
+      "completion_tokens": 529,
+      "output": {
+        "has_exceptions": true,
+        "exception_count": 1,
+        "critical_exceptions": [],
+        "detailed_exceptions": [
+          {
+            "exception_type": "Duplicate Invoice",
+            "description": "Exact duplicate of historical invoice INV-HIST-0022; all key fields (supplier, PO reference, total amount) match.",
+            "severity": "HIGH",
+            "resolution": "Requires manual verification; payment should be blocked pending review.",
+            "is_blocker": true,
+            "resolvable_via_human_review": true
+          }
+        ]
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "exception_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 1.464,
+      "tokens": 1360,
+      "prompt_tokens": 1022,
+      "completion_tokens": 338,
+      "output": {
+        "recommendation": "rejected",
+        "justification": "The invoice passes PO matching (EXACT_MATCH), policy compliance (POL-AP-001, POL-AP-002, POL-AP-003), and arithmetic validation (subtotal and total are correct). However, duplicate detection identified an exact duplicate of historical invoice INV-HIST-0022 with all key fields matching, classified as a HIGH‑severity blocker exception. According to the deterministic decision guidance, an exact duplicate warrants rejection.",
+        "conditions": {
+          "po_match_status": "EXACT_MATCH",
+          "policy_compliance": true,
+          "math_audit_passed": true,
+          "duplicate_status": "EXACT_DUPLICATE",
+          "exception_severity": "HIGH",
+          "is_blocker_exception": true,
+          "requires_manual_verification": true
+        }
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "approval_recommendation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_8 (gsk_yt...AwPO)",
+      "duration_seconds": 1.751,
+      "tokens": 1772,
+      "prompt_tokens": 1171,
+      "completion_tokens": 601,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "invoice_id": "INV-2026-0023",
+        "final_recommendation": "rejected",
+        "risk_level": "HIGH",
+        "summary_report": "The invoice passes arithmetic validation, PO matching, and policy compliance. However, duplicate detection flagged an exact duplicate of historical invoice INV-HIST-0022 with a HIGH‑severity blocker exception. No critical exceptions remain unaddressed. Consequently, the invoice is rejected and payment must be blocked pending manual verification.",
+        "audit_findings": {
+          "extraction": {
+            "status": "SUCCESS",
+            "issues": []
+          },
+          "validation": {
+            "status": "PASSED",
+            "math_audit": {
+              "is_arithmetic_valid": true,
+              "discrepancy_amount": 0.0
+            }
+          },
+          "po_matching": {
+            "status": "EXACT_MATCH",
+            "matched_po_id": "PO-2026-0023"
+          },
+          "policy_compliance": {
+            "is_compliant": true,
+            "applied_policies": [
+              "POL-AP-001",
+              "POL-AP-002",
+              "POL-AP-003"
+            ]
+          },
+          "duplicate_detection": {
+            "status": "EXACT_DUPLICATE",
+            "risk_assessment": "High – invoice is an exact duplicate of a previously processed invoice."
+          },
+          "exception_analysis": {
+            "has_exceptions": true,
+            "exception_count": 1,
+            "critical_exceptions": [],
+            "high_severity_blocker": true,
+            "details": [
+              {
+                "type": "Duplicate Invoice",
+                "severity": "HIGH",
+                "is_blocker": true,
+                "resolution": "Requires manual verification; payment should be blocked pending review."
+              }
+            ]
+          }
+        }
+      },
+      "notes": "",
+      "order": 8,
+      "agent_id": "final_review_agent_invoice"
+    }
+  ],
+  "total_tokens": 8716,
+  "prompt_tokens": 5700,
+  "completion_tokens": 3016,
+  "estimated_cost_usd": 0.005746,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"invoice_id\": \"INV-2026-0023\",\n  \"final_recommendation\": \"rejected\",\n  \"risk_level\": \"HIGH\",\n  \"summary_report\": \"The invoice passes arithmetic validation, PO matching, and policy compliance. However, duplicate detection flagged an exact duplicate of historical invoice INV-HIST-0022 with a HIGH\\u2011severity blocker exception. No critical exceptions remain unaddressed. Consequently, the invoice is rejected and payment must be blocked pending manual verification.\",\n  \"audit_findings\": {\n    \"extraction\": {\n      \"status\": \"SUCCESS\",\n      \"issues\": []\n    },\n    \"validation\": {\n      \"status\": \"PASSED\",\n      \"math_audit\": {\n        \"is_arithmetic_valid\": true,\n        \"discrepancy_amount\": 0.0\n      }\n    },\n    \"po_matching\": {\n      \"status\": \"EXACT_MATCH\",\n      \"matched_po_id\": \"PO-2026-0023\"\n    },\n    \"policy_compliance\": {\n      \"is_compliant\": true,\n      \"applied_policies\": [\n        \"POL-AP-001\",\n        \"POL-AP-002\",\n        \"POL-AP-003\"\n      ]\n    },\n    \"duplicate_detection\": {\n      \"status\": \"EXACT_DUPLICATE\",\n      \"risk_assessment\": \"High \\u2013 invoice is an exact duplicate of a previously processed invoice.\"\n    },\n    \"exception_analysis\": {\n      \"has_exceptions\": true,\n      \"exception_count\": 1,\n      \"critical_exceptions\": [],\n      \"high_severity_blocker\": true,\n      \"details\": [\n        {\n          \"type\": \"Duplicate Invoice\",\n          \"severity\": \"HIGH\",\n          \"is_blocker\": true,\n          \"resolution\": \"Requires manual verification; payment should be blocked pending review.\"\n        }\n      ]\n    }\n  }\n}",
+  "timestamp": "2026-10-31T13:19:55.430823+00:00"
+}

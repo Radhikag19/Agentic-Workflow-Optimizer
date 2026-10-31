@@ -1,0 +1,99 @@
+[
+  {
+    "agent_id": "invoice_extraction_agent",
+    "role": "Senior Invoice Extraction Specialist",
+    "goal": "Accurately extract all structured invoice fields (supplier, PO, line items, dates, totals) without hallucinating missing data.",
+    "framework": "CrewAI",
+    "model": "Groq:AGENT_ID",
+    "registered_tools": [],
+    "inputs": [
+      "invoice_data"
+    ],
+    "expected_outputs": [
+      "Strictly valid JSON containing extracted_invoice and extraction_flags."
+    ],
+    "helper_functions": [],
+    "source_file": "invoice_extraction_agent.py",
+    "line_range": "L15-L21",
+    "evidence_ids": [
+      "ev_invoice_extraction_agent_agent_init",
+      "ev_invoice_extraction_agent_task_exec_create_task"
+    ],
+    "unresolved_references": []
+  },
+  {
+    "agent_id": "invoice_validation_agent",
+    "role": "Invoice Validation Auditor",
+    "goal": "Verify invoice field integrity, validate calculations against deterministic math checks, and document discrepancies.",
+    "framework": "CrewAI",
+    "model": "Groq:AGENT_ID",
+    "registered_tools": [],
+    "inputs": [
+      "invoice_data"
+    ],
+    "expected_outputs": [
+      "Strictly valid JSON containing validation_status, math_audit, and validation_errors."
+    ],
+    "helper_functions": [
+      "deterministic_arithmetic_check"
+    ],
+    "source_file": "invoice_validation_agent.py",
+    "line_range": "L54-L60",
+    "evidence_ids": [
+      "ev_invoice_validation_agent_agent_init",
+      "ev_invoice_validation_agent_task_exec_create_task",
+      "ev_invoice_validation_agent_helper_deterministic_arithmetic_check"
+    ],
+    "unresolved_references": []
+  },
+  {
+    "agent_id": "po_matching_agent",
+    "role": "Purchase Order Reconciliation Specialist",
+    "goal": "Match invoice line items, pricing, quantities, and terms against authorized purchase orders.",
+    "framework": "CrewAI",
+    "model": "Groq:AGENT_ID",
+    "registered_tools": [],
+    "inputs": [
+      "invoice_data"
+    ],
+    "expected_outputs": [
+      "Strictly valid JSON containing po_match_status, matched_po_id, discrepancies, and matching_confidence."
+    ],
+    "helper_functions": [
+      "deterministic_po_match"
+    ],
+    "source_file": "po_matching_agent.py",
+    "line_range": "L80-L86",
+    "evidence_ids": [
+      "ev_po_matching_agent_agent_init",
+      "ev_po_matching_agent_task_exec_create_task",
+      "ev_po_matching_agent_helper_deterministic_po_match"
+    ],
+    "unresolved_references": []
+  },
+  {
+    "agent_id": "policy_compliance_agent",
+    "role": "Corporate Accounts Payable Compliance Officer",
+    "goal": "Audit invoice against corporate purchasing policies, threshold limits, and vendor eligibility.",
+    "framework": "CrewAI",
+    "model": "Groq:AGENT_ID",
+    "registered_tools": [],
+    "inputs": [
+      "invoice_data"
+    ],
+    "expected_outputs": [
+      "Strictly valid JSON containing is_compliant, applied_policy_ids, violations, and compliance_summary."
+    ],
+    "helper_functions": [
+      "deterministic_policy_check"
+    ],
+    "source_file": "policy_compliance_agent.py",
+    "line_range": "L75-L81",
+    "evidence_ids": [
+      "ev_policy_compliance_agent_agent_init",
+      "ev_policy_compliance_agent_task_exec_create_task",
+      "ev_policy_compliance_agent_helper_deterministic_policy_check"
+    ],
+    "unresolved_references": []
+  }
+]

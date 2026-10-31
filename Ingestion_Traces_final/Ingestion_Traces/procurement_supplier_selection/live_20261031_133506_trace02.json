@@ -1,0 +1,496 @@
+{
+  "run_id": "live_20261031_133506_trace02",
+  "workflow_name": "procurement_supplier_selection",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 24.35,
+  "agent_execution_count": 9,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 2.911,
+      "tokens": 1739,
+      "prompt_tokens": 782,
+      "completion_tokens": 957,
+      "output": {
+        "request_id": "RFQ-2026-002",
+        "normalized_quotations": [
+          {
+            "supplier_id": "PRO-SUP-01",
+            "supplier_name": "Titanium Engineering Solutions",
+            "unit_price": 42.75,
+            "quantity": 10000,
+            "item_total": 427500.0,
+            "shipping_cost": 500.0,
+            "shipping_per_unit": 0.05,
+            "tax_amount": 29925.0,
+            "tax_rate": 0.07,
+            "total_cost": 457925.0,
+            "currency": "USD",
+            "validity_days": 60,
+            "is_synthetic": true
+          },
+          {
+            "supplier_id": "PRO-SUP-02",
+            "supplier_name": "Kestrel Industrial Fasteners",
+            "unit_price": 51.5,
+            "quantity": 10000,
+            "item_total": 515000.0,
+            "shipping_cost": 750.0,
+            "shipping_per_unit": 0.075,
+            "tax_amount": 36050.0,
+            "tax_rate": 0.07,
+            "total_cost": 551800.0,
+            "currency": "USD",
+            "validity_days": 60,
+            "is_synthetic": true
+          },
+          {
+            "supplier_id": "PRO-SUP-03",
+            "supplier_name": "Atlas Smart Robotics Corp",
+            "unit_price": 60.9,
+            "quantity": 10000,
+            "item_total": 609000.0,
+            "shipping_cost": 1000.0,
+            "shipping_per_unit": 0.1,
+            "tax_amount": 42630.0,
+            "tax_rate": 0.07,
+            "total_cost": 652630.0,
+            "currency": "USD",
+            "validity_days": 60,
+            "is_synthetic": true
+          }
+        ],
+        "extraction_flags": [
+          "All quotations contain complete pricing elements (unit price, item total, shipping, tax, total cost).",
+          "Currency consistent across all quotations (USD).",
+          "Validity period present for all quotations (60 days)."
+        ]
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "quotation_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 2.867,
+      "tokens": 1440,
+      "prompt_tokens": 465,
+      "completion_tokens": 975,
+      "output": {
+        "evaluated_profiles": [
+          {
+            "supplier_id": "PRO-SUP-01",
+            "capability": "High-precision aerospace machining & structural alloy parts",
+            "iso_certified": true,
+            "capacity_per_month": 50000,
+            "strengths": [
+              "High‑precision aerospace machining",
+              "Strong financial stability (score 92)",
+              "ISO 9001 certified"
+            ],
+            "concerns": [
+              "Profile flagged as synthetic – requires verification of real‑world operations"
+            ]
+          },
+          {
+            "supplier_id": "PRO-SUP-02",
+            "capability": "Standardized industrial fasteners, bolts, and bulk structural hardware",
+            "iso_certified": true,
+            "capacity_per_month": 250000,
+            "strengths": [
+              "Very high production volume (250k units/month)",
+              "Good financial stability (score 85)",
+              "ISO 9001 certified"
+            ],
+            "concerns": [
+              "Profile flagged as synthetic – supply‑chain resilience should be confirmed"
+            ]
+          },
+          {
+            "supplier_id": "PRO-SUP-03",
+            "capability": "Automated warehouse robotics and optical inspection sensors",
+            "iso_certified": true,
+            "capacity_per_month": 1200,
+            "strengths": [
+              "Advanced robotics and sensor technology",
+              "Moderate financial stability (score 78)",
+              "ISO 9001 certified"
+            ],
+            "concerns": [
+              "Limited monthly capacity (1,200 units) may restrict large‑scale rollouts",
+              "Profile flagged as synthetic – verify robotics integration capabilities"
+            ]
+          }
+        ],
+        "profile_strengths": {
+          "PRO-SUP-01": [
+            "High‑precision aerospace machining",
+            "Strong financial stability (score 92)",
+            "ISO 9001 certified"
+          ],
+          "PRO-SUP-02": [
+            "Very high production volume (250k units/month)",
+            "Good financial stability (score 85)",
+            "ISO 9001 certified"
+          ],
+          "PRO-SUP-03": [
+            "Advanced robotics and sensor technology",
+            "Moderate financial stability (score 78)",
+            "ISO 9001 certified"
+          ]
+        },
+        "operational_concerns": {
+          "PRO-SUP-01": [
+            "Synthetic profile – requires validation of actual manufacturing facilities and performance history"
+          ],
+          "PRO-SUP-02": [
+            "Synthetic profile – confirm ability to meet bulk order lead times and quality consistency"
+          ],
+          "PRO-SUP-03": [
+            "Low capacity (1,200 units/month) limits scalability for large deployments",
+            "Synthetic profile – verify real‑world deployment success and support infrastructure"
+          ]
+        }
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "supplier_profile_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.645,
+      "tokens": 906,
+      "prompt_tokens": 436,
+      "completion_tokens": 470,
+      "output": {
+        "delivery_evaluation": [
+          {
+            "supplier_id": "PRO-SUP-01",
+            "meets_deadline": true,
+            "buffer_days": 39,
+            "risk_level": "low"
+          },
+          {
+            "supplier_id": "PRO-SUP-02",
+            "meets_deadline": true,
+            "buffer_days": 29,
+            "risk_level": "moderate"
+          },
+          {
+            "supplier_id": "PRO-SUP-03",
+            "meets_deadline": true,
+            "buffer_days": 19,
+            "risk_level": "elevated"
+          }
+        ],
+        "on_time_suppliers": [
+          "PRO-SUP-01",
+          "PRO-SUP-02",
+          "PRO-SUP-03"
+        ],
+        "late_risk_suppliers": [],
+        "logistics_summary": {
+          "overall_status": "All suppliers meet the required delivery date of 2026-10-30.",
+          "buffer_analysis": "Buffers range from 19 to 39 days, providing sufficient slack. However, PRO-SUP-03 has the smallest margin and should be monitored for potential disruptions.",
+          "recommendations": [
+            "Maintain current schedule for PRO-SUP-01 and PRO-SUP-02.",
+            "Implement proactive risk monitoring for PRO-SUP-03, including contingency plans for transport delays.",
+            "Review any upcoming holidays or peak shipping periods that could erode the 19‑day buffer for PRO-SUP-03."
+          ]
+        }
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "delivery_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 1.912,
+      "tokens": 1044,
+      "prompt_tokens": 437,
+      "completion_tokens": 607,
+      "output": {
+        "supplier_risk_scores": [
+          {
+            "supplier_id": "PRO-SUP-01",
+            "risk_category": "LOW"
+          },
+          {
+            "supplier_id": "PRO-SUP-02",
+            "risk_category": "LOW"
+          },
+          {
+            "supplier_id": "PRO-SUP-03",
+            "risk_category": "HIGH"
+          }
+        ],
+        "flagged_suppliers": [
+          "PRO-SUP-03"
+        ],
+        "risk_mitigation_notes": {
+          "PRO-SUP-03": "High defect (2.5%) and delivery failure (5%) rates combined with a conditional audit status constitute a red flag. Recommend requiring a corrective action plan, re‑audit, or selecting an alternative supplier."
+        }
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "supplier_risk_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 2.369,
+      "tokens": 1354,
+      "prompt_tokens": 551,
+      "completion_tokens": 803,
+      "output": {
+        "contract_comparison": {
+          "payment_terms": {
+            "PRO-SUP-01": "Net 45 days after verified receipt",
+            "PRO-SUP-02": "Net 45 days after verified receipt",
+            "PRO-SUP-03": "Net 45 days after verified receipt"
+          },
+          "warranty_months": {
+            "PRO-SUP-01": 24,
+            "PRO-SUP-02": 24,
+            "PRO-SUP-03": 24
+          },
+          "penalty_for_delay": {
+            "PRO-SUP-01": "1.5% per week of delay up to 15% maximum",
+            "PRO-SUP-02": "1.5% per week of delay up to 15% maximum",
+            "PRO-SUP-03": "1.5% per week of delay up to 15% maximum"
+          }
+        },
+        "best_terms_supplier": [
+          "PRO-SUP-01",
+          "PRO-SUP-02",
+          "PRO-SUP-03"
+        ],
+        "contract_risks": {
+          "PRO-SUP-01": [
+            "Net 45 payment term may strain cash flow compared to more common Net 30 terms",
+            "Delay penalty of up to 15% of contract value could be financially burdensome",
+            "30‑day cancellation notice may limit flexibility in terminating the agreement"
+          ],
+          "PRO-SUP-02": [
+            "Net 45 payment term may strain cash flow compared to more common Net 30 terms",
+            "Delay penalty of up to 15% of contract value could be financially burdensome",
+            "30‑day cancellation notice may limit flexibility in terminating the agreement"
+          ],
+          "PRO-SUP-03": [
+            "Net 45 payment term may strain cash flow compared to more common Net 30 terms",
+            "Delay penalty of up to 15% of contract value could be financially burdensome",
+            "30‑day cancellation notice may limit flexibility in terminating the agreement"
+          ]
+        }
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "contract_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 2.023,
+      "tokens": 1215,
+      "prompt_tokens": 497,
+      "completion_tokens": 718,
+      "output": {
+        "cost_ranking": [
+          {
+            "supplier_id": "PRO-SUP-01",
+            "supplier_name": "Titanium Engineering Solutions",
+            "total_landed_cost": 457925.0,
+            "cost_rank": 1
+          },
+          {
+            "supplier_id": "PRO-SUP-02",
+            "supplier_name": "Kestrel Industrial Fasteners",
+            "total_landed_cost": 551800.0,
+            "cost_rank": 2
+          },
+          {
+            "supplier_id": "PRO-SUP-03",
+            "supplier_name": "Atlas Smart Robotics Corp",
+            "total_landed_cost": 652630.0,
+            "cost_rank": 3
+          }
+        ],
+        "lowest_cost_bidder": {
+          "supplier_id": "PRO-SUP-01",
+          "supplier_name": "Titanium Engineering Solutions",
+          "total_landed_cost": 457925.0
+        },
+        "cost_spread_percentage": [
+          {
+            "supplier_id": "PRO-SUP-02",
+            "spread_percent": 20.5
+          },
+          {
+            "supplier_id": "PRO-SUP-03",
+            "spread_percent": 42.5
+          }
+        ],
+        "commercial_summary": "Each quotation consists of three cost components: the unit price multiplied by the quantity (item_total), a fixed shipping charge, and a tax amount calculated on the item total. Titanium Engineering Solutions offers the lowest unit price (42.75) resulting in the smallest item total (427,500) plus modest shipping (500) and tax (29,925), giving a landed cost of 457,925. Kestrel Industrial Fasteners is about 20.5% more expensive overall, while Atlas Smart Robotics Corp is roughly 42.5% higher than the lowest bid."
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "cost_comparison_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 3.143,
+      "tokens": 1574,
+      "prompt_tokens": 483,
+      "completion_tokens": 1091,
+      "output": {
+        "weighted_scores": [
+          {
+            "supplier_id": "PRO-SUP-01",
+            "cost_score": 100.0,
+            "delivery_score": 100.0,
+            "risk_score": 95.0,
+            "contract_score": 90.0,
+            "capability_score": 95.0,
+            "total_weighted_score": 97.5,
+            "overall_rank": 1
+          },
+          {
+            "supplier_id": "PRO-SUP-02",
+            "cost_score": 82.99,
+            "delivery_score": 100.0,
+            "risk_score": 90.0,
+            "contract_score": 90.0,
+            "capability_score": 95.0,
+            "total_weighted_score": 90.55,
+            "overall_rank": 2
+          },
+          {
+            "supplier_id": "PRO-SUP-03",
+            "cost_score": 70.17,
+            "delivery_score": 100.0,
+            "risk_score": 75.0,
+            "contract_score": 90.0,
+            "capability_score": 95.0,
+            "total_weighted_score": 83.06,
+            "overall_rank": 3
+          }
+        ],
+        "top_ranked_supplier": {
+          "supplier_id": "PRO-SUP-01",
+          "total_weighted_score": 97.5,
+          "overall_rank": 1
+        },
+        "score_spread": {
+          "highest_score": 97.5,
+          "lowest_score": 83.06,
+          "range": 14.44,
+          "average_score": 90.37
+        },
+        "evaluation_rationale": "PRO-SUP-01 achieved the highest total weighted score because it excelled across all weighted criteria. Its cost score (100) and delivery score (100) are perfect, and it also posted strong risk (95), contract (90) and capability (95) scores. When the pre‑defined weights are applied, these high sub‑scores combine to produce the overall 97.5 points, placing it clearly ahead of the competitors. \n\nThe trade‑off analysis shows that cost savings can be obtained by selecting lower‑cost suppliers, but this typically comes with reductions in other dimensions. PRO‑SUP‑02 reduces the cost score to 82.99, delivering a 14.5‑point drop in the cost component relative to PRO‑SUP‑01, yet it maintains perfect delivery and only modestly lower risk (90 vs 95). The net effect is a total score of 90.55, still respectable but noticeably lower than the top supplier. PRO‑SUP‑03 pushes cost savings further (cost score 70.17) but suffers larger penalties in risk (75) and overall capability, resulting in a total of 83.06. Decision makers must weigh whether the budgetary benefit of a lower cost score outweighs the potential increase in risk exposure or the loss of delivery confidence. In this dataset, the weighting scheme favours a balanced high performance, rewarding the supplier that can deliver both low cost and low risk while maintaining delivery reliability."
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "weighted_evaluation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_8 (gsk_yt...AwPO)",
+      "duration_seconds": 2.061,
+      "tokens": 3992,
+      "prompt_tokens": 3375,
+      "completion_tokens": 617,
+      "output": {
+        "recommended_supplier_id": "PRO-SUP-01",
+        "commercial_rationale": "Titanium Engineering Solutions (PRO-SUP-01) delivers the lowest total landed cost ($457,925) while achieving perfect delivery scores and a low delivery risk buffer of 39 days. Its weighted evaluation score (97.5) is the highest among all bidders, reflecting strong performance across cost, delivery, risk, contract, and capability dimensions. Compared to PRO-SUP-02, the cost advantage is ~20.5% with identical delivery and contract terms, and the risk score is slightly higher (95 vs 90). PRO-SUP-03 is markedly more expensive (42.5% higher) and carries a high risk rating, making it unsuitable despite its advanced robotics capability. The trade‑off analysis shows that selecting PRO-SUP-01 maximizes value by combining cost efficiency with robust delivery confidence and acceptable risk exposure.",
+        "risk_acceptance": {
+          "overall_risk_category": "LOW",
+          "accepted_risks": [
+            "Synthetic profile verification – requires on‑site validation of manufacturing capability and financial documentation.",
+            "Net 45 payment term – acceptable given the supplier’s strong financial stability (score 92)."
+          ],
+          "mitigated_risks": [
+            "Potential undisclosed operational issues: initiate third‑party audit before contract award.",
+            "Delivery buffer monitoring: maintain 30‑day watch on the 39‑day buffer to pre‑empt any schedule erosion."
+          ],
+          "unacceptable_risks": [
+            "None identified for PRO-SUP-01 under current evaluation criteria."
+          ]
+        },
+        "next_steps": [
+          "Conduct a physical site audit or request verified production records to confirm the synthetic profile of PRO‑SUP‑01.",
+          "Obtain a formal declaration of compliance with ISO 9001 and any relevant aerospace certifications.",
+          "Negotiate final contract terms, confirming the Net 45 payment schedule, 24‑month warranty, and delay penalties, while seeking to reduce cancellation notice to 15 days if feasible.",
+          "Establish a risk monitoring plan that includes weekly status reports during the production lead‑time and a contingency logistics plan should the buffer fall below 20 days.",
+          "Prepare a contingency shortlist (PRO‑SUP‑02) in case the audit reveals material deficiencies with PRO‑SUP‑01."
+        ]
+      },
+      "notes": "",
+      "order": 8,
+      "agent_id": "selection_recommendation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_9 (gsk_Oz...k7Gf)",
+      "duration_seconds": 2.948,
+      "tokens": 4904,
+      "prompt_tokens": 3916,
+      "completion_tokens": 988,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "selected_supplier": {
+          "supplier_id": "PRO-SUP-01",
+          "supplier_name": "Titanium Engineering Solutions",
+          "total_landed_cost": 457925.0,
+          "overall_rank": 1,
+          "total_weighted_score": 97.5
+        },
+        "compliance_verification": {
+          "mandatory_criteria_met": true,
+          "criteria_details": {
+            "cost": "Lowest total landed cost and cost score of 100 (benchmark against other bidders).",
+            "delivery": "Meets required delivery date with a 39‑day buffer; delivery score 100, risk level low.",
+            "risk": "Risk category LOW; no outstanding risk flags after mitigation of synthetic profile verification.",
+            "contract": "Payment terms Net 45, 24‑month warranty, delay penalty 1.5%/week – acceptable given strong financial stability (score 92).",
+            "capability": "High‑precision aerospace machining aligns with project requirements; ISO 9001 certified.",
+            "synthetic_profile": "Flag noted and addressed in risk acceptance – requires on‑site audit before award."
+          },
+          "cost_calculations_verified": true,
+          "risk_flags_addressed": true
+        },
+        "summary_report": {
+          "executive_summary": "Titanium Engineering Solutions (PRO‑SUP‑01) is the recommended awardee. It delivers the lowest landed cost ($457,925), achieves perfect scores in cost and delivery, and attains high scores in risk (95), contract (90) and capability (95), resulting in the highest weighted total of 97.5. All mandatory criteria are satisfied and no unverified cost or unresolved risk items remain.",
+          "key_findings": {
+            "cost_advantage": "Approximately 20.5% cheaper than the next bidder (PRO‑SUP‑02) and 42.5% cheaper than PRO‑SUP‑03.",
+            "delivery_confidence": "All suppliers meet the required delivery date; PRO‑SUP‑01 provides the largest buffer (39 days).",
+            "risk_profile": "Classified LOW; only synthetic‑profile verification pending, which is mitigated by a pre‑award audit.",
+            "contractual_terms": "Uniform across bidders; Net 45 terms deemed acceptable given supplier’s financial strength.",
+            "capability_match": "Specialized aerospace machining meets the technical scope of the procurement."
+          },
+          "mitigation_actions": [
+            "Conduct third‑party site audit to validate synthetic profile.",
+            "Obtain formal ISO 9001 and aerospace certification declarations.",
+            "Negotiate reduction of cancellation notice from 30 to 15 days.",
+            "Implement weekly production status reporting during lead‑time."
+          ]
+        },
+        "award_justification": "The award to PRO‑SUP‑01 is justified on the basis of superior economic value (lowest landed cost and 100% cost score), flawless delivery performance, and a low overall risk rating. The weighted evaluation framework, which assigns the highest importance to cost, delivery, risk, contract compliance, and capability, yields a total score of 97.5—well above the next highest score of 90.55. All contractual terms are acceptable, and the identified synthetic‑profile risk is fully mitigated through a planned on‑site audit. Consequently, PRO‑SUP‑01 provides the optimal balance of cost efficiency, reliability, and capability for the organization’s needs."
+      },
+      "notes": "",
+      "order": 9,
+      "agent_id": "final_review_agent_procurement"
+    }
+  ],
+  "total_tokens": 18168,
+  "prompt_tokens": 10942,
+  "completion_tokens": 7226,
+  "estimated_cost_usd": 0.012164,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"selected_supplier\": {\n    \"supplier_id\": \"PRO-SUP-01\",\n    \"supplier_name\": \"Titanium Engineering Solutions\",\n    \"total_landed_cost\": 457925.0,\n    \"overall_rank\": 1,\n    \"total_weighted_score\": 97.5\n  },\n  \"compliance_verification\": {\n    \"mandatory_criteria_met\": true,\n    \"criteria_details\": {\n      \"cost\": \"Lowest total landed cost and cost score of 100 (benchmark against other bidders).\",\n      \"delivery\": \"Meets required delivery date with a 39\\u2011day buffer; delivery score 100, risk level low.\",\n      \"risk\": \"Risk category LOW; no outstanding risk flags after mitigation of synthetic profile verification.\",\n      \"contract\": \"Payment terms Net 45, 24\\u2011month warranty, delay penalty 1.5%/week \\u2013 acceptable given strong financial stability (score 92).\",\n      \"capability\": \"High\\u2011precision aerospace machining aligns with project requirements; ISO 9001 certified.\",\n      \"synthetic_profile\": \"Flag noted and addressed in risk acceptance \\u2013 requires on\\u2011site audit before award.\"\n    },\n    \"cost_calculations_verified\": true,\n    \"risk_flags_addressed\": true\n  },\n  \"summary_report\": {\n    \"executive_summary\": \"Titanium Engineering Solutions (PRO\\u2011SUP\\u201101) is the recommended awardee. It delivers the lowest landed cost ($457,925), achieves perfect scores in cost and delivery, and attains high scores in risk (95), contract (90) and capability (95), resulting in the highest weighted total of 97.5. All mandatory criteria are satisfied and no unverified cost or unresolved risk items remain.\",\n    \"key_findings\": {\n      \"cost_advantage\": \"Approximately 20.5% cheaper than the next bidder (PRO\\u2011SUP\\u201102) and 42.5% cheaper than PRO\\u2011SUP\\u201103.\",\n      \"delivery_confidence\": \"All suppliers meet the required delivery date; PRO\\u2011SUP\\u201101 provides the largest buffer (39 days).\",\n      \"risk_profile\": \"Classified LOW; only synthetic\\u2011profile verification pending, which is mitigated by a pre\\u2011award audit.\",\n      \"contractual_terms\": \"Uniform across bidders; Net 45 terms deemed acceptable given supplier\\u2019s financial strength.\",\n      \"capability_match\": \"Specialized aerospace machining meets the technical scope of the procurement.\"\n    },\n    \"mitigation_actions\": [\n      \"Conduct third\\u2011party site audit to validate synthetic profile.\",\n      \"Obtain formal ISO 9001 and aerospace certification declarations.\",\n      \"Negotiate reduction of cancellation notice from 30 to 15 days.\",\n      \"Implement weekly production status reporting during lead\\u2011time.\"\n    ]\n  },\n  \"award_justification\": \"The award to PRO\\u2011SUP\\u201101 is justified on the basis of superior economic value (lowest landed cost and 100% cost score), flawless delivery performance, and a low overall risk rating. The weighted evaluation framework, which assigns the highest importance to cost, delivery, risk, contract compliance, and capability, yields a total score of 97.5\\u2014well above the next highest score of 90.55. All contractual terms are acceptable, and the identified synthetic\\u2011profile risk is fully mitigated through a planned on\\u2011site audit. Consequently, PRO\\u2011SUP\\u201101 provides the optimal balance of cost efficiency, reliability, and capability for the organization\\u2019s needs.\"\n}",
+  "timestamp": "2026-10-31T13:35:30.426975+00:00"
+}

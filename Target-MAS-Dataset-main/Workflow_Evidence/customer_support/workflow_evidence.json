@@ -1,0 +1,1669 @@
+{
+  "metadata": {
+    "workflow_id": "customer_support",
+    "workflow_name": "customer_support",
+    "evidence_schema_version": "1.0",
+    "generated_at": "2026-10-31T21:20:01.982700+00:00",
+    "traces_discovered": 30,
+    "traces_processed": 30,
+    "traces_failed": 0,
+    "input_files": {
+      "workflow_json": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support\\workflow.json",
+      "workflow_context_json": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support\\workflow_context.json",
+      "traces_directory": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Ingestion_Traces_final\\Ingestion_Traces\\customer_support",
+      "trace_files": [
+        "live_20261031_132411_trace01.json",
+        "live_20261031_132442_trace02.json",
+        "live_20261031_132458_trace03.json",
+        "live_20261031_132513_trace04.json",
+        "live_20261031_132524_trace05.json",
+        "live_20261031_132537_trace06.json",
+        "live_20261031_132548_trace07.json",
+        "live_20261031_132558_trace08.json",
+        "live_20261031_132611_trace09.json",
+        "live_20261031_132623_trace10.json",
+        "live_20261031_132636_trace11.json",
+        "live_20261031_132647_trace12.json",
+        "live_20261031_132700_trace13.json",
+        "live_20261031_132713_trace14.json",
+        "live_20261031_132731_trace15.json",
+        "live_20261031_132747_trace16.json",
+        "live_20261031_132807_trace17.json",
+        "live_20261031_132824_trace18.json",
+        "live_20261031_132838_trace19.json",
+        "live_20261031_132854_trace20.json",
+        "live_20261031_132912_trace21.json",
+        "live_20261031_132926_trace22.json",
+        "live_20261031_132943_trace23.json",
+        "live_20261031_132956_trace24.json",
+        "live_20261031_133014_trace25.json",
+        "live_20261031_133031_trace26.json",
+        "live_20261031_133045_trace27.json",
+        "live_20261031_133105_trace28.json",
+        "live_20261031_133119_trace29.json",
+        "live_20261031_133132_trace30.json"
+      ]
+    },
+    "aggregation_status": "complete"
+  },
+  "workflow_definition": {
+    "description": "Baseline Customer Support Ticket Resolution Multi-Agent Workflow",
+    "version": "1.0.0",
+    "declared_agents": [
+      {
+        "agent_id": "ticket_classification_agent",
+        "name": null,
+        "role": "Customer Support Triage Specialist",
+        "responsibilities": null,
+        "declared_inputs": [
+          "raw_ticket_record"
+        ],
+        "declared_outputs": [
+          "category",
+          "urgency",
+          "complexity",
+          "customer_impact",
+          "routing_recommendation"
+        ],
+        "declared_dependencies": [],
+        "assigned_key_env": "GROQ_API_KEY_2"
+      },
+      {
+        "agent_id": "policy_retrieval_agent",
+        "name": null,
+        "role": "Customer Policy & Knowledge Base Specialist",
+        "responsibilities": null,
+        "declared_inputs": [
+          "ticket_category",
+          "policies.json",
+          "troubleshooting_guides.json"
+        ],
+        "declared_outputs": [
+          "applicable_policy_ids",
+          "applicable_guide_ids",
+          "policy_conditions",
+          "retrieval_summary"
+        ],
+        "declared_dependencies": [
+          "ticket_classification_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_2"
+      },
+      {
+        "agent_id": "issue_investigation_agent",
+        "name": null,
+        "role": "Technical Support Investigator",
+        "responsibilities": null,
+        "declared_inputs": [
+          "ticket_data",
+          "customers.json",
+          "historical_resolutions.json"
+        ],
+        "declared_outputs": [
+          "investigation_findings",
+          "root_cause_hypothesis",
+          "confirmed_facts",
+          "data_gaps"
+        ],
+        "declared_dependencies": [
+          "policy_retrieval_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_2"
+      },
+      {
+        "agent_id": "resolution_agent",
+        "name": null,
+        "role": "Customer Resolution Strategist",
+        "responsibilities": null,
+        "declared_inputs": [
+          "ticket_data",
+          "investigation_findings",
+          "retrieved_policies"
+        ],
+        "declared_outputs": [
+          "resolution_type",
+          "recommended_action",
+          "policy_justification",
+          "escalation_required"
+        ],
+        "declared_dependencies": [
+          "issue_investigation_agent",
+          "policy_retrieval_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_2"
+      },
+      {
+        "agent_id": "response_drafting_agent",
+        "name": null,
+        "role": "Customer Communications Specialist",
+        "responsibilities": null,
+        "declared_inputs": [
+          "ticket_context",
+          "approved_resolution"
+        ],
+        "declared_outputs": [
+          "response_text",
+          "tone",
+          "next_steps_for_customer",
+          "ticket_status"
+        ],
+        "declared_dependencies": [
+          "resolution_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_2"
+      },
+      {
+        "agent_id": "resolution_verification_agent",
+        "name": null,
+        "role": "Support QA & Verification Auditor",
+        "responsibilities": null,
+        "declared_inputs": [
+          "full_support_audit_trail"
+        ],
+        "declared_outputs": [
+          "qa_status",
+          "final_ticket_status",
+          "verification_notes",
+          "support_summary_report"
+        ],
+        "declared_dependencies": [
+          "response_drafting_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_2"
+      }
+    ],
+    "declared_dependencies": [
+      {
+        "source": "ticket_classification_agent",
+        "target": "policy_retrieval_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "policy_retrieval_agent",
+        "target": "issue_investigation_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "issue_investigation_agent",
+        "target": "resolution_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "policy_retrieval_agent",
+        "target": "resolution_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "resolution_agent",
+        "target": "response_drafting_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "response_drafting_agent",
+        "target": "resolution_verification_agent",
+        "relationship_type": "declared_dependency"
+      }
+    ],
+    "declared_execution_order": [
+      "ticket_classification_agent",
+      "policy_retrieval_agent",
+      "issue_investigation_agent",
+      "resolution_agent",
+      "response_drafting_agent",
+      "resolution_verification_agent"
+    ],
+    "declared_model_configuration": {
+      "model": "openai/gpt-oss-120b",
+      "provider": null,
+      "assigned_groq_key_env": "GROQ_API_KEY_2"
+    },
+    "optimizer_annotations": {
+      "optimization_opportunities": [
+        "Dynamic routing: Route simple tickets directly from Policy Retrieval to Response Drafting, bypassing Investigation",
+        "Early stopping: Stop execution when straightforward standard SOP guide matches completely",
+        "Pruning redundant verification stages for low-risk, verified inquiries",
+        "Prompt compression to minimize ticket and policy context re-evaluations"
+      ],
+      "hypothesis_disclaimer": "Declared candidate hypothesis from workflow specification, not an empirical or validated optimization opportunity."
+    }
+  },
+  "static_implementation_context": {
+    "source_files": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "agents": [
+      {
+        "agent_id": "issue_investigation_agent",
+        "role": "Technical Support Investigator",
+        "goal": "Investigate root causes, correlate customer account history, and separate confirmed facts from hypotheses.",
+        "backstory": "A diagnostic engineer reviewing backend logs, customer history, and issue symptoms.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Investigate the customer's reported problem.\\nTicket Data:\\n{json.dumps(ticket_data, indent=2)}\\n\\nSynthetic Customer Record & System History:\\n{json.dumps(customer_context, indent=2)}\\n\\nInstructions:\\n1. Determine likely root cause based on symptoms and customer tier.\\n2. Separate confirmed facts from unconfirmed hypotheses.\\n3. State if further diagnostic data or user verification is required.\\nReturn strictly valid JSON with keys: 'investigation_findings', 'root_cause_hypothesis', 'confirmed_facts', and 'data_gaps'.\"",
+            "expected_output": "Strictly valid JSON containing investigation_findings, root_cause_hypothesis, confirmed_facts, and data_gaps.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Investigate the customer's reported problem.\\nTicket Data:\\n{json.dumps(ticket_data, indent=2)}\\n\\nSynthetic Customer Record & System History:\\n{json.dumps(customer_context, indent=2)}\\n\\nInstructions:\\n1. Determine likely root cause based on symptoms and customer tier.\\n2. Separate confirmed facts from unconfirmed hypotheses.\\n3. State if further diagnostic data or user verification is required.\\nReturn strictly valid JSON with keys: 'investigation_findings', 'root_cause_hypothesis', 'confirmed_facts', and 'data_gaps'.\"",
+          "Backstory: A diagnostic engineer reviewing backend logs, customer history, and issue symptoms."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task",
+          "deterministic_customer_lookup"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support\\issue_investigation_agent.py",
+        "start_line": 38,
+        "end_line": 47,
+        "evidence_refs": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "agent_id": "policy_retrieval_agent",
+        "role": "Customer Policy & Knowledge Base Specialist",
+        "goal": "Retrieve authoritative support guidelines, SLAs, and troubleshooting procedures for the ticket.",
+        "backstory": "A knowledge manager providing certified procedures to support agents without guessing.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Retrieve applicable policies and SOPs for this support ticket.\\nTicket Data:\\n{json.dumps(ticket_data, indent=2)}\\n\\nRetrieved Policy & Knowledge Base Records:\\n{json.dumps(retrieval_data, indent=2)}\\n\\nInstructions:\\n1. Identify the primary governing policy ID and troubleshooting guide ID.\\n2. Detail eligibility conditions, SLAs, and restrictions.\\n3. Note explicitly if no relevant policy covers this specific issue.\\nReturn strictly valid JSON with keys: 'applicable_policy_ids', 'applicable_guide_ids', 'policy_conditions', and 'retrieval_summary'.\"",
+            "expected_output": "Strictly valid JSON containing applicable_policy_ids, applicable_guide_ids, policy_conditions, and retrieval_summary.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Retrieve applicable policies and SOPs for this support ticket.\\nTicket Data:\\n{json.dumps(ticket_data, indent=2)}\\n\\nRetrieved Policy & Knowledge Base Records:\\n{json.dumps(retrieval_data, indent=2)}\\n\\nInstructions:\\n1. Identify the primary governing policy ID and troubleshooting guide ID.\\n2. Detail eligibility conditions, SLAs, and restrictions.\\n3. Note explicitly if no relevant policy covers this specific issue.\\nReturn strictly valid JSON with keys: 'applicable_policy_ids', 'applicable_guide_ids', 'policy_conditions', and 'retrieval_summary'.\"",
+          "Backstory: A knowledge manager providing certified procedures to support agents without guessing."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task",
+          "deterministic_policy_retrieval"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support\\policy_retrieval_agent.py",
+        "start_line": 40,
+        "end_line": 49,
+        "evidence_refs": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "agent_id": "resolution_agent",
+        "role": "Customer Resolution Strategist",
+        "goal": "Synthesize policies and technical investigation into a clear, actionable customer resolution.",
+        "backstory": "A tier-3 senior resolution specialist with authority to recommend credits, troubleshooting, or escalations.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Formulate a concrete resolution recommendation for this ticket.\\nTicket Data:\\n{json.dumps(ticket_data, indent=2)}\\n\\nUpstream Evidence:\\n{json.dumps(stage_evidence, indent=2)}\\n\\nInstructions:\\n1. Recommend resolution type: 'immediate_resolution', 'requires_user_action', or 'escalate_to_engineering'.\\n2. Provide step-by-step resolution actions conforming strictly to retrieved policy rules.\\n3. Note: Never execute actual database alterations or financial credits.\\nReturn strictly valid JSON with keys: 'resolution_type', 'recommended_action', 'policy_justification', and 'escalation_required'.\"",
+            "expected_output": "Strictly valid JSON containing resolution_type, recommended_action, policy_justification, and escalation_required.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Formulate a concrete resolution recommendation for this ticket.\\nTicket Data:\\n{json.dumps(ticket_data, indent=2)}\\n\\nUpstream Evidence:\\n{json.dumps(stage_evidence, indent=2)}\\n\\nInstructions:\\n1. Recommend resolution type: 'immediate_resolution', 'requires_user_action', or 'escalate_to_engineering'.\\n2. Provide step-by-step resolution actions conforming strictly to retrieved policy rules.\\n3. Note: Never execute actual database alterations or financial credits.\\nReturn strictly valid JSON with keys: 'resolution_type', 'recommended_action', 'policy_justification', and 'escalation_required'.\"",
+          "Backstory: A tier-3 senior resolution specialist with authority to recommend credits, troubleshooting, or escalations."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support\\resolution_agent.py",
+        "start_line": 12,
+        "end_line": 21,
+        "evidence_refs": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "agent_id": "resolution_verification_agent",
+        "role": "Support QA & Verification Auditor",
+        "goal": "Verify that the drafted response fully addresses the ticket within policy boundaries.",
+        "backstory": "A quality assurance lead ensuring high customer satisfaction and strict policy adherence.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Perform quality audit on the proposed ticket resolution and customer draft.\\nFull Support Audit Trail:\\n{json.dumps(full_ticket_audit, indent=2)}\\n\\nVerification Checks:\\n1. Does the drafted response completely solve the customer's stated complaint?\\n2. Are there any unsupported commitments, policy contradictions, or missing instructions?\\n3. Mark final status: 'RESOLVED', 'ACTION_REQUIRED_BY_USER', or 'ESCALATED'.\\nReturn strictly valid JSON with keys: 'qa_status' ('APPROVED' or 'REJECTED'), 'final_ticket_status', 'verification_notes', and 'support_summary_report'.\"",
+            "expected_output": "Strictly valid JSON containing qa_status, final_ticket_status, verification_notes, and support_summary_report.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Perform quality audit on the proposed ticket resolution and customer draft.\\nFull Support Audit Trail:\\n{json.dumps(full_ticket_audit, indent=2)}\\n\\nVerification Checks:\\n1. Does the drafted response completely solve the customer's stated complaint?\\n2. Are there any unsupported commitments, policy contradictions, or missing instructions?\\n3. Mark final status: 'RESOLVED', 'ACTION_REQUIRED_BY_USER', or 'ESCALATED'.\\nReturn strictly valid JSON with keys: 'qa_status' ('APPROVED' or 'REJECTED'), 'final_ticket_status', 'verification_notes', and 'support_summary_report'.\"",
+          "Backstory: A quality assurance lead ensuring high customer satisfaction and strict policy adherence."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support\\resolution_verification_agent.py",
+        "start_line": 12,
+        "end_line": 21,
+        "evidence_refs": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "agent_id": "response_drafting_agent",
+        "role": "Customer Communications Specialist",
+        "goal": "Draft clear, empathetic, and professional customer responses explaining the resolution.",
+        "backstory": "An expert in customer experience communication ensuring clear guidance and professional empathy.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Draft a formal, customer-facing response message.\\nTicket Context:\\n{json.dumps(ticket_data, indent=2)}\\n\\nApproved Resolution Strategy:\\n{json.dumps(resolution_data, indent=2)}\\n\\nGuidelines:\\n1. Acknowledge the customer's specific issue empathetically.\\n2. Explain the resolution or required user action with clear bullet points.\\n3. Do not disclose internal reasoning, prompt names, or unverified claims.\\n4. Do not promise external actions the system cannot guarantee.\\nReturn strictly valid JSON with keys: 'response_text', 'tone', 'next_steps_for_customer', and 'ticket_status'.\"",
+            "expected_output": "Strictly valid JSON containing response_text, tone, next_steps_for_customer, and ticket_status.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Draft a formal, customer-facing response message.\\nTicket Context:\\n{json.dumps(ticket_data, indent=2)}\\n\\nApproved Resolution Strategy:\\n{json.dumps(resolution_data, indent=2)}\\n\\nGuidelines:\\n1. Acknowledge the customer's specific issue empathetically.\\n2. Explain the resolution or required user action with clear bullet points.\\n3. Do not disclose internal reasoning, prompt names, or unverified claims.\\n4. Do not promise external actions the system cannot guarantee.\\nReturn strictly valid JSON with keys: 'response_text', 'tone', 'next_steps_for_customer', and 'ticket_status'.\"",
+          "Backstory: An expert in customer experience communication ensuring clear guidance and professional empathy."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support\\response_drafting_agent.py",
+        "start_line": 12,
+        "end_line": 21,
+        "evidence_refs": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "agent_id": "ticket_classification_agent",
+        "role": "Customer Support Triage Specialist",
+        "goal": "Classify customer tickets into accurate operational categories, urgency tiers, and complexity levels.",
+        "backstory": "An experienced support dispatcher who routes customer inquiries quickly and accurately.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Classify the following customer support ticket.\\nTicket Data:\\n{json.dumps(ticket_data, indent=2)}\\n\\nRule-Based Triage Signals:\\n{json.dumps(hints, indent=2)}\\n\\nInstructions:\\n1. Classify category (account_access, billing, payment, delivery, technical_failure, refund_request).\\n2. Assess urgency ('low', 'medium', 'high', 'critical') and customer impact.\\n3. Classify apparent complexity ('simple', 'moderate', 'complex').\\n4. Identify missing customer details or ambiguities.\\nReturn strictly valid JSON with keys: 'category', 'urgency', 'complexity', 'customer_impact', and 'routing_recommendation'.\"",
+            "expected_output": "Strictly valid JSON containing category, urgency, complexity, customer_impact, and routing_recommendation.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Classify the following customer support ticket.\\nTicket Data:\\n{json.dumps(ticket_data, indent=2)}\\n\\nRule-Based Triage Signals:\\n{json.dumps(hints, indent=2)}\\n\\nInstructions:\\n1. Classify category (account_access, billing, payment, delivery, technical_failure, refund_request).\\n2. Assess urgency ('low', 'medium', 'high', 'critical') and customer impact.\\n3. Classify apparent complexity ('simple', 'moderate', 'complex').\\n4. Identify missing customer details or ambiguities.\\nReturn strictly valid JSON with keys: 'category', 'urgency', 'complexity', 'customer_impact', and 'routing_recommendation'.\"",
+          "Backstory: An experienced support dispatcher who routes customer inquiries quickly and accurately."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task",
+          "deterministic_classification_hints"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support\\ticket_classification_agent.py",
+        "start_line": 38,
+        "end_line": 47,
+        "evidence_refs": [
+          "ev_agent_007"
+        ]
+      }
+    ],
+    "invocation_relationships": [],
+    "data_handoffs": [],
+    "conditional_branches": [],
+    "tools_and_helpers": {
+      "registered_tools": [],
+      "explicit_code_invocations": [],
+      "helper_functions": [
+        "create_task",
+        "deterministic_classification_hints",
+        "deterministic_customer_lookup",
+        "deterministic_policy_retrieval",
+        "run_customer_support_workflow"
+      ],
+      "runtime_llm_tool_selection": {
+        "observable": false,
+        "reason": "Runtime LLM tool selection is unobservable via static AST analysis"
+      }
+    },
+    "analysis_limitations": {
+      "unresolved_references": [],
+      "dynamic_expressions": [],
+      "unsupported_patterns": [],
+      "static_analysis_limitations": [
+        "Dynamic runtime LLM decisions and tool selection cannot be observed via static AST",
+        "Procedural workflow statement order does not imply internal framework agent scheduling"
+      ]
+    }
+  },
+  "runtime_observations": {
+    "total_runs": 30,
+    "successful_runs": 30,
+    "failed_runs": 0,
+    "observed_models": [
+      "openai/gpt-oss-120b"
+    ],
+    "key_distribution": {
+      "GROQ_API_KEY_1": 30,
+      "GROQ_API_KEY_2": 30,
+      "GROQ_API_KEY_3": 30,
+      "GROQ_API_KEY_4": 30,
+      "GROQ_API_KEY_5": 30,
+      "GROQ_API_KEY_6": 30
+    },
+    "workflow_latency": {
+      "mean_seconds": 14.664,
+      "median_seconds": 14.376,
+      "min_seconds": 10.564,
+      "max_seconds": 19.836,
+      "observation_count": 30
+    },
+    "workflow_tokens": {
+      "total_tokens": 242651,
+      "mean_tokens": 8088.4,
+      "min_tokens": 6804,
+      "max_tokens": 9165,
+      "total_prompt_tokens": 154042,
+      "mean_prompt_tokens": 5134.7,
+      "total_completion_tokens": 88609,
+      "mean_completion_tokens": 2953.6,
+      "observation_count": 30
+    },
+    "workflow_cost": {
+      "total_cost_usd": 0.16088,
+      "mean_cost_usd": 0.005363,
+      "pricing_source": "trace_telemetry_estimates",
+      "observation_count": 30
+    },
+    "agent_metrics": {
+      "ticket_classification_agent": {
+        "agent_id": "ticket_classification_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          1
+        ],
+        "latency": {
+          "mean_seconds": 1.4187,
+          "median_seconds": 1.4135,
+          "min_seconds": 1.124,
+          "max_seconds": 2.066,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 23310,
+          "mean_tokens": 777.0,
+          "min_tokens": 688,
+          "max_tokens": 920,
+          "total_prompt_tokens": 13102,
+          "mean_prompt_tokens": 436.7,
+          "total_completion_tokens": 10208,
+          "mean_completion_tokens": 340.3,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_1"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "category": "account_access",
+          "urgency": "medium",
+          "complexity": "simple",
+          "customer_impact": "high",
+          "routing_recommendation": "Assign to Account Access support queue with medium priority. Request any additional authentication details (e.g., last successful login IP, MFA device) if not already provided."
+        },
+        "error_count": 0
+      },
+      "policy_retrieval_agent": {
+        "agent_id": "policy_retrieval_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          2
+        ],
+        "latency": {
+          "mean_seconds": 1.4967,
+          "median_seconds": 1.522,
+          "min_seconds": 1.12,
+          "max_seconds": 2.03,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 27816,
+          "mean_tokens": 927.2,
+          "min_tokens": 778,
+          "max_tokens": 1162,
+          "total_prompt_tokens": 15617,
+          "mean_prompt_tokens": 520.6,
+          "total_completion_tokens": 12199,
+          "mean_completion_tokens": 406.6,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_2"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "applicable_policy_ids": [],
+          "applicable_guide_ids": [
+            "TSG-201"
+          ],
+          "policy_conditions": {
+            "eligibility": "No specific governing policy was found for this account‑access issue. The case falls under the generic support framework for Standard‑tier customers.",
+            "sla": {
+              "response_time": "Within 2 business days (Standard tier, low urgency)",
+              "resolution_time": "Target resolution within 5 business days, subject to issue complexity and verification steps."
+            },
+            "restrictions": [
+              "Applicable only after verifying the customer's identity using the registered email and phone as outlined in the troubleshooting guide.",
+              "Guide is marked as synthetic; therefore, the steps are intended for test scenarios and may not reflect production environment nuances.",
+              "Any deviation from the standard password‑reset flow (e.g., account lock escalation) must be escalated to the security team per internal escalation policy."
+            ]
+          },
+          "retrieval_summary": "Policy search returned no matching policies. One synthetic troubleshooting guide (TSG-201) was retrieved, covering account_access issues. Coverage flag is true due to the guide, but no formal policy SLA applies."
+        },
+        "error_count": 0
+      },
+      "issue_investigation_agent": {
+        "agent_id": "issue_investigation_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          3
+        ],
+        "latency": {
+          "mean_seconds": 1.7528,
+          "median_seconds": 1.719,
+          "min_seconds": 1.377,
+          "max_seconds": 2.692,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 35491,
+          "mean_tokens": 1183.0,
+          "min_tokens": 1090,
+          "max_tokens": 1331,
+          "total_prompt_tokens": 20196,
+          "mean_prompt_tokens": 673.2,
+          "total_completion_tokens": 15295,
+          "mean_completion_tokens": 509.8,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_3"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "investigation_findings": "The customer reports receiving an AUTH-403 error when attempting to access the dashboard. AUTH-403 typically indicates that the authentication request was understood but the user is not authorized to access the resource. No prior login‑related incidents are recorded for this account, and the ticket is marked as low urgency and simple complexity. The customer's tier (Standard) does not grant any special access exemptions that would bypass standard authentication checks.",
+          "root_cause_hypothesis": "Most likely the account is in a locked or disabled state due to either (a) multiple failed login attempts triggering an automatic lockout, (b) a recent password change that was not propagated to the authentication service, or (c) an IP‑based access restriction (e.g., geo‑block or corporate VPN change) that now denies access. A secondary possibility is a misconfiguration of the user's role/permissions after a recent system update.",
+          "confirmed_facts": {
+            "ticket_id": "TICK-2026-0001",
+            "customer_id": "CUST-0001",
+            "customer_name": "Enterprise Client 1",
+            "customer_tier": "Standard",
+            "subject": "[ACCOUNT_ACCESS] Cannot log into dashboard - error code AUTH-403",
+            "description": "Cannot log into dashboard - error code AUTH-403.",
+            "category": "account_access",
+            "urgency": "low",
+            "apparent_complexity": "simple",
+            "created_at": "2026-09-01T06:00:00",
+            "error_code": "AUTH-403",
+            "is_synthetic_ticket": true,
+            "customer_profile_is_synthetic": true,
+            "past_cases_exist": true,
+            "past_cases_categories": [
+              "billing",
+              "technical_failure"
+            ]
+          },
+          "data_gaps": [
+            "Authentication service logs for the customer's account covering the time window of the reported failure.",
+            "Current account status (active, locked, disabled) and lockout counters.",
+            "Password reset history and last password change timestamp.",
+            "MFA enrollment status and any recent MFA device changes.",
+            "IP address or geolocation of the login attempts and any IP‑allowlist/denylist rules applied to the account.",
+            "Recent role/permission changes or system updates that could affect dashboard access."
+          ]
+        },
+        "error_count": 0
+      },
+      "resolution_agent": {
+        "agent_id": "resolution_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          4
+        ],
+        "latency": {
+          "mean_seconds": 2.1169,
+          "median_seconds": 2.0415,
+          "min_seconds": 1.633,
+          "max_seconds": 3.126,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 52153,
+          "mean_tokens": 1738.4,
+          "min_tokens": 1404,
+          "max_tokens": 2270,
+          "total_prompt_tokens": 32181,
+          "mean_prompt_tokens": 1072.7,
+          "total_completion_tokens": 19972,
+          "mean_completion_tokens": 665.7,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_4"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "resolution_type": "requires_user_action",
+          "recommended_action": [
+            "1. Contact the customer and verify identity using the registered email address and phone number as specified in TSG-201 (the synthetic troubleshooting guide for account access).",
+            "2. Request the following details from the customer:",
+            "   - Timestamp and IP address of the last successful login (if known).",
+            "   - Any recent password change date.",
+            "   - MFA device information or recent MFA enrollment changes.",
+            "3. Once identity is confirmed, query the authentication service for the account status (active, locked, disabled) and lockout counters.",
+            "4. If the account is locked:",
+            "   - Unlock the account per standard procedure.",
+            "   - Reset the failed‑login counter.",
+            "5. If a password propagation issue is suspected:",
+            "   - Initiate a password reset flow and send the reset link to the verified email address.",
+            "6. If an IP‑based restriction appears to be the cause:",
+            "   - Ask the customer to confirm the IP address they are using.",
+            "   - Verify any IP allow‑list/deny‑list rules for the account and adjust them if the IP should be permitted.",
+            "7. Verify MFA status; if the MFA device was changed recently, re‑enroll the customer’s device.",
+            "8. After performing the above steps, ask the customer to attempt login again and confirm resolution.",
+            "9. Document all actions taken and close the ticket if access is restored; otherwise, proceed to escalation."
+          ],
+          "policy_justification": "The investigation falls under the generic support framework for Standard‑tier customers. Policy conditions require identity verification via registered email and phone before any account modifications (as outlined in TSG-201). No specific governing policy exists, so the standard SLA (response within 2 business days, resolution within 5 business days) applies. All actions adhere to the restrictions that any deviation from the normal password‑reset flow must be escalated, and we remain within the prescribed troubleshooting steps.",
+          "escalation_required": false
+        },
+        "error_count": 0
+      },
+      "response_drafting_agent": {
+        "agent_id": "response_drafting_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          5
+        ],
+        "latency": {
+          "mean_seconds": 2.3472,
+          "median_seconds": 1.933,
+          "min_seconds": 1.425,
+          "max_seconds": 6.327,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 40016,
+          "mean_tokens": 1333.9,
+          "min_tokens": 1026,
+          "max_tokens": 1608,
+          "total_prompt_tokens": 22734,
+          "mean_prompt_tokens": 757.8,
+          "total_completion_tokens": 17282,
+          "mean_completion_tokens": 576.1,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_5"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "response_text": "Dear Enterprise Client 1,\n\nThank you for reaching out about the AUTH‑403 error you encountered when attempting to log into the dashboard. We understand how important timely access is for your operations, and we’re here to help resolve this as quickly as possible.\n\nTo proceed, we need to verify your identity and gather a few details about the recent login attempts. Once verified, we will check the status of your account and take the appropriate actions (unlocking, password reset, IP‑allow list adjustments, or MFA re‑enrollment) to restore your access.\n\nWe appreciate your cooperation and will keep you informed at each step.\n\nBest regards,\nCustomer Support Team",
+          "tone": "professional and empathetic",
+          "next_steps_for_customer": [
+            "Reply to this email confirming your identity by providing the registered email address and phone number associated with your account (as per TSG‑201).",
+            "Provide the following information, if available:",
+            "  • Timestamp and IP address of the last successful login.",
+            "  • Date of any recent password change.",
+            "  • Details of your MFA device or any recent changes to MFA enrollment.",
+            "If you suspect an IP‑based restriction, please confirm the IP address you are currently using to access the dashboard."
+          ],
+          "ticket_status": "awaiting_customer_response"
+        },
+        "error_count": 0
+      },
+      "resolution_verification_agent": {
+        "agent_id": "resolution_verification_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          6
+        ],
+        "latency": {
+          "mean_seconds": 2.3984,
+          "median_seconds": 1.6655,
+          "min_seconds": 1.377,
+          "max_seconds": 8.142,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 63865,
+          "mean_tokens": 2128.8,
+          "min_tokens": 1587,
+          "max_tokens": 2528,
+          "total_prompt_tokens": 50212,
+          "mean_prompt_tokens": 1673.7,
+          "total_completion_tokens": 13653,
+          "mean_completion_tokens": 455.1,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_6"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "qa_status": "APPROVED",
+          "final_ticket_status": "ACTION_REQUIRED_BY_USER",
+          "verification_notes": "The drafted response acknowledges the AUTH-403 issue and correctly follows the synthetic troubleshooting guide (TSG-201) by requesting identity verification and relevant login details before any account changes. No unsupported promises are made, and all actions are within the stated policy restrictions. The response does not claim immediate resolution, which is appropriate given the missing data gaps, so the ticket remains open awaiting customer input.",
+          "support_summary_report": "The customer is experiencing an AUTH-403 error preventing dashboard access. The support team has identified likely causes (account lock, password propagation, IP restriction, MFA issues) and outlined a step‑by‑step remediation plan that requires identity verification and additional information from the customer. The response is professional, empathetic, and aligns with policy (identity verification via registered email/phone, no deviation from standard reset flow). The ticket should stay in 'awaiting_customer_response' status until the user provides the requested details, after which the support team can proceed with unlocking, password reset, IP allow‑list adjustments, or MFA re‑enrollment as needed."
+        },
+        "error_count": 0
+      }
+    },
+    "runs_summary": [
+      {
+        "run_id": "live_20261031_132411_trace01",
+        "status": "SUCCESS",
+        "duration_seconds": 16.551,
+        "total_tokens": 8759,
+        "prompt_tokens": 5609,
+        "completion_tokens": 3150,
+        "estimated_cost_usd": 0.005798,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:24:27.781238+00:00",
+        "trace_file": "live_20261031_132411_trace01.json"
+      },
+      {
+        "run_id": "live_20261031_132442_trace02",
+        "status": "SUCCESS",
+        "duration_seconds": 15.746,
+        "total_tokens": 7774,
+        "prompt_tokens": 4957,
+        "completion_tokens": 2817,
+        "estimated_cost_usd": 0.00515,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:24:58.312365+00:00",
+        "trace_file": "live_20261031_132442_trace02.json"
+      },
+      {
+        "run_id": "live_20261031_132458_trace03",
+        "status": "SUCCESS",
+        "duration_seconds": 14.622,
+        "total_tokens": 8125,
+        "prompt_tokens": 5063,
+        "completion_tokens": 3062,
+        "estimated_cost_usd": 0.005406,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:25:13.123788+00:00",
+        "trace_file": "live_20261031_132458_trace03.json"
+      },
+      {
+        "run_id": "live_20261031_132513_trace04",
+        "status": "SUCCESS",
+        "duration_seconds": 11.562,
+        "total_tokens": 7804,
+        "prompt_tokens": 5050,
+        "completion_tokens": 2754,
+        "estimated_cost_usd": 0.005155,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:25:24.694577+00:00",
+        "trace_file": "live_20261031_132513_trace04.json"
+      },
+      {
+        "run_id": "live_20261031_132524_trace05",
+        "status": "SUCCESS",
+        "duration_seconds": 12.394,
+        "total_tokens": 8489,
+        "prompt_tokens": 5342,
+        "completion_tokens": 3147,
+        "estimated_cost_usd": 0.005638,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:25:37.110669+00:00",
+        "trace_file": "live_20261031_132524_trace05.json"
+      },
+      {
+        "run_id": "live_20261031_132537_trace06",
+        "status": "SUCCESS",
+        "duration_seconds": 10.894,
+        "total_tokens": 7920,
+        "prompt_tokens": 5104,
+        "completion_tokens": 2816,
+        "estimated_cost_usd": 0.005236,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:25:48.010711+00:00",
+        "trace_file": "live_20261031_132537_trace06.json"
+      },
+      {
+        "run_id": "live_20261031_132548_trace07",
+        "status": "SUCCESS",
+        "duration_seconds": 10.564,
+        "total_tokens": 6991,
+        "prompt_tokens": 4545,
+        "completion_tokens": 2446,
+        "estimated_cost_usd": 0.004614,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:25:58.582116+00:00",
+        "trace_file": "live_20261031_132548_trace07.json"
+      },
+      {
+        "run_id": "live_20261031_132558_trace08",
+        "status": "SUCCESS",
+        "duration_seconds": 12.973,
+        "total_tokens": 9165,
+        "prompt_tokens": 5657,
+        "completion_tokens": 3508,
+        "estimated_cost_usd": 0.006109,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:26:11.555280+00:00",
+        "trace_file": "live_20261031_132558_trace08.json"
+      },
+      {
+        "run_id": "live_20261031_132611_trace09",
+        "status": "SUCCESS",
+        "duration_seconds": 12.031,
+        "total_tokens": 7987,
+        "prompt_tokens": 5017,
+        "completion_tokens": 2970,
+        "estimated_cost_usd": 0.005306,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:26:23.590902+00:00",
+        "trace_file": "live_20261031_132611_trace09.json"
+      },
+      {
+        "run_id": "live_20261031_132623_trace10",
+        "status": "SUCCESS",
+        "duration_seconds": 12.483,
+        "total_tokens": 7845,
+        "prompt_tokens": 4926,
+        "completion_tokens": 2919,
+        "estimated_cost_usd": 0.005212,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:26:36.079856+00:00",
+        "trace_file": "live_20261031_132623_trace10.json"
+      },
+      {
+        "run_id": "live_20261031_132636_trace11",
+        "status": "SUCCESS",
+        "duration_seconds": 11.884,
+        "total_tokens": 8305,
+        "prompt_tokens": 5329,
+        "completion_tokens": 2976,
+        "estimated_cost_usd": 0.005495,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:26:47.968552+00:00",
+        "trace_file": "live_20261031_132636_trace11.json"
+      },
+      {
+        "run_id": "live_20261031_132647_trace12",
+        "status": "SUCCESS",
+        "duration_seconds": 12.06,
+        "total_tokens": 8048,
+        "prompt_tokens": 5085,
+        "completion_tokens": 2963,
+        "estimated_cost_usd": 0.005341,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:27:00.029993+00:00",
+        "trace_file": "live_20261031_132647_trace12.json"
+      },
+      {
+        "run_id": "live_20261031_132700_trace13",
+        "status": "SUCCESS",
+        "duration_seconds": 13.0,
+        "total_tokens": 8747,
+        "prompt_tokens": 5204,
+        "completion_tokens": 3543,
+        "estimated_cost_usd": 0.005869,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:27:13.034282+00:00",
+        "trace_file": "live_20261031_132700_trace13.json"
+      },
+      {
+        "run_id": "live_20261031_132713_trace14",
+        "status": "SUCCESS",
+        "duration_seconds": 18.542,
+        "total_tokens": 8542,
+        "prompt_tokens": 5292,
+        "completion_tokens": 3250,
+        "estimated_cost_usd": 0.00569,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:27:31.587902+00:00",
+        "trace_file": "live_20261031_132713_trace14.json"
+      },
+      {
+        "run_id": "live_20261031_132731_trace15",
+        "status": "SUCCESS",
+        "duration_seconds": 16.179,
+        "total_tokens": 7191,
+        "prompt_tokens": 4757,
+        "completion_tokens": 2434,
+        "estimated_cost_usd": 0.004729,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:27:47.773360+00:00",
+        "trace_file": "live_20261031_132731_trace15.json"
+      },
+      {
+        "run_id": "live_20261031_132747_trace16",
+        "status": "SUCCESS",
+        "duration_seconds": 19.447,
+        "total_tokens": 8505,
+        "prompt_tokens": 5354,
+        "completion_tokens": 3151,
+        "estimated_cost_usd": 0.005648,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:28:07.225411+00:00",
+        "trace_file": "live_20261031_132747_trace16.json"
+      },
+      {
+        "run_id": "live_20261031_132807_trace17",
+        "status": "SUCCESS",
+        "duration_seconds": 16.884,
+        "total_tokens": 8590,
+        "prompt_tokens": 5453,
+        "completion_tokens": 3137,
+        "estimated_cost_usd": 0.005696,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:28:24.118926+00:00",
+        "trace_file": "live_20261031_132807_trace17.json"
+      },
+      {
+        "run_id": "live_20261031_132824_trace18",
+        "status": "SUCCESS",
+        "duration_seconds": 14.281,
+        "total_tokens": 7570,
+        "prompt_tokens": 4908,
+        "completion_tokens": 2662,
+        "estimated_cost_usd": 0.004999,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:28:38.415823+00:00",
+        "trace_file": "live_20261031_132824_trace18.json"
+      },
+      {
+        "run_id": "live_20261031_132838_trace19",
+        "status": "SUCCESS",
+        "duration_seconds": 15.704,
+        "total_tokens": 8738,
+        "prompt_tokens": 5204,
+        "completion_tokens": 3534,
+        "estimated_cost_usd": 0.005862,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:28:54.119799+00:00",
+        "trace_file": "live_20261031_132838_trace19.json"
+      },
+      {
+        "run_id": "live_20261031_132854_trace20",
+        "status": "SUCCESS",
+        "duration_seconds": 18.096,
+        "total_tokens": 7681,
+        "prompt_tokens": 4850,
+        "completion_tokens": 2831,
+        "estimated_cost_usd": 0.005098,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:29:12.227006+00:00",
+        "trace_file": "live_20261031_132854_trace20.json"
+      },
+      {
+        "run_id": "live_20261031_132912_trace21",
+        "status": "SUCCESS",
+        "duration_seconds": 14.471,
+        "total_tokens": 8496,
+        "prompt_tokens": 5396,
+        "completion_tokens": 3100,
+        "estimated_cost_usd": 0.005633,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:29:26.701471+00:00",
+        "trace_file": "live_20261031_132912_trace21.json"
+      },
+      {
+        "run_id": "live_20261031_132926_trace22",
+        "status": "SUCCESS",
+        "duration_seconds": 17.27,
+        "total_tokens": 7999,
+        "prompt_tokens": 5137,
+        "completion_tokens": 2862,
+        "estimated_cost_usd": 0.005292,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:29:43.980834+00:00",
+        "trace_file": "live_20261031_132926_trace22.json"
+      },
+      {
+        "run_id": "live_20261031_132943_trace23",
+        "status": "SUCCESS",
+        "duration_seconds": 12.244,
+        "total_tokens": 6804,
+        "prompt_tokens": 4520,
+        "completion_tokens": 2284,
+        "estimated_cost_usd": 0.004471,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:29:56.231623+00:00",
+        "trace_file": "live_20261031_132943_trace23.json"
+      },
+      {
+        "run_id": "live_20261031_132956_trace24",
+        "status": "SUCCESS",
+        "duration_seconds": 18.312,
+        "total_tokens": 9013,
+        "prompt_tokens": 5709,
+        "completion_tokens": 3304,
+        "estimated_cost_usd": 0.005978,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:30:14.545521+00:00",
+        "trace_file": "live_20261031_132956_trace24.json"
+      },
+      {
+        "run_id": "live_20261031_133014_trace25",
+        "status": "SUCCESS",
+        "duration_seconds": 16.76,
+        "total_tokens": 8422,
+        "prompt_tokens": 5432,
+        "completion_tokens": 2990,
+        "estimated_cost_usd": 0.005567,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:30:31.311643+00:00",
+        "trace_file": "live_20261031_133014_trace25.json"
+      },
+      {
+        "run_id": "live_20261031_133031_trace26",
+        "status": "SUCCESS",
+        "duration_seconds": 14.52,
+        "total_tokens": 7635,
+        "prompt_tokens": 4926,
+        "completion_tokens": 2709,
+        "estimated_cost_usd": 0.005046,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:30:45.840139+00:00",
+        "trace_file": "live_20261031_133031_trace26.json"
+      },
+      {
+        "run_id": "live_20261031_133045_trace27",
+        "status": "SUCCESS",
+        "duration_seconds": 19.836,
+        "total_tokens": 8130,
+        "prompt_tokens": 5209,
+        "completion_tokens": 2921,
+        "estimated_cost_usd": 0.005381,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:31:05.692623+00:00",
+        "trace_file": "live_20261031_133045_trace27.json"
+      },
+      {
+        "run_id": "live_20261031_133105_trace28",
+        "status": "SUCCESS",
+        "duration_seconds": 13.822,
+        "total_tokens": 7752,
+        "prompt_tokens": 5035,
+        "completion_tokens": 2717,
+        "estimated_cost_usd": 0.005117,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:31:19.518831+00:00",
+        "trace_file": "live_20261031_133105_trace28.json"
+      },
+      {
+        "run_id": "live_20261031_133119_trace29",
+        "status": "SUCCESS",
+        "duration_seconds": 12.864,
+        "total_tokens": 7679,
+        "prompt_tokens": 4916,
+        "completion_tokens": 2763,
+        "estimated_cost_usd": 0.005083,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:31:32.391915+00:00",
+        "trace_file": "live_20261031_133119_trace29.json"
+      },
+      {
+        "run_id": "live_20261031_133132_trace30",
+        "status": "SUCCESS",
+        "duration_seconds": 13.925,
+        "total_tokens": 7945,
+        "prompt_tokens": 5056,
+        "completion_tokens": 2889,
+        "estimated_cost_usd": 0.005265,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T13:31:46.327146+00:00",
+        "trace_file": "live_20261031_133132_trace30.json"
+      }
+    ]
+  },
+  "workflow_graph": {
+    "nodes": [
+      {
+        "id": "workflow:customer_support",
+        "type": "workflow",
+        "name": "customer_support",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:issue_investigation_agent",
+        "type": "agent",
+        "name": "issue_investigation_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:policy_retrieval_agent",
+        "type": "agent",
+        "name": "policy_retrieval_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:resolution_agent",
+        "type": "agent",
+        "name": "resolution_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:resolution_verification_agent",
+        "type": "agent",
+        "name": "resolution_verification_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:response_drafting_agent",
+        "type": "agent",
+        "name": "response_drafting_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:ticket_classification_agent",
+        "type": "agent",
+        "name": "ticket_classification_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "task:issue_investigation_agent_task",
+        "type": "task",
+        "name": "issue_investigation_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:policy_retrieval_agent_task",
+        "type": "task",
+        "name": "policy_retrieval_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:resolution_agent_task",
+        "type": "task",
+        "name": "resolution_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:resolution_verification_agent_task",
+        "type": "task",
+        "name": "resolution_verification_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:response_drafting_agent_task",
+        "type": "task",
+        "name": "response_drafting_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:ticket_classification_agent_task",
+        "type": "task",
+        "name": "ticket_classification_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:create_task",
+        "type": "function",
+        "name": "create_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:deterministic_customer_lookup",
+        "type": "function",
+        "name": "deterministic_customer_lookup",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:deterministic_policy_retrieval",
+        "type": "function",
+        "name": "deterministic_policy_retrieval",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:deterministic_classification_hints",
+        "type": "function",
+        "name": "deterministic_classification_hints",
+        "source": "statically_observed"
+      }
+    ],
+    "edges": [
+      {
+        "source": "agent:issue_investigation_agent",
+        "target": "task:issue_investigation_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "source": "agent:policy_retrieval_agent",
+        "target": "task:policy_retrieval_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "source": "agent:resolution_agent",
+        "target": "task:resolution_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "source": "agent:resolution_verification_agent",
+        "target": "task:resolution_verification_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "source": "agent:response_drafting_agent",
+        "target": "task:response_drafting_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "source": "agent:ticket_classification_agent",
+        "target": "task:ticket_classification_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "source": "agent:issue_investigation_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "source": "agent:issue_investigation_agent",
+        "target": "function:deterministic_customer_lookup",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "source": "agent:policy_retrieval_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "source": "agent:policy_retrieval_agent",
+        "target": "function:deterministic_policy_retrieval",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "source": "agent:resolution_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "source": "agent:resolution_verification_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "source": "agent:response_drafting_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "source": "agent:ticket_classification_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "source": "agent:ticket_classification_agent",
+        "target": "function:deterministic_classification_hints",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "source": "workflow:customer_support",
+        "target": "agent:resolution_verification_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:customer_support",
+        "target": "agent:policy_retrieval_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:customer_support",
+        "target": "agent:resolution_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:customer_support",
+        "target": "agent:response_drafting_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:customer_support",
+        "target": "agent:ticket_classification_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:customer_support",
+        "target": "agent:issue_investigation_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "agent:ticket_classification_agent",
+        "target": "agent:policy_retrieval_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:policy_retrieval_agent",
+        "target": "agent:issue_investigation_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:issue_investigation_agent",
+        "target": "agent:resolution_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:policy_retrieval_agent",
+        "target": "agent:resolution_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:resolution_agent",
+        "target": "agent:response_drafting_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:response_drafting_agent",
+        "target": "agent:resolution_verification_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:ticket_classification_agent",
+        "target": "agent:policy_retrieval_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:policy_retrieval_agent",
+        "target": "agent:issue_investigation_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:issue_investigation_agent",
+        "target": "agent:resolution_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:resolution_agent",
+        "target": "agent:response_drafting_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:response_drafting_agent",
+        "target": "agent:resolution_verification_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      }
+    ]
+  },
+  "reconciliation_and_limitations": {
+    "agent_reconciliation": [
+      {
+        "agent_id": "issue_investigation_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "policy_retrieval_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "resolution_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "resolution_verification_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "response_drafting_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "ticket_classification_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      }
+    ],
+    "dependency_reconciliation": [
+      {
+        "source": "ticket_classification_agent",
+        "target": "policy_retrieval_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "policy_retrieval_agent",
+        "target": "issue_investigation_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "issue_investigation_agent",
+        "target": "resolution_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "policy_retrieval_agent",
+        "target": "resolution_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "resolution_agent",
+        "target": "response_drafting_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "response_drafting_agent",
+        "target": "resolution_verification_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      }
+    ],
+    "model_reconciliation": {
+      "declared_model": "openai/gpt-oss-120b",
+      "statically_extracted_model": null,
+      "runtime_observed_model": "openai/gpt-oss-120b",
+      "status": "matching",
+      "notes": "Declared model 'openai/gpt-oss-120b' matches runtime enforced model 'openai/gpt-oss-120b'."
+    },
+    "limitations": [
+      "Per-agent cost in traces is not tracked individually; only workflow-level cost is recorded.",
+      "Dynamic runtime branch outcomes and retry loops are recorded as sequential executions.",
+      "Static prompt text reflects task description parameters; dynamic LLM runtime prompt interpolations are reflected in trace prompt tokens.",
+      "Static AST dependency graph was a flat star topology; inter-agent dependencies are reconciled from workflow.json and runtime trace sequences."
+    ]
+  }
+}

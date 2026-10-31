@@ -1,0 +1,268 @@
+{
+  "run_id": "live_20261031_131025_trace15",
+  "workflow_name": "invoice_processing",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 431.923,
+  "agent_execution_count": 8,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.845,
+      "tokens": 1071,
+      "prompt_tokens": 569,
+      "completion_tokens": 502,
+      "output": {
+        "extracted_invoice": {
+          "invoice_number": "INV-2026-0015",
+          "supplier_id": "SUP-105",
+          "supplier_name": "NextGen Logistics Corp.",
+          "po_reference": "PO-2026-0015",
+          "invoice_date": "2026-09-09",
+          "due_date": "2026-10-09",
+          "currency": "USD",
+          "line_items": [
+            {
+              "description": "Bulk Whiteboard Markers Pack",
+              "quantity": 14,
+              "unit_price": 45.0,
+              "line_total": 630.0
+            },
+            {
+              "description": "Ergonomic Office Chair",
+              "quantity": 10,
+              "unit_price": 250.0,
+              "line_total": 2500.0
+            },
+            {
+              "description": "SSD NVMe 2TB Enterprise",
+              "quantity": 19,
+              "unit_price": 220.0,
+              "line_total": 4180.0
+            }
+          ],
+          "subtotal": 7310.0,
+          "tax": 584.8,
+          "discount": 0.0,
+          "total_amount": 7894.8
+        },
+        "extraction_flags": {
+          "missing_fields": [],
+          "ambiguous_fields": [],
+          "inconsistent_fields": []
+        }
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "invoice_extraction_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.463,
+      "tokens": 954,
+      "prompt_tokens": 622,
+      "completion_tokens": 332,
+      "output": {
+        "validation_status": "PASSED",
+        "math_audit": {
+          "is_arithmetic_valid": true,
+          "calculated_subtotal": 7310.0,
+          "calculated_total": 7894.8,
+          "stated_total": 7894.8,
+          "discrepancy_amount": 0.0,
+          "line_discrepancies": []
+        },
+        "validation_errors": []
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "invoice_validation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.252,
+      "tokens": 1015,
+      "prompt_tokens": 842,
+      "completion_tokens": 173,
+      "output": {
+        "po_match_status": "EXACT_MATCH",
+        "matched_po_id": "PO-2026-0015",
+        "discrepancies": [],
+        "matching_confidence": 1.0
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "po_matching_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 1.387,
+      "tokens": 945,
+      "prompt_tokens": 597,
+      "completion_tokens": 348,
+      "output": {
+        "is_compliant": true,
+        "applied_policy_ids": [
+          "POL-AP-001",
+          "POL-AP-002",
+          "POL-AP-003"
+        ],
+        "violations": [],
+        "compliance_summary": "The invoice INV-2026-0015 complies with all applied policies. POL-AP-001 (vendor eligibility) is satisfied as NextGen Logistics Corp. is an approved supplier. POL-AP-002 (transaction threshold) is met; the total amount of $7,894.80 is below the $10,000 limit. POL-AP-003 (line‑item limits) is satisfied; each line item total is under the $5,000 per‑item ceiling. No fatal violations or secondary sign‑off flags were identified."
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "policy_compliance_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 415.103,
+      "tokens": 1030,
+      "prompt_tokens": 649,
+      "completion_tokens": 381,
+      "output": {
+        "duplicate_status": "EXACT_DUPLICATE",
+        "matching_records": [
+          {
+            "historical_invoice_id": "INV-HIST-0014",
+            "matched_fields": [
+              "supplier_id",
+              "po_reference",
+              "total_amount"
+            ]
+          }
+        ],
+        "risk_assessment": {
+          "risk_level": "HIGH",
+          "recommendation": "Reject payment pending further verification; invoice appears to be an exact duplicate of a previously processed invoice."
+        }
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "duplicate_detection_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 2.023,
+      "tokens": 1654,
+      "prompt_tokens": 1004,
+      "completion_tokens": 650,
+      "output": {
+        "has_exceptions": true,
+        "exception_count": 1,
+        "critical_exceptions": [],
+        "detailed_exceptions": [
+          {
+            "type": "DuplicateInvoice",
+            "description": "Exact duplicate of historical invoice INV-HIST-0014 (supplier_id, po_reference, total_amount match).",
+            "severity": "HIGH",
+            "resolvable_via_human_review": true,
+            "is_fatal_blocker": true,
+            "risk_level": "HIGH",
+            "recommendation": "Reject payment pending further verification."
+          }
+        ]
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "exception_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 1.353,
+      "tokens": 1492,
+      "prompt_tokens": 1170,
+      "completion_tokens": 322,
+      "output": {
+        "recommendation": "rejected",
+        "justification": "The invoice passes PO matching (EXACT_MATCH to PO-2026-0015), complies with all applicable policies (POL-AP-001, POL-AP-002, POL-AP-003), and the arithmetic validation is correct (subtotal, tax, total). However, duplicate detection identified an exact duplicate of historical invoice INV-HIST-0014 with matching supplier_id, po_reference, and total_amount, resulting in a HIGH risk assessment. The exception analysis flags this as a fatal, high‑severity DuplicateInvoice exception requiring human verification. Consequently, payment must be rejected pending further investigation.",
+        "conditions": [
+          "PO match status: EXACT_MATCH",
+          "Policy compliance: true (POL-AP-001, POL-AP-002, POL-AP-003)",
+          "Math audit: arithmetic valid, no discrepancies",
+          "Duplicate detection: EXACT_DUPLICATE, risk level HIGH"
+        ]
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "approval_recommendation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_8 (gsk_yt...AwPO)",
+      "duration_seconds": 2.799,
+      "tokens": 2330,
+      "prompt_tokens": 1344,
+      "completion_tokens": 986,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "invoice_id": "INV-2026-0015",
+        "final_recommendation": "rejected",
+        "risk_level": "HIGH",
+        "summary_report": "The invoice INV-2026-0015 passed extraction, arithmetic validation, PO matching (EXACT_MATCH), and policy compliance (all policies satisfied). However, duplicate detection flagged it as an EXACT_DUPLICATE of historical invoice INV-HIST-0014 with matching supplier_id, po_reference, and total_amount, resulting in a HIGH risk assessment. The exception analysis recorded a fatal, high‑severity DuplicateInvoice exception requiring human review. Consequently, the payment is recommended to be rejected pending further verification.",
+        "audit_findings": {
+          "extraction": {
+            "status": "completed",
+            "issues": []
+          },
+          "validation": {
+            "status": "PASSED",
+            "math_audit": {
+              "subtotal_match": true,
+              "total_match": true,
+              "discrepancy": 0.0
+            }
+          },
+          "po_matching": {
+            "status": "EXACT_MATCH",
+            "matched_po_id": "PO-2026-0015"
+          },
+          "policy_compliance": {
+            "status": "COMPLIANT",
+            "applied_policies": [
+              "POL-AP-001",
+              "POL-AP-002",
+              "POL-AP-003"
+            ]
+          },
+          "duplicate_detection": {
+            "status": "EXACT_DUPLICATE",
+            "risk_level": "HIGH",
+            "historical_invoice": "INV-HIST-0014"
+          },
+          "exception_analysis": {
+            "critical_exceptions": [],
+            "fatal_exceptions": [
+              {
+                "type": "DuplicateInvoice",
+                "severity": "HIGH",
+                "recommendation": "Reject payment pending further verification."
+              }
+            ]
+          },
+          "approval_recommendation": {
+            "recommendation": "rejected",
+            "justification": "Duplicate invoice high risk."
+          }
+        }
+      },
+      "notes": "",
+      "order": 8,
+      "agent_id": "final_review_agent_invoice"
+    }
+  ],
+  "total_tokens": 10491,
+  "prompt_tokens": 6797,
+  "completion_tokens": 3694,
+  "estimated_cost_usd": 0.006928,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"invoice_id\": \"INV-2026-0015\",\n  \"final_recommendation\": \"rejected\",\n  \"risk_level\": \"HIGH\",\n  \"summary_report\": \"The invoice INV-2026-0015 passed extraction, arithmetic validation, PO matching (EXACT_MATCH), and policy compliance (all policies satisfied). However, duplicate detection flagged it as an EXACT_DUPLICATE of historical invoice INV-HIST-0014 with matching supplier_id, po_reference, and total_amount, resulting in a HIGH risk assessment. The exception analysis recorded a fatal, high\\u2011severity DuplicateInvoice exception requiring human review. Consequently, the payment is recommended to be rejected pending further verification.\",\n  \"audit_findings\": {\n    \"extraction\": {\n      \"status\": \"completed\",\n      \"issues\": []\n    },\n    \"validation\": {\n      \"status\": \"PASSED\",\n      \"math_audit\": {\n        \"subtotal_match\": true,\n        \"total_match\": true,\n        \"discrepancy\": 0.0\n      }\n    },\n    \"po_matching\": {\n      \"status\": \"EXACT_MATCH\",\n      \"matched_po_id\": \"PO-2026-0015\"\n    },\n    \"policy_compliance\": {\n      \"status\": \"COMPLIANT\",\n      \"applied_policies\": [\n        \"POL-AP-001\",\n        \"POL-AP-002\",\n        \"POL-AP-003\"\n      ]\n    },\n    \"duplicate_detection\": {\n      \"status\": \"EXACT_DUPLICATE\",\n      \"risk_level\": \"HIGH\",\n      \"historical_invoice\": \"INV-HIST-0014\"\n    },\n    \"exception_analysis\": {\n      \"critical_exceptions\": [],\n      \"fatal_exceptions\": [\n        {\n          \"type\": \"DuplicateInvoice\",\n          \"severity\": \"HIGH\",\n          \"recommendation\": \"Reject payment pending further verification.\"\n        }\n      ]\n    },\n    \"approval_recommendation\": {\n      \"recommendation\": \"rejected\",\n      \"justification\": \"Duplicate invoice high risk.\"\n    }\n  }\n}",
+  "timestamp": "2026-10-31T13:17:37.627239+00:00"
+}

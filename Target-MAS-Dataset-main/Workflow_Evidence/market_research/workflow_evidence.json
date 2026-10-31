@@ -1,0 +1,2859 @@
+{
+  "metadata": {
+    "workflow_id": "market_research",
+    "workflow_name": "market_research",
+    "evidence_schema_version": "1.0",
+    "generated_at": "2026-10-31T21:20:02.111656+00:00",
+    "traces_discovered": 30,
+    "traces_processed": 30,
+    "traces_failed": 0,
+    "input_files": {
+      "workflow_json": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\market_research\\workflow.json",
+      "workflow_context_json": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\market_research\\workflow_context.json",
+      "traces_directory": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Ingestion_Traces_final\\Ingestion_Traces\\market_research",
+      "trace_files": [
+        "live_20261031_184233_trace01.json",
+        "live_20261031_184400_trace02.json",
+        "live_20261031_184525_trace03.json",
+        "live_20261031_184629_trace04.json",
+        "live_20261031_184722_trace05.json",
+        "live_20261031_185827_trace06.json",
+        "live_20261031_185944_trace07.json",
+        "live_20261031_190028_trace08.json",
+        "live_20261031_190112_trace09.json",
+        "live_20261031_190155_trace10.json",
+        "live_20261031_190237_trace11.json",
+        "live_20261031_190323_trace12.json",
+        "live_20261031_190406_trace13.json",
+        "live_20261031_190449_trace14.json",
+        "live_20261031_190531_trace15.json",
+        "live_20261031_190614_trace16.json",
+        "live_20261031_190659_trace17.json",
+        "live_20261031_190743_trace18.json",
+        "live_20261031_190829_trace19.json",
+        "live_20261031_190916_trace20.json",
+        "live_20261031_191003_trace21.json",
+        "live_20261031_191047_trace22.json",
+        "live_20261031_191128_trace23.json",
+        "live_20261031_191211_trace24.json",
+        "live_20261031_191253_trace25.json",
+        "live_20261031_191335_trace26.json",
+        "live_20261031_191551_trace27.json",
+        "live_20261031_191702_trace28.json",
+        "live_20261031_191810_trace29.json",
+        "live_20261031_191936_trace30.json"
+      ]
+    },
+    "aggregation_status": "complete"
+  },
+  "workflow_definition": {
+    "description": "Baseline 9-agent sequential competitor research and fact-checked synthesis workflow.",
+    "version": "1.0.0",
+    "declared_agents": [
+      {
+        "agent_id": "",
+        "name": "Research Planning Specialist",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "research_query"
+        ],
+        "declared_outputs": [
+          "target_competitors",
+          "evaluation_dimensions",
+          "evidence_gathering_plan"
+        ],
+        "declared_dependencies": [],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Company Profiling Specialist",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "target_competitors",
+          "profile_documents"
+        ],
+        "declared_outputs": [
+          "competitor_profiles",
+          "source_doc_ids"
+        ],
+        "declared_dependencies": [
+          "planning_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Product Capabilities Analyst",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "product_documents"
+        ],
+        "declared_outputs": [
+          "technical_capabilities",
+          "metrics",
+          "sdk_support",
+          "source_doc_ids"
+        ],
+        "declared_dependencies": [
+          "planning_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Pricing & Commercial Terms Specialist",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "pricing_documents"
+        ],
+        "declared_outputs": [
+          "commercial_tiers",
+          "overage_clauses",
+          "minimums",
+          "source_doc_ids"
+        ],
+        "declared_dependencies": [
+          "planning_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Customer Feedback & Review Analyst",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "feedback_documents"
+        ],
+        "declared_outputs": [
+          "customer_sentiments",
+          "reported_outages",
+          "praise",
+          "source_doc_ids"
+        ],
+        "declared_dependencies": [
+          "planning_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Evidence Correlation & Conflict Analyst",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "profiles",
+          "products",
+          "pricing",
+          "feedback"
+        ],
+        "declared_outputs": [
+          "triangulated_evidence",
+          "verified_contradictions",
+          "citation_gaps"
+        ],
+        "declared_dependencies": [
+          "profile_agent",
+          "product_agent",
+          "pricing_agent",
+          "feedback_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Competitor Comparison & Matrix Specialist",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "triangulated_evidence"
+        ],
+        "declared_outputs": [
+          "comparison_matrix",
+          "factual_specifications"
+        ],
+        "declared_dependencies": [
+          "evidence_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Research Synthesis & Narrative Specialist",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "comparison_matrix",
+          "evidence_report"
+        ],
+        "declared_outputs": [
+          "executive_research_narrative",
+          "recommendations"
+        ],
+        "declared_dependencies": [
+          "comparison_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Fact-Checking & Citation Verification Specialist",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "synthesis_narrative",
+          "all_source_documents"
+        ],
+        "declared_outputs": [
+          "final_checked_report",
+          "verified_citations",
+          "audit_flags"
+        ],
+        "declared_dependencies": [
+          "synthesis_agent"
+        ],
+        "assigned_key_env": null
+      }
+    ],
+    "declared_dependencies": [
+      {
+        "source": "planning_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "planning_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "planning_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "planning_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "profile_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "product_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "pricing_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "feedback_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "evidence_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "comparison_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "synthesis_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      }
+    ],
+    "declared_execution_order": [
+      "planning_agent",
+      "profile_agent",
+      "product_agent",
+      "pricing_agent",
+      "feedback_agent",
+      "evidence_agent",
+      "comparison_agent",
+      "synthesis_agent",
+      "fact_check_agent"
+    ],
+    "declared_model_configuration": {
+      "model": "openai/gpt-oss-120b",
+      "provider": null,
+      "assigned_groq_key_env": null
+    },
+    "optimizer_annotations": {
+      "optimization_opportunities": [
+        "Parallel execution of 4 data collection agents (profile, product, pricing, feedback)",
+        "Consolidating comparison and synthesis into a single-pass executive briefing agent",
+        "Direct retrieval of source citations during synthesis to prune independent fact-check overhead",
+        "Early routing for single-competitor deep dives"
+      ],
+      "hypothesis_disclaimer": "Declared candidate hypothesis from workflow specification, not an empirical or validated optimization opportunity."
+    }
+  },
+  "static_implementation_context": {
+    "source_files": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "agents": [
+      {
+        "agent_id": "comparison_agent",
+        "role": "Competitor Comparison & Matrix Specialist",
+        "goal": "Construct a multi-dimensional comparison matrix contrasting all 4 competitors. Clearly distinguish measured factual specifications from qualitative assessments. Cite doc_ids.",
+        "backstory": "You are a Competitive Strategy Director who synthesizes fragmented technical data into clear, actionable side-by-side matrices for executive evaluation.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'Construct a side-by-side competitor matrix for CloudScale AI, DataPulse Systems, NexusOps Technologies, and Veloce Security across dimensions:\\nFocus, Architecture, Key Strengths, Known Weaknesses, Starting Price, and SLA.\\nCorrelated Evidence: {evid_text}\\nClearly distinguish factual specs from analytical opinions. Include doc_ids.'",
+            "expected_output": "Structured competitor comparison matrix with citations.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'Construct a side-by-side competitor matrix for CloudScale AI, DataPulse Systems, NexusOps Technologies, and Veloce Security across dimensions:\\nFocus, Architecture, Key Strengths, Known Weaknesses, Starting Price, and SLA.\\nCorrelated Evidence: {evid_text}\\nClearly distinguish factual specs from analytical opinions. Include doc_ids.'",
+          "Backstory: You are a Competitive Strategy Director who synthesizes fragmented technical data into clear, actionable side-by-side matrices for executive evaluation."
+        ],
+        "model": "comparison_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\market_research\\comparison_agent.py",
+        "start_line": 11,
+        "end_line": 25,
+        "evidence_refs": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "agent_id": "evidence_agent",
+        "role": "Evidence Correlation & Conflict Analyst",
+        "goal": "Cross-examine findings from profile, product, pricing, and feedback agents. Highlight contradictions (e.g., advertised SLAs vs customer reported outages, flat rates vs hidden overages), missing citations, and unresolved discrepancies.",
+        "backstory": "You are an Investigative Research Editor who verifies information triangulation, identifies inconsistencies between marketing claims and customer experiences, and ensures source attribution.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'Cross-examine the evidence collected across all 4 domains:\\nProfiles: {prof_text}\\nProduct: {prod_text}\\nPricing: {price_text}\\nFeedback: {feed_text}\\nIdentify deliberate conflicts (e.g., uptime SLA vs customer reported outages, flat fees vs hidden overages). Flag any unsupported claims and preserve all source doc_ids.'",
+            "expected_output": "JSON containing triangulated evidence, verified contradictions, and citation gaps.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'Cross-examine the evidence collected across all 4 domains:\\nProfiles: {prof_text}\\nProduct: {prod_text}\\nPricing: {price_text}\\nFeedback: {feed_text}\\nIdentify deliberate conflicts (e.g., uptime SLA vs customer reported outages, flat fees vs hidden overages). Flag any unsupported claims and preserve all source doc_ids.'",
+          "Backstory: You are an Investigative Research Editor who verifies information triangulation, identifies inconsistencies between marketing claims and customer experiences, and ensures source attribution."
+        ],
+        "model": "evidence_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\market_research\\evidence_agent.py",
+        "start_line": 11,
+        "end_line": 26,
+        "evidence_refs": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "agent_id": "fact_check_agent",
+        "role": "Fact-Checking & Citation Verification Specialist",
+        "goal": "Audit all factual statements and metrics in the synthesis report against source doc_ids. Flag unsupported claims, verify citations, and guarantee the report is marked as synthetic data.",
+        "backstory": "You are a Head of Research Integrity and Fact-Checking. You ensure no unverified assertion, hallucination, or fabricated citation survives into the published report.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'Perform an audit on this final synthesis report:\\n{synth_text}\\nVerify that key claims reference valid doc_ids (DOC-CS-*, DOC-DP-*, DOC-NO-*, DOC-VS-*). Flag any unsupported statements. Confirm the report is marked as synthetic data.'",
+            "expected_output": "Final checked report with fact-check audit summary and verified citations.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'Perform an audit on this final synthesis report:\\n{synth_text}\\nVerify that key claims reference valid doc_ids (DOC-CS-*, DOC-DP-*, DOC-NO-*, DOC-VS-*). Flag any unsupported statements. Confirm the report is marked as synthetic data.'",
+          "Backstory: You are a Head of Research Integrity and Fact-Checking. You ensure no unverified assertion, hallucination, or fabricated citation survives into the published report."
+        ],
+        "model": "fact_check_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\market_research\\fact_check_agent.py",
+        "start_line": 11,
+        "end_line": 25,
+        "evidence_refs": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "agent_id": "feedback_agent",
+        "role": "Customer Feedback & Review Analyst",
+        "goal": "Extract real-world customer feedback, reported production outages, praise, and usability complaints across competitors. Keep recorded quotes strictly separate from conclusions.",
+        "backstory": "You are a Voice of Customer (VoC) Market Researcher who analyzes verified user testimonials, G2 reviews, and community sentiment to assess customer satisfaction.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'Analyze customer reviews and reported field experiences:\\n{json.dumps(feedback_docs, indent=2)}\\nSummarize user feedback, reported outages, praise, and usability friction. Separate recorded quotes from subjective conclusions and cite doc_ids.'",
+            "expected_output": "JSON customer feedback analysis citing specific review doc_ids.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'Analyze customer reviews and reported field experiences:\\n{json.dumps(feedback_docs, indent=2)}\\nSummarize user feedback, reported outages, praise, and usability friction. Separate recorded quotes from subjective conclusions and cite doc_ids.'",
+          "Backstory: You are a Voice of Customer (VoC) Market Researcher who analyzes verified user testimonials, G2 reviews, and community sentiment to assess customer satisfaction."
+        ],
+        "model": "feedback_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [
+          "query_feedback_documents"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\market_research\\feedback_agent.py",
+        "start_line": 25,
+        "end_line": 39,
+        "evidence_refs": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "agent_id": "planning_agent",
+        "role": "Research Planning Specialist",
+        "goal": "Deconstruct the user's market inquiry into key comparison dimensions (architecture, latency, pricing, SLA, customer sentiment). Identify target competitors and define the evidence matrix.",
+        "backstory": "You are a Strategic Market Intelligence Lead who designs structured, rigorous competitive research methodologies and investigative plans.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'Develop a structured research plan for this market inquiry:\\nInquiry: {q_text}\\nIdentify key comparison dimensions (architecture, throughput, pricing, SLA, customer sentiment) for competitors: CloudScale AI, DataPulse Systems, NexusOps Technologies, and Veloce Security.'",
+            "expected_output": "JSON containing target_competitors, evaluation_dimensions, and evidence_gathering_plan.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'Develop a structured research plan for this market inquiry:\\nInquiry: {q_text}\\nIdentify key comparison dimensions (architecture, throughput, pricing, SLA, customer sentiment) for competitors: CloudScale AI, DataPulse Systems, NexusOps Technologies, and Veloce Security.'",
+          "Backstory: You are a Strategic Market Intelligence Lead who designs structured, rigorous competitive research methodologies and investigative plans."
+        ],
+        "model": "planning_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\market_research\\planning_agent.py",
+        "start_line": 11,
+        "end_line": 26,
+        "evidence_refs": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "agent_id": "pricing_agent",
+        "role": "Pricing & Commercial Terms Specialist",
+        "goal": "Extract commercial pricing schedules, monthly tiers, overage fees, contract minimums, and billing units. Explicitly mark unstated pricing as UNKNOWN and cite source doc_ids.",
+        "backstory": "You are a SaaS Pricing & Licensing Strategist who scrutinizes Master Services Agreements, rate cards, and hidden overage terms to establish true total cost of ownership (TCO).",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'Extract commercial pricing and licensing from these documents:\\n{json.dumps(pricing_docs, indent=2)}\\nDetail monthly subscription tiers, overage clauses, and contract minimums. Preserve exact currency units and mark unknown values. Cite source doc_ids.'",
+            "expected_output": "JSON structured pricing breakdown with doc_id citations.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'Extract commercial pricing and licensing from these documents:\\n{json.dumps(pricing_docs, indent=2)}\\nDetail monthly subscription tiers, overage clauses, and contract minimums. Preserve exact currency units and mark unknown values. Cite source doc_ids.'",
+          "Backstory: You are a SaaS Pricing & Licensing Strategist who scrutinizes Master Services Agreements, rate cards, and hidden overage terms to establish true total cost of ownership (TCO)."
+        ],
+        "model": "pricing_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [
+          "query_pricing_documents"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\market_research\\pricing_agent.py",
+        "start_line": 25,
+        "end_line": 39,
+        "evidence_refs": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "agent_id": "product_agent",
+        "role": "Product Capabilities Analyst",
+        "goal": "Extract technical features, platform throughput, integrations, SDK support, and architectural limitations across competitors. Attribute every claim to its source doc_id.",
+        "backstory": "You are a Principal Solutions Architect who dissects technical whitepapers, feature sheets, and system SLAs to understand real engineering capabilities.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'Analyze technical capabilities from these source documents:\\n{json.dumps(product_docs, indent=2)}\\nExtract features, latency/throughput metrics, SDKs, and architectural limitations for each competitor. Cite specific source doc_ids for each claim.'",
+            "expected_output": "JSON structured product capabilities by competitor with doc_id citations.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'Analyze technical capabilities from these source documents:\\n{json.dumps(product_docs, indent=2)}\\nExtract features, latency/throughput metrics, SDKs, and architectural limitations for each competitor. Cite specific source doc_ids for each claim.'",
+          "Backstory: You are a Principal Solutions Architect who dissects technical whitepapers, feature sheets, and system SLAs to understand real engineering capabilities."
+        ],
+        "model": "product_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [
+          "query_product_documents"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\market_research\\product_agent.py",
+        "start_line": 25,
+        "end_line": 39,
+        "evidence_refs": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "agent_id": "profile_agent",
+        "role": "Company Profiling Specialist",
+        "goal": "Extract competitor corporate identities, funding stage, employee count, market positioning, and Ideal Customer Profile (ICP). Always cite stable source IDs.",
+        "backstory": "You are a Venture Capital Intelligence Analyst who creates crisp corporate dossiers, strictly referencing primary corporate source documents.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'Using this corporate profiles dataset:\\n{json.dumps(profiles_data, indent=2)}\\nExtract headquarters, founding year, headcount, funding, and positioning for each competitor. Cite all source document IDs (e.g., DOC-CS-01, DOC-DP-01).'",
+            "expected_output": "JSON structured competitor profiles with cited doc_ids.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'Using this corporate profiles dataset:\\n{json.dumps(profiles_data, indent=2)}\\nExtract headquarters, founding year, headcount, funding, and positioning for each competitor. Cite all source document IDs (e.g., DOC-CS-01, DOC-DP-01).'",
+          "Backstory: You are a Venture Capital Intelligence Analyst who creates crisp corporate dossiers, strictly referencing primary corporate source documents."
+        ],
+        "model": "profile_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [
+          "query_company_profiles"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\market_research\\profile_agent.py",
+        "start_line": 34,
+        "end_line": 48,
+        "evidence_refs": [
+          "ev_agent_009"
+        ]
+      },
+      {
+        "agent_id": "synthesis_agent",
+        "role": "Research Synthesis & Narrative Specialist",
+        "goal": "Synthesize the competitor comparison and evidence analysis into an executive research narrative. Highlight key trade-offs and recommendations without repetitive boilerplate.",
+        "backstory": "You are a Senior Industry Analyst known for writing concise, incisive market research reports that deliver executive-level clarity backed by empirical data.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'Author an executive competitive research report synthesized from:\\nComparison Matrix: {comp_text}\\nEvidence & Contradictions: {evid_text}\\nStructure into: Executive Summary, Competitive Landscape, Strategic Trade-Offs, and Key Recommendations. Avoid repetitive prose.'",
+            "expected_output": "Incisive executive research narrative with integrated source citations.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'Author an executive competitive research report synthesized from:\\nComparison Matrix: {comp_text}\\nEvidence & Contradictions: {evid_text}\\nStructure into: Executive Summary, Competitive Landscape, Strategic Trade-Offs, and Key Recommendations. Avoid repetitive prose.'",
+          "Backstory: You are a Senior Industry Analyst known for writing concise, incisive market research reports that deliver executive-level clarity backed by empirical data."
+        ],
+        "model": "synthesis_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\market_research\\synthesis_agent.py",
+        "start_line": 11,
+        "end_line": 25,
+        "evidence_refs": [
+          "ev_agent_010"
+        ]
+      }
+    ],
+    "invocation_relationships": [],
+    "data_handoffs": [],
+    "conditional_branches": [],
+    "tools_and_helpers": {
+      "registered_tools": [],
+      "explicit_code_invocations": [],
+      "helper_functions": [
+        "query_company_profiles",
+        "query_feedback_documents",
+        "query_pricing_documents",
+        "query_product_documents",
+        "run_market_research_workflow"
+      ],
+      "runtime_llm_tool_selection": {
+        "observable": false,
+        "reason": "Runtime LLM tool selection is unobservable via static AST analysis"
+      }
+    },
+    "analysis_limitations": {
+      "unresolved_references": [],
+      "dynamic_expressions": [],
+      "unsupported_patterns": [],
+      "static_analysis_limitations": [
+        "Dynamic runtime LLM decisions and tool selection cannot be observed via static AST",
+        "Procedural workflow statement order does not imply internal framework agent scheduling"
+      ]
+    }
+  },
+  "runtime_observations": {
+    "total_runs": 30,
+    "successful_runs": 30,
+    "failed_runs": 0,
+    "observed_models": [
+      "openai/gpt-oss-120b"
+    ],
+    "key_distribution": {
+      "GROQ_API_KEY_20": 45,
+      "GROQ_API_KEY_18": 42,
+      "GROQ_API_KEY_17": 26,
+      "GROQ_API_KEY_14": 26,
+      "GROQ_API_KEY_19": 26,
+      "GROQ_API_KEY_16": 7,
+      "GROQ_API_KEY_4": 16,
+      "GROQ_API_KEY_7": 10,
+      "GROQ_API_KEY_11": 12,
+      "GROQ_API_KEY_10": 2,
+      "GROQ_API_KEY_3": 10,
+      "GROQ_API_KEY_9": 17,
+      "GROQ_API_KEY_1": 7,
+      "GROQ_API_KEY_6": 9,
+      "GROQ_API_KEY_15": 4,
+      "GROQ_API_KEY_5": 7,
+      "GROQ_API_KEY_2": 4
+    },
+    "workflow_latency": {
+      "mean_seconds": 50.7078,
+      "median_seconds": 44.554,
+      "min_seconds": 40.538,
+      "max_seconds": 91.882,
+      "observation_count": 30
+    },
+    "workflow_tokens": {
+      "total_tokens": 849360,
+      "mean_tokens": 28312.0,
+      "min_tokens": 25473,
+      "max_tokens": 38548,
+      "total_prompt_tokens": 406961,
+      "mean_prompt_tokens": 13565.4,
+      "total_completion_tokens": 442399,
+      "mean_completion_tokens": 14746.6,
+      "observation_count": 30
+    },
+    "workflow_cost": {
+      "total_cost_usd": 0.58961,
+      "mean_cost_usd": 0.019654,
+      "pricing_source": "trace_telemetry_estimates",
+      "observation_count": 30
+    },
+    "agent_metrics": {
+      "planning_agent": {
+        "agent_id": "planning_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          1
+        ],
+        "latency": {
+          "mean_seconds": 4.5685,
+          "median_seconds": 4.101,
+          "min_seconds": 3.49,
+          "max_seconds": 14.669,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 49524,
+          "mean_tokens": 1650.8,
+          "min_tokens": 1470,
+          "max_tokens": 1970,
+          "total_prompt_tokens": 11440,
+          "mean_prompt_tokens": 381.3,
+          "total_completion_tokens": 38084,
+          "mean_completion_tokens": 1269.5,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_20"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "target_competitors": [
+            "CloudScale AI",
+            "DataPulse Systems",
+            "NexusOps Technologies",
+            "Veloce Security"
+          ],
+          "evaluation_dimensions": [
+            {
+              "name": "Architecture",
+              "description": "Technical stack, deployment model (cloud‑native, hybrid, on‑prem), scalability mechanisms, and integration points with enterprise ecosystems."
+            },
+            {
+              "name": "Enterprise Latency / Throughput",
+              "description": "Measured end‑to‑end latency under enterprise workloads, sustained throughput, and performance consistency across regions and load spikes."
+            },
+            {
+              "name": "Pricing Predictability",
+              "description": "Clarity of pricing tiers, presence of usage‑based vs. flat‑rate models, hidden fees, and the ability to forecast quarterly/annual spend with confidence."
+            },
+            {
+              "name": "Advertised vs. Actual SLA",
+              "description": "Comparison of vendor‑published service‑level agreements (availability, latency, support response) against third‑party audit results and customer‑reported breach incidents."
+            },
+            {
+              "name": "On-Prem / Hybrid Readiness",
+              "description": "Availability of on‑premise or hybrid deployment options, required hardware, integration complexity, and support for data sovereignty requirements."
+            },
+            {
+              "name": "Customer Sentiment & Trust",
+              "description": "Aggregate sentiment from reviews, case studies, churn rates, and analyst trust scores; includes qualitative insights on support quality and roadmap transparency."
+            }
+          ],
+          "evidence_gathering_plan": {
+            "sources": [
+              {
+                "type": "Vendor whitepapers & technical datasheets",
+                "purpose": "Obtain official architecture details, advertised performance metrics, and pricing structures."
+              },
+              {
+                "type": "Third‑party analyst reports (e.g., Gartner, Forrester)",
+                "purpose": "Validate performance claims, SLA adherence, and market positioning."
+              },
+              {
+                "type": "Independent benchmark labs (e.g., Cloud Spectator, TechEmpower)",
+                "purpose": "Collect empirical latency and throughput data under controlled enterprise workloads."
+              },
+              {
+                "type": "Customer review platforms (G2, TrustRadius, Reddit, LinkedIn groups)",
+                "purpose": "Gauge real‑world sentiment, perceived pricing predictability, and support experiences."
+              },
+              {
+                "type": "Regulatory filings & financial disclosures",
+                "purpose": "Cross‑check pricing models, revenue recognition, and any disclosed SLA breach penalties."
+              },
+              {
+                "type": "Direct stakeholder interviews (CTO, DevOps leads, procurement)",
+                "purpose": "Capture nuanced insights on on‑prem readiness, integration challenges, and trust factors."
+              }
+            ],
+            "methodology": [
+              {
+                "step": "Define data collection parameters",
+                "actions": [
+                  "Establish workload profiles representative of target enterprise use cases.",
+                  "Set latency and throughput thresholds for each profile.",
+                  "Create a pricing matrix (per‑core, per‑TB, subscription tiers)."
+                ]
+              },
+              {
+                "step": "Collect primary data",
+                "actions": [
+                  "Download and catalog all vendor‑published materials.",
+                  "Run benchmark suites on each platform using identical test rigs.",
+                  "Extract SLA language verbatim for later comparison."
+                ]
+              },
+              {
+                "step": "Validate and normalize data",
+                "actions": [
+                  "Cross‑reference benchmark results with third‑party reports.",
+                  "Normalize pricing to a common unit (e.g., $/M compute‑hours).",
+                  "Map SLA terms to a standardized scoring rubric."
+                ]
+              },
+              {
+                "step": "Analyze & score",
+                "actions": [
+                  "Score each dimension on a 1‑5 scale using weighted criteria.",
+                  "Perform sensitivity analysis on pricing predictability under variable usage.",
+                  "Calculate variance between advertised and actual SLA performance."
+                ]
+              },
+              {
+                "step": "Synthesize findings",
+                "actions": [
+                  "Compile a comparative matrix with visual heat‑maps.",
+                  "Draft narrative insights highlighting strengths, gaps, and risk factors.",
+                  "Prepare an executive summary with actionable recommendations."
+                ]
+              }
+            ]
+          }
+        },
+        "error_count": 0
+      },
+      "profile_agent": {
+        "agent_id": "profile_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          2
+        ],
+        "latency": {
+          "mean_seconds": 4.5721,
+          "median_seconds": 3.543,
+          "min_seconds": 2.823,
+          "max_seconds": 17.037,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 70662,
+          "mean_tokens": 2355.4,
+          "min_tokens": 2074,
+          "max_tokens": 2844,
+          "total_prompt_tokens": 40860,
+          "mean_prompt_tokens": 1362.0,
+          "total_completion_tokens": 29802,
+          "mean_completion_tokens": 993.4,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_18"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "competitor_profiles": [
+            {
+              "id": "COMP-CS",
+              "name": "CloudScale AI",
+              "headquarters": "San Francisco, CA",
+              "founded_year": 2022,
+              "employee_count": 140,
+              "funding_stage": "Series B",
+              "funding_amount": "$42M",
+              "positioning": "Enterprise‑grade agent orchestration plane with semantic caching, token optimization, and intelligent load balancing across 14 LLM backends; targets mid‑to‑large engineering enterprises migrating multi‑agent systems to production.",
+              "source_documents": [
+                "DOC-CS-01"
+              ]
+            },
+            {
+              "id": "COMP-DP",
+              "name": "DataPulse Systems",
+              "headquarters": "Austin, TX",
+              "founded_year": 2021,
+              "employee_count": 210,
+              "funding_stage": "Series C",
+              "funding_amount": "$78M",
+              "positioning": "Real‑time streaming feature pipelines that connect Apache Kafka, Flink, and vector databases directly to agentic execution engines; serves financial institutions, fraud‑detection teams, and high‑frequency real‑time analytics workloads.",
+              "source_documents": [
+                "DOC-DP-01"
+              ]
+            },
+            {
+              "id": "COMP-NO",
+              "name": "NexusOps Technologies",
+              "headquarters": "Seattle, WA",
+              "founded_year": 2020,
+              "employee_count": 185,
+              "funding_stage": "Series B",
+              "funding_amount": "$55M",
+              "positioning": "Autonomous AIOps platform that automates IT incident triage, symptom correlation, and runbook remediation via specialized multi‑agent graphs; aimed at DevOps, SRE, and platform‑engineering organizations managing Kubernetes at scale.",
+              "source_documents": [
+                "DOC-NO-01"
+              ]
+            },
+            {
+              "id": "COMP-VS",
+              "name": "Veloce Security",
+              "headquarters": "Boston, MA",
+              "founded_year": 2023,
+              "employee_count": 75,
+              "funding_stage": "Series A",
+              "funding_amount": "$18M",
+              "positioning": "AI runtime firewall for agentic applications that intercepts prompt injection, jailbreaks, and sensitive data leakage in sub‑15 ms; focuses on healthcare, legal, and other compliance‑sensitive enterprises running LLMs on private data.",
+              "source_documents": [
+                "DOC-VS-01"
+              ]
+            }
+          ]
+        },
+        "error_count": 0
+      },
+      "product_agent": {
+        "agent_id": "product_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          3
+        ],
+        "latency": {
+          "mean_seconds": 5.9347,
+          "median_seconds": 5.247,
+          "min_seconds": 4.046,
+          "max_seconds": 16.345,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 84579,
+          "mean_tokens": 2819.3,
+          "min_tokens": 2336,
+          "max_tokens": 3359,
+          "total_prompt_tokens": 30270,
+          "mean_prompt_tokens": 1009.0,
+          "total_completion_tokens": 54309,
+          "mean_completion_tokens": 1810.3,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_17",
+          "GROQ_API_KEY_20"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "COMP-CS": {
+            "competitor_name": "CloudScale AI",
+            "features": [
+              {
+                "description": "Dynamic Context Compression (reducing prompt tokens by up to 34%)",
+                "doc_id": "DOC-CS-02"
+              },
+              {
+                "description": "Fallback Circuit Breakers for resilient routing",
+                "doc_id": "DOC-CS-02"
+              },
+              {
+                "description": "Sub‑50 ms routing overhead for request forwarding",
+                "doc_id": "DOC-CS-02"
+              }
+            ],
+            "latency_metrics": [
+              {
+                "metric": "Routing Overhead",
+                "value": "sub‑50 ms",
+                "doc_id": "DOC-CS-02"
+              }
+            ],
+            "sdks": [
+              {
+                "language": "Python",
+                "type": "Native SDK",
+                "doc_id": "DOC-CS-02"
+              },
+              {
+                "language": "TypeScript",
+                "type": "Native SDK",
+                "doc_id": "DOC-CS-02"
+              },
+              {
+                "language": "N/A",
+                "type": "OpenTelemetry‑compliant trace export support",
+                "doc_id": "DOC-CS-02"
+              }
+            ],
+            "architectural_limitations": []
+          },
+          "COMP-DP": {
+            "competitor_name": "DataPulse Systems",
+            "features": [
+              {
+                "description": "Sub‑10 ms feature retrieval latency",
+                "doc_id": "DOC-DP-02"
+              },
+              {
+                "description": "Supports up to 250,000 queries per second",
+                "doc_id": "DOC-DP-02"
+              },
+              {
+                "description": "Native integrations with Pinecone, Milvus, Qdrant, and Redis",
+                "doc_id": "DOC-DP-02"
+              },
+              {
+                "description": "Automated schema drift detection",
+                "doc_id": "DOC-DP-02"
+              },
+              {
+                "description": "Lineage tracking for multi‑agent decision pipelines",
+                "doc_id": "DOC-DP-02"
+              }
+            ],
+            "latency_metrics": [
+              {
+                "metric": "Feature Retrieval Latency",
+                "value": "sub‑10 ms",
+                "doc_id": "DOC-DP-02"
+              },
+              {
+                "metric": "Maximum Query Throughput",
+                "value": "250,000 queries per second",
+                "doc_id": "DOC-DP-02"
+              }
+            ],
+            "sdks": [],
+            "architectural_limitations": []
+          },
+          "COMP-NO": {
+            "competitor_name": "NexusOps Technologies",
+            "features": [
+              {
+                "description": "450+ pre‑built Kubernetes and Cloud runbooks",
+                "doc_id": "DOC-NO-02"
+              },
+              {
+                "description": "Bidirectional synchronization with ServiceNow and PagerDuty",
+                "doc_id": "DOC-NO-02"
+              },
+              {
+                "description": "Deterministic rollback on failed remediation steps",
+                "doc_id": "DOC-NO-02"
+              },
+              {
+                "description": "Safety air‑gapping for production database commands",
+                "doc_id": "DOC-NO-02"
+              }
+            ],
+            "latency_metrics": [],
+            "sdks": [],
+            "architectural_limitations": []
+          },
+          "COMP-VS": {
+            "competitor_name": "Veloce Security",
+            "features": [
+              {
+                "description": "Operates completely on‑premise or within customer private VPCs without transmitting prompt payloads to external servers",
+                "doc_id": "DOC-VS-02"
+              },
+              {
+                "description": "Supports 120+ regex and semantic rules for HIPAA, GDPR, and PCI‑DSS data redaction",
+                "doc_id": "DOC-VS-02"
+              }
+            ],
+            "latency_metrics": [],
+            "sdks": [],
+            "architectural_limitations": [
+              {
+                "description": "Must be deployed on‑premise or within a private VPC; SaaS deployment is not supported",
+                "doc_id": "DOC-VS-02"
+              },
+              {
+                "description": "Redaction capabilities limited to the predefined set of 120+ regex and semantic rules",
+                "doc_id": "DOC-VS-02"
+              }
+            ]
+          }
+        },
+        "error_count": 0
+      },
+      "pricing_agent": {
+        "agent_id": "pricing_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          4
+        ],
+        "latency": {
+          "mean_seconds": 5.4777,
+          "median_seconds": 5.1395,
+          "min_seconds": 4.396,
+          "max_seconds": 11.78,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 92982,
+          "mean_tokens": 3099.4,
+          "min_tokens": 2710,
+          "max_tokens": 3911,
+          "total_prompt_tokens": 39002,
+          "mean_prompt_tokens": 1300.1,
+          "total_completion_tokens": 53980,
+          "mean_completion_tokens": 1799.3,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_14",
+          "GROQ_API_KEY_18"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": [
+          {
+            "competitor_id": "COMP-CS",
+            "competitor_name": "CloudScale AI",
+            "pricing_tiers": [
+              {
+                "tier_name": "Developer Tier",
+                "price": "$49/month",
+                "included_units": "1M routed tokens",
+                "source_doc_id": "DOC-CS-03"
+              },
+              {
+                "tier_name": "Team Tier",
+                "price": "$499/month",
+                "included_units": "15M routed tokens and 5 team seats",
+                "source_doc_id": "DOC-CS-03"
+              },
+              {
+                "tier_name": "Enterprise Tier",
+                "price": "$3,200/month platform fee",
+                "included_units": "N/A (pay‑per‑token at $0.15 per 1M routed tokens)",
+                "source_doc_id": "DOC-CS-03"
+              }
+            ],
+            "overage_clause": {
+              "description": "Additional routed tokens beyond any included amount",
+              "price": "$0.15 per 1M routed tokens",
+              "source_doc_id": "DOC-CS-03"
+            },
+            "contract_minimum": {
+              "amount": "UNKNOWN",
+              "period": "UNKNOWN",
+              "source_doc_id": "DOC-CS-03"
+            }
+          },
+          {
+            "competitor_id": "COMP-DP",
+            "competitor_name": "DataPulse Systems",
+            "pricing_tiers": [
+              {
+                "tier_name": "Enterprise Tier",
+                "price": "$4,500/month",
+                "included_units": "unlimited event ingestion, up to 10 cluster nodes",
+                "source_doc_id": "DOC-DP-03"
+              }
+            ],
+            "overage_clause": {
+              "description": "Data ingestion exceeding 50 million events per billing cycle",
+              "price": "$0.05 per 10,000 events",
+              "source_doc_id": "DOC-DP-04"
+            },
+            "contract_minimum": {
+              "amount": "UNKNOWN",
+              "period": "UNKNOWN",
+              "source_doc_id": "DOC-DP-03"
+            }
+          },
+          {
+            "competitor_id": "COMP-NO",
+            "competitor_name": "NexusOps Technologies",
+            "pricing_tiers": [
+              {
+                "tier_name": "Standard",
+                "price": "$28/node/month",
+                "included_units": "per managed node",
+                "source_doc_id": "DOC-NO-03"
+              },
+              {
+                "tier_name": "Pro",
+                "price": "$45/node/month",
+                "included_units": "per managed node (includes autonomous remediation execution)",
+                "source_doc_id": "DOC-NO-03"
+              }
+            ],
+            "overage_clause": {
+              "description": "UNKNOWN",
+              "price": "UNKNOWN",
+              "source_doc_id": "DOC-NO-03"
+            },
+            "contract_minimum": {
+              "amount": "$35,000",
+              "period": "annual",
+              "source_doc_id": "DOC-NO-03"
+            }
+          },
+          {
+            "competitor_id": "COMP-VS",
+            "competitor_name": "Veloce Security",
+            "pricing_tiers": [
+              {
+                "tier_name": "Startup Package",
+                "price": "$1,200/month",
+                "included_units": "up to 500k inspected agent interactions",
+                "source_doc_id": "DOC-VS-03"
+              },
+              {
+                "tier_name": "Enterprise Package",
+                "price": "$5,500/month",
+                "included_units": "unlimited inspect operations",
+                "source_doc_id": "DOC-VS-03"
+              }
+            ],
+            "overage_clause": {
+              "description": "UNKNOWN",
+              "price": "UNKNOWN",
+              "source_doc_id": "DOC-VS-03"
+            },
+            "contract_minimum": {
+              "amount": "UNKNOWN",
+              "period": "UNKNOWN",
+              "source_doc_id": "DOC-VS-03"
+            }
+          }
+        ],
+        "error_count": 0
+      },
+      "feedback_agent": {
+        "agent_id": "feedback_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          5
+        ],
+        "latency": {
+          "mean_seconds": 4.2097,
+          "median_seconds": 3.864,
+          "min_seconds": 3.152,
+          "max_seconds": 12.568,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 64331,
+          "mean_tokens": 2144.4,
+          "min_tokens": 2039,
+          "max_tokens": 2332,
+          "total_prompt_tokens": 30090,
+          "mean_prompt_tokens": 1003.0,
+          "total_completion_tokens": 34241,
+          "mean_completion_tokens": 1141.4,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_19",
+          "GROQ_API_KEY_20"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "quotes": [
+            {
+              "doc_id": "DOC-CS-05",
+              "quote": "CloudScale reduced our Groq and OpenAI token costs by 28% within the first month. However, documentation for custom Python middleware is sparse, and we experienced two 3-hour outages in Q2 where support disputed our 10x SLA credit claim citing upstream cloud network degradations."
+            },
+            {
+              "doc_id": "DOC-CS-06",
+              "quote": "The semantic cache hit rate hovers around 22% in production, which is lower than the advertised 40%. The UI dashboard is intuitive, but on-prem installation took four weeks instead of the promised 48 hours."
+            },
+            {
+              "doc_id": "DOC-DP-05",
+              "quote": "DataPulse is unrivaled for real-time latency. Our fleet routing agents query fresh sensor states in 6ms. Be careful with high-volume Kafka topics, however; overage fees doubled our invoice in month three before we configured filtering."
+            },
+            {
+              "doc_id": "DOC-NO-04",
+              "quote": "Reduced our MTTR from 45 minutes to 11 minutes for recurring database and pod connection incidents. The safety guardrails are solid—it has never accidentally executed an unsafe command in production."
+            },
+            {
+              "doc_id": "DOC-VS-04",
+              "quote": "Veloce caught three sophisticated indirect prompt injection attempts during our clinical pilot. The false positive rate on medical abbreviations is slightly annoying (around 4%), but their customer support helped tune custom bypass dictionaries quickly."
+            }
+          ],
+          "analysis": {
+            "outages_and_incidents": [
+              {
+                "doc_id": "DOC-CS-05",
+                "description": "Two separate three‑hour service outages occurred in Q2; the customer’s request for a 10× SLA credit was denied by support, who attributed the failures to upstream cloud network degradations."
+              },
+              {
+                "doc_id": "DOC-CS-06",
+                "description": "On‑premises deployment took four weeks, far exceeding the vendor’s promised 48‑hour installation window, indicating a significant delivery delay."
+              }
+            ],
+            "praise_and_positive_outcomes": [
+              {
+                "doc_id": "DOC-CS-05",
+                "description": "Achieved a 28 % reduction in Groq and OpenAI token costs within the first month of usage."
+              },
+              {
+                "doc_id": "DOC-DP-05",
+                "description": "Real‑time latency is exceptional, with sensor‑state queries completing in 6 ms."
+              },
+              {
+                "doc_id": "DOC-NO-04",
+                "description": "Mean Time To Recovery (MTTR) dropped from 45 minutes to 11 minutes for recurring database and pod‑connection incidents; safety guardrails prevented any unsafe command execution in production."
+              },
+              {
+                "doc_id": "DOC-VS-04",
+                "description": "Detected three sophisticated indirect prompt‑injection attempts during a clinical pilot, demonstrating strong security coverage."
+              },
+              {
+                "doc_id": "DOC-CS-06",
+                "description": "The UI dashboard is described as intuitive, facilitating easier monitoring and management."
+              }
+            ],
+            "usability_and_friction_points": [
+              {
+                "doc_id": "DOC-CS-05",
+                "description": "Documentation for building custom Python middleware is described as sparse, creating integration friction."
+              },
+              {
+                "doc_id": "DOC-CS-06",
+                "description": "Semantic cache hit rate observed at 22 % in production, notably below the advertised 40 % benchmark."
+              },
+              {
+                "doc_id": "DOC-DP-05",
+                "description": "High‑volume Kafka topics triggered overage fees that doubled the invoice in month three before proper filtering was applied."
+              },
+              {
+                "doc_id": "DOC-VS-04",
+                "description": "False‑positive rate on medical abbreviations is around 4 %, which users find slightly annoying despite support assistance."
+              }
+            ]
+          }
+        },
+        "error_count": 0
+      },
+      "evidence_agent": {
+        "agent_id": "evidence_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          6
+        ],
+        "latency": {
+          "mean_seconds": 8.2526,
+          "median_seconds": 5.9565,
+          "min_seconds": 5.25,
+          "max_seconds": 21.96,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 161556,
+          "mean_tokens": 5385.2,
+          "min_tokens": 4742,
+          "max_tokens": 6636,
+          "total_prompt_tokens": 96649,
+          "mean_prompt_tokens": 3221.6,
+          "total_completion_tokens": 64907,
+          "mean_completion_tokens": 2163.6,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_10",
+          "GROQ_API_KEY_15",
+          "GROQ_API_KEY_16",
+          "GROQ_API_KEY_18",
+          "GROQ_API_KEY_2",
+          "GROQ_API_KEY_3"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "triangulated_evidence": {
+            "competitors": [
+              {
+                "competitor_id": "COMP-CS",
+                "name": "CloudScale AI",
+                "claims": {
+                  "dynamic_context_compression": {
+                    "description": "Dynamic Context Compression (reducing prompt tokens by up to 34%)",
+                    "doc_id": "DOC-CS-02"
+                  },
+                  "fallback_circuit_breakers": {
+                    "description": "Fallback Circuit Breakers for resilient routing",
+                    "doc_id": "DOC-CS-02"
+                  },
+                  "routing_overhead": {
+                    "description": "Sub‑50 ms routing overhead for request forwarding",
+                    "doc_id": "DOC-CS-02"
+                  },
+                  "semantic_cache_hit_rate": {
+                    "description": "Advertised semantic cache hit rate of 40 % (marketing claim)",
+                    "doc_id": null
+                  },
+                  "installation_time_promise": {
+                    "description": "On‑premise installation promised within 48 hours",
+                    "doc_id": null
+                  },
+                  "sla_credit_policy": {
+                    "description": "10× SLA credit for outages exceeding agreed‑upon availability",
+                    "doc_id": null
+                  }
+                },
+                "customer_feedback": [
+                  {
+                    "quote": "CloudScale reduced our Groq and OpenAI token costs by 28% within the first month. However, documentation for custom Python middleware is sparse, and we experienced two 3‑hour outages in Q2 where support disputed our 10x SLA credit claim citing upstream cloud network degradations.",
+                    "doc_id": "DOC-CS-05"
+                  },
+                  {
+                    "quote": "The semantic cache hit rate hovers around 22% in production, which is lower than the advertised 40%. The UI dashboard is intuitive, but on‑prem installation took four weeks instead of the promised 48‑hour window.",
+                    "doc_id": "DOC-CS-06"
+                  }
+                ],
+                "contradictions": [
+                  {
+                    "type": "sla_violation",
+                    "claimed_value": "10× SLA credit for any outage beyond the SLA",
+                    "observed_issue": "Two three‑hour outages were denied SLA credit; support blamed upstream network issues.",
+                    "evidence_claim": "DOC-CS-04",
+                    "evidence_feedback": "DOC-CS-05",
+                    "severity": "high",
+                    "notes": "Customer experience directly contradicts the implied SLA credit policy; no formal contract language was provided to substantiate the claim."
+                  },
+                  {
+                    "type": "performance_gap",
+                    "claimed_value": "Semantic cache hit rate 40 % (marketing)",
+                    "observed_issue": "Actual hit rate measured at 22 % in production.",
+                    "evidence_claim": null,
+                    "evidence_feedback": "DOC-CS-06",
+                    "severity": "medium",
+                    "notes": "Marketing claim lacks a source document; field measurement shows a substantial shortfall."
+                  },
+                  {
+                    "type": "delivery_delay",
+                    "claimed_value": "On‑premise deployment within 48 hours",
+                    "observed_issue": "Customer required four weeks to complete installation.",
+                    "evidence_claim": null,
+                    "evidence_feedback": "DOC-CS-06",
+                    "severity": "high",
+                    "notes": "No supporting doc_id for the 48‑hour promise; real‑world rollout far exceeds it."
+                  },
+                  {
+                    "type": "documentation_gap",
+                    "claimed_value": "Comprehensive SDKs and middleware guidance",
+                    "observed_issue": "Documentation for custom Python middleware described as sparse.",
+                    "evidence_claim": "DOC-CS-02",
+                    "evidence_feedback": "DOC-CS-05",
+                    "severity": "low",
+                    "notes": "SDK existence is documented, but quality of developer docs is not, creating integration friction."
+                  }
+                ],
+                "citation_gaps": [
+                  {
+                    "missing_claim": "Advertised semantic cache hit rate of 40 %",
+                    "context": "Marketing material that positions CloudScale as having a high cache efficiency.",
+                    "required_doc_id": null
+                  },
+                  {
+                    "missing_claim": "On‑premise installation promised within 48 hours",
+                    "context": "Installation SLA communicated during sales cycle.",
+                    "required_doc_id": null
+                  },
+                  {
+                    "missing_claim": "10× SLA credit policy for outages",
+                    "context": "Service Level Agreement terms presented to customers.",
+                    "required_doc_id": null
+                  }
+                ]
+              },
+              {
+                "competitor_id": "COMP-DP",
+                "name": "DataPulse Systems",
+                "claims": {
+                  "feature_retrieval_latency": {
+                    "description": "Sub‑10 ms feature retrieval latency",
+                    "doc_id": "DOC-DP-02"
+                  },
+                  "max_query_throughput": {
+                    "description": "Supports up to 250,000 queries per second",
+                    "doc_id": "DOC-DP-02"
+                  },
+                  "native_vector_integrations": {
+                    "description": "Native integrations with Pinecone, Milvus, Qdrant, and Redis",
+                    "doc_id": "DOC-DP-02"
+                  },
+                  "schema_drift_detection": {
+                    "description": "Automated schema drift detection",
+                    "doc_id": "DOC-DP-02"
+                  },
+                  "lineage_tracking": {
+                    "description": "Lineage tracking for multi‑agent decision pipelines",
+                    "doc_id": "DOC-DP-02"
+                  },
+                  "pricing_overage": {
+                    "description": "$0.05 per 10,000 events after 50 M events per billing cycle",
+                    "doc_id": "DOC-DP-04"
+                  }
+                },
+                "customer_feedback": [
+                  {
+                    "quote": "DataPulse is unrivaled for real-time latency. Our fleet routing agents query fresh sensor states in 6ms. Be careful with high-volume Kafka topics, however; overage fees doubled our invoice in month three before we configured filtering.",
+                    "doc_id": "DOC-DP-05"
+                  }
+                ],
+                "contradictions": [
+                  {
+                    "type": "hidden_overage",
+                    "claimed_value": "Sub‑10 ms latency and unlimited high‑throughput usage without extra cost",
+                    "observed_issue": "Overage fees doubled the invoice in month three due to high‑volume Kafka topics.",
+                    "evidence_claim": "DOC-DP-02",
+                    "evidence_feedback": "DOC-DP-05",
+                    "severity": "high",
+                    "notes": "Marketing emphasizes speed and capacity but does not surface the per‑event overage pricing until after usage."
+                  }
+                ],
+                "citation_gaps": [
+                  {
+                    "missing_claim": "Unlimited high‑throughput usage without additional fees",
+                    "context": "Implied by the 250k QPS claim; no explicit statement that usage beyond a threshold is free.",
+                    "required_doc_id": null
+                  }
+                ]
+              },
+              {
+                "competitor_id": "COMP-NO",
+                "name": "NexusOps Technologies",
+                "claims": {
+                  "prebuilt_runbooks": {
+                    "description": "450+ pre‑built Kubernetes and Cloud runbooks",
+                    "doc_id": "DOC-NO-02"
+                  },
+                  "service_sync": {
+                    "description": "Bidirectional synchronization with ServiceNow and PagerDuty",
+                    "doc_id": "DOC-NO-02"
+                  },
+                  "deterministic_rollback": {
+                    "description": "Deterministic rollback on failed remediation steps",
+                    "doc_id": "DOC-NO-02"
+                  },
+                  "safety_air_gap": {
+                    "description": "Safety air‑gapping for production database commands",
+                    "doc_id": "DOC-NO-02"
+                  },
+                  "pricing_per_node": {
+                    "description": "$28/node/month (Standard) / $45/node/month (Pro)",
+                    "doc_id": "DOC-NO-03"
+                  },
+                  "contract_minimum": {
+                    "description": "$35,000 annual minimum",
+                    "doc_id": "DOC-NO-03"
+                  }
+                },
+                "customer_feedback": [
+                  {
+                    "quote": "Reduced our MTTR from 45 minutes to 11 minutes for recurring database and pod connection incidents. The safety guardrails are solid—it has never accidentally executed an unsafe command in production.",
+                    "doc_id": "DOC-NO-04"
+                  }
+                ],
+                "contradictions": [],
+                "citation_gaps": []
+              },
+              {
+                "competitor_id": "COMP-VS",
+                "name": "Veloce Security",
+                "claims": {
+                  "on_premise_only": {
+                    "description": "Operates completely on‑premise or within customer private VPCs without transmitting prompt payloads to external servers",
+                    "doc_id": "DOC-VS-02"
+                  },
+                  "rule_coverage": {
+                    "description": "Supports 120+ regex and semantic rules for HIPAA, GDPR, and PCI‑DSS data redaction",
+                    "doc_id": "DOC-VS-02"
+                  },
+                  "pricing_startup": {
+                    "description": "$1,200/month for up to 500k inspected agent interactions",
+                    "doc_id": "DOC-VS-03"
+                  },
+                  "pricing_enterprise": {
+                    "description": "$5,500/month for unlimited inspect operations",
+                    "doc_id": "DOC-VS-03"
+                  }
+                },
+                "customer_feedback": [
+                  {
+                    "quote": "Veloce caught three sophisticated indirect prompt injection attempts during our clinical pilot. The false positive rate on medical abbreviations is slightly annoying (around 4%), but their customer support helped tune custom bypass dictionaries quickly.",
+                    "doc_id": "DOC-VS-04"
+                  }
+                ],
+                "contradictions": [
+                  {
+                    "type": "rule_coverage_limit",
+                    "claimed_value": "Comprehensive data redaction via 120+ regex and semantic rules",
+                    "observed_issue": "Customers report a 4 % false‑positive rate on medical abbreviations, indicating coverage gaps for domain‑specific terminology.",
+                    "evidence_claim": "DOC-VS-02",
+                    "evidence_feedback": "DOC-VS-04",
+                    "severity": "medium",
+                    "notes": "The rule set is finite; the claim of “comprehensive” is overstated for specialized medical vocabularies."
+                  }
+                ],
+                "citation_gaps": [
+                  {
+                    "missing_claim": "Unlimited inspect operations are truly unlimited (no hidden caps)",
+                    "context": "Enterprise pricing tier promises unlimited usage, but no technical doc confirms absence of internal throttling or hidden limits.",
+                    "required_doc_id": null
+                  }
+                ]
+              }
+            ]
+          },
+          "summary": {
+            "overall_findings": "Across the four competitors, marketing materials frequently present optimistic performance, availability, and cost‑saving figures that are either unsupported by explicit documentation or contradicted by real‑world customer experiences. The most serious discrepancies involve CloudScale AI (SLA credit denial, 48‑hour installation promise vs. four‑week rollout, and a cache‑hit rate far below the advertised 40 %) and DataPulse Systems (hidden overage fees that can double invoices despite advertised unlimited high‑throughput). NexusOps Technologies shows alignment between claims and feedback. Veloce Security’s on‑premise claim is consistent, but its assertion of comprehensive rule coverage is overstated given a measurable false‑positive rate. Several marketing assertions lack a cited source document, creating citation gaps that should be addressed before these claims are used in competitive positioning or contractual negotiations."
+          }
+        },
+        "error_count": 0
+      },
+      "comparison_agent": {
+        "agent_id": "comparison_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          7
+        ],
+        "latency": {
+          "mean_seconds": 5.928,
+          "median_seconds": 5.3905,
+          "min_seconds": 4.552,
+          "max_seconds": 8.629,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 107385,
+          "mean_tokens": 3579.5,
+          "min_tokens": 2461,
+          "max_tokens": 5840,
+          "total_prompt_tokens": 47779,
+          "mean_prompt_tokens": 1592.6,
+          "total_completion_tokens": 59606,
+          "mean_completion_tokens": 1986.9,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_10",
+          "GROQ_API_KEY_20",
+          "GROQ_API_KEY_4",
+          "GROQ_API_KEY_6",
+          "GROQ_API_KEY_9"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": "## Competitive‑Benchmark Matrix  \n\n| Competitor | Focus *(what problem they solve)* | Architecture *(core technical building blocks)* | Key Strengths *(facts)* | Known Weaknesses *(facts + analysis)* | Starting Price *(publicly disclosed)* | SLA *(public claim + observed reality)* |\n|------------|-----------------------------------|---------------------------------------------------|--------------------------|----------------------------------------|----------------------------------------|------------------------------------------|\n| **CloudScale AI** | • AI‑inference cost optimisation – dynamic context compression, token‑reduction, routing resiliency. <br>**[Opinion]** Positions itself as a “plug‑and‑play” accelerator for LLM workloads. | • On‑premise appliance + lightweight routing layer. <br>• Dynamic Context Compression engine (‑34 % tokens) – **DOC‑CS‑02**. <br>• Fallback Circuit Breakers for resilient request routing – **DOC‑CS‑02**. <br>• Sub‑50 ms routing overhead – **DOC‑CS‑02**. <br>• Semantic cache (claimed 40 % hit) – **(no doc_id)**. | • Documented 34 % token‑reduction via Dynamic Context Compression – **DOC‑CS‑02**. <br>• Low routing latency (≈ < 50 ms) – **DOC‑CS‑02**. <br>• Intuitive UI dashboard (customer feedback) – **DOC‑CS‑06**. | • **Documentation gap** – sparse guidance for custom Python middleware (customer quote) – **DOC‑CS‑05**. <br>• **Performance gap** – semantic cache hit rate measured at 22 % vs. 40 % claim – **DOC‑CS‑06**. <br>• **Installation delay** – promised 48 h on‑prem deployment not met; rollout took 4 weeks – **DOC‑CS‑06**. <br>• **SLA credit denial** – two 3‑hour outages were not credited despite “10× credit” claim – **DOC‑CS‑05**. <br>**[Opinion]** The combination of undocumented SDK quality and missed delivery promises reduces overall reliability perception. | • No publicly disclosed subscription price. <br>**[Opinion]** Pricing is likely enterprise‑negotiated; absence of a baseline makes cost‑comparisons difficult. | • **Claim** – “10× SLA credit for any outage beyond the agreed‑upon availability” – **(no doc_id)**. <br>• **Observed** – credits denied for two 3‑hour outages; support cited upstream network issues – **DOC‑CS‑05**. <br>**[Opinion]** The lack of a formal contract clause weakens the advertised credit promise. |\n| **DataPulse Systems** | • Real‑time feature retrieval & high‑throughput query serving for AI/ML pipelines. | • Service‑oriented platform with native connectors to major vector stores (Pinecone, Milvus, Qdrant, Redis) – **DOC‑DP‑02**. <br>• Schema‑drift detection & lineage tracking – **DOC‑DP‑02**. <br>• Engine delivers sub‑10 ms retrieval latency – **DOC‑DP‑02**. <br>• Scales to 250 k queries / sec – **DOC‑DP‑02**. | • Sub‑10 ms feature‑retrieval latency – **DOC‑DP‑02**. <br>• 250 k QPS throughput – **DOC‑DP‑02**. <br>• Out‑of‑the‑box integrations with four leading vector DBs – **DOC‑DP‑02**. <br>• Automated schema‑drift detection – **DOC‑DP‑02**. | • **Hidden overage** – $0.05 per 10 k events after 50 M events per billing cycle – **DOC‑DP‑04**. <br>• Customer saw invoice double in month 3 due to high‑volume Kafka topics – **DOC‑DP‑05**. <br>• Marketing implies “unlimited” high‑throughput usage, but no explicit “no‑fee” clause – **(citation gap)**. <br>**[Opinion]** The overage model can erode the cost‑advantage that the latency claim promises. | • Base tier price not disclosed. <br>• Overage fee: **$0.05 / 10 k events** after 50 M events – **DOC‑DP‑04**. | • No SLA language found in the supplied documents. <br>**[Opinion]** Absence of a published availability guarantee may be a risk for mission‑critical deployments. |\n| **NexusOps Technologies** | • Automated incident remediation & run‑book execution for Kubernetes & cloud environments. | • Orchestration engine with 450 + pre‑built runbooks – **DOC‑NO‑02**. <br>• Bidirectional sync with ServiceNow & PagerDuty – **DOC‑NO‑02**. <br>• Deterministic rollback & safety air‑gapping for DB commands – **DOC‑NO‑02**. <br>• SaaS‑style multi‑tenant service (no on‑prem claim) – **(no doc_id)**. | • Large library of production‑ready runbooks – **DOC‑NO‑02**. <br>• Deterministic rollback reduces risk of partial remediation – **DOC‑NO‑02**. <br>• Safety air‑gap prevents unsafe DB commands – **DOC‑NO‑04**. <br>• MTTR cut from 45 min to 11 min in field test – **DOC‑NO‑04**. | • No contradictions in the evidence set. <br>• **[Opinion]** High annual minimum ($35 k) may be a barrier for smaller enterprises. | • **Standard**: $28 / node / month – **DOC‑NO‑03**. <br>• **Pro**: $45 / node / month – **DOC‑NO‑03**. <br>• **Annual minimum**: $35 k – **DOC‑NO‑03**. | • No SLA details disclosed in the provided material. <br>**[Opinion]** Customers will need to negotiate availability terms as part of the contract. |\n| **Veloce Security** | • Prompt‑injection detection & data‑redaction for LLM‑driven applications, with a focus on regulated industries (HIPAA, GDPR, PCI‑DSS). | • Deployable **on‑premise or within a private VPC**; never sends prompt payloads to external servers – **DOC‑VS‑02**. <br>• Rule engine with 120 + regex + semantic patterns – **DOC‑VS‑02**. <br>• No publicly documented internal throttling for “unlimited” tier – **(citation gap)**. | • 120 + pre‑built compliance rules – **DOC‑VS‑02**. <br>• Detects indirect prompt‑injection attacks (clinical pilot) – **DOC‑VS‑04**. <br>• Fast support for custom bypass dictionaries – **DOC‑VS‑04**. | • **False‑positive rate** ≈ 4 % on medical abbreviations – **DOC‑VS‑04**. <br>• Claim of “comprehensive” coverage overstated for domain‑specific vocabularies – **(analysis)**. <br>• Unlimited‑tier usage cap not documented – **(citation gap)**. | • **Startup tier**: $1,200 / month for ≤ 500 k inspected interactions – **DOC‑VS‑03**. <br>• **Enterprise tier**: $5,500 / month for “unlimited” inspections – **DOC‑VS‑03**. | • No SLA language supplied. <br>**[Opinion]** Customers should request explicit availability and credit terms before signing. |\n\n---\n\n### Source Document Legend  \n\n| Doc ID | Description |\n|--------|-------------|\n| **DOC‑CS‑02",
+        "error_count": 0
+      },
+      "synthesis_agent": {
+        "agent_id": "synthesis_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          8
+        ],
+        "latency": {
+          "mean_seconds": 6.7439,
+          "median_seconds": 5.1855,
+          "min_seconds": 4.735,
+          "max_seconds": 18.288,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 124186,
+          "mean_tokens": 4139.5,
+          "min_tokens": 3107,
+          "max_tokens": 8047,
+          "total_prompt_tokens": 62351,
+          "mean_prompt_tokens": 2078.4,
+          "total_completion_tokens": 61835,
+          "mean_completion_tokens": 2061.2,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_20",
+          "GROQ_API_KEY_7",
+          "GROQ_API_KEY_9"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": "**Executive Competitive Research Report**  \n*Prepared for the Chief Strategy Officer – Date: 31 Oct 2026*  \n\n---\n\n## 1. Executive Summary  \n\n| Competitor | Core Value‑Prop | Proven Strengths | Critical Gaps / Risks | Pricing (public) | SLA (guarantee) |\n|------------|----------------|------------------|-----------------------|------------------|----------------|\n| **CloudScale AI** | AI‑inference cost‑optimisation via Dynamic Context Compression and ultra‑low‑latency routing. | • 34 % token‑reduction (DOC‑CS‑02).  <br>• Sub‑50 ms routing overhead (DOC‑CS‑02).  <br>• Intuitive UI (DOC‑CS‑06). | • Documentation for custom middleware sparse (DOC‑CS‑05).  <br>• Semantic‑cache hit rate 22 % vs. 40 % claim (DOC‑CS‑06).  <br>• Installation took 4 weeks vs. 48 h promise (DOC‑CS‑06).  <br>• SLA‑credit policy not honoured (DOC‑CS‑05). | No disclosed subscription price – likely enterprise‑negotiated (opinion). | “10× credit” advertised, but no contract clause; credits denied for two 3‑hour outages (DOC‑CS‑05). |\n| **DataPulse Systems** | Real‑time feature retrieval & ultra‑high‑throughput query serving for AI/ML pipelines. | • Sub‑10 ms retrieval latency, 250 k QPS (DOC‑DP‑02).  <br>• Native connectors to 4 major vector stores (DOC‑DP‑02).  <br>• Automated schema‑drift detection (DOC‑DP‑02). | • Overage fee $0.05 / 10 k events after 50 M events (DOC‑DP‑04) – doubled invoice in month 3 (DOC‑DP‑05).  <br>• No published SLA (opinion).  <br>• Marketing implies “unlimited” usage without fee – citation gap. | Base tier price undisclosed; overage fee disclosed (DOC‑DP‑04). | No SLA language supplied. |\n| **NexusOps Technologies** | Automated incident remediation & run‑book execution for Kubernetes & cloud environments. | • 450+ production‑ready runbooks (DOC‑NO‑02).  <br>• Deterministic rollback & safety air‑gap (DOC‑NO‑02, DOC‑NO‑04).  <br>• MTTR reduced from 45 min → 11 min (DOC‑NO‑04). | • High annual minimum ($35 k) may deter SMBs (DOC‑NO‑03).  <br>• No public SLA – must be negotiated (opinion). | Standard $28 / node / mo; Pro $45 / node / mo; $35 k annual minimum (DOC‑NO‑03). | No SLA disclosed; contract‑level negotiation required. |\n| **Veloce Security** | Prompt‑injection detection & data‑redaction for regulated LLM apps (HIPAA, GDPR, PCI‑DSS). | • 120+ pre‑built compliance rules (DOC‑VS‑02).  <br>• On‑prem / private‑VPC deployment – no payload egress (DOC‑VS‑02).  <br>• Detects indirect prompt‑injection in clinical pilot (DOC‑VS‑04). | • False‑positive rate ≈ 4 % on medical abbreviations (DOC‑VS‑04) – coverage not truly “comprehensive”.  <br>• “Unlimited” tier lacks technical confirmation of no throttling (citation gap).  <br>• No SLA language (opinion). | Startup $1,200 / mo (≤ 500 k interactions) (DOC‑VS‑03).  <br>Enterprise $5,500 / mo “unlimited” (DOC‑VS‑03). | No SLA disclosed; explicit availability/credit terms needed. |\n\n**Bottom‑line:**  \n- **CloudScale AI** and **DataPulse Systems** deliver the most differentiated performance, but both hide material risk (undocumented SDK quality & SLA credit for CloudScale; hidden overage fees for DataPulse).  \n- **NexusOps** offers the most reliable claim‑to‑evidence alignment, yet its pricing floor and lack of a published SLA limit appeal to cost‑sensitive or highly regulated buyers.  \n- **Veloce Security** is the only vendor with a fully on‑premise data‑privacy guarantee, but its “comprehensive” rule set is overstated and the “unlimited” usage promise is undocumented.\n\n---\n\n## 2. Competitive Landscape  \n\n### 2.1 Technical Architecture & Differentiators  \n\n| Vendor | Architecture Highlights | Differentiating Tech | Evidence |\n|--------|------------------------|---------------------|----------|\n| **CloudScale AI** | On‑prem appliance + lightweight routing layer. | Dynamic Context Compression (‑34 % tokens) (DOC‑CS‑02); fallback circuit breakers; sub‑50 ms routing overhead (DOC‑CS‑02). | DOC‑CS‑02 |\n| **DataPulse Systems** | Service‑oriented platform with native vector‑store connectors. | Sub‑10 ms retrieval; 250 k QPS; schema‑drift detection; lineage tracking (DOC‑DP‑02). | DOC‑DP‑02 |\n| **NexusOps Technologies** | SaaS‑style multi‑tenant orchestration engine. | 450+ runbooks; deterministic rollback; safety air‑gap; ServiceNow/PagerDuty sync (DOC‑NO‑02, DOC‑NO‑04). | DOC‑NO‑02, DOC‑NO‑04 |\n| **Veloce Security** | Deployable on‑prem or private VPC; never sends payloads externally. | 120+ regex + semantic patterns; fast custom bypass dictionary updates (DOC‑VS‑02, DOC‑VS‑04). | DOC‑VS‑02, DOC‑VS‑04 |\n\n### 2.2 Pricing & Cost‑Structure  \n\n| Vendor | Base Price | Overage / Hidden Fees | Comments |\n|--------|------------|-----------------------|----------|\n| **CloudScale AI** | Not disclosed – enterprise‑negotiated (opinion). | No explicit overage model, but undocumented SDK quality may increase integration cost. | Pricing opacity hampers TCO modelling. |\n| **DataPulse Systems** | Undisclosed base tier; overage $0.05 / 10 k events after 50 M events (DOC‑DP‑04). | Hidden overage can double invoices (DOC‑DP‑05). | Must model expected event volume before commitment. |\n| **NexusOps Technologies** | $28 / node / mo (Standard) / $45 / node / mo (Pro) (DOC‑NO‑03). | Annual minimum $35 k (DOC‑NO‑03). | Predictable per‑node cost; high floor for small deployments. |\n| **Veloce Security** | $1,200 / mo (≤ 500 k interactions) (DOC‑VS‑03). | “Unlimited” tier $5,500 / mo (DOC‑VS‑03) – no technical confirmation of true unlimited usage (citation gap). | Cost scales with interaction volume; privacy‑first architecture may justify premium. |\n\n### 2.3 Service‑Level & Reliability  \n\n| Vendor | SLA Claim | Observed Reality | Gap Severity |\n|--------|-----------|------------------|--------------|\n| **CloudScale AI** | “10× credit for any outage beyond SLA” (no doc). | Credits denied for two 3‑hour outages; support blamed upstream network (DOC‑CS‑05). | **High** – contractual risk. |\n| **DataPulse Systems** | No SLA language found. | No published guarantee – risk for mission‑critical pipelines (opinion). | **Medium** – negotiation required. |\n| **NexusOps Technologies** | No SLA disclosed. | No contradictions; customers rely on contract negotiation (opinion). | **Medium** – must secure SLA in contract. |\n| **Veloce Security** | No SLA disclosed. | No contradictions; privacy guarantee strong, but availability terms absent (opinion). | **Medium** – negotiate explicit uptime/credit terms. |\n\n### 2.4 Evidence‑vs‑Claim Alignment  \n\n| Vendor | Claims Fully Supported | Claims Partially Supported | Claims Unsubstantiated / Contradicted |\n|--------|------------------------|----------------------------|--------------------------------------|\n| **CloudScale AI** | Token‑reduction, routing latency (DOC‑CS‑02). | Semantic‑cache hit rate (claimed 40 % vs. 22 % observed – DOC‑CS‑06). | Installation 48 h promise, 10× SLA credit – no source docs; documentation gaps (DOC‑CS‑05). |\n| **DataPulse Systems** | Latency, throughput, vector integrations (DOC‑DP‑02). | “Unlimited” high‑throughput usage – no fee clause (citation gap). | Hidden overage fees (DOC‑DP‑04, DOC‑DP‑05). |\n| **NexusOps Technologies** | All technical claims verified (DOC‑NO‑02, DOC‑NO‑04). | None. | Pricing floor may limit market reach (DOC‑NO‑03). |\n| **Veloce Security** | On‑prem privacy guarantee, rule count (DOC‑VS‑02). | “Comprehensive” coverage – false‑positive rate shows gaps (DOC‑VS‑04). | Unlimited tier usage cap undocumented (citation gap). |\n\n---\n\n## 3. Strategic Trade‑Offs  \n\n| Dimension | CloudScale AI | DataPulse Systems | NexusOps Technologies | Veloce Security |\n|-----------|---------------|-------------------|-----------------------|-----------------|\n| **Performance** | Strong token‑compression & low routing latency; cache under‑delivers. | Best‑in‑class sub‑10 ms latency & 250 k QPS; overage can erode cost advantage. | Remediation speed (MTTR ↓ 78 %) – not a raw latency play. | Detection speed adequate; false‑positives modest. |\n| **Cost Predictability** | Unclear subscription price; integration effort may rise due to SDK gaps. | Base price hidden; overage fees unpredictable → high variance. | Transparent per‑node pricing; high annual minimum. | Tiered pricing clear; “unlimited” tier uncertain. |\n| **Operational Risk** | SLA credit denial; installation delays; undocumented SDKs → higher integration risk. | No formal SLA; hidden overage → financial risk. | No public SLA but deterministic rollback reduces remediation risk. | No SLA; false‑positives may impact user experience in regulated domains. |\n| **Compliance & Data Residency** | On‑prem appliance helps data‑locality, but no explicit compliance certifications noted. | Cloud‑native service – may conflict with strict residency rules. | SaaS multi‑tenant – similar residency concerns. | Explicit on‑prem / VPC deployment; never leaves customer network – strongest privacy posture. |\n| **Ecosystem Fit** | Best for LLM‑centric inference pipelines seeking token‑cost savings. | Ideal for high‑throughput feature‑store queries (e.g., real‑time recommendation, sensor fusion). | Suited for organizations with mature Kubernetes/CloudOps stacks needing automated remediation. | Targeted at regulated LLM applications (healthcare, finance) where prompt‑injection risk is a compliance driver. |\n\n**Key Trade‑Off Summary**\n\n1. **Performance vs. Predictable Cost** – CloudScale and DataPulse deliver headline‑grabbing latency/throughput, but both hide cost or reliability variables that can offset the performance upside.  \n2. **On‑Premise Privacy vs. Managed Simplicity** – Veloce’s on‑premise model guarantees data residency but lacks a published SLA; NexusOps and DataPulse provide managed services that simplify ops but may conflict with strict compliance regimes.  \n3. **Speed of Incident Resolution vs. Pricing Floor** – NexusOps offers deterministic remediation with a clear per‑node cost, but the $35 k annual floor may be prohibitive for smaller units.  \n\n---\n\n## 4. Key Recommendations  \n\n| Recommendation | Rationale | Target Stakeholder | Action Items (with doc_id reference) |\n|----------------|-----------|--------------------|--------------------------------------|\n| **1. Prioritise vendors with verifiable SLA language** | SLA credit denial (CloudScale) and absence of any SLA (DataPulse, NexusOps, Veloce) expose the business to unquantified downtime risk. | Procurement & Legal | • Insist on a formal SLA clause (availability %, credit multiplier). <br>• Use CloudScale’s SLA claim as a negotiation baseline (DOC‑CS‑05). |\n| **2. Conduct a “hidden‑cost” audit before signing** | DataPulse’s overage model can double spend (DOC‑DP‑05); CloudScale’s undocumented SDK may increase integration effort. | Finance & Engineering | • Model worst‑case event volume for DataPulse (≥ 50 M events) and calculate potential overage (DOC‑DP‑04). <br>• Allocate engineering time to prototype CloudScale SDK; capture documentation gaps (DOC‑CS‑05). |\n| **3. Leverage Veloce’s on‑premise privacy for regulated workloads** | Veloce guarantees no payload egress (DOC‑VS‑02) – a decisive factor for HIPAA/GDPR use cases. | Compliance & Product Management | • Run a pilot on‑prem deployment (startup tier $1,200 / mo – DOC‑VS‑03). <br>• Validate false‑positive handling and tune bypass dictionaries (DOC‑VS‑04). |\n| **4. Position NexusOps as the “low‑risk” remediation platform for core infra** | Claims fully corroborated; deterministic rollback reduces remediation fallout (DOC‑NO‑04). | Site Reliability Engineering (SRE) | • Negotiate inclusion of a minimum‑availability SLA (e.g., 99.9 %). <br>• Confirm annual minimum aligns with projected node count (DOC‑NO‑03). |\n| **5. Require citation of all performance and cost claims in vendor contracts** | Multiple marketing claims lack source documents (e.g., CloudScale’s 48‑hour install, DataPulse “unlimited” usage). | Legal & Vendor Management | • Add a clause that any performance or pricing claim must be backed by a mutually‑signed technical appendix (reference citation gaps). |\n| **6. Build a decision matrix weighted to your strategic priorities** | Trade‑offs differ by use‑case (LLM inference vs. feature retrieval vs. incident remediation vs. compliance). | Strategy Office | • Weight dimensions (Performance, Cost Predictability, Compliance, SLA, Integration Effort). <br>• Populate with the data above; run sensitivity analysis. |\n| **7. Establish a “post‑deployment health‑check” SLA** | Observed delivery delays (CloudScale 4 weeks vs. 48 h) and hidden overage (DataPulse) suggest implementation risk. | Operations | • Define a 30‑day post‑go‑live review with success criteria (installation time, cache hit rate, overage billing). <br>• Tie final payment milestones to meeting these criteria (DOC‑CS‑06, DOC‑DP‑05).",
+        "error_count": 0
+      },
+      "fact_check_agent": {
+        "agent_id": "fact_check_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          9
+        ],
+        "latency": {
+          "mean_seconds": 5.0102,
+          "median_seconds": 4.5015,
+          "min_seconds": 3.396,
+          "max_seconds": 10.555,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 94155,
+          "mean_tokens": 3138.5,
+          "min_tokens": 2169,
+          "max_tokens": 5903,
+          "total_prompt_tokens": 48520,
+          "mean_prompt_tokens": 1617.3,
+          "total_completion_tokens": 45635,
+          "mean_completion_tokens": 1521.2,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_1",
+          "GROQ_API_KEY_11",
+          "GROQ_API_KEY_18",
+          "GROQ_API_KEY_5"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "verified_citations": [
+            {
+              "doc_id": "DOC-CS-02",
+              "claim": "CloudScale AI achieves 34 % token‑reduction and sub‑50 ms routing overhead.",
+              "status": "VERIFIED"
+            },
+            {
+              "doc_id": "DOC-CS-05",
+              "claim": "CloudScale AI’s SLA‑credit policy was not honoured for two 3‑hour outages.",
+              "status": "VERIFIED"
+            },
+            {
+              "doc_id": "DOC-CS-06",
+              "claim": "CloudScale AI’s semantic‑cache hit rate observed at 22 % (vs. 40 % claimed) and installation required 4 weeks instead of the promised 48 hours.",
+              "status": "VERIFIED"
+            },
+            {
+              "doc_id": "DOC-DP-02",
+              "claim": "DataPulse Systems delivers sub‑10 ms retrieval latency, 250 k QPS, and native connectors to four major vector stores.",
+              "status": "VERIFIED"
+            },
+            {
+              "doc_id": "DOC-DP-04",
+              "claim": "DataPulse Systems charges an overage fee of $0.05 / 10 k events after 50 M events.",
+              "status": "VERIFIED"
+            },
+            {
+              "doc_id": "DOC-DP-05",
+              "claim": "DataPulse Systems’ overage fee doubled the invoice in month 3 for a customer.",
+              "status": "VERIFIED"
+            },
+            {
+              "doc_id": "DOC-NO-02",
+              "claim": "NexusOps Technologies provides 450+ production‑ready runbooks and deterministic rollback with safety air‑gap.",
+              "status": "VERIFIED"
+            },
+            {
+              "doc_id": "DOC-NO-04",
+              "claim": "NexusOps Technologies reduced MTTR from 45 min to 11 min.",
+              "status": "VERIFIED"
+            },
+            {
+              "doc_id": "DOC-NO-03",
+              "claim": "NexusOps Technologies pricing includes a $35 k annual minimum.",
+              "status": "VERIFIED"
+            },
+            {
+              "doc_id": "DOC-VS-02",
+              "claim": "Veloce Security ships with 120+ pre‑built compliance rules and can be deployed on‑prem or in a private VPC with no payload egress.",
+              "status": "VERIFIED"
+            },
+            {
+              "doc_id": "DOC-VS-04",
+              "claim": "Veloce Security’s clinical pilot showed a false‑positive rate of ≈ 4 % on medical abbreviations.",
+              "status": "VERIFIED"
+            },
+            {
+              "doc_id": "DOC-VS-03",
+              "claim": "Veloce Security pricing: Startup tier $1,200 / mo (≤ 500 k interactions) and Enterprise “unlimited” tier $5,500 / mo.",
+              "status": "VERIFIED"
+            }
+          ],
+          "unsupported_statements": [
+            {
+              "statement": "DataPulse Systems has no published SLA.",
+              "reason": "No citation provided to substantiate the absence of an SLA."
+            },
+            {
+              "statement": "Veloce Security has no SLA language disclosed.",
+              "reason": "No citation provided to substantiate the lack of SLA documentation."
+            },
+            {
+              "statement": "Marketing implies “unlimited” usage without fee for DataPulse Systems.",
+              "reason": "Citation gap – no source document referenced."
+            },
+            {
+              "statement": "The “unlimited” tier of Veloce Security lacks technical confirmation of no throttling.",
+              "reason": "Citation gap – no source document referenced."
+            },
+            {
+              "statement": "CloudScale AI’s 48‑hour installation promise is undocumented.",
+              "reason": "No citation provided to verify the promised installation timeframe."
+            }
+          ],
+          "fact_check_verdict": "NEEDS_REVISION",
+          "audit_summary": "The report contains many well‑cited factual claims (12 verified citations). However, several factual statements lack supporting documentation, notably the absence of SLAs for DataPulse and Veloce, marketing‑level “unlimited” usage claims, and the undocumented 48‑hour installation promise for CloudScale. These gaps trigger a NEEDS_REVISION verdict. Opinions and strategic commentary are acceptable, but all concrete performance or pricing assertions must be backed by a doc_id.",
+          "is_synthetic_verified": false
+        },
+        "error_count": 0
+      }
+    },
+    "runs_summary": [
+      {
+        "run_id": "live_20261031_184233_trace01",
+        "status": "SUCCESS",
+        "duration_seconds": 61.974,
+        "total_tokens": 38548,
+        "prompt_tokens": 19525,
+        "completion_tokens": 19023,
+        "estimated_cost_usd": 0.026548,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T18:43:35.581081+00:00",
+        "trace_file": "live_20261031_184233_trace01.json"
+      },
+      {
+        "run_id": "live_20261031_184400_trace02",
+        "status": "SUCCESS",
+        "duration_seconds": 83.321,
+        "total_tokens": 38160,
+        "prompt_tokens": 19102,
+        "completion_tokens": 19058,
+        "estimated_cost_usd": 0.026326,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T18:45:24.149841+00:00",
+        "trace_file": "live_20261031_184400_trace02.json"
+      },
+      {
+        "run_id": "live_20261031_184525_trace03",
+        "status": "SUCCESS",
+        "duration_seconds": 63.053,
+        "total_tokens": 35861,
+        "prompt_tokens": 17912,
+        "completion_tokens": 17949,
+        "estimated_cost_usd": 0.024748,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T18:46:28.228710+00:00",
+        "trace_file": "live_20261031_184525_trace03.json"
+      },
+      {
+        "run_id": "live_20261031_184629_trace04",
+        "status": "SUCCESS",
+        "duration_seconds": 51.976,
+        "total_tokens": 36159,
+        "prompt_tokens": 17588,
+        "completion_tokens": 18571,
+        "estimated_cost_usd": 0.025048,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T18:47:21.220346+00:00",
+        "trace_file": "live_20261031_184629_trace04.json"
+      },
+      {
+        "run_id": "live_20261031_184722_trace05",
+        "status": "SUCCESS",
+        "duration_seconds": 52.964,
+        "total_tokens": 38049,
+        "prompt_tokens": 19505,
+        "completion_tokens": 18544,
+        "estimated_cost_usd": 0.026158,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T18:48:15.208930+00:00",
+        "trace_file": "live_20261031_184722_trace05.json"
+      },
+      {
+        "run_id": "live_20261031_185827_trace06",
+        "status": "SUCCESS",
+        "duration_seconds": 57.564,
+        "total_tokens": 26278,
+        "prompt_tokens": 12319,
+        "completion_tokens": 13959,
+        "estimated_cost_usd": 0.018296,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T18:59:24.693590+00:00",
+        "trace_file": "live_20261031_185827_trace06.json"
+      },
+      {
+        "run_id": "live_20261031_185944_trace07",
+        "status": "SUCCESS",
+        "duration_seconds": 42.832,
+        "total_tokens": 25931,
+        "prompt_tokens": 11754,
+        "completion_tokens": 14177,
+        "estimated_cost_usd": 0.018135,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:00:27.227968+00:00",
+        "trace_file": "live_20261031_185944_trace07.json"
+      },
+      {
+        "run_id": "live_20261031_190028_trace08",
+        "status": "SUCCESS",
+        "duration_seconds": 42.775,
+        "total_tokens": 27252,
+        "prompt_tokens": 12874,
+        "completion_tokens": 14378,
+        "estimated_cost_usd": 0.018954,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:01:11.021964+00:00",
+        "trace_file": "live_20261031_190028_trace08.json"
+      },
+      {
+        "run_id": "live_20261031_190112_trace09",
+        "status": "SUCCESS",
+        "duration_seconds": 42.17,
+        "total_tokens": 25473,
+        "prompt_tokens": 11360,
+        "completion_tokens": 14113,
+        "estimated_cost_usd": 0.017852,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:01:54.224918+00:00",
+        "trace_file": "live_20261031_190112_trace09.json"
+      },
+      {
+        "run_id": "live_20261031_190155_trace10",
+        "status": "SUCCESS",
+        "duration_seconds": 40.93,
+        "total_tokens": 27335,
+        "prompt_tokens": 13294,
+        "completion_tokens": 14041,
+        "estimated_cost_usd": 0.018936,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:02:36.188612+00:00",
+        "trace_file": "live_20261031_190155_trace10.json"
+      },
+      {
+        "run_id": "live_20261031_190237_trace11",
+        "status": "SUCCESS",
+        "duration_seconds": 45.422,
+        "total_tokens": 25767,
+        "prompt_tokens": 11831,
+        "completion_tokens": 13936,
+        "estimated_cost_usd": 0.01799,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:03:22.663027+00:00",
+        "trace_file": "live_20261031_190237_trace11.json"
+      },
+      {
+        "run_id": "live_20261031_190323_trace12",
+        "status": "SUCCESS",
+        "duration_seconds": 41.46,
+        "total_tokens": 25986,
+        "prompt_tokens": 12132,
+        "completion_tokens": 13854,
+        "estimated_cost_usd": 0.018103,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:04:05.183011+00:00",
+        "trace_file": "live_20261031_190323_trace12.json"
+      },
+      {
+        "run_id": "live_20261031_190406_trace13",
+        "status": "SUCCESS",
+        "duration_seconds": 41.808,
+        "total_tokens": 25529,
+        "prompt_tokens": 11897,
+        "completion_tokens": 13632,
+        "estimated_cost_usd": 0.017789,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:04:48.035337+00:00",
+        "trace_file": "live_20261031_190406_trace13.json"
+      },
+      {
+        "run_id": "live_20261031_190449_trace14",
+        "status": "SUCCESS",
+        "duration_seconds": 41.841,
+        "total_tokens": 27023,
+        "prompt_tokens": 12866,
+        "completion_tokens": 14157,
+        "estimated_cost_usd": 0.018775,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:05:30.907199+00:00",
+        "trace_file": "live_20261031_190449_trace14.json"
+      },
+      {
+        "run_id": "live_20261031_190531_trace15",
+        "status": "SUCCESS",
+        "duration_seconds": 41.491,
+        "total_tokens": 26888,
+        "prompt_tokens": 13062,
+        "completion_tokens": 13826,
+        "estimated_cost_usd": 0.018629,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:06:13.443525+00:00",
+        "trace_file": "live_20261031_190531_trace15.json"
+      },
+      {
+        "run_id": "live_20261031_190614_trace16",
+        "status": "SUCCESS",
+        "duration_seconds": 44.247,
+        "total_tokens": 26636,
+        "prompt_tokens": 12150,
+        "completion_tokens": 14486,
+        "estimated_cost_usd": 0.018612,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:06:58.750591+00:00",
+        "trace_file": "live_20261031_190614_trace16.json"
+      },
+      {
+        "run_id": "live_20261031_190659_trace17",
+        "status": "SUCCESS",
+        "duration_seconds": 42.465,
+        "total_tokens": 26557,
+        "prompt_tokens": 12442,
+        "completion_tokens": 14115,
+        "estimated_cost_usd": 0.018492,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:07:42.269511+00:00",
+        "trace_file": "live_20261031_190659_trace17.json"
+      },
+      {
+        "run_id": "live_20261031_190743_trace18",
+        "status": "SUCCESS",
+        "duration_seconds": 44.861,
+        "total_tokens": 27321,
+        "prompt_tokens": 13103,
+        "completion_tokens": 14218,
+        "estimated_cost_usd": 0.018963,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:08:28.192107+00:00",
+        "trace_file": "live_20261031_190743_trace18.json"
+      },
+      {
+        "run_id": "live_20261031_190829_trace19",
+        "status": "SUCCESS",
+        "duration_seconds": 45.493,
+        "total_tokens": 27793,
+        "prompt_tokens": 13958,
+        "completion_tokens": 13835,
+        "estimated_cost_usd": 0.019165,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:09:14.754378+00:00",
+        "trace_file": "live_20261031_190829_trace19.json"
+      },
+      {
+        "run_id": "live_20261031_190916_trace20",
+        "status": "SUCCESS",
+        "duration_seconds": 45.956,
+        "total_tokens": 26175,
+        "prompt_tokens": 12298,
+        "completion_tokens": 13877,
+        "estimated_cost_usd": 0.018219,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:10:02.240648+00:00",
+        "trace_file": "live_20261031_190916_trace20.json"
+      },
+      {
+        "run_id": "live_20261031_191003_trace21",
+        "status": "SUCCESS",
+        "duration_seconds": 42.693,
+        "total_tokens": 27358,
+        "prompt_tokens": 13535,
+        "completion_tokens": 13823,
+        "estimated_cost_usd": 0.018906,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:10:45.967992+00:00",
+        "trace_file": "live_20261031_191003_trace21.json"
+      },
+      {
+        "run_id": "live_20261031_191047_trace22",
+        "status": "SUCCESS",
+        "duration_seconds": 40.538,
+        "total_tokens": 25598,
+        "prompt_tokens": 12343,
+        "completion_tokens": 13255,
+        "estimated_cost_usd": 0.017754,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:11:27.752706+00:00",
+        "trace_file": "live_20261031_191047_trace22.json"
+      },
+      {
+        "run_id": "live_20261031_191128_trace23",
+        "status": "SUCCESS",
+        "duration_seconds": 41.234,
+        "total_tokens": 26016,
+        "prompt_tokens": 12071,
+        "completion_tokens": 13945,
+        "estimated_cost_usd": 0.018138,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:12:10.055996+00:00",
+        "trace_file": "live_20261031_191128_trace23.json"
+      },
+      {
+        "run_id": "live_20261031_191211_trace24",
+        "status": "SUCCESS",
+        "duration_seconds": 41.202,
+        "total_tokens": 26318,
+        "prompt_tokens": 12591,
+        "completion_tokens": 13727,
+        "estimated_cost_usd": 0.018273,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:12:52.331980+00:00",
+        "trace_file": "live_20261031_191211_trace24.json"
+      },
+      {
+        "run_id": "live_20261031_191253_trace25",
+        "status": "SUCCESS",
+        "duration_seconds": 40.73,
+        "total_tokens": 26069,
+        "prompt_tokens": 12123,
+        "completion_tokens": 13946,
+        "estimated_cost_usd": 0.01817,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:13:34.127288+00:00",
+        "trace_file": "live_20261031_191253_trace25.json"
+      },
+      {
+        "run_id": "live_20261031_191335_trace26",
+        "status": "SUCCESS",
+        "duration_seconds": 50.722,
+        "total_tokens": 27470,
+        "prompt_tokens": 13638,
+        "completion_tokens": 13832,
+        "estimated_cost_usd": 0.018974,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:14:25.930435+00:00",
+        "trace_file": "live_20261031_191335_trace26.json"
+      },
+      {
+        "run_id": "live_20261031_191551_trace27",
+        "status": "SUCCESS",
+        "duration_seconds": 47.636,
+        "total_tokens": 26470,
+        "prompt_tokens": 12475,
+        "completion_tokens": 13995,
+        "estimated_cost_usd": 0.018416,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:16:39.089634+00:00",
+        "trace_file": "live_20261031_191551_trace27.json"
+      },
+      {
+        "run_id": "live_20261031_191702_trace28",
+        "status": "SUCCESS",
+        "duration_seconds": 65.211,
+        "total_tokens": 27551,
+        "prompt_tokens": 13040,
+        "completion_tokens": 14511,
+        "estimated_cost_usd": 0.019157,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:18:07.661762+00:00",
+        "trace_file": "live_20261031_191702_trace28.json"
+      },
+      {
+        "run_id": "live_20261031_191810_trace29",
+        "status": "SUCCESS",
+        "duration_seconds": 84.783,
+        "total_tokens": 26208,
+        "prompt_tokens": 12261,
+        "completion_tokens": 13947,
+        "estimated_cost_usd": 0.018252,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:19:35.449510+00:00",
+        "trace_file": "live_20261031_191810_trace29.json"
+      },
+      {
+        "run_id": "live_20261031_191936_trace30",
+        "status": "SUCCESS",
+        "duration_seconds": 91.882,
+        "total_tokens": 25581,
+        "prompt_tokens": 11912,
+        "completion_tokens": 13669,
+        "estimated_cost_usd": 0.017827,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T19:21:08.374017+00:00",
+        "trace_file": "live_20261031_191936_trace30.json"
+      }
+    ]
+  },
+  "workflow_graph": {
+    "nodes": [
+      {
+        "id": "workflow:market_research",
+        "type": "workflow",
+        "name": "market_research",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:",
+        "type": "agent",
+        "name": "",
+        "source": "declared"
+      },
+      {
+        "id": "agent:comparison_agent",
+        "type": "agent",
+        "name": "comparison_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:evidence_agent",
+        "type": "agent",
+        "name": "evidence_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:fact_check_agent",
+        "type": "agent",
+        "name": "fact_check_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:feedback_agent",
+        "type": "agent",
+        "name": "feedback_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:planning_agent",
+        "type": "agent",
+        "name": "planning_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:pricing_agent",
+        "type": "agent",
+        "name": "pricing_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:product_agent",
+        "type": "agent",
+        "name": "product_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:profile_agent",
+        "type": "agent",
+        "name": "profile_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:synthesis_agent",
+        "type": "agent",
+        "name": "synthesis_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "task:comparison_agent_task",
+        "type": "task",
+        "name": "comparison_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:evidence_agent_task",
+        "type": "task",
+        "name": "evidence_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:fact_check_agent_task",
+        "type": "task",
+        "name": "fact_check_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:feedback_agent_task",
+        "type": "task",
+        "name": "feedback_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:planning_agent_task",
+        "type": "task",
+        "name": "planning_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:pricing_agent_task",
+        "type": "task",
+        "name": "pricing_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:product_agent_task",
+        "type": "task",
+        "name": "product_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:profile_agent_task",
+        "type": "task",
+        "name": "profile_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:synthesis_agent_task",
+        "type": "task",
+        "name": "synthesis_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:query_feedback_documents",
+        "type": "function",
+        "name": "query_feedback_documents",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:query_pricing_documents",
+        "type": "function",
+        "name": "query_pricing_documents",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:query_product_documents",
+        "type": "function",
+        "name": "query_product_documents",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:query_company_profiles",
+        "type": "function",
+        "name": "query_company_profiles",
+        "source": "statically_observed"
+      }
+    ],
+    "edges": [
+      {
+        "source": "agent:comparison_agent",
+        "target": "task:comparison_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "source": "agent:evidence_agent",
+        "target": "task:evidence_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "source": "agent:fact_check_agent",
+        "target": "task:fact_check_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "source": "agent:feedback_agent",
+        "target": "task:feedback_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "source": "agent:planning_agent",
+        "target": "task:planning_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "source": "agent:pricing_agent",
+        "target": "task:pricing_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "source": "agent:product_agent",
+        "target": "task:product_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "source": "agent:profile_agent",
+        "target": "task:profile_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_009"
+        ]
+      },
+      {
+        "source": "agent:synthesis_agent",
+        "target": "task:synthesis_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_010"
+        ]
+      },
+      {
+        "source": "agent:feedback_agent",
+        "target": "function:query_feedback_documents",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "source": "agent:pricing_agent",
+        "target": "function:query_pricing_documents",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "source": "agent:product_agent",
+        "target": "function:query_product_documents",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "source": "agent:profile_agent",
+        "target": "function:query_company_profiles",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_009"
+        ]
+      },
+      {
+        "source": "workflow:market_research",
+        "target": "agent:comparison_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:market_research",
+        "target": "agent:synthesis_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:market_research",
+        "target": "agent:profile_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:market_research",
+        "target": "agent:product_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:market_research",
+        "target": "agent:planning_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:market_research",
+        "target": "agent:pricing_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:market_research",
+        "target": "agent:fact_check_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:market_research",
+        "target": "agent:feedback_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:market_research",
+        "target": "agent:evidence_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "agent:planning_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:planning_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:planning_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:planning_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:profile_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:product_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:pricing_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:feedback_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:evidence_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:comparison_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:synthesis_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:planning_agent",
+        "target": "agent:profile_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:profile_agent",
+        "target": "agent:product_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:product_agent",
+        "target": "agent:pricing_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:pricing_agent",
+        "target": "agent:feedback_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:feedback_agent",
+        "target": "agent:evidence_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:evidence_agent",
+        "target": "agent:comparison_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:comparison_agent",
+        "target": "agent:synthesis_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:synthesis_agent",
+        "target": "agent:fact_check_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      }
+    ]
+  },
+  "reconciliation_and_limitations": {
+    "agent_reconciliation": [
+      {
+        "agent_id": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "declared_unimplemented",
+        "notes": "Agent declared in design but not found in Python source code."
+      },
+      {
+        "agent_id": "comparison_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      },
+      {
+        "agent_id": "evidence_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      },
+      {
+        "agent_id": "fact_check_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      },
+      {
+        "agent_id": "feedback_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      },
+      {
+        "agent_id": "planning_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      },
+      {
+        "agent_id": "pricing_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      },
+      {
+        "agent_id": "product_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      },
+      {
+        "agent_id": "profile_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      },
+      {
+        "agent_id": "synthesis_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      }
+    ],
+    "dependency_reconciliation": [
+      {
+        "source": "planning_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "planning_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "planning_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "planning_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "profile_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "product_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "pricing_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "feedback_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "evidence_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "comparison_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "synthesis_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      }
+    ],
+    "model_reconciliation": {
+      "declared_model": "openai/gpt-oss-120b",
+      "statically_extracted_model": "comparison_agent",
+      "runtime_observed_model": "openai/gpt-oss-120b",
+      "status": "matching",
+      "notes": "Declared model 'openai/gpt-oss-120b' matches runtime enforced model 'openai/gpt-oss-120b'."
+    },
+    "limitations": [
+      "Per-agent cost in traces is not tracked individually; only workflow-level cost is recorded.",
+      "Dynamic runtime branch outcomes and retry loops are recorded as sequential executions.",
+      "Static prompt text reflects task description parameters; dynamic LLM runtime prompt interpolations are reflected in trace prompt tokens.",
+      "Static AST dependency graph was a flat star topology; inter-agent dependencies are reconciled from workflow.json and runtime trace sequences."
+    ]
+  }
+}

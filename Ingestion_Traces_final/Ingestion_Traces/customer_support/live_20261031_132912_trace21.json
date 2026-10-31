@@ -1,0 +1,151 @@
+{
+  "run_id": "live_20261031_132912_trace21",
+  "workflow_name": "customer_support",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 14.471,
+  "agent_execution_count": 6,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.306,
+      "tokens": 701,
+      "prompt_tokens": 444,
+      "completion_tokens": 257,
+      "output": {
+        "category": "delivery",
+        "urgency": "high",
+        "complexity": "complex",
+        "customer_impact": "high",
+        "routing_recommendation": "Escalate to Enterprise Delivery Operations team for immediate investigation and possible expedited shipping."
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "ticket_classification_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.491,
+      "tokens": 887,
+      "prompt_tokens": 498,
+      "completion_tokens": 389,
+      "output": {
+        "applicable_policy_ids": [],
+        "applicable_guide_ids": [
+          "TSG-204"
+        ],
+        "policy_conditions": {
+          "coverage_note": "No explicit policy record matched this ticket; therefore no dedicated policy ID applies.",
+          "fallback_sla": {
+            "tier": "Enterprise",
+            "urgency": "high",
+            "response_time": "Within 2 business hours",
+            "resolution_time": "Standard delivery issue resolution within 5 business days from ticket creation, subject to carrier investigation timelines."
+          },
+          "eligibility_conditions": [
+            "Customer must be an active Enterprise tier account.",
+            "Issue must be classified under the 'delivery' category.",
+            "Ticket urgency is high, triggering priority handling."
+          ],
+          "restrictions": [
+            "SLA applies only to orders shipped with a tracked carrier.",
+            "If the carrier indicates delivery completed, a formal carrier investigation must be initiated before escalation."
+          ]
+        },
+        "retrieval_summary": "Policy search returned no matching policy records; however, a relevant troubleshooting guide (TSG-204) was found for delivery issues. The response includes fallback SLA details for Enterprise high‑urgency delivery problems."
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "policy_retrieval_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.678,
+      "tokens": 1181,
+      "prompt_tokens": 681,
+      "completion_tokens": 500,
+      "output": {
+        "investigation_findings": "The customer (Enterprise tier) reports that replacement parts order #ORD-8819 has not arrived after a 2‑week period. No shipping or carrier details are present in the ticket. Historical cases for this synthetic customer show successful resolutions via standard SOPs for billing and technical issues, indicating no known systemic issues with this account. The primary suspicion is a fulfillment or logistics failure (e.g., carrier delay, address mismatch, internal hold) rather than a product or account‑specific problem.",
+        "root_cause_hypothesis": "A delivery disruption caused by either (a) an internal fulfillment hold or mis‑routing, or (b) a carrier‑level delay/misdirected shipment. Given the enterprise tier and high urgency, the issue likely stems from a logistics error rather than a technical fault.",
+        "confirmed_facts": [
+          "Ticket ID TICK-2026-0021 created on 2026-09-06 06:00 UTC.",
+          "Customer ID CUST-0021, Enterprise tier, synthetic record.",
+          "Order #ORD-8819 is a replacement parts order.",
+          "Customer reports non‑receipt after 2 weeks.",
+          "Urgency marked as high."
+        ],
+        "data_gaps": [
+          "Shipping carrier name and tracking number for order #ORD-8819.",
+          "Current fulfillment status in the internal order management system.",
+          "Verification of the shipping address on file versus the address used for this order.",
+          "Any carrier incident reports or delay notifications covering the 2‑week window.",
+          "Confirmation whether the order was dispatched or held in the warehouse."
+        ]
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "issue_investigation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 2.428,
+      "tokens": 2030,
+      "prompt_tokens": 1099,
+      "completion_tokens": 931,
+      "output": {
+        "resolution_type": "immediate_resolution",
+        "recommended_action": "1. Acknowledge the ticket and confirm receipt with the customer within 2 business hours (per fallback SLA). \n2. Access the internal Order Management System (OMS) to retrieve the full fulfillment record for order #ORD-8819, including carrier name, tracking number, shipment date, and current status. \n3. Verify that the shipping address on file matches the address the customer expects. \n4. If the OMS shows the order is still pending or on hold, immediately request the Fulfillment Team to release and ship the parts using an expedited, tracked carrier. \n5. If the order has been shipped, locate the tracking number and check the carrier’s tracking portal for the latest status. \n   a. If tracking shows a delay or “in transit” beyond normal transit time, open a carrier investigation (e.g., UPS/FEDEX claim) and request an expedited re‑ship. \n   b. If tracking shows “delivered,” verify delivery location; if the customer still reports non‑receipt, still open a carrier investigation per policy before any further escalation. \n6. Document all findings and actions in the ticket per TSG-204 troubleshooting guide. \n7. Provide the customer with a status update within the next 24 hours, including any tracking information, investigation reference numbers, and expected resolution timeline (aiming to resolve within 5 business days). \n8. If the carrier investigation confirms loss or irrecoverable delay, arrange a replacement shipment at no cost to the customer and note a goodwill credit in the account notes (do not issue the credit directly).",
+        "policy_justification": "The fallback SLA for Enterprise tier high‑urgency delivery issues mandates a response within 2 business hours and a resolution within 5 business days, subject to carrier investigation timelines. The actions follow the TSG-204 delivery troubleshooting guide and respect the policy restriction that a carrier investigation must be initiated before any escalation or credit issuance. All steps are designed to meet the high‑impact, high‑urgency criteria and to keep the customer informed throughout the process.",
+        "escalation_required": true
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "resolution_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 1.814,
+      "tokens": 1442,
+      "prompt_tokens": 881,
+      "completion_tokens": 561,
+      "output": {
+        "response_text": "Dear Enterprise Client 21,\n\nThank you for bringing the delay with replacement parts order #ORD‑8819 to our attention. We understand how critical timely delivery is for your operations, and we apologize for any inconvenience this has caused.\n\nWe have begun an immediate investigation and are taking the following actions:\n\n- Verify that the shipping address we have on file matches your expected delivery location.\n- Review the order’s fulfillment record in our system to confirm shipment status and obtain the carrier’s tracking details.\n- If the order has not yet shipped, we will request an expedited, tracked shipment from our Fulfillment Team.\n- If the order has already shipped, we will check the carrier’s tracking portal. Should the tracking indicate a delay or an unexpected delivery status, we will open a carrier investigation and arrange a priority re‑ship at no cost to you.\n- Document all findings and keep you updated with any tracking numbers, investigation reference numbers, and an estimated resolution timeline (aiming to resolve within five business days).\n\nWe will provide you with a status update within the next 24 hours.\n\nThank you for your patience and partnership.\n\nSincerely,\nCustomer Support Team",
+        "tone": "Professional and Empathetic",
+        "next_steps_for_customer": "Please confirm that the shipping address we have on file (as shown below) is correct, or provide any updates if it has changed:\n[Insert address from OMS]\nIf the address is correct, no further action is required from you at this time; we will keep you informed of progress.",
+        "ticket_status": "In Progress – Investigation Initiated"
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "response_drafting_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 1.508,
+      "tokens": 2255,
+      "prompt_tokens": 1793,
+      "completion_tokens": 462,
+      "output": {
+        "qa_status": "APPROVED",
+        "final_ticket_status": "ACTION_REQUIRED_BY_USER",
+        "verification_notes": "The response acknowledges the delay, outlines a clear investigation plan, aligns with the fallback SLA (2‑hour acknowledgment, 5‑day resolution), and respects policy restrictions (carrier investigation before any credit). No unsupported promises are made; the only customer action required is address confirmation, which is explicitly requested. The draft therefore fully addresses the complaint within policy bounds.",
+        "support_summary_report": "The drafted reply is professional, empathetic, and actionable. It commits to a 24‑hour status update and a 5‑day resolution window, matching the enterprise high‑urgency SLA. All required steps (OMS check, address verification, carrier investigation, possible expedited re‑ship) are included, and no policy contradictions are present. The ticket should remain open with the next step awaiting the customer's address confirmation."
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "resolution_verification_agent"
+    }
+  ],
+  "total_tokens": 8496,
+  "prompt_tokens": 5396,
+  "completion_tokens": 3100,
+  "estimated_cost_usd": 0.005633,
+  "error_message": null,
+  "final_output": "{\n  \"qa_status\": \"APPROVED\",\n  \"final_ticket_status\": \"ACTION_REQUIRED_BY_USER\",\n  \"verification_notes\": \"The response acknowledges the delay, outlines a clear investigation plan, aligns with the fallback SLA (2\\u2011hour acknowledgment, 5\\u2011day resolution), and respects policy restrictions (carrier investigation before any credit). No unsupported promises are made; the only customer action required is address confirmation, which is explicitly requested. The draft therefore fully addresses the complaint within policy bounds.\",\n  \"support_summary_report\": \"The drafted reply is professional, empathetic, and actionable. It commits to a 24\\u2011hour status update and a 5\\u2011day resolution window, matching the enterprise high\\u2011urgency SLA. All required steps (OMS check, address verification, carrier investigation, possible expedited re\\u2011ship) are included, and no policy contradictions are present. The ticket should remain open with the next step awaiting the customer's address confirmation.\"\n}",
+  "timestamp": "2026-10-31T13:29:26.701471+00:00"
+}

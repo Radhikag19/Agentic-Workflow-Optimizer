@@ -1,0 +1,526 @@
+{
+  "run_id": "live_20261031_120213_trace08",
+  "workflow_name": "contract_review",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 31.872,
+  "agent_execution_count": 10,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.831,
+      "tokens": 771,
+      "prompt_tokens": 302,
+      "completion_tokens": 469,
+      "output": {
+        "document_id": "DOC-20261031-0001",
+        "contract_id": "CTR-2026-0008",
+        "contract_title": "SaaS Subscription Agreement with Enterprise Partner 008 LLC",
+        "contract_type": "SaaS Subscription Agreement",
+        "contract_version": "1.0",
+        "policy_id": "POL-CORP-FIN-02",
+        "policy_version": "3.1",
+        "document_complete": true,
+        "section_count": 5,
+        "source_metadata": {
+          "parties": [
+            "AWO Enterprise Corp",
+            "Enterprise Partner 008 LLC"
+          ],
+          "effective_date": "2026-01-01",
+          "expiration_date": "2027-01-01",
+          "clause_count": 5,
+          "contract_fields_present": [
+            "Contract ID",
+            "Title",
+            "Type",
+            "Version",
+            "Parties",
+            "Effective Date",
+            "Expiration Date",
+            "Clause Count"
+          ],
+          "policy_fields_present": [
+            "Policy ID",
+            "Policy Version"
+          ]
+        },
+        "intake_warnings": []
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "contract_intake_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.846,
+      "tokens": 1295,
+      "prompt_tokens": 741,
+      "completion_tokens": 554,
+      "output": {
+        "contract_id": "CTR-2026-0008",
+        "clauses": [
+          {
+            "clause_id": "CLS-0008-PAY",
+            "clause_type": "payment_terms",
+            "clause_title": "Section 3: Invoicing and Payment Terms",
+            "clause_text": "Customer shall pay all undisputed invoice amounts within thirty (30) days of invoice date.",
+            "section_reference": "Section 3.1"
+          },
+          {
+            "clause_id": "CLS-0008-DATA",
+            "clause_type": "data_protection",
+            "clause_title": "Section 8: Security & Breach Notification",
+            "clause_text": "Vendor shall notify Customer in writing within twenty-four (24) hours of becoming aware of any confirmed Data Breach.",
+            "section_reference": "Section 8.2"
+          },
+          {
+            "clause_id": "CLS-0008-LIAB",
+            "clause_type": "liability_cap",
+            "clause_title": "Section 10: Limitation of Liability",
+            "clause_text": "Each party's maximum aggregate liability shall be strictly limited to the total fees paid under this Agreement in the preceding twelve (12) months.",
+            "section_reference": "Section 10.1"
+          },
+          {
+            "clause_id": "CLS-0008-TERM",
+            "clause_type": "termination",
+            "clause_title": "Section 12: Term and Termination",
+            "clause_text": "Either party may terminate this Agreement for convenience upon providing thirty (30) days prior written notice.",
+            "section_reference": "Section 12.1"
+          },
+          {
+            "clause_id": "CLS-0008-REN",
+            "clause_type": "renewal",
+            "clause_title": "Section 12: Renewal Provisions",
+            "clause_text": "This Agreement renews on an annual basis unless either party gives notice of non-renewal at least 30 days prior.",
+            "section_reference": "Section 12.4"
+          }
+        ],
+        "absent_clause_types": [],
+        "extraction_notes": [
+          "Document extracted once for downstream policy comparison"
+        ]
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "clause_extraction_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.968,
+      "tokens": 907,
+      "prompt_tokens": 349,
+      "completion_tokens": 558,
+      "output": {
+        "policy_id": "POL-CORP-FIN-02",
+        "policy_version": "3.1",
+        "policy_name": "Commercial Payment Terms & Billing Policy",
+        "mandatory_requirements": [
+          {
+            "requirement_id": "REQ-FIN-01",
+            "clause_type": "payment_terms",
+            "description": "Payment terms shall not exceed Net 45 days from receipt of undisputed invoice.",
+            "threshold": "Maximum of 45 calendar days after the date the invoice is received and deemed undisputed."
+          }
+        ],
+        "recommended_requirements": [
+          {
+            "requirement_id": "REQ-FIN-02",
+            "clause_type": "payment_terms",
+            "description": "Late payment penalties should not exceed 1.5% per month.",
+            "threshold": "Cap of 1.5% interest per month on overdue amounts."
+          }
+        ],
+        "ambiguities_in_policy": [
+          "Definition of \"undisputed invoice\" – the policy does not specify the criteria or process for determining when an invoice is undisputed.",
+          "Whether \"Net 45 days\" refers to calendar days or business days is not clarified.",
+          "The calculation basis for the 1.5% monthly penalty (e.g., on the original invoice amount, the outstanding balance, or including previously accrued penalties) is not defined.",
+          "The policy does not address how penalties are applied if payments are partially late (e.g., partial payments before the due date)."
+        ]
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "policy_interpretation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 2.356,
+      "tokens": 1485,
+      "prompt_tokens": 707,
+      "completion_tokens": 778,
+      "output": {
+        "contract_id": "CTR-2026-0008",
+        "policy_id": "REQ-FIN-01",
+        "mappings": [
+          {
+            "clause_id": "CLS-0008-PAY",
+            "requirement_id": "REQ-FIN-01",
+            "mapping_status": "satisfied",
+            "justification": "Clause requires payment within 30 days of invoice date, which is stricter than the policy maximum of 45 days."
+          },
+          {
+            "clause_id": "CLS-0008-DATA",
+            "requirement_id": null,
+            "mapping_status": "unaddressed",
+            "justification": "Clause addresses data breach notification, not payment terms."
+          },
+          {
+            "clause_id": "CLS-0008-LIAB",
+            "requirement_id": null,
+            "mapping_status": "unaddressed",
+            "justification": "Clause pertains to liability caps, unrelated to the payment terms policy."
+          },
+          {
+            "clause_id": "CLS-0008-TERM",
+            "requirement_id": null,
+            "mapping_status": "unaddressed",
+            "justification": "Clause deals with termination rights, not payment terms."
+          },
+          {
+            "clause_id": "CLS-0008-REN",
+            "requirement_id": null,
+            "mapping_status": "unaddressed",
+            "justification": "Clause concerns renewal provisions, unrelated to payment terms."
+          }
+        ],
+        "coverage_percentage": 100
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "clause_mapping_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 1.666,
+      "tokens": 800,
+      "prompt_tokens": 556,
+      "completion_tokens": 244,
+      "output": {
+        "contract_id": "CTR-2026-0008",
+        "deviations": [],
+        "has_critical_deviations": false
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "compliance_deviation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 3.366,
+      "tokens": 1868,
+      "prompt_tokens": 638,
+      "completion_tokens": 1230,
+      "output": {
+        "contract_id": "CTR-2026-0008",
+        "risk_findings": [
+          {
+            "finding_id": "RF-0001",
+            "clause_id": "CLS-0008-PAY",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "The term \"undisputed invoice amounts\" is undefined, creating uncertainty about payment obligations for disputed invoices. No interest or penalty provisions for late payment are included, potentially favoring the vendor.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-0002",
+            "clause_id": "CLS-0008-DATA",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "\"Becoming aware of any confirmed Data Breach\" is not defined, leaving room for interpretation of when a breach is considered \"confirmed\" and when the vendor is deemed aware. This may delay notification beyond the intended 24‑hour window.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-0003",
+            "clause_id": "CLS-0008-LIAB",
+            "risk_category": "one_sided_covenant",
+            "ambiguity_description": "Limiting aggregate liability to the total fees paid in the preceding twelve months may be insufficient to cover consequential or regulatory damages, exposing the customer to significant uncovered risk.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-0004",
+            "clause_id": "CLS-0008-TERM",
+            "risk_category": "latent_operational_risk",
+            "ambiguity_description": "The termination clause lacks provisions for post‑termination duties such as data return, transition assistance, or outstanding obligations, creating operational uncertainty upon termination.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-0005",
+            "clause_id": "CLS-0008-REN",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "The renewal provision does not specify how renewal terms (e.g., pricing, service scope) will be determined, nor does it define the method for delivering the non‑renewal notice, leading to potential unexpected changes at renewal.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          }
+        ]
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "risk_ambiguity_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 1.61,
+      "tokens": 1591,
+      "prompt_tokens": 1193,
+      "completion_tokens": 398,
+      "output": {
+        "contract_id": "CTR-2026-0008",
+        "inconsistencies": []
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "cross_clause_consistency_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_8 (gsk_yt...AwPO)",
+      "duration_seconds": 1.647,
+      "tokens": 1461,
+      "prompt_tokens": 1159,
+      "completion_tokens": 302,
+      "output": {
+        "contract_id": "CTR-2026-0008",
+        "all_citations_valid": true,
+        "verified_finding_ids": [
+          "RF-0001",
+          "RF-0002",
+          "RF-0003",
+          "RF-0004",
+          "RF-0005"
+        ],
+        "invalid_or_unsupported_findings": [],
+        "evidence_notes": "Each finding references a clause_id present in the contract's clause list: CLS-0008-PAY, CLS-0008-DATA, CLS-0008-LIAB, CLS-0008-TERM, and CLS-0008-REN. No missing or mismatched citations were detected."
+      },
+      "notes": "",
+      "order": 8,
+      "agent_id": "evidence_validation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_9 (gsk_Oz...k7Gf)",
+      "duration_seconds": 2.626,
+      "tokens": 1808,
+      "prompt_tokens": 868,
+      "completion_tokens": 940,
+      "output": {
+        "contract_id": "CTR-2026-0008",
+        "calibrated_deviations": [],
+        "calibrated_risks": [
+          {
+            "finding_id": "RF-0001",
+            "clause_id": "CLS-0008-PAY",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "The term \"undisputed invoice amounts\" is undefined, creating uncertainty about payment obligations for disputed invoices. No interest or penalty provisions for late payment are included, potentially favoring the vendor.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-0002",
+            "clause_id": "CLS-0008-DATA",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "\"Becoming aware of any confirmed Data Breach\" is not defined, leaving room for interpretation of when a breach is considered \"confirmed\" and when the vendor is deemed aware. This may delay notification beyond the intended 24‑hour window.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-0003",
+            "clause_id": "CLS-0008-LIAB",
+            "risk_category": "one_sided_covenant",
+            "ambiguity_description": "Limiting aggregate liability to the total fees paid in the preceding twelve months may be insufficient to cover consequential or regulatory damages, exposing the customer to significant uncovered risk.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-0004",
+            "clause_id": "CLS-0008-TERM",
+            "risk_category": "latent_operational_risk",
+            "ambiguity_description": "The termination clause lacks provisions for post‑termination duties such as data return, transition assistance, or outstanding obligations, creating operational uncertainty upon termination.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-0005",
+            "clause_id": "CLS-0008-REN",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "The renewal provision does not specify how renewal terms (e.g., pricing, service scope) will be determined, nor does it define the method for delivering the non‑renewal notice, leading to potential unexpected changes at renewal.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          }
+        ],
+        "review_notes": "No duplicate findings were identified; each risk addresses a distinct contractual provision. Severity adjustments: RF-0004 upgraded from medium to high due to the significant operational impact of missing post‑termination obligations. All findings retain the flag for human interpretation, indicating that legal counsel should review the ambiguous language and consider negotiating clarifying amendments."
+      },
+      "notes": "",
+      "order": 9,
+      "agent_id": "contract_independent_review_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_10 (gsk_jW...DBpq)",
+      "duration_seconds": 6.665,
+      "tokens": 4145,
+      "prompt_tokens": 1902,
+      "completion_tokens": 2243,
+      "output": {
+        "run_id": "RUN-20261031-001",
+        "contract_id": "CTR-2026-0008",
+        "contract_version": "1.0",
+        "policy_id": "POL-CORP-FIN-02",
+        "policy_version": "3.1",
+        "contract_type": "SaaS Subscription Agreement",
+        "executive_summary": "The SaaS Subscription Agreement (CTR-2026-0008) meets the payment‑terms requirement of Policy POL-CORP-FIN-02, as the invoicing clause mandates payment within 30 days—stricter than the policy maximum of 45 days. However, five additional contractual provisions introduce material risk. Ambiguous language in the payment, data‑breach, liability, termination, and renewal clauses creates uncertainty and potential exposure for the customer. All findings have been flagged for human interpretation and should be reviewed by legal counsel before execution or renewal.",
+        "policy_coverage": 100,
+        "clause_inventory": [
+          {
+            "clause_id": "CLS-0008-PAY",
+            "clause_type": "payment_terms",
+            "clause_title": "Section 3: Invoicing and Payment Terms",
+            "section_reference": "Section 3.1"
+          },
+          {
+            "clause_id": "CLS-0008-DATA",
+            "clause_type": "data_protection",
+            "clause_title": "Section 8: Security & Breach Notification",
+            "section_reference": "Section 8.2"
+          },
+          {
+            "clause_id": "CLS-0008-LIAB",
+            "clause_type": "liability_cap",
+            "clause_title": "Section 10: Limitation of Liability",
+            "section_reference": "Section 10.1"
+          },
+          {
+            "clause_id": "CLS-0008-TERM",
+            "clause_type": "termination",
+            "clause_title": "Section 12: Term and Termination",
+            "section_reference": "Section 12.1"
+          },
+          {
+            "clause_id": "CLS-0008-REN",
+            "clause_type": "renewal",
+            "clause_title": "Section 12: Renewal Provisions",
+            "section_reference": "Section 12.4"
+          }
+        ],
+        "compliance_findings": [
+          {
+            "clause_id": "CLS-0008-PAY",
+            "requirement_id": "REQ-FIN-01",
+            "mapping_status": "satisfied",
+            "justification": "Clause requires payment within 30 days of invoice date, which is stricter than the policy maximum of 45 days."
+          },
+          {
+            "clause_id": "CLS-0008-DATA",
+            "requirement_id": null,
+            "mapping_status": "unaddressed",
+            "justification": "Clause addresses data breach notification, not payment terms."
+          },
+          {
+            "clause_id": "CLS-0008-LIAB",
+            "requirement_id": null,
+            "mapping_status": "unaddressed",
+            "justification": "Clause pertains to liability caps, unrelated to the payment terms policy."
+          },
+          {
+            "clause_id": "CLS-0008-TERM",
+            "requirement_id": null,
+            "mapping_status": "unaddressed",
+            "justification": "Clause deals with termination rights, not payment terms."
+          },
+          {
+            "clause_id": "CLS-0008-REN",
+            "requirement_id": null,
+            "mapping_status": "unaddressed",
+            "justification": "Clause concerns renewal provisions, unrelated to payment terms."
+          }
+        ],
+        "risk_findings": [
+          {
+            "finding_id": "RF-0001",
+            "clause_id": "CLS-0008-PAY",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "The term \"undisputed invoice amounts\" is undefined, creating uncertainty about payment obligations for disputed invoices. No interest or penalty provisions for late payment are included, potentially favoring the vendor.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-0002",
+            "clause_id": "CLS-0008-DATA",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "\"Becoming aware of any confirmed Data Breach\" is not defined, leaving room for interpretation of when a breach is considered \"confirmed\" and when the vendor is deemed aware. This may delay notification beyond the intended 24‑hour window.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-0003",
+            "clause_id": "CLS-0008-LIAB",
+            "risk_category": "one_sided_covenant",
+            "ambiguity_description": "Limiting aggregate liability to the total fees paid in the preceding twelve months may be insufficient to cover consequential or regulatory damages, exposing the customer to significant uncovered risk.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-0004",
+            "clause_id": "CLS-0008-TERM",
+            "risk_category": "latent_operational_risk",
+            "ambiguity_description": "The termination clause lacks provisions for post‑termination duties such as data return, transition assistance, or outstanding obligations, creating operational uncertainty upon termination.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-0005",
+            "clause_id": "CLS-0008-REN",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "The renewal provision does not specify how renewal terms (e.g., pricing, service scope) will be determined, nor does it define the method for delivering the non‑renewal notice, leading to potential unexpected changes at renewal.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          }
+        ],
+        "cross_clause_inconsistencies": [],
+        "evidence_validation": {
+          "document_complete": true,
+          "intake_warnings": [],
+          "source_metadata_verified": true
+        },
+        "unresolved_questions": [
+          "What definition applies to \"undisputed invoice amounts\" and how are disputed invoices handled?",
+          "Will interest, penalties, or other remedies apply for late payment?",
+          "How is a \"confirmed Data Breach\" defined and when is the vendor considered \"aware\"?",
+          "Is the liability cap sufficient to cover potential consequential, regulatory, or indirect damages?",
+          "What post‑termination obligations (data return, transition assistance, outstanding fees) are expected?",
+          "How will renewal pricing and service scope be determined?",
+          "What is the acceptable method (email, certified mail, etc.) and timeline for delivering a non‑renewal notice?"
+        ],
+        "recommended_actions": [
+          "Add a clear definition for \"undisputed invoice amounts\" and specify treatment of disputed invoices.",
+          "Insert interest or late‑payment penalty language consistent with applicable law.",
+          "Define \"confirmed Data Breach\" and the point at which the vendor is deemed aware; consider adding a shorter notification window if feasible.",
+          "Re‑evaluate the liability cap; negotiate an exception for consequential, regulatory, or statutory damages.",
+          "Include explicit post‑termination obligations covering data return, transition services, and settlement of outstanding obligations.",
+          "Specify renewal mechanics: pricing formula, service scope review process, and required notice format for non‑renewal.",
+          "Document the required delivery method and receipt confirmation for non‑renewal notices."
+        ],
+        "human_review_required": true,
+        "legal_disclaimer": "This compliance report is generated for informational purposes only and does not constitute legal advice. The findings and recommendations are based on the supplied contract excerpts and the referenced corporate policy. Final determination of compliance, risk exposure, and appropriate contractual amendments should be performed by qualified legal counsel."
+      },
+      "notes": "",
+      "order": 10,
+      "agent_id": "final_compliance_report_agent"
+    }
+  ],
+  "total_tokens": 16131,
+  "prompt_tokens": 8415,
+  "completion_tokens": 7716,
+  "estimated_cost_usd": 0.01106,
+  "error_message": null,
+  "final_output": "{\n  \"run_id\": \"RUN-20261031-001\",\n  \"contract_id\": \"CTR-2026-0008\",\n  \"contract_version\": \"1.0\",\n  \"policy_id\": \"POL-CORP-FIN-02\",\n  \"policy_version\": \"3.1\",\n  \"contract_type\": \"SaaS Subscription Agreement\",\n  \"executive_summary\": \"The SaaS Subscription Agreement (CTR-2026-0008) meets the payment\\u2011terms requirement of Policy POL-CORP-FIN-02, as the invoicing clause mandates payment within 30 days\\u2014stricter than the policy maximum of 45 days. However, five additional contractual provisions introduce material risk. Ambiguous language in the payment, data\\u2011breach, liability, termination, and renewal clauses creates uncertainty and potential exposure for the customer. All findings have been flagged for human interpretation and should be reviewed by legal counsel before execution or renewal.\",\n  \"policy_coverage\": 100,\n  \"clause_inventory\": [\n    {\n      \"clause_id\": \"CLS-0008-PAY\",\n      \"clause_type\": \"payment_terms\",\n      \"clause_title\": \"Section 3: Invoicing and Payment Terms\",\n      \"section_reference\": \"Section 3.1\"\n    },\n    {\n      \"clause_id\": \"CLS-0008-DATA\",\n      \"clause_type\": \"data_protection\",\n      \"clause_title\": \"Section 8: Security & Breach Notification\",\n      \"section_reference\": \"Section 8.2\"\n    },\n    {\n      \"clause_id\": \"CLS-0008-LIAB\",\n      \"clause_type\": \"liability_cap\",\n      \"clause_title\": \"Section 10: Limitation of Liability\",\n      \"section_reference\": \"Section 10.1\"\n    },\n    {\n      \"clause_id\": \"CLS-0008-TERM\",\n      \"clause_type\": \"termination\",\n      \"clause_title\": \"Section 12: Term and Termination\",\n      \"section_reference\": \"Section 12.1\"\n    },\n    {\n      \"clause_id\": \"CLS-0008-REN\",\n      \"clause_type\": \"renewal\",\n      \"clause_title\": \"Section 12: Renewal Provisions\",\n      \"section_reference\": \"Section 12.4\"\n    }\n  ],\n  \"compliance_findings\": [\n    {\n      \"clause_id\": \"CLS-0008-PAY\",\n      \"requirement_id\": \"REQ-FIN-01\",\n      \"mapping_status\": \"satisfied\",\n      \"justification\": \"Clause requires payment within 30 days of invoice date, which is stricter than the policy maximum of 45 days.\"\n    },\n    {\n      \"clause_id\": \"CLS-0008-DATA\",\n      \"requirement_id\": null,\n      \"mapping_status\": \"unaddressed\",\n      \"justification\": \"Clause addresses data breach notification, not payment terms.\"\n    },\n    {\n      \"clause_id\": \"CLS-0008-LIAB\",\n      \"requirement_id\": null,\n      \"mapping_status\": \"unaddressed\",\n      \"justification\": \"Clause pertains to liability caps, unrelated to the payment terms policy.\"\n    },\n    {\n      \"clause_id\": \"CLS-0008-TERM\",\n      \"requirement_id\": null,\n      \"mapping_status\": \"unaddressed\",\n      \"justification\": \"Clause deals with termination rights, not payment terms.\"\n    },\n    {\n      \"clause_id\": \"CLS-0008-REN\",\n      \"requirement_id\": null,\n      \"mapping_status\": \"unaddressed\",\n      \"justification\": \"Clause concerns renewal provisions, unrelated to payment terms.\"\n    }\n  ],\n  \"risk_findings\": [\n    {\n      \"finding_id\": \"RF-0001\",\n      \"clause_id\": \"CLS-0008-PAY\",\n      \"risk_category\": \"vague_wording\",\n      \"ambiguity_description\": \"The term \\\"undisputed invoice amounts\\\" is undefined, creating uncertainty about payment obligations for disputed invoices. No interest or penalty provisions for late payment are included, potentially favoring the vendor.\",\n      \"severity\": \"medium\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"finding_id\": \"RF-0002\",\n      \"clause_id\": \"CLS-0008-DATA\",\n      \"risk_category\": \"vague_wording\",\n      \"ambiguity_description\": \"\\\"Becoming aware of any confirmed Data Breach\\\" is not defined, leaving room for interpretation of when a breach is considered \\\"confirmed\\\" and when the vendor is deemed aware. This may delay notification beyond the intended 24\\u2011hour window.\",\n      \"severity\": \"high\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"finding_id\": \"RF-0003\",\n      \"clause_id\": \"CLS-0008-LIAB\",\n      \"risk_category\": \"one_sided_covenant\",\n      \"ambiguity_description\": \"Limiting aggregate liability to the total fees paid in the preceding twelve months may be insufficient to cover consequential or regulatory damages, exposing the customer to significant uncovered risk.\",\n      \"severity\": \"high\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"finding_id\": \"RF-0004\",\n      \"clause_id\": \"CLS-0008-TERM\",\n      \"risk_category\": \"latent_operational_risk\",\n      \"ambiguity_description\": \"The termination clause lacks provisions for post\\u2011termination duties such as data return, transition assistance, or outstanding obligations, creating operational uncertainty upon termination.\",\n      \"severity\": \"high\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"finding_id\": \"RF-0005\",\n      \"clause_id\": \"CLS-0008-REN\",\n      \"risk_category\": \"vague_wording\",\n      \"ambiguity_description\": \"The renewal provision does not specify how renewal terms (e.g., pricing, service scope) will be determined, nor does it define the method for delivering the non\\u2011renewal notice, leading to potential unexpected changes at renewal.\",\n      \"severity\": \"medium\",\n      \"human_interpretation_needed\": true\n    }\n  ],\n  \"cross_clause_inconsistencies\": [],\n  \"evidence_validation\": {\n    \"document_complete\": true,\n    \"intake_warnings\": [],\n    \"source_metadata_verified\": true\n  },\n  \"unresolved_questions\": [\n    \"What definition applies to \\\"undisputed invoice amounts\\\" and how are disputed invoices handled?\",\n    \"Will interest, penalties, or other remedies apply for late payment?\",\n    \"How is a \\\"confirmed Data Breach\\\" defined and when is the vendor considered \\\"aware\\\"?\",\n    \"Is the liability cap sufficient to cover potential consequential, regulatory, or indirect damages?\",\n    \"What post\\u2011termination obligations (data return, transition assistance, outstanding fees) are expected?\",\n    \"How will renewal pricing and service scope be determined?\",\n    \"What is the acceptable method (email, certified mail, etc.) and timeline for delivering a non\\u2011renewal notice?\"\n  ],\n  \"recommended_actions\": [\n    \"Add a clear definition for \\\"undisputed invoice amounts\\\" and specify treatment of disputed invoices.\",\n    \"Insert interest or late\\u2011payment penalty language consistent with applicable law.\",\n    \"Define \\\"confirmed Data Breach\\\" and the point at which the vendor is deemed aware; consider adding a shorter notification window if feasible.\",\n    \"Re\\u2011evaluate the liability cap; negotiate an exception for consequential, regulatory, or statutory damages.\",\n    \"Include explicit post\\u2011termination obligations covering data return, transition services, and settlement of outstanding obligations.\",\n    \"Specify renewal mechanics: pricing formula, service scope review process, and required notice format for non\\u2011renewal.\",\n    \"Document the required delivery method and receipt confirmation for non\\u2011renewal notices.\"\n  ],\n  \"human_review_required\": true,\n  \"legal_disclaimer\": \"This compliance report is generated for informational purposes only and does not constitute legal advice. The findings and recommendations are based on the supplied contract excerpts and the referenced corporate policy. Final determination of compliance, risk exposure, and appropriate contractual amendments should be performed by qualified legal counsel.\"\n}",
+  "timestamp": "2026-10-31T12:02:44.972212+00:00"
+}

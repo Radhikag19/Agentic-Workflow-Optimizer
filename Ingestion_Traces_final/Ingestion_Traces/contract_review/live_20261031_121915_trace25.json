@@ -1,0 +1,504 @@
+{
+  "run_id": "live_20261031_121915_trace25",
+  "workflow_name": "contract_review",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 415.336,
+  "agent_execution_count": 10,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.185,
+      "tokens": 642,
+      "prompt_tokens": 309,
+      "completion_tokens": 333,
+      "output": {
+        "document_id": "DOC-20261031-001",
+        "contract_id": "CTR-2026-0025",
+        "contract_title": "Non-Disclosure Agreement (NDA) with Enterprise Partner 025 LLC",
+        "contract_type": "Non-Disclosure Agreement (NDA)",
+        "contract_version": "1.0",
+        "policy_id": "POL-CORP-SEC-01",
+        "policy_version": "2.4",
+        "document_complete": true,
+        "section_count": 5,
+        "source_metadata": {
+          "effective_date": "2026-01-01",
+          "expiration_date": "2027-01-01",
+          "parties": [
+            "AWO Enterprise Corp",
+            "Enterprise Partner 025 LLC"
+          ]
+        },
+        "intake_warnings": []
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "contract_intake_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.866,
+      "tokens": 1279,
+      "prompt_tokens": 741,
+      "completion_tokens": 538,
+      "output": {
+        "contract_id": "CTR-2026-0025",
+        "clauses": [
+          {
+            "clause_id": "CLS-0025-PAY",
+            "clause_type": "payment_terms",
+            "clause_title": "Section 3: Invoicing and Payment Terms",
+            "clause_text": "Customer shall pay all undisputed invoice amounts within thirty (30) days of invoice date.",
+            "section_reference": "Section 3.1"
+          },
+          {
+            "clause_id": "CLS-0025-DATA",
+            "clause_type": "data_protection",
+            "clause_title": "Section 8: Security & Breach Notification",
+            "clause_text": "Vendor shall notify Customer in writing within twenty-four (24) hours of becoming aware of any confirmed Data Breach.",
+            "section_reference": "Section 8.2"
+          },
+          {
+            "clause_id": "CLS-0025-LIAB",
+            "clause_type": "liability_cap",
+            "clause_title": "Section 10: Limitation of Liability",
+            "clause_text": "Each party's maximum aggregate liability shall be strictly limited to the total fees paid under this Agreement in the preceding twelve (12) months.",
+            "section_reference": "Section 10.1"
+          },
+          {
+            "clause_id": "CLS-0025-TERM",
+            "clause_type": "termination",
+            "clause_title": "Section 12: Term and Termination",
+            "clause_text": "Either party may terminate this Agreement for convenience upon providing thirty (30) days prior written notice.",
+            "section_reference": "Section 12.1"
+          },
+          {
+            "clause_id": "CLS-0025-REN",
+            "clause_type": "renewal",
+            "clause_title": "Section 12: Renewal Provisions",
+            "clause_text": "This Agreement renews on an annual basis unless either party gives notice of non-renewal at least 30 days prior.",
+            "section_reference": "Section 12.4"
+          }
+        ],
+        "absent_clause_types": [],
+        "extraction_notes": [
+          "Document extracted once for downstream policy comparison"
+        ]
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "clause_extraction_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.513,
+      "tokens": 840,
+      "prompt_tokens": 358,
+      "completion_tokens": 482,
+      "output": {
+        "policy_id": "POL-CORP-SEC-01",
+        "policy_version": "2.4",
+        "policy_name": "Corporate Data Protection & Security Standard",
+        "mandatory_requirements": [
+          {
+            "requirement_id": "REQ-SEC-01",
+            "clause_type": "data_protection",
+            "description": "Vendor must notify customer of any security breach within 48 hours of discovery.",
+            "threshold": "48 hours notification"
+          },
+          {
+            "requirement_id": "REQ-SEC-02",
+            "clause_type": "data_protection",
+            "description": "Data must be encrypted in transit using TLS 1.3 and at rest using AES-256.",
+            "threshold": "TLS 1.3 / AES-256"
+          }
+        ],
+        "recommended_requirements": [],
+        "ambiguities_in_policy": [
+          "The term \"discovery\" is not defined; it may be interpreted differently across vendors.",
+          "No specification of time zone for the 48‑hour notification window.",
+          "No guidance on key management practices for AES‑256 encryption at rest."
+        ]
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "policy_interpretation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 2.236,
+      "tokens": 1454,
+      "prompt_tokens": 761,
+      "completion_tokens": 693,
+      "output": {
+        "contract_id": "CTR-2026-0025",
+        "policy_id": "SECURITY-POLICY-001",
+        "mappings": [
+          {
+            "requirement_id": "REQ-SEC-01",
+            "clause_id": "CLS-0025-DATA",
+            "mapping_status": "satisfied",
+            "notes": "Vendor notifies within 24 hours, which meets the 48‑hour notification requirement."
+          },
+          {
+            "requirement_id": "REQ-SEC-02",
+            "clause_id": null,
+            "mapping_status": "unaddressed",
+            "notes": "No extracted clause specifies encryption in transit (TLS 1.3) or at rest (AES‑256)."
+          }
+        ],
+        "coverage_percentage": 50.0
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "clause_mapping_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 1.302,
+      "tokens": 829,
+      "prompt_tokens": 458,
+      "completion_tokens": 371,
+      "output": {
+        "contract_id": "CTR-2026-0025",
+        "deviations": [
+          {
+            "requirement_id": "REQ-SEC-02",
+            "clause_id": null,
+            "severity": "critical",
+            "supporting_evidence": "Mapping notes indicate no extracted clause specifies encryption in transit (TLS 1.3) or at rest (AES-256). Policy requires data to be encrypted in transit using TLS 1.3 and at rest using AES-256.",
+            "recommended_remediation": "Add a dedicated data protection clause that explicitly mandates encryption of all data in transit using TLS 1.3 and encryption at rest using AES-256. Include compliance verification steps (e.g., periodic security audits, certification of encryption mechanisms) and penalties for non‑compliance."
+          }
+        ],
+        "has_critical_deviations": true
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "compliance_deviation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 2.828,
+      "tokens": 1650,
+      "prompt_tokens": 638,
+      "completion_tokens": 1012,
+      "output": {
+        "contract_id": "CTR-2026-0025",
+        "risk_findings": [
+          {
+            "finding_id": "RISK-001",
+            "clause_id": "CLS-0025-PAY",
+            "risk_category": "one-sided_covenant",
+            "ambiguity_description": "The term \"undisputed invoice amounts\" is not defined, leaving ambiguity around what constitutes a dispute and how disputes are resolved. No interest or penalty for late payment is specified, favoring the vendor.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RISK-002",
+            "clause_id": "CLS-0025-DATA",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "\"Becoming aware of any confirmed Data Breach\" is undefined; it is unclear when a breach is considered \"confirmed\" and what triggers the awareness. This creates uncertainty around the notification timeline.",
+            "severity": "High",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RISK-003",
+            "clause_id": "CLS-0025-LIAB",
+            "risk_category": "one-sided_covenant",
+            "ambiguity_description": "Limiting aggregate liability to the total fees paid in the preceding twelve months may be insufficient to cover potential damages, especially for data breach or intellectual property losses. The cap is symmetric but may disproportionately expose the customer to higher risk.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RISK-004",
+            "clause_id": "CLS-0025-TERM",
+            "risk_category": "latent_operational_risk",
+            "ambiguity_description": "Termination for convenience is allowed by either party with 30 days' notice, but the clause does not address post‑termination obligations such as data return, transition services, or outstanding fees, creating operational uncertainty.",
+            "severity": "Low",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RISK-005",
+            "clause_id": "CLS-0025-REN",
+            "risk_category": "undefined_timeline",
+            "ambiguity_description": "The renewal clause lacks details on renewal terms, such as price adjustments, service level changes, or notice mechanisms beyond the 30‑day non‑renewal period, leading to potential commercial exposure at renewal.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          }
+        ]
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "risk_ambiguity_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 1.372,
+      "tokens": 1600,
+      "prompt_tokens": 1198,
+      "completion_tokens": 402,
+      "output": {
+        "contract_id": "CTR-2026-0025",
+        "inconsistencies": []
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "cross_clause_consistency_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_8 (gsk_yt...AwPO)",
+      "duration_seconds": 1.444,
+      "tokens": 1672,
+      "prompt_tokens": 1325,
+      "completion_tokens": 347,
+      "output": {
+        "contract_id": "CTR-2026-0025",
+        "all_citations_valid": true,
+        "verified_finding_ids": [
+          "RISK-001",
+          "RISK-002",
+          "RISK-003",
+          "RISK-004",
+          "RISK-005"
+        ],
+        "invalid_or_unsupported_findings": [],
+        "evidence_notes": "Each risk finding references a clause_id that exists in the provided clause list (CLS-0025-PAY, CLS-0025-DATA, CLS-0025-LIAB, CLS-0025-TERM, CLS-0025-REN). No missing or mismatched citations were detected."
+      },
+      "notes": "",
+      "order": 8,
+      "agent_id": "evidence_validation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_9 (gsk_Oz...k7Gf)",
+      "duration_seconds": 3.606,
+      "tokens": 2440,
+      "prompt_tokens": 1034,
+      "completion_tokens": 1406,
+      "output": {
+        "contract_id": "CTR-2026-0025",
+        "calibrated_deviations": [
+          {
+            "requirement_id": "REQ-SEC-02",
+            "clause_id": null,
+            "original_severity": "critical",
+            "calibrated_severity": "critical",
+            "supporting_evidence": "Mapping notes indicate no extracted clause specifies encryption in transit (TLS 1.3) or at rest (AES-256). Policy requires data to be encrypted in transit using TLS 1.3 and at rest using AES-256.",
+            "recommended_remediation": "Add a dedicated data protection clause that explicitly mandates encryption of all data in transit using TLS 1.3 and encryption at rest using AES-256. Include compliance verification steps (e.g., periodic security audits, certification of encryption mechanisms) and penalties for non‑compliance."
+          }
+        ],
+        "calibrated_risks": [
+          {
+            "finding_id": "RISK-001",
+            "clause_id": "CLS-0025-PAY",
+            "risk_category": "one-sided_covenant",
+            "ambiguity_description": "The term \"undisputed invoice amounts\" is not defined, leaving ambiguity around what constitutes a dispute and how disputes are resolved. No interest or penalty for late payment is specified, favoring the vendor.",
+            "original_severity": "Medium",
+            "calibrated_severity": "Medium",
+            "human_interpretation_needed": true,
+            "human_review_required": true
+          },
+          {
+            "finding_id": "RISK-002",
+            "clause_id": "CLS-0025-DATA",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "\"Becoming aware of any confirmed Data Breach\" is undefined; it is unclear when a breach is considered \"confirmed\" and what triggers the awareness. This creates uncertainty around the notification timeline.",
+            "original_severity": "High",
+            "calibrated_severity": "High",
+            "human_interpretation_needed": true,
+            "human_review_required": true
+          },
+          {
+            "finding_id": "RISK-003",
+            "clause_id": "CLS-0025-LIAB",
+            "risk_category": "one-sided_covenant",
+            "ambiguity_description": "Limiting aggregate liability to the total fees paid in the preceding twelve months may be insufficient to cover potential damages, especially for data breach or intellectual property losses. The cap is symmetric but may disproportionately expose the customer to higher risk.",
+            "original_severity": "Medium",
+            "calibrated_severity": "Medium",
+            "human_interpretation_needed": true,
+            "human_review_required": true
+          },
+          {
+            "finding_id": "RISK-004",
+            "clause_id": "CLS-0025-TERM",
+            "risk_category": "latent_operational_risk",
+            "ambiguity_description": "Termination for convenience is allowed by either party with 30 days' notice, but the clause does not address post‑termination obligations such as data return, transition services, or outstanding fees, creating operational uncertainty.",
+            "original_severity": "Low",
+            "calibrated_severity": "Low",
+            "human_interpretation_needed": true,
+            "human_review_required": true
+          },
+          {
+            "finding_id": "RISK-005",
+            "clause_id": "CLS-0025-REN",
+            "risk_category": "undefined_timeline",
+            "ambiguity_description": "The renewal clause lacks details on renewal terms, such as price adjustments, service level changes, or notice mechanisms beyond the 30‑day non‑renewal period, leading to potential commercial exposure at renewal.",
+            "original_severity": "Medium",
+            "calibrated_severity": "Medium",
+            "human_interpretation_needed": true,
+            "human_review_required": true
+          }
+        ],
+        "review_notes": "No redundant issues were identified; each deviation and risk finding addresses a distinct contractual gap. Severity ratings have been retained after calibration: the encryption deviation remains critical, and risk severities (High, Medium, Low) are unchanged. All risk findings retain the flag for human interpretation and are marked as requiring human review to resolve ambiguities and assess commercial impact."
+      },
+      "notes": "",
+      "order": 9,
+      "agent_id": "contract_independent_review_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_10 (gsk_jW...DBpq)",
+      "duration_seconds": 395.222,
+      "tokens": 4023,
+      "prompt_tokens": 1977,
+      "completion_tokens": 2046,
+      "output": {
+        "run_id": "RUN-20261031-001",
+        "contract_id": "CTR-2026-0025",
+        "contract_version": "1.0",
+        "policy_id": "POL-CORP-SEC-01",
+        "policy_version": "2.4",
+        "contract_type": "Non-Disclosure Agreement (NDA)",
+        "executive_summary": "The NDA with Enterprise Partner 025 LLC satisfies 50% of the security policy requirements. A critical compliance gap exists for data encryption (no clause mandates TLS 1.3 in‑transit or AES‑256 at rest). Five additional contractual risks were identified, ranging from medium to high severity, primarily due to ambiguous wording or missing operational detail. Human review is required to resolve ambiguities, assess commercial impact, and implement recommended remedial language.",
+        "policy_coverage": 50.0,
+        "clause_inventory": [
+          {
+            "clause_id": "CLS-0025-PAY",
+            "clause_type": "payment_terms",
+            "clause_title": "Section 3: Invoicing and Payment Terms",
+            "section_reference": "Section 3.1"
+          },
+          {
+            "clause_id": "CLS-0025-DATA",
+            "clause_type": "data_protection",
+            "clause_title": "Section 8: Security & Breach Notification",
+            "section_reference": "Section 8.2"
+          },
+          {
+            "clause_id": "CLS-0025-LIAB",
+            "clause_type": "liability_cap",
+            "clause_title": "Section 10: Limitation of Liability",
+            "section_reference": "Section 10.1"
+          },
+          {
+            "clause_id": "CLS-0025-TERM",
+            "clause_type": "termination",
+            "clause_title": "Section 12: Term and Termination",
+            "section_reference": "Section 12.1"
+          },
+          {
+            "clause_id": "CLS-0025-REN",
+            "clause_type": "renewal",
+            "clause_title": "Section 12: Renewal Provisions",
+            "section_reference": "Section 12.4"
+          }
+        ],
+        "compliance_findings": [
+          {
+            "finding_id": "COMPLY-001",
+            "requirement_id": "REQ-SEC-02",
+            "clause_id": null,
+            "status": "unaddressed",
+            "severity": "critical",
+            "evidence": "Mapping notes indicate no extracted clause specifies encryption in transit (TLS 1.3) or at rest (AES‑256). Policy requires both.",
+            "recommended_remediation": "Add a dedicated data protection clause that explicitly mandates encryption of all data in transit using TLS 1.3 and encryption at rest using AES‑256. Include verification steps (periodic security audits, certification of encryption mechanisms) and penalties for non‑compliance."
+          }
+        ],
+        "risk_findings": [
+          {
+            "finding_id": "RISK-001",
+            "clause_id": "CLS-0025-PAY",
+            "risk_category": "one-sided_covenant",
+            "ambiguity_description": "The term \"undisputed invoice amounts\" is not defined, leaving ambiguity around what constitutes a dispute and how disputes are resolved. No interest or penalty for late payment is specified, favoring the vendor.",
+            "original_severity": "Medium",
+            "calibrated_severity": "Medium",
+            "human_interpretation_needed": true,
+            "human_review_required": true
+          },
+          {
+            "finding_id": "RISK-002",
+            "clause_id": "CLS-0025-DATA",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "\"Becoming aware of any confirmed Data Breach\" is undefined; it is unclear when a breach is considered \"confirmed\" and what triggers the awareness. This creates uncertainty around the notification timeline.",
+            "original_severity": "High",
+            "calibrated_severity": "High",
+            "human_interpretation_needed": true,
+            "human_review_required": true
+          },
+          {
+            "finding_id": "RISK-003",
+            "clause_id": "CLS-0025-LIAB",
+            "risk_category": "one-sided_covenant",
+            "ambiguity_description": "Limiting aggregate liability to the total fees paid in the preceding twelve months may be insufficient to cover potential damages, especially for data breach or intellectual property losses. The cap is symmetric but may disproportionately expose the customer to higher risk.",
+            "original_severity": "Medium",
+            "calibrated_severity": "Medium",
+            "human_interpretation_needed": true,
+            "human_review_required": true
+          },
+          {
+            "finding_id": "RISK-004",
+            "clause_id": "CLS-0025-TERM",
+            "risk_category": "latent_operational_risk",
+            "ambiguity_description": "Termination for convenience is allowed by either party with 30 days' notice, but the clause does not address post‑termination obligations such as data return, transition services, or outstanding fees, creating operational uncertainty.",
+            "original_severity": "Low",
+            "calibrated_severity": "Low",
+            "human_interpretation_needed": true,
+            "human_review_required": true
+          },
+          {
+            "finding_id": "RISK-005",
+            "clause_id": "CLS-0025-REN",
+            "risk_category": "undefined_timeline",
+            "ambiguity_description": "The renewal clause lacks details on renewal terms, such as price adjustments, service level changes, or notice mechanisms beyond the 30‑day non‑renewal period, leading to potential commercial exposure at renewal.",
+            "original_severity": "Medium",
+            "calibrated_severity": "Medium",
+            "human_interpretation_needed": true,
+            "human_review_required": true
+          }
+        ],
+        "cross_clause_inconsistencies": [],
+        "evidence_validation": {
+          "clause_extraction_verified": true,
+          "mapping_status_verified": true,
+          "policy_requirements_cross_checked": true,
+          "notes": "All clause texts were extracted and matched against the security policy. Mapping statuses reflect current coverage."
+        },
+        "unresolved_questions": [
+          "Definition of \"undisputed invoice amounts\" and dispute resolution process.",
+          "Criteria for a \"confirmed Data Breach\" and the point at which the vendor is deemed to have become aware.",
+          "Post‑termination obligations regarding data return, transition assistance, and settlement of outstanding fees.",
+          "Renewal terms: price adjustment mechanism, service level changes, and detailed notice procedures."
+        ],
+        "recommended_actions": [
+          "Insert a data encryption clause meeting TLS 1.3 (in‑transit) and AES‑256 (at‑rest) requirements.",
+          "Clarify payment terms: define \"undisputed invoice amounts\", add late‑payment interest or penalties, and outline dispute resolution steps.",
+          "Refine breach‑notification language: specify what constitutes a confirmed breach and the exact trigger for vendor awareness.",
+          "Add post‑termination provisions covering data return, transition services, and final settlement of fees.",
+          "Enhance renewal clause with explicit pricing adjustment formula, SLA review process, and detailed notice requirements.",
+          "Re‑evaluate liability cap to ensure it adequately covers potential data‑breach and IP loss exposures."
+        ],
+        "human_review_required": true,
+        "legal_disclaimer": "This report is provided for informational purposes only and does not constitute legal advice. The findings are based on the supplied contract excerpts and the referenced corporate security policy. Parties should consult qualified legal counsel to interpret the clauses, assess risk, and implement any recommended amendments."
+      },
+      "notes": "",
+      "order": 10,
+      "agent_id": "final_compliance_report_agent"
+    }
+  ],
+  "total_tokens": 16429,
+  "prompt_tokens": 8799,
+  "completion_tokens": 7630,
+  "estimated_cost_usd": 0.011219,
+  "error_message": null,
+  "final_output": "{\n  \"run_id\": \"RUN-20261031-001\",\n  \"contract_id\": \"CTR-2026-0025\",\n  \"contract_version\": \"1.0\",\n  \"policy_id\": \"POL-CORP-SEC-01\",\n  \"policy_version\": \"2.4\",\n  \"contract_type\": \"Non-Disclosure Agreement (NDA)\",\n  \"executive_summary\": \"The NDA with Enterprise Partner 025 LLC satisfies 50% of the security policy requirements. A critical compliance gap exists for data encryption (no clause mandates TLS\\u202f1.3 in\\u2011transit or AES\\u2011256 at rest). Five additional contractual risks were identified, ranging from medium to high severity, primarily due to ambiguous wording or missing operational detail. Human review is required to resolve ambiguities, assess commercial impact, and implement recommended remedial language.\",\n  \"policy_coverage\": 50.0,\n  \"clause_inventory\": [\n    {\n      \"clause_id\": \"CLS-0025-PAY\",\n      \"clause_type\": \"payment_terms\",\n      \"clause_title\": \"Section 3: Invoicing and Payment Terms\",\n      \"section_reference\": \"Section 3.1\"\n    },\n    {\n      \"clause_id\": \"CLS-0025-DATA\",\n      \"clause_type\": \"data_protection\",\n      \"clause_title\": \"Section 8: Security & Breach Notification\",\n      \"section_reference\": \"Section 8.2\"\n    },\n    {\n      \"clause_id\": \"CLS-0025-LIAB\",\n      \"clause_type\": \"liability_cap\",\n      \"clause_title\": \"Section 10: Limitation of Liability\",\n      \"section_reference\": \"Section 10.1\"\n    },\n    {\n      \"clause_id\": \"CLS-0025-TERM\",\n      \"clause_type\": \"termination\",\n      \"clause_title\": \"Section 12: Term and Termination\",\n      \"section_reference\": \"Section 12.1\"\n    },\n    {\n      \"clause_id\": \"CLS-0025-REN\",\n      \"clause_type\": \"renewal\",\n      \"clause_title\": \"Section 12: Renewal Provisions\",\n      \"section_reference\": \"Section 12.4\"\n    }\n  ],\n  \"compliance_findings\": [\n    {\n      \"finding_id\": \"COMPLY-001\",\n      \"requirement_id\": \"REQ-SEC-02\",\n      \"clause_id\": null,\n      \"status\": \"unaddressed\",\n      \"severity\": \"critical\",\n      \"evidence\": \"Mapping notes indicate no extracted clause specifies encryption in transit (TLS\\u202f1.3) or at rest (AES\\u2011256). Policy requires both.\",\n      \"recommended_remediation\": \"Add a dedicated data protection clause that explicitly mandates encryption of all data in transit using TLS\\u202f1.3 and encryption at rest using AES\\u2011256. Include verification steps (periodic security audits, certification of encryption mechanisms) and penalties for non\\u2011compliance.\"\n    }\n  ],\n  \"risk_findings\": [\n    {\n      \"finding_id\": \"RISK-001\",\n      \"clause_id\": \"CLS-0025-PAY\",\n      \"risk_category\": \"one-sided_covenant\",\n      \"ambiguity_description\": \"The term \\\"undisputed invoice amounts\\\" is not defined, leaving ambiguity around what constitutes a dispute and how disputes are resolved. No interest or penalty for late payment is specified, favoring the vendor.\",\n      \"original_severity\": \"Medium\",\n      \"calibrated_severity\": \"Medium\",\n      \"human_interpretation_needed\": true,\n      \"human_review_required\": true\n    },\n    {\n      \"finding_id\": \"RISK-002\",\n      \"clause_id\": \"CLS-0025-DATA\",\n      \"risk_category\": \"vague_wording\",\n      \"ambiguity_description\": \"\\\"Becoming aware of any confirmed Data Breach\\\" is undefined; it is unclear when a breach is considered \\\"confirmed\\\" and what triggers the awareness. This creates uncertainty around the notification timeline.\",\n      \"original_severity\": \"High\",\n      \"calibrated_severity\": \"High\",\n      \"human_interpretation_needed\": true,\n      \"human_review_required\": true\n    },\n    {\n      \"finding_id\": \"RISK-003\",\n      \"clause_id\": \"CLS-0025-LIAB\",\n      \"risk_category\": \"one-sided_covenant\",\n      \"ambiguity_description\": \"Limiting aggregate liability to the total fees paid in the preceding twelve months may be insufficient to cover potential damages, especially for data breach or intellectual property losses. The cap is symmetric but may disproportionately expose the customer to higher risk.\",\n      \"original_severity\": \"Medium\",\n      \"calibrated_severity\": \"Medium\",\n      \"human_interpretation_needed\": true,\n      \"human_review_required\": true\n    },\n    {\n      \"finding_id\": \"RISK-004\",\n      \"clause_id\": \"CLS-0025-TERM\",\n      \"risk_category\": \"latent_operational_risk\",\n      \"ambiguity_description\": \"Termination for convenience is allowed by either party with 30 days' notice, but the clause does not address post\\u2011termination obligations such as data return, transition services, or outstanding fees, creating operational uncertainty.\",\n      \"original_severity\": \"Low\",\n      \"calibrated_severity\": \"Low\",\n      \"human_interpretation_needed\": true,\n      \"human_review_required\": true\n    },\n    {\n      \"finding_id\": \"RISK-005\",\n      \"clause_id\": \"CLS-0025-REN\",\n      \"risk_category\": \"undefined_timeline\",\n      \"ambiguity_description\": \"The renewal clause lacks details on renewal terms, such as price adjustments, service level changes, or notice mechanisms beyond the 30\\u2011day non\\u2011renewal period, leading to potential commercial exposure at renewal.\",\n      \"original_severity\": \"Medium\",\n      \"calibrated_severity\": \"Medium\",\n      \"human_interpretation_needed\": true,\n      \"human_review_required\": true\n    }\n  ],\n  \"cross_clause_inconsistencies\": [],\n  \"evidence_validation\": {\n    \"clause_extraction_verified\": true,\n    \"mapping_status_verified\": true,\n    \"policy_requirements_cross_checked\": true,\n    \"notes\": \"All clause texts were extracted and matched against the security policy. Mapping statuses reflect current coverage.\"\n  },\n  \"unresolved_questions\": [\n    \"Definition of \\\"undisputed invoice amounts\\\" and dispute resolution process.\",\n    \"Criteria for a \\\"confirmed Data Breach\\\" and the point at which the vendor is deemed to have become aware.\",\n    \"Post\\u2011termination obligations regarding data return, transition assistance, and settlement of outstanding fees.\",\n    \"Renewal terms: price adjustment mechanism, service level changes, and detailed notice procedures.\"\n  ],\n  \"recommended_actions\": [\n    \"Insert a data encryption clause meeting TLS\\u202f1.3 (in\\u2011transit) and AES\\u2011256 (at\\u2011rest) requirements.\",\n    \"Clarify payment terms: define \\\"undisputed invoice amounts\\\", add late\\u2011payment interest or penalties, and outline dispute resolution steps.\",\n    \"Refine breach\\u2011notification language: specify what constitutes a confirmed breach and the exact trigger for vendor awareness.\",\n    \"Add post\\u2011termination provisions covering data return, transition services, and final settlement of fees.\",\n    \"Enhance renewal clause with explicit pricing adjustment formula, SLA review process, and detailed notice requirements.\",\n    \"Re\\u2011evaluate liability cap to ensure it adequately covers potential data\\u2011breach and IP loss exposures.\"\n  ],\n  \"human_review_required\": true,\n  \"legal_disclaimer\": \"This report is provided for informational purposes only and does not constitute legal advice. The findings are based on the supplied contract excerpts and the referenced corporate security policy. Parties should consult qualified legal counsel to interpret the clauses, assess risk, and implement any recommended amendments.\"\n}",
+  "timestamp": "2026-10-31T12:26:10.721448+00:00"
+}

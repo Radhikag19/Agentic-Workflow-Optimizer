@@ -1,0 +1,578 @@
+{
+  "run_id": "live_20261031_121405_trace17",
+  "workflow_name": "contract_review",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 30.804,
+  "agent_execution_count": 10,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.284,
+      "tokens": 626,
+      "prompt_tokens": 300,
+      "completion_tokens": 326,
+      "output": {
+        "document_id": "DOC-2026-0017-01",
+        "contract_id": "CTR-2026-0017",
+        "contract_title": "Vendor Procurement Agreement with Enterprise Partner 017 LLC",
+        "contract_type": "Vendor Procurement Agreement",
+        "contract_version": "1.0",
+        "policy_id": "POL-CORP-FIN-02",
+        "policy_version": "3.1",
+        "document_complete": true,
+        "section_count": 4,
+        "source_metadata": {
+          "parties": [
+            "AWO Enterprise Corp",
+            "Enterprise Partner 017 LLC"
+          ],
+          "effective_date": "2026-01-01",
+          "expiration_date": "2027-01-01"
+        },
+        "intake_warnings": []
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "contract_intake_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.594,
+      "tokens": 1168,
+      "prompt_tokens": 653,
+      "completion_tokens": 515,
+      "output": {
+        "contract_id": "CTR-2026-0017",
+        "clauses": [
+          {
+            "clause_id": "CLS-0017-PAY",
+            "clause_type": "payment_terms",
+            "clause_title": "Section 3: Invoicing and Payment Terms",
+            "clause_text": "Customer shall pay all undisputed invoice amounts within thirty (30) days of invoice date.",
+            "section_reference": "Section 3.1"
+          },
+          {
+            "clause_id": "CLS-0017-LIAB",
+            "clause_type": "liability_cap",
+            "clause_title": "Section 10: Limitation of Liability",
+            "clause_text": "Each party's maximum aggregate liability shall be strictly limited to the total fees paid under this Agreement in the preceding twelve (12) months.",
+            "section_reference": "Section 10.1"
+          },
+          {
+            "clause_id": "CLS-0017-TERM",
+            "clause_type": "termination",
+            "clause_title": "Section 12: Term and Termination",
+            "clause_text": "Either party may terminate this Agreement for convenience upon providing thirty (30) days prior written notice.",
+            "section_reference": "Section 12.1"
+          },
+          {
+            "clause_id": "CLS-0017-REN",
+            "clause_type": "renewal",
+            "clause_title": "Section 12: Renewal Provisions",
+            "clause_text": "This Agreement renews on an annual basis unless either party gives notice of non-renewal at least 30 days prior.",
+            "section_reference": "Section 12.4"
+          }
+        ],
+        "absent_clause_types": [],
+        "extraction_notes": [
+          "Document extracted once for downstream policy comparison"
+        ]
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "clause_extraction_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 2.579,
+      "tokens": 854,
+      "prompt_tokens": 349,
+      "completion_tokens": 505,
+      "output": {
+        "policy_id": "POL-CORP-FIN-02",
+        "policy_version": "3.1",
+        "policy_name": "Commercial Payment Terms & Billing Policy",
+        "mandatory_requirements": [
+          {
+            "requirement_id": "REQ-FIN-01",
+            "clause_type": "payment_terms",
+            "description": "Payment terms shall not exceed Net 45 days from receipt of undisputed invoice.",
+            "threshold": "Net 45 maximum"
+          }
+        ],
+        "recommended_requirements": [
+          {
+            "requirement_id": "REQ-FIN-02",
+            "clause_type": "payment_terms",
+            "description": "Late payment penalties should not exceed 1.5% per month.",
+            "threshold": "1.5% monthly cap"
+          }
+        ],
+        "ambiguities_in_policy": [
+          "Definition of \"receipt of undisputed invoice\" – timing of when an invoice is considered undisputed is not specified.",
+          "Whether the Net 45 days count includes the receipt day or starts the next business day.",
+          "Method for calculating the 1.5% monthly penalty (simple vs. compound interest) is not clarified.",
+          "Applicability of the late payment penalty threshold to partial payments or only to full overdue amounts."
+        ]
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "policy_interpretation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 1.98,
+      "tokens": 1223,
+      "prompt_tokens": 606,
+      "completion_tokens": 617,
+      "output": {
+        "contract_id": "CTR-2026-0017",
+        "policy_id": "REQ-FIN-01",
+        "mappings": [
+          {
+            "clause_id": "CLS-0017-PAY",
+            "requirement_id": "REQ-FIN-01",
+            "mapping_status": "satisfied"
+          },
+          {
+            "clause_id": "CLS-0017-LIAB",
+            "requirement_id": "REQ-FIN-01",
+            "mapping_status": "unaddressed"
+          },
+          {
+            "clause_id": "CLS-0017-TERM",
+            "requirement_id": "REQ-FIN-01",
+            "mapping_status": "unaddressed"
+          },
+          {
+            "clause_id": "CLS-0017-REN",
+            "requirement_id": "REQ-FIN-01",
+            "mapping_status": "unaddressed"
+          }
+        ],
+        "coverage_percentage": 100
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "clause_mapping_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 2.784,
+      "tokens": 1265,
+      "prompt_tokens": 425,
+      "completion_tokens": 840,
+      "output": {
+        "contract_id": "CTR-2026-0017",
+        "deviations": [
+          {
+            "clause_id": "CLS-0017-LIAB",
+            "requirement_id": "REQ-FIN-01",
+            "severity": "high",
+            "supporting_evidence": "Clause mapping status is 'unaddressed', indicating the liability clause does not contain the required payment terms of Net 45 days.",
+            "recommended_remediation": "Amend the liability clause to include a payment terms provision limiting payment to Net 45 days from receipt of undisputed invoice."
+          },
+          {
+            "clause_id": "CLS-0017-TERM",
+            "requirement_id": "REQ-FIN-01",
+            "severity": "high",
+            "supporting_evidence": "Clause mapping status is 'unaddressed', indicating the term clause does not address the required payment terms.",
+            "recommended_remediation": "Add a payment terms statement to the term clause specifying a Net 45 maximum."
+          },
+          {
+            "clause_id": "CLS-0017-REN",
+            "requirement_id": "REQ-FIN-01",
+            "severity": "high",
+            "supporting_evidence": "Clause mapping status is 'unaddressed', indicating the renewal clause lacks the required payment terms.",
+            "recommended_remediation": "Include payment terms in the renewal clause, ensuring a Net 45 days limit."
+          }
+        ],
+        "has_critical_deviations": false
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "compliance_deviation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 3.817,
+      "tokens": 1669,
+      "prompt_tokens": 550,
+      "completion_tokens": 1119,
+      "output": {
+        "contract_id": "CTR-2026-0017",
+        "risk_findings": [
+          {
+            "finding_id": "RF-001",
+            "clause_id": "CLS-0017-PAY",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "The term \"undisputed invoice amounts\" is not defined. It may allow the Customer to withhold payment by claiming a dispute, without a clear mechanism or timeline for dispute resolution.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-002",
+            "clause_id": "CLS-0017-PAY",
+            "risk_category": "latent_operational_risk",
+            "ambiguity_description": "Absence of a defined dispute‑resolution process could delay cash flow and create accounting uncertainty for the Supplier.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-003",
+            "clause_id": "CLS-0017-LIAB",
+            "risk_category": "one_sided_covenant",
+            "ambiguity_description": "Liability is capped at the total fees paid in the preceding twelve months, which may be insufficient to cover consequential or indirect damages, especially for the Supplier who may bear higher exposure.",
+            "severity": "High",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-004",
+            "clause_id": "CLS-0017-LIAB",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "The phrase \"maximum aggregate liability\" is not qualified for exclusions (e.g., breach of confidentiality, IP infringement), leaving uncertainty about the scope of the cap.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-005",
+            "clause_id": "CLS-0017-TERM",
+            "risk_category": "one_sided_covenant",
+            "ambiguity_description": "Termination for convenience with only 30‑day notice favors the terminating party and may leave the non‑terminating party with insufficient time to transition services or recover costs.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-006",
+            "clause_id": "CLS-0017-TERM",
+            "risk_category": "latent_operational_risk",
+            "ambiguity_description": "No provision for transition assistance, data hand‑over, or termination fees creates operational risk upon abrupt termination.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-007",
+            "clause_id": "CLS-0017-REN",
+            "risk_category": "undefined_timeline",
+            "ambiguity_description": "The renewal clause does not specify the effective date of renewal, any price adjustment mechanism, or the maximum number of renewal cycles.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-008",
+            "clause_id": "CLS-0017-REN",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "\"Unless either party gives notice of non‑renewal at least 30 days prior\" lacks clarity on the method of notice and whether electronic communication is acceptable.",
+            "severity": "Low",
+            "human_interpretation_needed": true
+          }
+        ]
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "risk_ambiguity_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 2.164,
+      "tokens": 1419,
+      "prompt_tokens": 1016,
+      "completion_tokens": 403,
+      "output": {
+        "contract_id": "CTR-2026-0017",
+        "inconsistencies": []
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "cross_clause_consistency_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_8 (gsk_yt...AwPO)",
+      "duration_seconds": 2.607,
+      "tokens": 2089,
+      "prompt_tokens": 1591,
+      "completion_tokens": 498,
+      "output": {
+        "contract_id": "CTR-2026-0017",
+        "all_citations_valid": true,
+        "verified_finding_ids": [
+          "RF-001",
+          "RF-002",
+          "RF-003",
+          "RF-004",
+          "RF-005",
+          "RF-006",
+          "RF-007",
+          "RF-008"
+        ],
+        "invalid_or_unsupported_findings": [],
+        "evidence_notes": [
+          "Each risk finding references a clause_id present in the provided Clauses list (CLS-0017-PAY, CLS-0017-LIAB, CLS-0017-TERM, CLS-0017-REN).",
+          "All deviation entries also reference clause_ids that exist in the contract, satisfying the citation requirement.",
+          "No citation references a non‑existent or unsupported clause identifier."
+        ]
+      },
+      "notes": "",
+      "order": 8,
+      "agent_id": "evidence_validation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_9 (gsk_Oz...k7Gf)",
+      "duration_seconds": 3.916,
+      "tokens": 2890,
+      "prompt_tokens": 1426,
+      "completion_tokens": 1464,
+      "output": {
+        "contract_id": "CTR-2026-0017",
+        "calibrated_deviations": [
+          {
+            "clause_ids": [
+              "CLS-0017-LIAB",
+              "CLS-0017-TERM",
+              "CLS-0017-REN"
+            ],
+            "requirement_id": "REQ-FIN-01",
+            "severity": "high",
+            "supporting_evidence": "Mapping status 'unaddressed' for liability, term, and renewal clauses indicates none contain the required Net 45 payment term.",
+            "recommended_remediation": "Amend each of the liability, term, and renewal clauses to expressly include a payment term limiting payment to Net 45 days from receipt of an undisputed invoice."
+          }
+        ],
+        "calibrated_risks": [
+          {
+            "risk_id": "RF-001-002",
+            "clause_id": "CLS-0017-PAY",
+            "risk_category": "payment_terms_ambiguity",
+            "ambiguity_description": "The phrase \"undisputed invoice amounts\" is undefined and there is no dispute‑resolution mechanism, creating uncertainty about when payment is due and how disputes are resolved, potentially delaying cash flow.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "risk_id": "RF-003",
+            "clause_id": "CLS-0017-LIAB",
+            "risk_category": "one_sided_covenant",
+            "ambiguity_description": "Liability is capped at the total fees paid in the preceding twelve months, which may be insufficient to cover consequential or indirect damages, exposing the Supplier to excessive risk.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "risk_id": "RF-004",
+            "clause_id": "CLS-0017-LIAB",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "The term \"maximum aggregate liability\" lacks exclusions (e.g., breach of confidentiality, IP infringement), leaving uncertainty about the scope of the cap.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "risk_id": "RF-005-006",
+            "clause_id": "CLS-0017-TERM",
+            "risk_category": "termination_risk",
+            "ambiguity_description": "Termination for convenience with only 30‑day notice, no transition assistance, data hand‑over, or termination fees, creates operational and financial risk for the non‑terminating party.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "risk_id": "RF-007",
+            "clause_id": "CLS-0017-REN",
+            "risk_category": "undefined_timeline",
+            "ambiguity_description": "The renewal clause does not specify the effective date of renewal, any price adjustment mechanism, or the maximum number of renewal cycles.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "risk_id": "RF-008",
+            "clause_id": "CLS-0017-REN",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "\"Unless either party gives notice of non‑renewal at least 30 days prior\" lacks clarity on the method of notice and whether electronic communication is acceptable.",
+            "severity": "low",
+            "human_interpretation_needed": true
+          }
+        ],
+        "review_notes": [
+          "Three separate deviation entries addressed the same payment‑term requirement; they were consolidated into a single calibrated deviation covering all affected clauses.",
+          "Risks RF-001 and RF-002 were merged because both stem from undefined payment‑term language and missing dispute‑resolution process; severity upgraded to high due to potential cash‑flow impact.",
+          "Risks RF-005 and RF-006 were combined as they both relate to termination for convenience without transition provisions; severity upgraded to high to reflect heightened operational exposure.",
+          "All remaining risks retained their original identifiers where distinct, but severity adjustments were applied where the risk impact warranted (e.g., termination risk raised to high).",
+          "All items retain human_interpretation_needed = true, flagging them for detailed legal review and possible negotiation with the counter‑party."
+        ]
+      },
+      "notes": "",
+      "order": 9,
+      "agent_id": "contract_independent_review_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_10 (gsk_jW...DBpq)",
+      "duration_seconds": 5.575,
+      "tokens": 4203,
+      "prompt_tokens": 1933,
+      "completion_tokens": 2270,
+      "output": {
+        "run_id": "RUN-20231031-001",
+        "contract_id": "CTR-2026-0017",
+        "contract_version": "1.0",
+        "policy_id": "POL-CORP-FIN-02",
+        "policy_version": "3.1",
+        "contract_type": "Vendor Procurement Agreement",
+        "executive_summary": "The Vendor Procurement Agreement (CTR-2026-0017) was evaluated against corporate financial policy POL-CORP-FIN-02. While the invoicing clause satisfies the basic 30‑day payment requirement, the contract fails to meet the policy’s Net 45 payment term across liability, term, and renewal sections, resulting in high‑severity calibrated deviations. Multiple high‑severity risks were identified, notably ambiguous payment language, a one‑sided liability cap, and insufficient termination and renewal provisions. All findings require human legal review and remediation before the agreement can be deemed fully compliant.",
+        "policy_coverage": "100%",
+        "clause_inventory": [
+          {
+            "clause_id": "CLS-0017-PAY",
+            "clause_type": "payment_terms",
+            "clause_title": "Section 3: Invoicing and Payment Terms",
+            "mapping_status": "satisfied"
+          },
+          {
+            "clause_id": "CLS-0017-LIAB",
+            "clause_type": "liability_cap",
+            "clause_title": "Section 10: Limitation of Liability",
+            "mapping_status": "unaddressed"
+          },
+          {
+            "clause_id": "CLS-0017-TERM",
+            "clause_type": "termination",
+            "clause_title": "Section 12: Term and Termination",
+            "mapping_status": "unaddressed"
+          },
+          {
+            "clause_id": "CLS-0017-REN",
+            "clause_type": "renewal",
+            "clause_title": "Section 12: Renewal Provisions",
+            "mapping_status": "unaddressed"
+          }
+        ],
+        "compliance_findings": [
+          {
+            "clause_ids": [
+              "CLS-0017-LIAB",
+              "CLS-0017-TERM",
+              "CLS-0017-REN"
+            ],
+            "requirement_id": "REQ-FIN-01",
+            "severity": "high",
+            "supporting_evidence": "Mapping status 'unaddressed' for liability, term, and renewal clauses indicates none contain the required Net 45 payment term.",
+            "recommended_remediation": "Amend each of the liability, term, and renewal clauses to expressly include a payment term limiting payment to Net 45 days from receipt of an undisputed invoice."
+          }
+        ],
+        "risk_findings": [
+          {
+            "risk_id": "RF-001-002",
+            "clause_id": "CLS-0017-PAY",
+            "risk_category": "payment_terms_ambiguity",
+            "ambiguity_description": "The phrase \"undisputed invoice amounts\" is undefined and there is no dispute‑resolution mechanism, creating uncertainty about when payment is due and how disputes are resolved, potentially delaying cash flow.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "risk_id": "RF-003",
+            "clause_id": "CLS-0017-LIAB",
+            "risk_category": "one_sided_covenant",
+            "ambiguity_description": "Liability is capped at the total fees paid in the preceding twelve months, which may be insufficient to cover consequential or indirect damages, exposing the Supplier to excessive risk.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "risk_id": "RF-004",
+            "clause_id": "CLS-0017-LIAB",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "The term \"maximum aggregate liability\" lacks exclusions (e.g., breach of confidentiality, IP infringement), leaving uncertainty about the scope of the cap.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "risk_id": "RF-005-006",
+            "clause_id": "CLS-0017-TERM",
+            "risk_category": "termination_risk",
+            "ambiguity_description": "Termination for convenience with only 30‑day notice, no transition assistance, data hand‑over, or termination fees, creates operational and financial risk for the non‑terminating party.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "risk_id": "RF-007",
+            "clause_id": "CLS-0017-REN",
+            "risk_category": "undefined_timeline",
+            "ambiguity_description": "The renewal clause does not specify the effective date of renewal, any price adjustment mechanism, or the maximum number of renewal cycles.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "risk_id": "RF-008",
+            "clause_id": "CLS-0017-REN",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "\"Unless either party gives notice of non‑renewal at least 30 days prior\" lacks clarity on the method of notice and whether electronic communication is acceptable.",
+            "severity": "low",
+            "human_interpretation_needed": true
+          }
+        ],
+        "cross_clause_inconsistencies": [
+          {
+            "description": "Payment term is only expressed in Section 3 (30 days) and does not align with the policy‑required Net 45 term referenced in liability, term, and renewal sections.",
+            "affected_clauses": [
+              "CLS-0017-LIAB",
+              "CLS-0017-TERM",
+              "CLS-0017-REN"
+            ]
+          },
+          {
+            "description": "Renewal clause lacks price adjustment language, while the payment clause defines a fixed 30‑day term, creating potential financial inconsistency on future renewals.",
+            "affected_clauses": [
+              "CLS-0017-REN",
+              "CLS-0017-PAY"
+            ]
+          }
+        ],
+        "evidence_validation": {
+          "mapping_coverage_percentage": 100,
+          "unaddressed_clauses": [
+            "CLS-0017-LIAB",
+            "CLS-0017-TERM",
+            "CLS-0017-REN"
+          ],
+          "evidence_sources": [
+            "Mapping table",
+            "Review Findings – calibrated deviations",
+            "Review Findings – calibrated risks"
+          ]
+        },
+        "unresolved_questions": [
+          "What precise definition does the parties intend for \"undisputed invoice amounts\"?",
+          "What dispute‑resolution process should apply when an invoice is contested?",
+          "Should the liability cap include or exclude specific categories such as breach of confidentiality or IP infringement?",
+          "Is any transition assistance or data hand‑over required upon termination for convenience?",
+          "What is the intended effective date and price adjustment mechanism for each renewal cycle?",
+          "What methods of notice (e.g., email, certified mail) are acceptable for non‑renewal or termination notices?"
+        ],
+        "recommended_actions": [
+          "Amend Sections 10, 12.1, and 12.4 to insert a Net 45 payment term and define \"undisputed invoice amounts\".",
+          "Add a dispute‑resolution clause (e.g., escalation hierarchy, mediation) linked to the payment provision.",
+          "Clarify liability exclusions by enumerating categories that are not subject to the aggregate cap.",
+          "Include transition assistance obligations and data hand‑over procedures in the termination clause, or negotiate a termination fee.",
+          "Specify renewal effective date, allowable price adjustments (e.g., CPI index), and a maximum number of renewal cycles.",
+          "Define acceptable notice methods (electronic, certified mail) and required receipt confirmation for termination and non‑renewal notices."
+        ],
+        "human_review_required": true,
+        "legal_disclaimer": "This compliance report is generated for informational purposes only and does not constitute legal advice. The findings and recommendations are based on the supplied contract excerpts and the referenced corporate policy. Final determination of compliance, risk exposure, and appropriate remedial actions must be performed by qualified legal counsel after a full review of the complete agreement and any related documents."
+      },
+      "notes": "",
+      "order": 10,
+      "agent_id": "final_compliance_report_agent"
+    }
+  ],
+  "total_tokens": 17406,
+  "prompt_tokens": 8849,
+  "completion_tokens": 8557,
+  "estimated_cost_usd": 0.011981,
+  "error_message": null,
+  "final_output": "{\n  \"run_id\": \"RUN-20231031-001\",\n  \"contract_id\": \"CTR-2026-0017\",\n  \"contract_version\": \"1.0\",\n  \"policy_id\": \"POL-CORP-FIN-02\",\n  \"policy_version\": \"3.1\",\n  \"contract_type\": \"Vendor Procurement Agreement\",\n  \"executive_summary\": \"The Vendor Procurement Agreement (CTR-2026-0017) was evaluated against corporate financial policy POL-CORP-FIN-02. While the invoicing clause satisfies the basic 30\\u2011day payment requirement, the contract fails to meet the policy\\u2019s Net\\u202f45 payment term across liability, term, and renewal sections, resulting in high\\u2011severity calibrated deviations. Multiple high\\u2011severity risks were identified, notably ambiguous payment language, a one\\u2011sided liability cap, and insufficient termination and renewal provisions. All findings require human legal review and remediation before the agreement can be deemed fully compliant.\",\n  \"policy_coverage\": \"100%\",\n  \"clause_inventory\": [\n    {\n      \"clause_id\": \"CLS-0017-PAY\",\n      \"clause_type\": \"payment_terms\",\n      \"clause_title\": \"Section 3: Invoicing and Payment Terms\",\n      \"mapping_status\": \"satisfied\"\n    },\n    {\n      \"clause_id\": \"CLS-0017-LIAB\",\n      \"clause_type\": \"liability_cap\",\n      \"clause_title\": \"Section 10: Limitation of Liability\",\n      \"mapping_status\": \"unaddressed\"\n    },\n    {\n      \"clause_id\": \"CLS-0017-TERM\",\n      \"clause_type\": \"termination\",\n      \"clause_title\": \"Section 12: Term and Termination\",\n      \"mapping_status\": \"unaddressed\"\n    },\n    {\n      \"clause_id\": \"CLS-0017-REN\",\n      \"clause_type\": \"renewal\",\n      \"clause_title\": \"Section 12: Renewal Provisions\",\n      \"mapping_status\": \"unaddressed\"\n    }\n  ],\n  \"compliance_findings\": [\n    {\n      \"clause_ids\": [\n        \"CLS-0017-LIAB\",\n        \"CLS-0017-TERM\",\n        \"CLS-0017-REN\"\n      ],\n      \"requirement_id\": \"REQ-FIN-01\",\n      \"severity\": \"high\",\n      \"supporting_evidence\": \"Mapping status 'unaddressed' for liability, term, and renewal clauses indicates none contain the required Net 45 payment term.\",\n      \"recommended_remediation\": \"Amend each of the liability, term, and renewal clauses to expressly include a payment term limiting payment to Net 45 days from receipt of an undisputed invoice.\"\n    }\n  ],\n  \"risk_findings\": [\n    {\n      \"risk_id\": \"RF-001-002\",\n      \"clause_id\": \"CLS-0017-PAY\",\n      \"risk_category\": \"payment_terms_ambiguity\",\n      \"ambiguity_description\": \"The phrase \\\"undisputed invoice amounts\\\" is undefined and there is no dispute\\u2011resolution mechanism, creating uncertainty about when payment is due and how disputes are resolved, potentially delaying cash flow.\",\n      \"severity\": \"high\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"risk_id\": \"RF-003\",\n      \"clause_id\": \"CLS-0017-LIAB\",\n      \"risk_category\": \"one_sided_covenant\",\n      \"ambiguity_description\": \"Liability is capped at the total fees paid in the preceding twelve months, which may be insufficient to cover consequential or indirect damages, exposing the Supplier to excessive risk.\",\n      \"severity\": \"high\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"risk_id\": \"RF-004\",\n      \"clause_id\": \"CLS-0017-LIAB\",\n      \"risk_category\": \"vague_wording\",\n      \"ambiguity_description\": \"The term \\\"maximum aggregate liability\\\" lacks exclusions (e.g., breach of confidentiality, IP infringement), leaving uncertainty about the scope of the cap.\",\n      \"severity\": \"medium\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"risk_id\": \"RF-005-006\",\n      \"clause_id\": \"CLS-0017-TERM\",\n      \"risk_category\": \"termination_risk\",\n      \"ambiguity_description\": \"Termination for convenience with only 30\\u2011day notice, no transition assistance, data hand\\u2011over, or termination fees, creates operational and financial risk for the non\\u2011terminating party.\",\n      \"severity\": \"high\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"risk_id\": \"RF-007\",\n      \"clause_id\": \"CLS-0017-REN\",\n      \"risk_category\": \"undefined_timeline\",\n      \"ambiguity_description\": \"The renewal clause does not specify the effective date of renewal, any price adjustment mechanism, or the maximum number of renewal cycles.\",\n      \"severity\": \"medium\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"risk_id\": \"RF-008\",\n      \"clause_id\": \"CLS-0017-REN\",\n      \"risk_category\": \"vague_wording\",\n      \"ambiguity_description\": \"\\\"Unless either party gives notice of non\\u2011renewal at least 30 days prior\\\" lacks clarity on the method of notice and whether electronic communication is acceptable.\",\n      \"severity\": \"low\",\n      \"human_interpretation_needed\": true\n    }\n  ],\n  \"cross_clause_inconsistencies\": [\n    {\n      \"description\": \"Payment term is only expressed in Section 3 (30 days) and does not align with the policy\\u2011required Net\\u202f45 term referenced in liability, term, and renewal sections.\",\n      \"affected_clauses\": [\n        \"CLS-0017-LIAB\",\n        \"CLS-0017-TERM\",\n        \"CLS-0017-REN\"\n      ]\n    },\n    {\n      \"description\": \"Renewal clause lacks price adjustment language, while the payment clause defines a fixed 30\\u2011day term, creating potential financial inconsistency on future renewals.\",\n      \"affected_clauses\": [\n        \"CLS-0017-REN\",\n        \"CLS-0017-PAY\"\n      ]\n    }\n  ],\n  \"evidence_validation\": {\n    \"mapping_coverage_percentage\": 100,\n    \"unaddressed_clauses\": [\n      \"CLS-0017-LIAB\",\n      \"CLS-0017-TERM\",\n      \"CLS-0017-REN\"\n    ],\n    \"evidence_sources\": [\n      \"Mapping table\",\n      \"Review Findings \\u2013 calibrated deviations\",\n      \"Review Findings \\u2013 calibrated risks\"\n    ]\n  },\n  \"unresolved_questions\": [\n    \"What precise definition does the parties intend for \\\"undisputed invoice amounts\\\"?\",\n    \"What dispute\\u2011resolution process should apply when an invoice is contested?\",\n    \"Should the liability cap include or exclude specific categories such as breach of confidentiality or IP infringement?\",\n    \"Is any transition assistance or data hand\\u2011over required upon termination for convenience?\",\n    \"What is the intended effective date and price adjustment mechanism for each renewal cycle?\",\n    \"What methods of notice (e.g., email, certified mail) are acceptable for non\\u2011renewal or termination notices?\"\n  ],\n  \"recommended_actions\": [\n    \"Amend Sections 10, 12.1, and 12.4 to insert a Net\\u202f45 payment term and define \\\"undisputed invoice amounts\\\".\",\n    \"Add a dispute\\u2011resolution clause (e.g., escalation hierarchy, mediation) linked to the payment provision.\",\n    \"Clarify liability exclusions by enumerating categories that are not subject to the aggregate cap.\",\n    \"Include transition assistance obligations and data hand\\u2011over procedures in the termination clause, or negotiate a termination fee.\",\n    \"Specify renewal effective date, allowable price adjustments (e.g., CPI index), and a maximum number of renewal cycles.\",\n    \"Define acceptable notice methods (electronic, certified mail) and required receipt confirmation for termination and non\\u2011renewal notices.\"\n  ],\n  \"human_review_required\": true,\n  \"legal_disclaimer\": \"This compliance report is generated for informational purposes only and does not constitute legal advice. The findings and recommendations are based on the supplied contract excerpts and the referenced corporate policy. Final determination of compliance, risk exposure, and appropriate remedial actions must be performed by qualified legal counsel after a full review of the complete agreement and any related documents.\"\n}",
+  "timestamp": "2026-10-31T12:14:36.782817+00:00"
+}

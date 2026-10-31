@@ -1,0 +1,213 @@
+{
+  "run_id": "live_20261031_170038_trace17",
+  "workflow_name": "inventory_replenishment",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 30.292,
+  "agent_execution_count": 6,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_17 (gsk_qB...KRNJ)",
+      "duration_seconds": 18.851,
+      "tokens": 3899,
+      "prompt_tokens": 3252,
+      "completion_tokens": 647,
+      "output": {
+        "request_id": "REQ-INV-0017",
+        "sku_id": "SKU-0017",
+        "warehouse_id": "WH-EAST-02",
+        "sku_name": "Packaging Component Model 017",
+        "source_record_ids": [
+          "INV-SKU-0017",
+          "SUP-SUP-17"
+        ],
+        "raw_inventory_record": {
+          "sku_id": "SKU-0017",
+          "sku_name": "Packaging Component Model 017",
+          "category": "Packaging",
+          "warehouse_id": "WH-EAST-02",
+          "supplier_id": "SUP-17",
+          "current_stock": 3904,
+          "reserved_stock": 20,
+          "incoming_stock": 0,
+          "unit_cost": 81.94,
+          "reorder_threshold": 976,
+          "safety_stock": 155,
+          "edge_case_type": "excess_inventory",
+          "source_record_ids": [
+            "INV-SKU-0017",
+            "SUP-SUP-17"
+          ]
+        },
+        "raw_supplier_record": {
+          "supplier_id": "SUP-17",
+          "supplier_name": "Vendor Supply Partner 17",
+          "lead_time_days": 21,
+          "minimum_order_quantity": 50,
+          "pack_size": 25,
+          "reliability_score": 0.86,
+          "contact_email": "orders@vendor17.example.com"
+        },
+        "raw_policy_record": {
+          "planning_rules": {
+            "default_safety_stock_days": 5,
+            "lead_time_demand_formula": "daily_avg_demand * lead_time_days",
+            "base_replenishment_formula": "max(0, lead_time_demand + safety_stock - (current_stock - reserved_stock + incoming_stock))",
+            "rounding_rule": "round_up_to_nearest_pack_size",
+            "moq_rule": "max(rounded_quantity, supplier_moq) if base_replenishment > 0 else 0"
+          }
+        },
+        "sales_history_days": 90,
+        "data_quality_issues": []
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "inventory_intake_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_18 (gsk_qB...kphs)",
+      "duration_seconds": 1.327,
+      "tokens": 580,
+      "prompt_tokens": 368,
+      "completion_tokens": 212,
+      "output": {
+        "sku_id": "SKU-0017",
+        "warehouse_id": "WH-EAST-02",
+        "current_stock": 3904,
+        "reserved_stock": 20,
+        "incoming_stock": 0,
+        "usable_inventory": 3884,
+        "reorder_threshold": 976,
+        "safety_stock": 155,
+        "replenishment_needed": false,
+        "policy_notes": [
+          "Usable inventory incorporates incoming purchase orders without double-counting",
+          "Current stock position evaluated against defined reorder threshold"
+        ]
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "stock_policy_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_19 (gsk_99...IlGY)",
+      "duration_seconds": 4.808,
+      "tokens": 2643,
+      "prompt_tokens": 934,
+      "completion_tokens": 1709,
+      "output": {
+        "sku_id": "SKU-0017",
+        "forecast_horizon_days": 14,
+        "historical_avg_daily_demand": 29.49,
+        "forecast_demand_units": 412.9,
+        "volatility_metric": "moderate",
+        "demand_spikes_detected": false,
+        "has_sufficient_history": true,
+        "source_record_ids": [
+          "SALES-SKU-0017"
+        ],
+        "assumptions": [
+          "Baseline forecast computed using arithmetic moving average",
+          "Demand volatility classified as moderate"
+        ]
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "demand_forecast_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_20 (gsk_1f...ghyb)",
+      "duration_seconds": 1.548,
+      "tokens": 562,
+      "prompt_tokens": 402,
+      "completion_tokens": 160,
+      "output": {
+        "supplier_id": "SUP-17",
+        "lead_time_days": 21,
+        "minimum_order_quantity": 50,
+        "pack_size": 25,
+        "expected_arrival_date": "2026-11-05",
+        "supplier_reliability_notes": [
+          "Supplier reliability rated at 86%",
+          "Expected lead time of 21 days from order placement"
+        ],
+        "source_record_ids": [
+          "SUP-SUP-17"
+        ]
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "supplier_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_11 (gsk_A9...C3BP)",
+      "duration_seconds": 1.957,
+      "tokens": 880,
+      "prompt_tokens": 435,
+      "completion_tokens": 445,
+      "output": {
+        "sku_id": "SKU-0017",
+        "base_replenishment_quantity": 0,
+        "recommended_order_quantity": 0,
+        "calculation_breakdown": "Usable Inventory = 3884 (Current 3904 - Reserved 20 + Inbound 0). Lead‑time demand = 29.49 * 21 = 619.29. Add safety stock 155 → Gross requirement = 774.29. Deficit = Gross requirement - Usable = 774.29 - 3884 = -3109.71, which is negative, so base replenishment quantity = 0.",
+        "adjustment_reasoning": "The base need of 0 units is first rounded up to the pack size of 25, but rounding up a zero remains zero. The supplier minimum order quantity (MOQ) is 50, and since the rounded quantity (0) is below the MOQ, the final recommended order remains 0 units.",
+        "stockout_risk": "low",
+        "replenishment_status": "STOCK_SUFFICIENT"
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "replenishment_planning_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_13 (gsk_i9...Ujsn)",
+      "duration_seconds": 1.794,
+      "tokens": 2050,
+      "prompt_tokens": 1553,
+      "completion_tokens": 497,
+      "output": {
+        "run_id": "live_20261031_170038_trace17",
+        "planning_date": "2026-10-15",
+        "warehouse_id": "WH-EAST-02",
+        "sku_id": "SKU-0017",
+        "current_stock": 3904,
+        "reserved_stock": 20,
+        "available_stock": 3884,
+        "incoming_stock": 0,
+        "forecast_demand": 412.9,
+        "forecast_horizon": 14,
+        "supplier_id": "SUP-17",
+        "lead_time_days": 21,
+        "safety_stock": 155,
+        "reorder_threshold": 976,
+        "base_replenishment_quantity": 0,
+        "recommended_order_quantity": 0,
+        "expected_arrival_date": "2026-11-05",
+        "stockout_risk": "low",
+        "reasoning": "Audit verified: Usable inventory accurately accounts for incoming stock without double-counting. Recommended order of 0 units complies with pack size 25 and supplier MOQ 50.",
+        "source_record_ids": [
+          "INV-SKU-0017",
+          "SUP-SUP-17",
+          "SALES-SKU-0017"
+        ],
+        "validation_warnings": [],
+        "human_review_required": false
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "inventory_review_agent"
+    }
+  ],
+  "total_tokens": 10614,
+  "prompt_tokens": 6944,
+  "completion_tokens": 3670,
+  "estimated_cost_usd": 0.006996,
+  "error_message": null,
+  "final_output": "{\n  \"run_id\": \"live_20261031_170038_trace17\",\n  \"planning_date\": \"2026-10-15\",\n  \"warehouse_id\": \"WH-EAST-02\",\n  \"sku_id\": \"SKU-0017\",\n  \"current_stock\": 3904,\n  \"reserved_stock\": 20,\n  \"available_stock\": 3884,\n  \"incoming_stock\": 0,\n  \"forecast_demand\": 412.9,\n  \"forecast_horizon\": 14,\n  \"supplier_id\": \"SUP-17\",\n  \"lead_time_days\": 21,\n  \"safety_stock\": 155,\n  \"reorder_threshold\": 976,\n  \"base_replenishment_quantity\": 0,\n  \"recommended_order_quantity\": 0,\n  \"expected_arrival_date\": \"2026-11-05\",\n  \"stockout_risk\": \"low\",\n  \"reasoning\": \"Audit verified: Usable inventory accurately accounts for incoming stock without double-counting. Recommended order of 0 units complies with pack size 25 and supplier MOQ 50.\",\n  \"source_record_ids\": [\n    \"INV-SKU-0017\",\n    \"SUP-SUP-17\",\n    \"SALES-SKU-0017\"\n  ],\n  \"validation_warnings\": [],\n  \"human_review_required\": false\n}",
+  "timestamp": "2026-10-31T17:01:09.059043+00:00"
+}

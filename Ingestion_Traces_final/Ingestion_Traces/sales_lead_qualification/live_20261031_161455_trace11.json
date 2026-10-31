@@ -1,0 +1,202 @@
+{
+  "run_id": "live_20261031_161455_trace11",
+  "workflow_name": "sales_lead_qualification",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 13.816,
+  "agent_execution_count": 7,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_11 (gsk_A9...C3BP)",
+      "duration_seconds": 2.66,
+      "tokens": 1153,
+      "prompt_tokens": 397,
+      "completion_tokens": 756,
+      "output": {
+        "lead_id": "LEAD-2026-0001",
+        "enriched_lead_profile": {
+          "lead_id": "LEAD-2026-0001",
+          "contact_name": "Sarah Jenkins",
+          "contact_email": "sjenkins@fintechhorizon.com",
+          "job_title": "VP of Engineering",
+          "company_id": "COMP-101",
+          "stated_budget": 85000.0,
+          "purchase_timeline": "Within 3 months",
+          "test_case_tag": "high_fit_high_intent",
+          "company_name": "Fintech Horizon Global",
+          "industry": "Financial Services",
+          "employee_count": 4500,
+          "annual_revenue_usd": 650000000,
+          "region": "North America"
+        },
+        "missing_attributes": [
+          "lead.is_synthetic true (data synthetic, may be unverified)",
+          "company.is_synthetic true (data synthetic, may be unverified)"
+        ]
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "lead_enrichment_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_12 (gsk_5G...OStT)",
+      "duration_seconds": 1.579,
+      "tokens": 915,
+      "prompt_tokens": 621,
+      "completion_tokens": 294,
+      "output": {
+        "fit_category": "STRONG_FIT",
+        "industry_fit_score": 10,
+        "company_size_fit_score": 9,
+        "fit_rationale": "The account aligns with the ICP: target industry (Financial Services) is a match, employee count (4,500) comfortably exceeds the minimum 200 and is well within the max 100,000, annual revenue ($650M) surpasses the $20M threshold, and the contact role (VP of Engineering) is listed among target roles. No disqualifying industry flags are present, and the stated budget and purchase timeline support a viable sales opportunity."
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "lead_fit_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_13 (gsk_i9...Ujsn)",
+      "duration_seconds": 1.987,
+      "tokens": 1016,
+      "prompt_tokens": 477,
+      "completion_tokens": 539,
+      "output": {
+        "intent_level": "HIGH_INTENT",
+        "intent_score": 92,
+        "high_value_signals": [
+          {
+            "type": "demo_request",
+            "date": "2026-09-10",
+            "details": "Requested live demo for 50-person engineering org"
+          },
+          {
+            "type": "pricing_page_visit",
+            "date": "2026-09-12",
+            "details": "Viewed Enterprise Tier pricing 4 times"
+          },
+          {
+            "type": "whitepaper_download",
+            "date": "2026-09-08",
+            "details": "Downloaded 'Autonomous AI Agent Architecture'"
+          }
+        ],
+        "behavioral_summary": "Sarah Jenkins, VP of Engineering at FinTech Horizon, has demonstrated strong purchase intent. Within a few days she downloaded a technical whitepaper, requested a live demo for a sizable engineering team, and repeatedly visited the Enterprise Tier pricing page (four visits). Coupled with a stated budget of $85,000 and a purchase timeline of 'within 3 months', these high‑value signals indicate a high likelihood of conversion in the near term."
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "intent_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_14 (gsk_6G...l7b1)",
+      "duration_seconds": 2.367,
+      "tokens": 953,
+      "prompt_tokens": 310,
+      "completion_tokens": 643,
+      "output": {
+        "total_score": 100,
+        "qualification_tier": "SALES_QUALIFIED_LEAD",
+        "component_scores": {
+          "industry_fit": 25,
+          "company_size_fit": 25,
+          "role_authority": 20,
+          "intent_signals": 20,
+          "budget_timeline": 10
+        },
+        "scoring_rationale": "The deterministic model allocates a fixed point pool of 100 across five weighted dimensions: industry_fit (25), company_size_fit (25), role_authority (20), intent_signals (20), and budget_timeline (10). Each dimension is evaluated against predefined criteria (e.g., industry relevance, employee count range, decision‑maker title, observed buying intent, declared budget and purchase timeline). The scores for each dimension are summed to produce the total_score. Tier classification uses the following thresholds: \n- SALES_QUALIFIED_LEAD (SQL): total_score >= 80 \n- MARKETING_NURTURE: 50 <= total_score < 80 \n- DISQUALIFIED: total_score < 50. \nWith a total_score of 100, the prospect exceeds the SQL threshold and is classified as a SALES_QUALIFIED_LEAD. The highest‑scoring dimensions are industry_fit and company_size_fit (both 25 points), indicating strong alignment with target market and ideal company size. The lowest‑scoring dimension is budget_timeline (10 points), suggesting limited disclosed budget or an extended purchase timeline."
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "lead_scoring_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_15 (gsk_3b...vKIi)",
+      "duration_seconds": 1.596,
+      "tokens": 1547,
+      "prompt_tokens": 1189,
+      "completion_tokens": 358,
+      "output": {
+        "opportunity_viability": "HIGH",
+        "estimated_deal_size": 85000,
+        "pipeline_stage": "Proposal/Negotiation",
+        "key_risks": [
+          "Synthetic nature of lead and company data may affect verification",
+          "Stated budget $85k may be below typical Enterprise Tier pricing, requiring discount or scope adjustment",
+          "Potential competition from established fintech platform vendors",
+          "Internal procurement and legal review timelines could extend beyond the 3‑month window"
+        ]
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "opportunity_assessment_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_16 (gsk_ID...uEx3)",
+      "duration_seconds": 1.334,
+      "tokens": 1613,
+      "prompt_tokens": 1314,
+      "completion_tokens": 299,
+      "output": {
+        "recommended_action": "Immediate SDR outreach and AE booking within 2 hours",
+        "target_team": "Enterprise Sales Development (SDR) -> Account Executive (AE) handoff",
+        "priority": "HIGH",
+        "action_justification": "The lead is a SALES_QUALIFIED_LEAD with a perfect total_score of 100, strong fit (industry, size, revenue), high intent signals (demo request, pricing page visits, whitepaper download) and a declared budget of $85,000 with a purchase timeline of within 3 months. These factors indicate a high likelihood of conversion in the near term. Despite synthetic data flags, the volume and recency of engagement outweigh the risk, warranting immediate outreach to secure a demo and move the opportunity into Proposal/Negotiation. Prompt SDR contact followed by AE scheduling aligns with the recommended 2‑hour response window for SQLs, maximizing conversion potential while addressing potential discount or scope negotiations early."
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "next_action_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 2.289,
+      "tokens": 2179,
+      "prompt_tokens": 1494,
+      "completion_tokens": 685,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "lead_id": "LEAD-2026-0001",
+        "final_qualification_tier": "SALES_QUALIFIED_LEAD",
+        "final_score": 100,
+        "summary_report": "Lead LEAD-2026-0001 (Sarah Jenkins, VP of Engineering, Fintech Horizon Global) meets the Ideal Customer Profile (ICP) with a STRONG_FIT: target industry (Financial Services), employee count (4,500) and revenue ($650M) exceed thresholds, and the contact holds a decision‑maker title. Intent signals are high (demo request, multiple pricing page visits, whitepaper download) yielding an intent_score of 92. The deterministic scoring model allocates the maximum 100 points across industry_fit (25), company_size_fit (25), role_authority (20), intent_signals (20) and budget_timeline (10). This places the lead firmly in the SALES_QUALIFIED_LEAD tier. The recommended action—immediate SDR outreach and AE handoff within 2 hours—is consistent with the SQL routing SLA. Synthetic data flags are noted as a risk but do not contradict the routing decision given the strong engagement and short purchase timeline.",
+        "audit_findings": [
+          {
+            "category": "Consistency",
+            "finding": "ICP fit, scoring rubric, qualification tier, and recommended routing are fully aligned. No contradictory decisions detected."
+          },
+          {
+            "category": "Synthetic Data Risk",
+            "finding": "Both lead and company are flagged as synthetic. This introduces verification risk; however, the audit concludes the engagement volume outweighs the risk for immediate outreach."
+          },
+          {
+            "category": "Budget Alignment",
+            "finding": "Declared budget ($85,000) is lower than typical Enterprise Tier pricing, potentially requiring discount or scope adjustment. This is captured in the opportunity key risks but does not affect the SQL classification."
+          },
+          {
+            "category": "Timeline Feasibility",
+            "finding": "Purchase timeline ('within 3 months') aligns with the recommended 2‑hour response SLA, supporting rapid progression to Proposal/Negotiation."
+          },
+          {
+            "category": "Routing Decision",
+            "finding": "Action targets Enterprise Sales Development (SDR) followed by Account Executive handoff, matching the standard routing for SQLs. No conflicting routing paths identified."
+          }
+        ]
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "final_review_agent_sales"
+    }
+  ],
+  "total_tokens": 9376,
+  "prompt_tokens": 5802,
+  "completion_tokens": 3574,
+  "estimated_cost_usd": 0.006247,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"lead_id\": \"LEAD-2026-0001\",\n  \"final_qualification_tier\": \"SALES_QUALIFIED_LEAD\",\n  \"final_score\": 100,\n  \"summary_report\": \"Lead LEAD-2026-0001 (Sarah Jenkins, VP of Engineering, Fintech Horizon Global) meets the Ideal Customer Profile (ICP) with a STRONG_FIT: target industry (Financial Services), employee count (4,500) and revenue ($650M) exceed thresholds, and the contact holds a decision\\u2011maker title. Intent signals are high (demo request, multiple pricing page visits, whitepaper download) yielding an intent_score of 92. The deterministic scoring model allocates the maximum 100 points across industry_fit (25), company_size_fit (25), role_authority (20), intent_signals (20) and budget_timeline (10). This places the lead firmly in the SALES_QUALIFIED_LEAD tier. The recommended action\\u2014immediate SDR outreach and AE handoff within 2\\u202fhours\\u2014is consistent with the SQL routing SLA. Synthetic data flags are noted as a risk but do not contradict the routing decision given the strong engagement and short purchase timeline.\",\n  \"audit_findings\": [\n    {\n      \"category\": \"Consistency\",\n      \"finding\": \"ICP fit, scoring rubric, qualification tier, and recommended routing are fully aligned. No contradictory decisions detected.\"\n    },\n    {\n      \"category\": \"Synthetic Data Risk\",\n      \"finding\": \"Both lead and company are flagged as synthetic. This introduces verification risk; however, the audit concludes the engagement volume outweighs the risk for immediate outreach.\"\n    },\n    {\n      \"category\": \"Budget Alignment\",\n      \"finding\": \"Declared budget ($85,000) is lower than typical Enterprise Tier pricing, potentially requiring discount or scope adjustment. This is captured in the opportunity key risks but does not affect the SQL classification.\"\n    },\n    {\n      \"category\": \"Timeline Feasibility\",\n      \"finding\": \"Purchase timeline ('within 3 months') aligns with the recommended 2\\u2011hour response SLA, supporting rapid progression to Proposal/Negotiation.\"\n    },\n    {\n      \"category\": \"Routing Decision\",\n      \"finding\": \"Action targets Enterprise Sales Development (SDR) followed by Account Executive handoff, matching the standard routing for SQLs. No conflicting routing paths identified.\"\n    }\n  ]\n}",
+  "timestamp": "2026-10-31T16:15:09.026160+00:00"
+}

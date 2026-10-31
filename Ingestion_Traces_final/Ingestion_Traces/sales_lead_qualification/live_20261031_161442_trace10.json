@@ -1,0 +1,169 @@
+{
+  "run_id": "live_20261031_161442_trace10",
+  "workflow_name": "sales_lead_qualification",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 12.644,
+  "agent_execution_count": 7,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_11 (gsk_A9...C3BP)",
+      "duration_seconds": 2.656,
+      "tokens": 1240,
+      "prompt_tokens": 390,
+      "completion_tokens": 850,
+      "output": {
+        "lead_id": "LEAD-2026-0005",
+        "enriched_lead_profile": {
+          "contact_name": "Tom Bodega",
+          "contact_email": "tom@acmebodega.com",
+          "job_title": "Cashier",
+          "stated_budget": 50.0,
+          "purchase_timeline": "None",
+          "test_case_tag": "unsuitable_wrong_role_wrong_size",
+          "company_id": "COMP-105",
+          "company_name": "Acme Local Bodega",
+          "industry": "Retail",
+          "employee_count": 2,
+          "annual_revenue_usd": 120000,
+          "region": "North America"
+        },
+        "missing_attributes": []
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "lead_enrichment_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_12 (gsk_5G...OStT)",
+      "duration_seconds": 1.588,
+      "tokens": 784,
+      "prompt_tokens": 601,
+      "completion_tokens": 183,
+      "output": {
+        "fit_category": "DISQUALIFIED",
+        "industry_fit_score": 0,
+        "company_size_fit_score": 0,
+        "fit_rationale": "The prospect operates in the Retail industry, which is listed among the disqualified industries, and the company has only 2 employees, far below the minimum threshold of 200 employees required by the ICP. Both industry and size criteria are not met, resulting in a DISQUALIFIED classification."
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "lead_fit_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_13 (gsk_i9...Ujsn)",
+      "duration_seconds": 1.333,
+      "tokens": 556,
+      "prompt_tokens": 356,
+      "completion_tokens": 200,
+      "output": {
+        "intent_level": "NO_SIGNALS",
+        "intent_score": 0,
+        "high_value_signals": [],
+        "behavioral_summary": "The lead is synthetic and provides no digital engagement events. The contact is a cashier with a minimal budget ($50) and no stated purchase timeline, indicating they are not a decision-maker for a purchase. No high‑value intent signals such as demo requests, pricing page visits, or content downloads are present, resulting in a lack of observable purchase intent."
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "intent_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_14 (gsk_6G...l7b1)",
+      "duration_seconds": 2.157,
+      "tokens": 707,
+      "prompt_tokens": 306,
+      "completion_tokens": 401,
+      "output": {
+        "total_score": 0,
+        "qualification_tier": "DISQUALIFIED",
+        "component_scores": {
+          "industry_fit": 0,
+          "company_size_fit": 0,
+          "role_authority": 0,
+          "intent_signals": 0,
+          "budget_timeline": 0
+        },
+        "scoring_rationale": "The deterministic model sums the weighted scores of five dimensions: industry_fit, company_size_fit, role_authority, intent_signals, and budget_timeline. Each dimension contributes its raw score (0–100) multiplied by a predefined weight; in this case all raw scores are 0, resulting in a total_score of 0. Tier classification follows a simple threshold rule: \n- total_score >= 80 → SALES_QUALIFIED_LEAD (high readiness)\n- total_score between 40 and 79 → MARKETING_NURTURE (moderate interest)\n- total_score < 40 → DISQUALIFIED (insufficient fit or intent)\nBecause the total_score is 0, the lead falls into the DISQUALIFIED tier. All dimensions have identical scores, so every dimension is both the highest‑scoring and the lowest‑scoring component."
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "lead_scoring_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_15 (gsk_3b...vKIi)",
+      "duration_seconds": 1.498,
+      "tokens": 1150,
+      "prompt_tokens": 909,
+      "completion_tokens": 241,
+      "output": {
+        "opportunity_viability": "LOW",
+        "estimated_deal_size": 50.0,
+        "pipeline_stage": "DISQUALIFIED",
+        "key_risks": [
+          "Contact is a cashier, not a decision‑maker",
+          "Stated budget ($50) far below minimum viable deal size",
+          "No purchase timeline provided",
+          "Company size (2 employees) below ICP threshold of 200",
+          "Retail industry is a disqualified segment per ICP",
+          "Zero intent signals; no engagement or interest demonstrated"
+        ]
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "opportunity_assessment_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_16 (gsk_ID...uEx3)",
+      "duration_seconds": 1.464,
+      "tokens": 1263,
+      "prompt_tokens": 1050,
+      "completion_tokens": 213,
+      "output": {
+        "recommended_action": "Log disqualification reason and archive the lead",
+        "target_team": "Lead Operations / Disqualification Team",
+        "priority": "Low",
+        "action_justification": "The lead is classified as DISQUALIFIED (total_score 0). It fails industry fit (Retail is a disqualified segment), company size (2 employees < 200), role authority (cashier, not a decision‑maker), budget ($50 << minimum viable deal), and shows no intent signals or purchase timeline. All key risk factors indicate no viable opportunity, so the appropriate next step is to record the disqualification rationale and move the record to the archive."
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "next_action_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.943,
+      "tokens": 1594,
+      "prompt_tokens": 1170,
+      "completion_tokens": 424,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "lead_id": "LEAD-2026-0005",
+        "final_qualification_tier": "DISQUALIFIED",
+        "final_score": 0,
+        "summary_report": "The lead (Tom Bodega, Cashier at Acme Local Bodega) fails all core ICP criteria. Retail is a disqualified industry, the company size (2 employees) is far below the 200‑employee minimum, the contact lacks decision‑making authority, the stated budget ($50) is well under the minimum viable deal size, and there is no purchase timeline or intent signals. Scoring components all register a raw score of 0, yielding a total_score of 0 and a DISQUALIFIED tier. The recommended action—log the disqualification reason and archive the lead—is consistent with the scoring outcome and the opportunity assessment. No contradictory routing decisions were identified.",
+        "audit_findings": [
+          "Fit assessment aligns with ICP thresholds (industry and size both disqualified).",
+          "Scoring rubric correctly reflects zero values across all dimensions, resulting in total_score 0.",
+          "Qualification tier from scoring (DISQUALIFIED) matches the fit category and opportunity viability.",
+          "Recommended action (archive/disqualify) is consistent with the DISQUALIFIED tier and low priority.",
+          "No conflicting routing directives were detected; the lead is correctly routed to Lead Operations / Disqualification Team."
+        ]
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "final_review_agent_sales"
+    }
+  ],
+  "total_tokens": 7294,
+  "prompt_tokens": 4782,
+  "completion_tokens": 2512,
+  "estimated_cost_usd": 0.004806,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"lead_id\": \"LEAD-2026-0005\",\n  \"final_qualification_tier\": \"DISQUALIFIED\",\n  \"final_score\": 0,\n  \"summary_report\": \"The lead (Tom Bodega, Cashier at Acme Local Bodega) fails all core ICP criteria. Retail is a disqualified industry, the company size (2 employees) is far below the 200\\u2011employee minimum, the contact lacks decision\\u2011making authority, the stated budget ($50) is well under the minimum viable deal size, and there is no purchase timeline or intent signals. Scoring components all register a raw score of 0, yielding a total_score of 0 and a DISQUALIFIED tier. The recommended action\\u2014log the disqualification reason and archive the lead\\u2014is consistent with the scoring outcome and the opportunity assessment. No contradictory routing decisions were identified.\",\n  \"audit_findings\": [\n    \"Fit assessment aligns with ICP thresholds (industry and size both disqualified).\",\n    \"Scoring rubric correctly reflects zero values across all dimensions, resulting in total_score 0.\",\n    \"Qualification tier from scoring (DISQUALIFIED) matches the fit category and opportunity viability.\",\n    \"Recommended action (archive/disqualify) is consistent with the DISQUALIFIED tier and low priority.\",\n    \"No conflicting routing directives were detected; the lead is correctly routed to Lead Operations / Disqualification Team.\"\n  ]\n}",
+  "timestamp": "2026-10-31T16:14:55.204910+00:00"
+}

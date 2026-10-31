@@ -1,0 +1,200 @@
+{
+  "run_id": "live_20261023_070410_sales_",
+  "workflow_name": "sales_lead_qualification",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 23.176,
+  "agent_execution_count": 7,
+  "agent_executions": [
+    {
+      "order": 1,
+      "agent_id": "lead_enrichment_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_...Bm5c)",
+      "duration_seconds": 1.94,
+      "status": "SUCCESS",
+      "tokens": 1072,
+      "prompt_tokens": 429,
+      "completion_tokens": 643,
+      "output": {
+        "lead_id": "LEAD-2026-0001",
+        "enriched_lead_profile": {
+          "lead_id": "LEAD-2026-0001",
+          "contact_name": "Sarah Jenkins",
+          "contact_email": "sjenkins@fintechhorizon.com",
+          "job_title": "VP of Engineering",
+          "company_id": "COMP-101",
+          "company_name": "Fintech Horizon Global",
+          "industry": "Financial Services",
+          "employee_count": 4500,
+          "annual_revenue_usd": 650000000,
+          "stated_budget": 85000.0,
+          "purchase_timeline": "Within 3 months",
+          "test_case_tag": "high_fit_high_intent",
+          "is_synthetic": true
+        },
+        "missing_attributes": []
+      },
+      "notes": ""
+    },
+    {
+      "order": 2,
+      "agent_id": "lead_fit_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_...Bm5c)",
+      "duration_seconds": 1.378,
+      "status": "SUCCESS",
+      "tokens": 896,
+      "prompt_tokens": 501,
+      "completion_tokens": 395,
+      "output": {
+        "fit_category": "STRONG_FIT",
+        "industry_fit_score": 10,
+        "company_size_fit_score": 10,
+        "fit_rationale": "The lead operates in Financial Services, the target industry. The company has 4,500 employees, well above the enterprise threshold (>=200). The contact is a VP of Engineering, a senior decision\u2011maker for technology purchases. The stated budget of $85,000 and a purchase timeline of within 3 months further reinforce a strong alignment with the ICP."
+      },
+      "notes": ""
+    },
+    {
+      "order": 3,
+      "agent_id": "intent_analysis_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_...Bm5c)",
+      "duration_seconds": 1.458,
+      "status": "SUCCESS",
+      "tokens": 854,
+      "prompt_tokens": 492,
+      "completion_tokens": 362,
+      "output": {
+        "intent_level": "HIGH_INTENT",
+        "intent_score": 92,
+        "high_value_signals": [
+          {
+            "type": "demo_request",
+            "date": "2026-09-10",
+            "notes": "Requested live demo for 50-person engineering org"
+          },
+          {
+            "type": "whitepaper_download",
+            "date": "2026-09-08",
+            "notes": "Downloaded 'Autonomous AI Agent Architecture'"
+          },
+          {
+            "type": "pricing_page_visit",
+            "date": "2026-09-12",
+            "notes": "Viewed Enterprise Tier pricing 4 times"
+          }
+        ],
+        "behavioral_summary": "Sarah Jenkins, VP of Engineering, has demonstrated strong purchase intent within a 3\u2011month horizon. She actively engaged with high\u2011value content\u2014downloading a technical whitepaper, requesting a live demo tailored to a sizable engineering team, and repeatedly visiting the Enterprise pricing page. These actions, combined with a stated budget that aligns with the Enterprise tier, indicate a high likelihood of conversion in the near term."
+      },
+      "notes": ""
+    },
+    {
+      "order": 4,
+      "agent_id": "lead_scoring_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_...Bm5c)",
+      "duration_seconds": 1.875,
+      "status": "SUCCESS",
+      "tokens": 863,
+      "prompt_tokens": 338,
+      "completion_tokens": 525,
+      "output": {
+        "total_score": 100,
+        "qualification_tier": "SALES_QUALIFIED_LEAD",
+        "component_scores": {
+          "industry_fit": 25,
+          "company_size_fit": 25,
+          "role_authority": 20,
+          "intent_signals": 20,
+          "budget_timeline": 10
+        },
+        "scoring_rationale": "The model assigns a fixed maximum weight to each of five qualification dimensions that together sum to 100 points. Each dimension is evaluated against predefined criteria (e.g., industry relevance, employee count range, decision\u2011maker title, observed buying intent, and disclosed budget/timeline). The scores for each dimension are summed to produce the total_score. Tier classification uses the following thresholds: \n- total_score >= 80 \u2192 SALES_QUALIFIED_LEAD (SQL) \n- total_score between 50 and 79 \u2192 MARKETING_NURTURE \n- total_score < 50 \u2192 DISQUALIFIED. \nIn this case the lead achieved the maximum possible score of 100, placing it firmly in the SQL tier. The highest\u2011scoring dimensions are 'industry_fit' and 'company_size_fit', each contributing 25 points, indicating strong alignment with target market and ideal company size. The lowest\u2011scoring dimension is 'budget_timeline' with 10 points, reflecting a relative weakness or lack of disclosed budget or timeline information."
+      },
+      "notes": ""
+    },
+    {
+      "order": 5,
+      "agent_id": "opportunity_assessment_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_...Bm5c)",
+      "duration_seconds": 1.89,
+      "status": "SUCCESS",
+      "tokens": 2131,
+      "prompt_tokens": 1563,
+      "completion_tokens": 568,
+      "output": {
+        "opportunity_viability": "HIGH",
+        "estimated_deal_size": "$85,000 - $120,000",
+        "pipeline_stage": "Opportunity - Proposal/Price Quote",
+        "key_risks": [
+          "Lead data flagged as synthetic \u2013 requires verification of authenticity before full engagement",
+          "Stated budget ($85k) may be at the lower end of the solution's total cost, risking scope reduction or need for additional funding",
+          "Tight 3\u2011month purchase timeline could be impacted by internal procurement, legal, or budget approval cycles",
+          "Potential competition from other enterprise vendors targeting the same high\u2011intent signals",
+          "Reliance on a single champion (VP of Engineering) \u2013 broader stakeholder alignment needed to secure final approval"
+        ]
+      },
+      "notes": ""
+    },
+    {
+      "order": 6,
+      "agent_id": "next_action_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_...Bm5c)",
+      "duration_seconds": 1.785,
+      "status": "SUCCESS",
+      "tokens": 2275,
+      "prompt_tokens": 1802,
+      "completion_tokens": 473,
+      "output": {
+        "recommended_action": "schedule_executive_demo",
+        "target_team": "enterprise_account_exec",
+        "priority": "HIGH",
+        "action_justification": "The lead scores a perfect 100, is classified as a Sales Qualified Lead, and exhibits a STRONG_FIT across industry, company size, and role authority. Sarah Jenkins, VP of Engineering, has demonstrated HIGH_INTENT through a demo request, whitepaper download, and repeated Enterprise pricing page visits, and she has a stated budget ($85K) that aligns with the lower end of the estimated deal size ($85K\u2011$120K). The purchase timeline is within 3 months, placing the opportunity in the Proposal/Price Quote stage. The highest\u2011ROI use of sales rep bandwidth is to move this qualified, high\u2011intent prospect forward with an executive\u2011level demo that can address technical depth and secure broader stakeholder buy\u2011in. While the data is flagged as synthetic, the risk can be mitigated during the demo qualification call, and the potential revenue justifies immediate executive engagement."
+      },
+      "notes": ""
+    },
+    {
+      "order": 7,
+      "agent_id": "final_review_agent_sales",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_...Bm5c)",
+      "duration_seconds": 12.85,
+      "status": "SUCCESS",
+      "tokens": 2771,
+      "prompt_tokens": 2001,
+      "completion_tokens": 770,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "lead_id": "LEAD-2026-0001",
+        "final_qualification_tier": "SALES_QUALIFIED_LEAD",
+        "final_score": 100,
+        "summary_report": "The lead (Sarah Jenkins, VP of Engineering at Fintech Horizon Global) meets all core criteria for a Sales Qualified Lead. Industry fit (Financial Services) and company size (4,500 employees) each receive maximum scores, the role is a senior decision\u2011maker, intent signals are strong (demo request, whitepaper download, repeated Enterprise pricing visits), and a disclosed budget ($85K) aligns with the lower bound of the estimated deal size. The deterministic total score is 100, placing the lead in the SQL tier. The recommended next step\u2014scheduling an executive\u2011level demo with the enterprise account executive\u2014is appropriate for an SQL and receives a HIGH priority designation. The only caveat is the synthetic data flag, which warrants a quick verification of lead authenticity before full engagement, but does not invalidate the high\u2011priority recommendation.",
+        "audit_findings": [
+          {
+            "check": "Action Alignment with Qualification Tier",
+            "result": "PASS",
+            "notes": "Recommended action (schedule_executive_demo) is consistent with a SALES_QUALIFIED_LEAD tier."
+          },
+          {
+            "check": "Priority Suitability for Lead Quality",
+            "result": "PASS",
+            "notes": "Lead exhibits strong fit, intent, and budget; high priority is justified. Synthetic flag noted as a verification risk, not a disqualifier."
+          },
+          {
+            "check": "Data Integrity / Synthetic Flag",
+            "result": "WARN",
+            "notes": "Lead is flagged as synthetic; verify authenticity during the initial qualification call."
+          },
+          {
+            "check": "Overall Qualification Consistency",
+            "result": "PASS",
+            "notes": "All scoring components sum to 100, matching the deterministic score and tier classification."
+          }
+        ]
+      },
+      "notes": ""
+    }
+  ],
+  "total_tokens": 10862,
+  "prompt_tokens": 7126,
+  "completion_tokens": 3736,
+  "estimated_cost_usd": 0.003311,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"lead_id\": \"LEAD-2026-0001\",\n  \"final_qualification_tier\": \"SALES_QUALIFIED_LEAD\",\n  \"final_score\": 100,\n  \"summary_report\": \"The lead (Sarah Jenkins, VP of Engineering at Fintech Horizon Global) meets all core criteria for a Sales Qualified Lead. Industry fit (Financial Services) and company size (4,500 employees) each receive maximum scores, the role is a senior decision\u2011maker, intent signals are strong (demo request, whitepaper download, repeated Enterprise pricing visits), and a disclosed budget ($85K) aligns with the lower bound of the estimated deal size. The deterministic total score is 100, placing the lead in the SQL tier. The recommended next step\u2014scheduling an executive\u2011level demo with the enterprise account executive\u2014is appropriate for an SQL and receives a HIGH priority designation. The only caveat is the synthetic data flag, which warrants a quick verification of lead authenticity before full engagement, but does not invalidate the high\u2011priority recommendation.\",\n  \"audit_findings\": [\n    {\n      \"check\": \"Action Alignment with Qualification Tier\",\n      \"result\": \"PASS\",\n      \"notes\": \"Recommended action (schedule_executive_demo) is consistent with a SALES_QUALIFIED_LEAD tier.\"\n    },\n    {\n      \"check\": \"Priority Suitability for Lead Quality\",\n      \"result\": \"PASS\",\n      \"notes\": \"Lead exhibits strong fit, intent, and budget; high priority is justified. Synthetic flag noted as a verification risk, not a disqualifier.\"\n    },\n    {\n      \"check\": \"Data Integrity / Synthetic Flag\",\n      \"result\": \"WARN\",\n      \"notes\": \"Lead is flagged as synthetic; verify authenticity during the initial qualification call.\"\n    },\n    {\n      \"check\": \"Overall Qualification Consistency\",\n      \"result\": \"PASS\",\n      \"notes\": \"All scoring components sum to 100, matching the deterministic score and tier classification.\"\n    }\n  ]\n}",
+  "timestamp": "2026-10-23T07:04:33.807408+00:00"
+}

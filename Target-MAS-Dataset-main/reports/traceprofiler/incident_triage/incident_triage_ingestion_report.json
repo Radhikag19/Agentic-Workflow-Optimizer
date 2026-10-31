@@ -1,0 +1,3006 @@
+{
+  "workflow_name": "incident_triage",
+  "report_type": "traceprofiler_single_workflow_ingestion",
+  "analysis_mode": "static_ast_non_executing",
+  "metrics": {
+    "declared_agents": 7,
+    "implemented_agents": 7,
+    "python_files": 8,
+    "telemetry_runs": 2,
+    "discrepancy_count": 2
+  },
+  "manifest": {
+    "file": "Agents/incident_triage/workflow.json",
+    "dir": "Agents/incident_triage",
+    "workflow_name": "incident_triage",
+    "version": "1.0.0",
+    "description": "Baseline 7-agent sequential IT incident triage and remediation workflow.",
+    "fixed_model": "openai/gpt-oss-120b",
+    "total_agents": 7,
+    "execution_mode": "sequential",
+    "execution_order": [
+      "intake_agent",
+      "classification_agent",
+      "runbook_agent",
+      "symptom_agent",
+      "severity_agent",
+      "remediation_agent",
+      "incident_review_agent"
+    ],
+    "optimization_opportunities": [
+      "Dynamic routing for simple vs complex incidents",
+      "Bypassing symptom diagnostic branch for low-complexity / known-issue incidents",
+      "Parallel execution of runbook retrieval and symptom correlation",
+      "Early stopping when runbook confidence exceeds 0.95 and severity is SEV-4"
+    ],
+    "agents": [
+      {
+        "id": "intake_agent",
+        "name": "Incident Intake Specialist",
+        "role": "Incident Intake Specialist",
+        "declared_file": "intake_agent.py",
+        "dependencies": [],
+        "inputs": [
+          "raw_ticket_text",
+          "service",
+          "reported_impact",
+          "timestamp"
+        ],
+        "outputs": [
+          "normalized_title",
+          "affected_service",
+          "symptoms",
+          "timestamps",
+          "reported_impact_users",
+          "outage_minutes",
+          "missing_fields"
+        ],
+        "assigned_key": "GROQ_API_KEY_8",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "id": "intake_agent",
+          "name": "Incident Intake Specialist",
+          "assigned_key": "GROQ_API_KEY_8",
+          "file": "intake_agent.py",
+          "dependencies": [],
+          "inputs": [
+            "raw_ticket_text",
+            "service",
+            "reported_impact",
+            "timestamp"
+          ],
+          "outputs": [
+            "normalized_title",
+            "affected_service",
+            "symptoms",
+            "timestamps",
+            "reported_impact_users",
+            "outage_minutes",
+            "missing_fields"
+          ],
+          "parallelizable": false
+        }
+      },
+      {
+        "id": "classification_agent",
+        "name": "Incident Classification Engineer",
+        "role": "Incident Classification Engineer",
+        "declared_file": "classification_agent.py",
+        "dependencies": [
+          "intake_agent"
+        ],
+        "inputs": [
+          "normalized_telemetry"
+        ],
+        "outputs": [
+          "category",
+          "apparent_complexity",
+          "classification_reasoning"
+        ],
+        "assigned_key": "GROQ_API_KEY_9",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "id": "classification_agent",
+          "name": "Incident Classification Engineer",
+          "assigned_key": "GROQ_API_KEY_9",
+          "file": "classification_agent.py",
+          "dependencies": [
+            "intake_agent"
+          ],
+          "inputs": [
+            "normalized_telemetry"
+          ],
+          "outputs": [
+            "category",
+            "apparent_complexity",
+            "classification_reasoning"
+          ],
+          "parallelizable": false
+        }
+      },
+      {
+        "id": "runbook_agent",
+        "name": "Runbook Retrieval Specialist",
+        "role": "Runbook Retrieval Specialist",
+        "declared_file": "runbook_agent.py",
+        "dependencies": [
+          "classification_agent"
+        ],
+        "inputs": [
+          "category",
+          "symptoms"
+        ],
+        "outputs": [
+          "selected_runbook_id",
+          "match_confidence",
+          "prerequisites",
+          "safety_notes"
+        ],
+        "assigned_key": "GROQ_API_KEY_10",
+        "parallelizable": true,
+        "parallel_group": "diagnostic_branch",
+        "pruning_candidate": null,
+        "raw": {
+          "id": "runbook_agent",
+          "name": "Runbook Retrieval Specialist",
+          "assigned_key": "GROQ_API_KEY_10",
+          "file": "runbook_agent.py",
+          "dependencies": [
+            "classification_agent"
+          ],
+          "inputs": [
+            "category",
+            "symptoms"
+          ],
+          "outputs": [
+            "selected_runbook_id",
+            "match_confidence",
+            "prerequisites",
+            "safety_notes"
+          ],
+          "parallelizable": true,
+          "parallel_group": "diagnostic_branch"
+        }
+      },
+      {
+        "id": "symptom_agent",
+        "name": "Diagnostic & Symptom Correlation Specialist",
+        "role": "Diagnostic & Symptom Correlation Specialist",
+        "declared_file": "symptom_agent.py",
+        "dependencies": [
+          "classification_agent"
+        ],
+        "inputs": [
+          "service",
+          "category",
+          "symptoms"
+        ],
+        "outputs": [
+          "correlated_incident_ids",
+          "recurring_patterns",
+          "diagnostic_stage_assessment"
+        ],
+        "assigned_key": "GROQ_API_KEY_11",
+        "parallelizable": true,
+        "parallel_group": "diagnostic_branch",
+        "pruning_candidate": "Can be bypassed by optimizer for Simple incidents",
+        "raw": {
+          "id": "symptom_agent",
+          "name": "Diagnostic & Symptom Correlation Specialist",
+          "assigned_key": "GROQ_API_KEY_11",
+          "file": "symptom_agent.py",
+          "dependencies": [
+            "classification_agent"
+          ],
+          "inputs": [
+            "service",
+            "category",
+            "symptoms"
+          ],
+          "outputs": [
+            "correlated_incident_ids",
+            "recurring_patterns",
+            "diagnostic_stage_assessment"
+          ],
+          "parallelizable": true,
+          "parallel_group": "diagnostic_branch",
+          "pruning_candidate": "Can be bypassed by optimizer for Simple incidents"
+        }
+      },
+      {
+        "id": "severity_agent",
+        "name": "Severity Assessment Specialist",
+        "role": "Severity Assessment Specialist",
+        "declared_file": "severity_agent.py",
+        "dependencies": [
+          "symptom_agent",
+          "runbook_agent"
+        ],
+        "inputs": [
+          "impact_users",
+          "service_tier",
+          "outage_minutes",
+          "diagnostic_context"
+        ],
+        "outputs": [
+          "severity_level",
+          "governing_sla_rule",
+          "justification"
+        ],
+        "assigned_key": "GROQ_API_KEY_12",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "id": "severity_agent",
+          "name": "Severity Assessment Specialist",
+          "assigned_key": "GROQ_API_KEY_12",
+          "file": "severity_agent.py",
+          "dependencies": [
+            "symptom_agent",
+            "runbook_agent"
+          ],
+          "inputs": [
+            "impact_users",
+            "service_tier",
+            "outage_minutes",
+            "diagnostic_context"
+          ],
+          "outputs": [
+            "severity_level",
+            "governing_sla_rule",
+            "justification"
+          ],
+          "parallelizable": false
+        }
+      },
+      {
+        "id": "remediation_agent",
+        "name": "Remediation Planning Engineer",
+        "role": "Remediation Planning Engineer",
+        "declared_file": "remediation_agent.py",
+        "dependencies": [
+          "severity_agent",
+          "runbook_agent"
+        ],
+        "inputs": [
+          "selected_runbook",
+          "severity_level",
+          "diagnosis"
+        ],
+        "outputs": [
+          "remediation_steps",
+          "rollback_plan",
+          "safety_verification"
+        ],
+        "assigned_key": "GROQ_API_KEY_13",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "id": "remediation_agent",
+          "name": "Remediation Planning Engineer",
+          "assigned_key": "GROQ_API_KEY_13",
+          "file": "remediation_agent.py",
+          "dependencies": [
+            "severity_agent",
+            "runbook_agent"
+          ],
+          "inputs": [
+            "selected_runbook",
+            "severity_level",
+            "diagnosis"
+          ],
+          "outputs": [
+            "remediation_steps",
+            "rollback_plan",
+            "safety_verification"
+          ],
+          "parallelizable": false
+        }
+      },
+      {
+        "id": "incident_review_agent",
+        "name": "Incident Quality Reviewer",
+        "role": "Incident Quality Reviewer",
+        "declared_file": "review_agent.py",
+        "dependencies": [
+          "remediation_agent"
+        ],
+        "inputs": [
+          "all_previous_stages"
+        ],
+        "outputs": [
+          "final_structured_incident_report"
+        ],
+        "assigned_key": "GROQ_API_KEY_14",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "id": "incident_review_agent",
+          "name": "Incident Quality Reviewer",
+          "assigned_key": "GROQ_API_KEY_14",
+          "file": "review_agent.py",
+          "dependencies": [
+            "remediation_agent"
+          ],
+          "inputs": [
+            "all_previous_stages"
+          ],
+          "outputs": [
+            "final_structured_incident_report"
+          ],
+          "parallelizable": false
+        }
+      }
+    ]
+  },
+  "agent_inventory": [
+    {
+      "id": "intake_agent",
+      "name": "Incident Intake Specialist",
+      "role": "Incident Intake Specialist",
+      "workflow": "incident_triage",
+      "declared_file": "intake_agent.py",
+      "assigned_key": "GROQ_API_KEY_8",
+      "dependencies": [],
+      "inputs": [
+        "raw_ticket_text",
+        "service",
+        "reported_impact",
+        "timestamp"
+      ],
+      "outputs": [
+        "normalized_title",
+        "affected_service",
+        "symptoms",
+        "timestamps",
+        "reported_impact_users",
+        "outage_minutes",
+        "missing_fields"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/incident_triage/intake_agent.py",
+      "agent_constructors": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Incident Intake Specialist",
+          "goal": "Normalize raw incident ticket text, extract affected services, symptoms, timestamps, and impacted users, and flag any missing critical fields without inventing facts.",
+          "backstory": "You are a Tier-1 SRE Intake Specialist. You parse messy, emergency incident tickets into crisp, unambiguous facts and telemetry without speculating or adding unsupported assumptions.",
+          "llm_expression": "create_agent_llm(\"intake_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_intake_agent",
+          "line": 11,
+          "end_line": 25,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    },
+    {
+      "id": "classification_agent",
+      "name": "Incident Classification Engineer",
+      "role": "Incident Classification Engineer",
+      "workflow": "incident_triage",
+      "declared_file": "classification_agent.py",
+      "assigned_key": "GROQ_API_KEY_9",
+      "dependencies": [
+        "intake_agent"
+      ],
+      "inputs": [
+        "normalized_telemetry"
+      ],
+      "outputs": [
+        "category",
+        "apparent_complexity",
+        "classification_reasoning"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/incident_triage/classification_agent.py",
+      "agent_constructors": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Incident Classification Engineer",
+          "goal": "Categorize the incident into a precise failure domain (network_failure, application_error, authentication_issue, database_problem, storage_exhaustion) and assess complexity level (Simple, Moderate, Complex) for dynamic routing.",
+          "backstory": "You are a Senior Systems Architect who excels at recognizing system failure topologies, root failure domains, and whether an incident is standard or multi-service complex.",
+          "llm_expression": "create_agent_llm(\"classification_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_classification_agent",
+          "line": 11,
+          "end_line": 26,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    },
+    {
+      "id": "runbook_agent",
+      "name": "Runbook Retrieval Specialist",
+      "role": "Runbook Retrieval Specialist",
+      "workflow": "incident_triage",
+      "declared_file": "runbook_agent.py",
+      "assigned_key": "GROQ_API_KEY_10",
+      "dependencies": [
+        "classification_agent"
+      ],
+      "inputs": [
+        "category",
+        "symptoms"
+      ],
+      "outputs": [
+        "selected_runbook_id",
+        "match_confidence",
+        "prerequisites",
+        "safety_notes"
+      ],
+      "parallelizable": true,
+      "parallel_group": "diagnostic_branch",
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/incident_triage/runbook_agent.py",
+      "agent_constructors": [
+        {
+          "line": 28,
+          "constructor": "Agent",
+          "role": "Runbook Retrieval Specialist",
+          "goal": "Examine candidate runbooks from the local knowledge base, evaluate symptom matches, and select the optimal runbook IDs with supporting evidence.",
+          "backstory": "You are an Operations Reliability Engineer who knows every standard operating procedure and selects the most relevant, proven runbook for active incidents.",
+          "llm_expression": "create_agent_llm(\"runbook_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "query_candidate_runbooks",
+          "line": 16,
+          "end_line": 24,
+          "docstring": "Deterministic retrieval helper to fetch candidate runbooks from local dataset.",
+          "args": [
+            "category",
+            "limit"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_runbook_agent",
+          "line": 27,
+          "end_line": 41,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 7
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 10
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 11
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "query_candidate_runbooks",
+          "line": 16,
+          "classification": "function_candidate",
+          "docstring": "Deterministic retrieval helper to fetch candidate runbooks from local dataset."
+        }
+      ]
+    },
+    {
+      "id": "symptom_agent",
+      "name": "Diagnostic & Symptom Correlation Specialist",
+      "role": "Diagnostic & Symptom Correlation Specialist",
+      "workflow": "incident_triage",
+      "declared_file": "symptom_agent.py",
+      "assigned_key": "GROQ_API_KEY_11",
+      "dependencies": [
+        "classification_agent"
+      ],
+      "inputs": [
+        "service",
+        "category",
+        "symptoms"
+      ],
+      "outputs": [
+        "correlated_incident_ids",
+        "recurring_patterns",
+        "diagnostic_stage_assessment"
+      ],
+      "parallelizable": true,
+      "parallel_group": "diagnostic_branch",
+      "pruning_candidate": "Can be bypassed by optimizer for Simple incidents",
+      "implementation_found": true,
+      "implementation_file": "Agents/incident_triage/symptom_agent.py",
+      "agent_constructors": [
+        {
+          "line": 43,
+          "constructor": "Agent",
+          "role": "Diagnostic & Symptom Correlation Specialist",
+          "goal": "Correlate active incident symptoms with synthetic historical incidents and log records. Identify recurring patterns and return matching historical IDs and evidence.",
+          "backstory": "You are a Root Cause Diagnostics Specialist who performs deep telemetry correlation across past outages to spot systemic regressions and recurring anomalies.",
+          "llm_expression": "create_agent_llm(\"symptom_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "query_historical_evidence",
+          "line": 16,
+          "end_line": 39,
+          "docstring": "Deterministic lookup for relevant historical incidents and logs.",
+          "args": [
+            "service",
+            "category",
+            "limit"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_symptom_agent",
+          "line": 42,
+          "end_line": 56,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 7
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 10
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 11
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "query_historical_evidence",
+          "line": 16,
+          "classification": "function_candidate",
+          "docstring": "Deterministic lookup for relevant historical incidents and logs."
+        }
+      ]
+    },
+    {
+      "id": "severity_agent",
+      "name": "Severity Assessment Specialist",
+      "role": "Severity Assessment Specialist",
+      "workflow": "incident_triage",
+      "declared_file": "severity_agent.py",
+      "assigned_key": "GROQ_API_KEY_12",
+      "dependencies": [
+        "symptom_agent",
+        "runbook_agent"
+      ],
+      "inputs": [
+        "impact_users",
+        "service_tier",
+        "outage_minutes",
+        "diagnostic_context"
+      ],
+      "outputs": [
+        "severity_level",
+        "governing_sla_rule",
+        "justification"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/incident_triage/severity_agent.py",
+      "agent_constructors": [
+        {
+          "line": 33,
+          "constructor": "Agent",
+          "role": "Severity Assessment Specialist",
+          "goal": "Apply deterministic corporate severity thresholds and evaluate contextual impact, returning the final severity level (SEV-1 to SEV-4) and complete justification.",
+          "backstory": "You are an Incident Commander responsible for assigning definitive incident severity levels, strictly adhering to SLA policies and business continuity guidelines.",
+          "llm_expression": "create_agent_llm(\"severity_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "calculate_deterministic_severity",
+          "line": 12,
+          "end_line": 29,
+          "docstring": "Deterministic severity calculation enforcing strict SLA policy matrices.",
+          "args": [
+            "impact_users",
+            "service_tier",
+            "outage_minutes"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_severity_agent",
+          "line": 32,
+          "end_line": 46,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Dict",
+            "Any"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 9
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "calculate_deterministic_severity",
+          "line": 12,
+          "classification": "function_candidate",
+          "docstring": "Deterministic severity calculation enforcing strict SLA policy matrices."
+        }
+      ]
+    },
+    {
+      "id": "remediation_agent",
+      "name": "Remediation Planning Engineer",
+      "role": "Remediation Planning Engineer",
+      "workflow": "incident_triage",
+      "declared_file": "remediation_agent.py",
+      "assigned_key": "GROQ_API_KEY_13",
+      "dependencies": [
+        "severity_agent",
+        "runbook_agent"
+      ],
+      "inputs": [
+        "selected_runbook",
+        "severity_level",
+        "diagnosis"
+      ],
+      "outputs": [
+        "remediation_steps",
+        "rollback_plan",
+        "safety_verification"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/incident_triage/remediation_agent.py",
+      "agent_constructors": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Remediation Planning Engineer",
+          "goal": "Recommend structured, reversible, and safe troubleshooting actions based on retrieved runbooks and incident evidence. Never execute commands or connect to real infrastructure.",
+          "backstory": "You are a Senior Infrastructure Automation Engineer focused on safe system recovery. You specify explicit rollback procedures and safety prerequisites for every action.",
+          "llm_expression": "create_agent_llm(\"remediation_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_remediation_agent",
+          "line": 11,
+          "end_line": 25,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    },
+    {
+      "id": "incident_review_agent",
+      "name": "Incident Quality Reviewer",
+      "role": "Incident Quality Reviewer",
+      "workflow": "incident_triage",
+      "declared_file": "review_agent.py",
+      "assigned_key": "GROQ_API_KEY_14",
+      "dependencies": [
+        "remediation_agent"
+      ],
+      "inputs": [
+        "all_previous_stages"
+      ],
+      "outputs": [
+        "final_structured_incident_report"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/incident_triage/review_agent.py",
+      "agent_constructors": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Incident Quality Reviewer",
+          "goal": "Audit findings across intake, classification, runbooks, symptoms, severity, and remediation. Detect contradictions or unsupported claims and compile the final structured JSON incident triage report.",
+          "backstory": "You are the Principal SRE Review Lead. You ensure incident reports maintain the highest standards of factual consistency, SLA compliance, and remediation safety.",
+          "llm_expression": "create_agent_llm(\"incident_review_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_review_agent",
+          "line": 11,
+          "end_line": 25,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    }
+  ],
+  "workflow_analysis": {
+    "file": "Agents/incident_triage/workflow.py",
+    "classes": [],
+    "entry_points": [
+      {
+        "name": "run_incident_triage_workflow",
+        "line": 32,
+        "args": [
+          "incident_input",
+          "run_id"
+        ],
+        "docstring": "Execute the 7-agent IT Incident Triage workflow."
+      }
+    ],
+    "crew_constructions": [
+      {
+        "line": 66,
+        "source": "Crew(agents=[intake_agent], tasks=[intake_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 87,
+        "source": "Crew(agents=[classification_agent], tasks=[classification_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 115,
+        "source": "Crew(agents=[runbook_agent], tasks=[runbook_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 137,
+        "source": "Crew(agents=[symptom_agent], tasks=[symptom_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 162,
+        "source": "Crew(agents=[severity_agent], tasks=[severity_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 183,
+        "source": "Crew(agents=[remediation_agent], tasks=[remediation_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 207,
+        "source": "Crew(agents=[review_agent], tasks=[review_task], process=Process.sequential, verbose=False)"
+      }
+    ],
+    "assignments": [
+      {
+        "line": 38,
+        "targets": [
+          "run_id"
+        ],
+        "value_names": [
+          "generate_run_id",
+          "run_id"
+        ],
+        "expression": "run_id or generate_run_id(\"incident\")"
+      },
+      {
+        "line": 39,
+        "targets": [
+          "start_total"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 40,
+        "targets": [
+          "agent_durations"
+        ],
+        "value_names": [],
+        "expression": "{}"
+      },
+      {
+        "line": 41,
+        "targets": [
+          "order"
+        ],
+        "value_names": [],
+        "expression": "[\n        \"intake_agent\",\n        \"classification_agent\",\n        \"runbook_agent\",\n        \"symptom_agent\",\n        \"severity_agent\",\n        \"remediation_agent\",\n        \"incident_review_agent\",\n    ]"
+      },
+      {
+        "line": 213,
+        "targets": [
+          "total_duration"
+        ],
+        "value_names": [
+          "start_total",
+          "time"
+        ],
+        "expression": "time.perf_counter() - start_total"
+      },
+      {
+        "line": 215,
+        "targets": [
+          "final_payload"
+        ],
+        "value_names": [
+          "classification_text",
+          "incident_input",
+          "intake_text",
+          "remediation_text",
+          "review_text",
+          "run_id",
+          "runbook_text",
+          "severity_text",
+          "symptom_text"
+        ],
+        "expression": "{\n        \"workflow\": \"incident_triage\",\n        \"run_id\": run_id,\n        \"input\": incident_input,\n        \"stages\": {\n            \"intake\": intake_text,\n            \"classification\": classification_text,\n            \"runbook\": runbook_text,\n            \"symptoms\": symptom_text,\n            \"severi"
+      },
+      {
+        "line": 231,
+        "targets": [
+          "tracker_data"
+        ],
+        "value_names": [
+          "ACTIVE_TRACKER"
+        ],
+        "expression": "ACTIVE_TRACKER.snapshot()"
+      },
+      {
+        "line": 232,
+        "targets": [
+          "result"
+        ],
+        "value_names": [
+          "WorkflowExecutionResult",
+          "agent_durations",
+          "final_payload",
+          "len",
+          "order",
+          "run_id",
+          "total_duration",
+          "tracker_data"
+        ],
+        "expression": "WorkflowExecutionResult(\n        workflow_name=\"incident_triage\",\n        run_id=run_id,\n        status=\"SUCCESS\",\n        execution_order=order,\n        agent_durations=agent_durations,\n        total_duration_seconds=total_duration,\n        agent_count=len(order),\n        llm_call_count=tracker_dat"
+      },
+      {
+        "line": 53,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 71,
+        "targets": [
+          "intake_text"
+        ],
+        "value_names": [
+          "hasattr",
+          "intake_output",
+          "str"
+        ],
+        "expression": "str(intake_output.raw if hasattr(intake_output, \"raw\") else intake_output)"
+      },
+      {
+        "line": 74,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 91,
+        "targets": [
+          "classification_text"
+        ],
+        "value_names": [
+          "classification_output",
+          "hasattr",
+          "str"
+        ],
+        "expression": "str(classification_output.raw if hasattr(classification_output, \"raw\") else classification_output)"
+      },
+      {
+        "line": 94,
+        "targets": [
+          "detected_category"
+        ],
+        "value_names": [],
+        "expression": "\"database_problem\""
+      },
+      {
+        "line": 101,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 102,
+        "targets": [
+          "candidate_runbooks"
+        ],
+        "value_names": [
+          "detected_category",
+          "query_candidate_runbooks"
+        ],
+        "expression": "query_candidate_runbooks(detected_category, limit=3)"
+      },
+      {
+        "line": 119,
+        "targets": [
+          "runbook_text"
+        ],
+        "value_names": [
+          "hasattr",
+          "runbook_output",
+          "str"
+        ],
+        "expression": "str(runbook_output.raw if hasattr(runbook_output, \"raw\") else runbook_output)"
+      },
+      {
+        "line": 122,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 123,
+        "targets": [
+          "target_service"
+        ],
+        "value_names": [
+          "incident_input"
+        ],
+        "expression": "incident_input.get(\"service\", \"unknown-service\")"
+      },
+      {
+        "line": 124,
+        "targets": [
+          "evidence_data"
+        ],
+        "value_names": [
+          "detected_category",
+          "query_historical_evidence",
+          "target_service"
+        ],
+        "expression": "query_historical_evidence(target_service, detected_category, limit=3)"
+      },
+      {
+        "line": 141,
+        "targets": [
+          "symptom_text"
+        ],
+        "value_names": [
+          "hasattr",
+          "str",
+          "symptom_output"
+        ],
+        "expression": "str(symptom_output.raw if hasattr(symptom_output, \"raw\") else symptom_output)"
+      },
+      {
+        "line": 144,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 145,
+        "targets": [
+          "users_impacted"
+        ],
+        "value_names": [
+          "incident_input"
+        ],
+        "expression": "incident_input.get(\"impact_users\", 250)"
+      },
+      {
+        "line": 146,
+        "targets": [
+          "srv_tier"
+        ],
+        "value_names": [
+          "incident_input"
+        ],
+        "expression": "incident_input.get(\"service_tier\", \"Tier-2\")"
+      },
+      {
+        "line": 147,
+        "targets": [
+          "outage_dur"
+        ],
+        "value_names": [
+          "incident_input"
+        ],
+        "expression": "incident_input.get(\"outage_minutes\", 30)"
+      },
+      {
+        "line": 148,
+        "targets": [
+          "deterministic_sev"
+        ],
+        "value_names": [
+          "calculate_deterministic_severity",
+          "outage_dur",
+          "srv_tier",
+          "users_impacted"
+        ],
+        "expression": "calculate_deterministic_severity(users_impacted, srv_tier, outage_dur)"
+      },
+      {
+        "line": 166,
+        "targets": [
+          "severity_text"
+        ],
+        "value_names": [
+          "hasattr",
+          "severity_output",
+          "str"
+        ],
+        "expression": "str(severity_output.raw if hasattr(severity_output, \"raw\") else severity_output)"
+      },
+      {
+        "line": 169,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 187,
+        "targets": [
+          "remediation_text"
+        ],
+        "value_names": [
+          "hasattr",
+          "remediation_output",
+          "str"
+        ],
+        "expression": "str(remediation_output.raw if hasattr(remediation_output, \"raw\") else remediation_output)"
+      },
+      {
+        "line": 190,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 211,
+        "targets": [
+          "review_text"
+        ],
+        "value_names": [
+          "hasattr",
+          "review_output",
+          "str"
+        ],
+        "expression": "str(review_output.raw if hasattr(review_output, \"raw\") else review_output)"
+      },
+      {
+        "line": 55,
+        "targets": [
+          "intake_agent"
+        ],
+        "value_names": [
+          "create_intake_agent"
+        ],
+        "expression": "create_intake_agent()"
+      },
+      {
+        "line": 56,
+        "targets": [
+          "intake_task"
+        ],
+        "value_names": [
+          "Task",
+          "incident_input",
+          "intake_agent",
+          "json"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Normalize this raw incident ticket and extract structured fields:\\n\"\n                    f\"Raw Ticket: {json.dumps(incident_input, indent=2)}\\n\"\n                    f\"Return JSON with: normalized_title, affected_service, symptoms, timestamps,"
+      },
+      {
+        "line": 66,
+        "targets": [
+          "crew1"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "intake_agent",
+          "intake_task"
+        ],
+        "expression": "Crew(agents=[intake_agent], tasks=[intake_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 67,
+        "targets": [
+          "intake_output"
+        ],
+        "value_names": [
+          "crew1"
+        ],
+        "expression": "crew1.kickoff()"
+      },
+      {
+        "line": 76,
+        "targets": [
+          "classification_agent"
+        ],
+        "value_names": [
+          "create_classification_agent"
+        ],
+        "expression": "create_classification_agent()"
+      },
+      {
+        "line": 77,
+        "targets": [
+          "classification_task"
+        ],
+        "value_names": [
+          "Task",
+          "classification_agent",
+          "intake_text"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Based on the intake findings below, classify the primary failure category \"\n                    f\"(network_failure, application_error, authentication_issue, database_problem, storage_exhaustion) \"\n                    f\"and apparent complexity"
+      },
+      {
+        "line": 87,
+        "targets": [
+          "crew2"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "classification_agent",
+          "classification_task"
+        ],
+        "expression": "Crew(agents=[classification_agent], tasks=[classification_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 88,
+        "targets": [
+          "classification_output"
+        ],
+        "value_names": [
+          "crew2"
+        ],
+        "expression": "crew2.kickoff()"
+      },
+      {
+        "line": 104,
+        "targets": [
+          "runbook_agent"
+        ],
+        "value_names": [
+          "create_runbook_agent"
+        ],
+        "expression": "create_runbook_agent()"
+      },
+      {
+        "line": 105,
+        "targets": [
+          "runbook_task"
+        ],
+        "value_names": [
+          "Task",
+          "candidate_runbooks",
+          "detected_category",
+          "intake_text",
+          "json",
+          "runbook_agent"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Evaluate these candidate operational runbooks for category '{detected_category}':\\n\"\n                    f\"{json.dumps(candidate_runbooks, indent=2)}\\n\"\n                    f\"Incident Telemetry: {intake_text}\\n\"\n                    f\"Select t"
+      },
+      {
+        "line": 115,
+        "targets": [
+          "crew3"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "runbook_agent",
+          "runbook_task"
+        ],
+        "expression": "Crew(agents=[runbook_agent], tasks=[runbook_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 116,
+        "targets": [
+          "runbook_output"
+        ],
+        "value_names": [
+          "crew3"
+        ],
+        "expression": "crew3.kickoff()"
+      },
+      {
+        "line": 126,
+        "targets": [
+          "symptom_agent"
+        ],
+        "value_names": [
+          "create_symptom_agent"
+        ],
+        "expression": "create_symptom_agent()"
+      },
+      {
+        "line": 127,
+        "targets": [
+          "symptom_task"
+        ],
+        "value_names": [
+          "Task",
+          "evidence_data",
+          "intake_text",
+          "json",
+          "symptom_agent"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Correlate current symptoms with historical incidents and log records:\\n\"\n                    f\"Historical Evidence: {json.dumps(evidence_data, indent=2)}\\n\"\n                    f\"Current Symptoms: {intake_text}\\n\"\n                    f\"Return"
+      },
+      {
+        "line": 137,
+        "targets": [
+          "crew4"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "symptom_agent",
+          "symptom_task"
+        ],
+        "expression": "Crew(agents=[symptom_agent], tasks=[symptom_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 138,
+        "targets": [
+          "symptom_output"
+        ],
+        "value_names": [
+          "crew4"
+        ],
+        "expression": "crew4.kickoff()"
+      },
+      {
+        "line": 151,
+        "targets": [
+          "severity_agent"
+        ],
+        "value_names": [
+          "create_severity_agent"
+        ],
+        "expression": "create_severity_agent()"
+      },
+      {
+        "line": 152,
+        "targets": [
+          "severity_task"
+        ],
+        "value_names": [
+          "Task",
+          "deterministic_sev",
+          "json",
+          "outage_dur",
+          "severity_agent",
+          "srv_tier",
+          "symptom_text",
+          "users_impacted"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Deterministic Severity Rule Result:\\n{json.dumps(deterministic_sev, indent=2)}\\n\"\n                    f\"Telemetry: Users={users_impacted}, ServiceTier={srv_tier}, OutageDuration={outage_dur}m.\\n\"\n                    f\"Correlated Context: {sym"
+      },
+      {
+        "line": 162,
+        "targets": [
+          "crew5"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "severity_agent",
+          "severity_task"
+        ],
+        "expression": "Crew(agents=[severity_agent], tasks=[severity_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 163,
+        "targets": [
+          "severity_output"
+        ],
+        "value_names": [
+          "crew5"
+        ],
+        "expression": "crew5.kickoff()"
+      },
+      {
+        "line": 171,
+        "targets": [
+          "remediation_agent"
+        ],
+        "value_names": [
+          "create_remediation_agent"
+        ],
+        "expression": "create_remediation_agent()"
+      },
+      {
+        "line": 172,
+        "targets": [
+          "remediation_task"
+        ],
+        "value_names": [
+          "Task",
+          "remediation_agent",
+          "runbook_text",
+          "symptom_text"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Based on the selected runbook and diagnosis:\\n\"\n                    f\"Runbook: {runbook_text}\\n\"\n                    f\"Diagnosis & Symptoms: {symptom_text}\\n\"\n                    f\"Recommend step-by-step troubleshooting and remediation action"
+      },
+      {
+        "line": 183,
+        "targets": [
+          "crew6"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "remediation_agent",
+          "remediation_task"
+        ],
+        "expression": "Crew(agents=[remediation_agent], tasks=[remediation_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 184,
+        "targets": [
+          "remediation_output"
+        ],
+        "value_names": [
+          "crew6"
+        ],
+        "expression": "crew6.kickoff()"
+      },
+      {
+        "line": 192,
+        "targets": [
+          "review_agent"
+        ],
+        "value_names": [
+          "create_review_agent"
+        ],
+        "expression": "create_review_agent()"
+      },
+      {
+        "line": 193,
+        "targets": [
+          "review_task"
+        ],
+        "value_names": [
+          "Task",
+          "classification_text",
+          "intake_text",
+          "remediation_text",
+          "review_agent",
+          "runbook_text",
+          "severity_text",
+          "symptom_text"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Audit all 6 preceding stages for agreement and missing info:\\n\"\n                    f\"Intake: {intake_text}\\n\"\n                    f\"Classification: {classification_text}\\n\"\n                    f\"Runbook: {runbook_text}\\n\"\n                   "
+      },
+      {
+        "line": 207,
+        "targets": [
+          "crew7"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "review_agent",
+          "review_task"
+        ],
+        "expression": "Crew(agents=[review_agent], tasks=[review_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 208,
+        "targets": [
+          "review_output"
+        ],
+        "value_names": [
+          "crew7"
+        ],
+        "expression": "crew7.kickoff()"
+      },
+      {
+        "line": 97,
+        "targets": [
+          "detected_category"
+        ],
+        "value_names": [
+          "cat"
+        ],
+        "expression": "cat"
+      }
+    ],
+    "task_handoffs": [
+      {
+        "line": 56,
+        "referenced_variables": [
+          "incident_input",
+          "json"
+        ],
+        "description_literals": [
+          "Normalize this raw incident ticket and extract structured fields:\nRaw Ticket:",
+          "Return JSON with: normalized_title, affected_service, symptoms, timestamps, reported_impact_users, outage_minutes, and missing_fields."
+        ],
+        "agent_expression": "intake_agent"
+      },
+      {
+        "line": 77,
+        "referenced_variables": [
+          "intake_text"
+        ],
+        "description_literals": [
+          "Based on the intake findings below, classify the primary failure category (network_failure, application_error, authentication_issue, database_problem, storage_exhaustion) and apparent complexity (Simple, Moderate, Complex):\nIntake Findings:"
+        ],
+        "agent_expression": "classification_agent"
+      },
+      {
+        "line": 105,
+        "referenced_variables": [
+          "candidate_runbooks",
+          "detected_category",
+          "intake_text",
+          "json"
+        ],
+        "description_literals": [
+          "Evaluate these candidate operational runbooks for category '",
+          "':",
+          "Incident Telemetry:",
+          "Select the best matching runbook_id, outline why it applies, and state its safety notes."
+        ],
+        "agent_expression": "runbook_agent"
+      },
+      {
+        "line": 127,
+        "referenced_variables": [
+          "evidence_data",
+          "intake_text",
+          "json"
+        ],
+        "description_literals": [
+          "Correlate current symptoms with historical incidents and log records:\nHistorical Evidence:",
+          "Current Symptoms:",
+          "Return matching past incident IDs, recurring error signatures, and diagnosis confidence."
+        ],
+        "agent_expression": "symptom_agent"
+      },
+      {
+        "line": 152,
+        "referenced_variables": [
+          "deterministic_sev",
+          "json",
+          "outage_dur",
+          "srv_tier",
+          "symptom_text",
+          "users_impacted"
+        ],
+        "description_literals": [
+          "Deterministic Severity Rule Result:",
+          "Telemetry: Users=",
+          ", ServiceTier=",
+          ", OutageDuration=",
+          "m.\nCorrelated Context:",
+          "Confirm or refine the final severity level (SEV-1..SEV-4) with clear SLA justification."
+        ],
+        "agent_expression": "severity_agent"
+      },
+      {
+        "line": 172,
+        "referenced_variables": [
+          "runbook_text",
+          "symptom_text"
+        ],
+        "description_literals": [
+          "Based on the selected runbook and diagnosis:\nRunbook:",
+          "Diagnosis & Symptoms:",
+          "Recommend step-by-step troubleshooting and remediation actions. Must be safe, documented, and fully reversible. Do not execute real infrastructure changes."
+        ],
+        "agent_expression": "remediation_agent"
+      },
+      {
+        "line": 193,
+        "referenced_variables": [
+          "classification_text",
+          "intake_text",
+          "remediation_text",
+          "runbook_text",
+          "severity_text",
+          "symptom_text"
+        ],
+        "description_literals": [
+          "Audit all 6 preceding stages for agreement and missing info:\nIntake:",
+          "Classification:",
+          "Runbook:",
+          "Symptoms:",
+          "Severity:",
+          "Remediation:",
+          "Produce the final structured incident triage report in clean JSON."
+        ],
+        "agent_expression": "review_agent"
+      }
+    ],
+    "observed_order": [
+      "intake_agent",
+      "classification_agent",
+      "runbook_agent",
+      "symptom_agent",
+      "severity_agent",
+      "remediation_agent",
+      "incident_review_agent"
+    ],
+    "sequential_kickoffs": 7
+  },
+  "comparison": {
+    "workflow": "incident_triage",
+    "manifest_file": "Agents/incident_triage/workflow.json",
+    "workflow_source": "Agents/incident_triage/workflow.py",
+    "declared_order": [
+      "intake_agent",
+      "classification_agent",
+      "runbook_agent",
+      "symptom_agent",
+      "severity_agent",
+      "remediation_agent",
+      "incident_review_agent"
+    ],
+    "source_observed_order": [
+      "intake_agent",
+      "classification_agent",
+      "runbook_agent",
+      "symptom_agent",
+      "severity_agent",
+      "remediation_agent",
+      "incident_review_agent"
+    ],
+    "declared_agent_count": 7,
+    "observed_agent_count": 7,
+    "discrepancy_count": 2,
+    "findings": [
+      {
+        "type": "DECLARED_PARALLELIZABLE",
+        "severity": "INFO",
+        "agents": [
+          "runbook_agent",
+          "symptom_agent"
+        ],
+        "note": "Agents declared parallelizable in manifest; confirm concurrency in runtime traces."
+      },
+      {
+        "type": "MULTIPLE_KICKOFF_CALLS",
+        "severity": "WARNING",
+        "count": 7,
+        "note": "Workflow invokes 7 sequential Crew kickoff calls instead of single execution graph."
+      }
+    ]
+  },
+  "python_files": [
+    {
+      "file": "Agents/incident_triage/classification_agent.py",
+      "filename": "classification_agent.py",
+      "stem": "classification_agent",
+      "sha256": "2bb51d7c18304916f02e5bdf13721ff776638639dc3c595facab428aaba121d2",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_classification_agent",
+          "line": 11,
+          "end_line": 26,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Incident Classification Engineer",
+          "goal": "Categorize the incident into a precise failure domain (network_failure, application_error, authentication_issue, database_problem, storage_exhaustion) and assess complexity level (Simple, Moderate, Complex) for dynamic routing.",
+          "backstory": "You are a Senior Systems Architect who excels at recognizing system failure topologies, root failure domains, and whether an incident is standard or multi-service complex.",
+          "llm_expression": "create_agent_llm(\"classification_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 23,
+          "arguments": [
+            "\"classification_agent\""
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Classification Agent for IT Incident Triage.\n\nCategorizes the technical failure domain and determines incident complexity\nto support future dynamic optimizer routing.\n",
+          "line": 1
+        },
+        {
+          "value": "Categorize the incident into a precise failure domain (network_failure, application_error, authentication_issue, database_problem, storage_exhaustion) and assess complexity level (Simple, Moderate, Complex) for dynamic routing.",
+          "line": 15
+        },
+        {
+          "value": "You are a Senior Systems Architect who excels at recognizing system failure topologies, root failure domains, and whether an incident is standard or multi-service complex.",
+          "line": 20
+        }
+      ]
+    },
+    {
+      "file": "Agents/incident_triage/intake_agent.py",
+      "filename": "intake_agent.py",
+      "stem": "intake_agent",
+      "sha256": "50b34534058fe6920711d7082f0f7fd5532942df957796756e4ccdd2c268c0e9",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_intake_agent",
+          "line": 11,
+          "end_line": 25,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Incident Intake Specialist",
+          "goal": "Normalize raw incident ticket text, extract affected services, symptoms, timestamps, and impacted users, and flag any missing critical fields without inventing facts.",
+          "backstory": "You are a Tier-1 SRE Intake Specialist. You parse messy, emergency incident tickets into crisp, unambiguous facts and telemetry without speculating or adding unsupported assumptions.",
+          "llm_expression": "create_agent_llm(\"intake_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 22,
+          "arguments": [
+            "\"intake_agent\""
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Intake Agent for IT Incident Triage.\n\nNormalizes raw incident tickets, extracts structured system telemetry,\naffected services, user counts, and flags missing information.\n",
+          "line": 1
+        },
+        {
+          "value": "Normalize raw incident ticket text, extract affected services, symptoms, timestamps, and impacted users, and flag any missing critical fields without inventing facts.",
+          "line": 15
+        },
+        {
+          "value": "You are a Tier-1 SRE Intake Specialist. You parse messy, emergency incident tickets into crisp, unambiguous facts and telemetry without speculating or adding unsupported assumptions.",
+          "line": 19
+        }
+      ]
+    },
+    {
+      "file": "Agents/incident_triage/remediation_agent.py",
+      "filename": "remediation_agent.py",
+      "stem": "remediation_agent",
+      "sha256": "a0f1119a86e1d0ab96b9d983a0e39671c79822d1bfc38a8f054ed22b299a9abc",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_remediation_agent",
+          "line": 11,
+          "end_line": 25,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Remediation Planning Engineer",
+          "goal": "Recommend structured, reversible, and safe troubleshooting actions based on retrieved runbooks and incident evidence. Never execute commands or connect to real infrastructure.",
+          "backstory": "You are a Senior Infrastructure Automation Engineer focused on safe system recovery. You specify explicit rollback procedures and safety prerequisites for every action.",
+          "llm_expression": "create_agent_llm(\"remediation_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 22,
+          "arguments": [
+            "\"remediation_agent\""
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Remediation Agent for IT Incident Triage.\n\nRecommends safe, documented, reversible remediation procedures\nderived from retrieved runbooks and correlated incident evidence.\n",
+          "line": 1
+        },
+        {
+          "value": "Recommend structured, reversible, and safe troubleshooting actions based on retrieved runbooks and incident evidence. Never execute commands or connect to real infrastructure.",
+          "line": 15
+        },
+        {
+          "value": "You are a Senior Infrastructure Automation Engineer focused on safe system recovery. You specify explicit rollback procedures and safety prerequisites for every action.",
+          "line": 19
+        }
+      ]
+    },
+    {
+      "file": "Agents/incident_triage/review_agent.py",
+      "filename": "review_agent.py",
+      "stem": "review_agent",
+      "sha256": "d7e63750113f9badd903a578da323e9c984c32bd53ea836e5a3ca9a050122bd4",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_review_agent",
+          "line": 11,
+          "end_line": 25,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Incident Quality Reviewer",
+          "goal": "Audit findings across intake, classification, runbooks, symptoms, severity, and remediation. Detect contradictions or unsupported claims and compile the final structured JSON incident triage report.",
+          "backstory": "You are the Principal SRE Review Lead. You ensure incident reports maintain the highest standards of factual consistency, SLA compliance, and remediation safety.",
+          "llm_expression": "create_agent_llm(\"incident_review_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 22,
+          "arguments": [
+            "\"incident_review_agent\""
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Review Agent for IT Incident Triage.\n\nPerforms quality validation across all triage stages and generates\nthe final structured incident report.\n",
+          "line": 1
+        },
+        {
+          "value": "Audit findings across intake, classification, runbooks, symptoms, severity, and remediation. Detect contradictions or unsupported claims and compile the final structured JSON incident triage report.",
+          "line": 15
+        },
+        {
+          "value": "You are the Principal SRE Review Lead. You ensure incident reports maintain the highest standards of factual consistency, SLA compliance, and remediation safety.",
+          "line": 19
+        }
+      ]
+    },
+    {
+      "file": "Agents/incident_triage/runbook_agent.py",
+      "filename": "runbook_agent.py",
+      "stem": "runbook_agent",
+      "sha256": "8b98ad9ccd921125258feda7fdd7a2a78030dc8684506decdf9c3ca11f2edfc4",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 7
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 10
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 11
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "query_candidate_runbooks",
+          "line": 16,
+          "end_line": 24,
+          "docstring": "Deterministic retrieval helper to fetch candidate runbooks from local dataset.",
+          "args": [
+            "category",
+            "limit"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_runbook_agent",
+          "line": 27,
+          "end_line": 41,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 28,
+          "constructor": "Agent",
+          "role": "Runbook Retrieval Specialist",
+          "goal": "Examine candidate runbooks from the local knowledge base, evaluate symptom matches, and select the optimal runbook IDs with supporting evidence.",
+          "backstory": "You are an Operations Reliability Engineer who knows every standard operating procedure and selects the most relevant, proven runbook for active incidents.",
+          "llm_expression": "create_agent_llm(\"runbook_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 38,
+          "arguments": [
+            "\"runbook_agent\""
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "query_candidate_runbooks",
+          "line": 16,
+          "classification": "function_candidate",
+          "docstring": "Deterministic retrieval helper to fetch candidate runbooks from local dataset."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Runbook Agent for IT Incident Triage.\n\nRetrieves relevant operational runbooks from the local dataset\nmatching the classified incident domain and symptoms.\n",
+          "line": 1
+        },
+        {
+          "value": "Deterministic retrieval helper to fetch candidate runbooks from local dataset.",
+          "line": 17
+        },
+        {
+          "value": "Examine candidate runbooks from the local knowledge base, evaluate symptom matches, and select the optimal runbook IDs with supporting evidence.",
+          "line": 31
+        },
+        {
+          "value": "You are an Operations Reliability Engineer who knows every standard operating procedure and selects the most relevant, proven runbook for active incidents.",
+          "line": 35
+        }
+      ]
+    },
+    {
+      "file": "Agents/incident_triage/severity_agent.py",
+      "filename": "severity_agent.py",
+      "stem": "severity_agent",
+      "sha256": "b925f7fe77bbe0d97a051c3899be48feba9acf7a1f3155be541926e40dc5fd9b",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Dict",
+            "Any"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 9
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "calculate_deterministic_severity",
+          "line": 12,
+          "end_line": 29,
+          "docstring": "Deterministic severity calculation enforcing strict SLA policy matrices.",
+          "args": [
+            "impact_users",
+            "service_tier",
+            "outage_minutes"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_severity_agent",
+          "line": 32,
+          "end_line": 46,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 33,
+          "constructor": "Agent",
+          "role": "Severity Assessment Specialist",
+          "goal": "Apply deterministic corporate severity thresholds and evaluate contextual impact, returning the final severity level (SEV-1 to SEV-4) and complete justification.",
+          "backstory": "You are an Incident Commander responsible for assigning definitive incident severity levels, strictly adhering to SLA policies and business continuity guidelines.",
+          "llm_expression": "create_agent_llm(\"severity_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 43,
+          "arguments": [
+            "\"severity_agent\""
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "calculate_deterministic_severity",
+          "line": 12,
+          "classification": "function_candidate",
+          "docstring": "Deterministic severity calculation enforcing strict SLA policy matrices."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Severity Agent for IT Incident Triage.\n\nEvaluates operational severity using deterministic impact formulas\ncombined with LLM justification and context.\n",
+          "line": 1
+        },
+        {
+          "value": "Deterministic severity calculation enforcing strict SLA policy matrices.",
+          "line": 13
+        },
+        {
+          "value": "Tier-1 service impacting >= 5,000 users or outage >= 120 minutes.",
+          "line": 18
+        },
+        {
+          "value": "Tier-1 service impacting >= 500 users, or cross-tier impact >= 2,000 users.",
+          "line": 21
+        },
+        {
+          "value": "Apply deterministic corporate severity thresholds and evaluate contextual impact, returning the final severity level (SEV-1 to SEV-4) and complete justification.",
+          "line": 36
+        },
+        {
+          "value": "You are an Incident Commander responsible for assigning definitive incident severity levels, strictly adhering to SLA policies and business continuity guidelines.",
+          "line": 40
+        },
+        {
+          "value": "Moderate disruption impacting >= 100 users.",
+          "line": 24
+        },
+        {
+          "value": "Minor disruption impacting < 100 users with standard SLA.",
+          "line": 27
+        }
+      ]
+    },
+    {
+      "file": "Agents/incident_triage/symptom_agent.py",
+      "filename": "symptom_agent.py",
+      "stem": "symptom_agent",
+      "sha256": "947936858fc3362f38b3c254f72509bf24252b9ffa7e48961ac8c7d43acb4e5f",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 7
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 10
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 11
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "query_historical_evidence",
+          "line": 16,
+          "end_line": 39,
+          "docstring": "Deterministic lookup for relevant historical incidents and logs.",
+          "args": [
+            "service",
+            "category",
+            "limit"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_symptom_agent",
+          "line": 42,
+          "end_line": 56,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 43,
+          "constructor": "Agent",
+          "role": "Diagnostic & Symptom Correlation Specialist",
+          "goal": "Correlate active incident symptoms with synthetic historical incidents and log records. Identify recurring patterns and return matching historical IDs and evidence.",
+          "backstory": "You are a Root Cause Diagnostics Specialist who performs deep telemetry correlation across past outages to spot systemic regressions and recurring anomalies.",
+          "llm_expression": "create_agent_llm(\"symptom_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 53,
+          "arguments": [
+            "\"symptom_agent\""
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "query_historical_evidence",
+          "line": 16,
+          "classification": "function_candidate",
+          "docstring": "Deterministic lookup for relevant historical incidents and logs."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Symptom Agent for IT Incident Triage.\n\nCorrelates incident symptoms with historical incident logs and telemetry,\nidentifying recurrent patterns, matching past failures, and supporting record IDs.\n",
+          "line": 1
+        },
+        {
+          "value": "Deterministic lookup for relevant historical incidents and logs.",
+          "line": 17
+        },
+        {
+          "value": "Diagnostic & Symptom Correlation Specialist",
+          "line": 44
+        },
+        {
+          "value": "Correlate active incident symptoms with synthetic historical incidents and log records. Identify recurring patterns and return matching historical IDs and evidence.",
+          "line": 46
+        },
+        {
+          "value": "You are a Root Cause Diagnostics Specialist who performs deep telemetry correlation across past outages to spot systemic regressions and recurring anomalies.",
+          "line": 50
+        }
+      ]
+    },
+    {
+      "file": "Agents/incident_triage/workflow.py",
+      "filename": "workflow.py",
+      "stem": "workflow",
+      "sha256": "123ae43cbd94ec4ca3acae8b47c4ea0e9fbe0d86ca0db0b481bd3a95c6a60856",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "__future__",
+          "level": 0,
+          "names": [
+            "annotations"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "json",
+          "asname": null,
+          "line": 15
+        },
+        {
+          "module": "time",
+          "asname": null,
+          "line": 16
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 17
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Crew",
+            "Process",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 19
+        },
+        {
+          "module": "Agents.incident_triage.classification_agent",
+          "level": 0,
+          "names": [
+            "create_classification_agent"
+          ],
+          "aliases": {},
+          "line": 21
+        },
+        {
+          "module": "Agents.incident_triage.intake_agent",
+          "level": 0,
+          "names": [
+            "create_intake_agent"
+          ],
+          "aliases": {},
+          "line": 22
+        },
+        {
+          "module": "Agents.incident_triage.remediation_agent",
+          "level": 0,
+          "names": [
+            "create_remediation_agent"
+          ],
+          "aliases": {},
+          "line": 23
+        },
+        {
+          "module": "Agents.incident_triage.review_agent",
+          "level": 0,
+          "names": [
+            "create_review_agent"
+          ],
+          "aliases": {},
+          "line": 24
+        },
+        {
+          "module": "Agents.incident_triage.runbook_agent",
+          "level": 0,
+          "names": [
+            "create_runbook_agent",
+            "query_candidate_runbooks"
+          ],
+          "aliases": {},
+          "line": 25
+        },
+        {
+          "module": "Agents.incident_triage.severity_agent",
+          "level": 0,
+          "names": [
+            "calculate_deterministic_severity",
+            "create_severity_agent"
+          ],
+          "aliases": {},
+          "line": 26
+        },
+        {
+          "module": "Agents.incident_triage.symptom_agent",
+          "level": 0,
+          "names": [
+            "create_symptom_agent",
+            "query_historical_evidence"
+          ],
+          "aliases": {},
+          "line": 27
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "ACTIVE_TRACKER",
+            "WorkflowExecutionResult",
+            "generate_run_id",
+            "save_run_result"
+          ],
+          "aliases": {},
+          "line": 28
+        },
+        {
+          "module": "common.tracing",
+          "level": 0,
+          "names": [
+            "agent_span",
+            "workflow_span"
+          ],
+          "aliases": {},
+          "line": 29
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "run_incident_triage_workflow",
+          "line": 32,
+          "end_line": 247,
+          "docstring": "Execute the 7-agent IT Incident Triage workflow.",
+          "args": [
+            "incident_input",
+            "run_id"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [],
+      "task_definitions": [
+        {
+          "line": 56,
+          "description_expression": "f\"Normalize this raw incident ticket and extract structured fields:\\n\"\n                    f\"Raw Ticket: {json.dumps(incident_input, indent=2)}\\n\"\n                    f\"Return JSON with: normalized_title, affected_service, symptoms, timestamps, \"\n                    f\"reported_impact_users, outage_minutes, and missing_fields.\"",
+          "description_literals": [
+            "Normalize this raw incident ticket and extract structured fields:\nRaw Ticket:",
+            "Return JSON with: normalized_title, affected_service, symptoms, timestamps, reported_impact_users, outage_minutes, and missing_fields."
+          ],
+          "expected_output": "Valid JSON string containing normalized incident telemetry and missing fields.",
+          "agent_expression": "intake_agent"
+        },
+        {
+          "line": 77,
+          "description_expression": "f\"Based on the intake findings below, classify the primary failure category \"\n                    f\"(network_failure, application_error, authentication_issue, database_problem, storage_exhaustion) \"\n                    f\"and apparent complexity (Simple, Moderate, Complex):\\n\"\n                    f\"Intake Findings: {intake_text}\"",
+          "description_literals": [
+            "Based on the intake findings below, classify the primary failure category (network_failure, application_error, authentication_issue, database_problem, storage_exhaustion) and apparent complexity (Simple, Moderate, Complex):\nIntake Findings:"
+          ],
+          "expected_output": "JSON containing category, apparent_complexity, and classification_reasoning.",
+          "agent_expression": "classification_agent"
+        },
+        {
+          "line": 105,
+          "description_expression": "f\"Evaluate these candidate operational runbooks for category '{detected_category}':\\n\"\n                    f\"{json.dumps(candidate_runbooks, indent=2)}\\n\"\n                    f\"Incident Telemetry: {intake_text}\\n\"\n                    f\"Select the best matching runbook_id, outline why it applies, and state its safety notes.\"",
+          "description_literals": [
+            "Evaluate these candidate operational runbooks for category '",
+            "':",
+            "Incident Telemetry:",
+            "Select the best matching runbook_id, outline why it applies, and state its safety notes."
+          ],
+          "expected_output": "JSON with selected_runbook_id, match_confidence, prerequisites, and safety_notes.",
+          "agent_expression": "runbook_agent"
+        },
+        {
+          "line": 127,
+          "description_expression": "f\"Correlate current symptoms with historical incidents and log records:\\n\"\n                    f\"Historical Evidence: {json.dumps(evidence_data, indent=2)}\\n\"\n                    f\"Current Symptoms: {intake_text}\\n\"\n                    f\"Return matching past incident IDs, recurring error signatures, and diagnosis confidence.\"",
+          "description_literals": [
+            "Correlate current symptoms with historical incidents and log records:\nHistorical Evidence:",
+            "Current Symptoms:",
+            "Return matching past incident IDs, recurring error signatures, and diagnosis confidence."
+          ],
+          "expected_output": "JSON with correlated_incident_ids, recurring_patterns, and diagnostic_stage_assessment.",
+          "agent_expression": "symptom_agent"
+        },
+        {
+          "line": 152,
+          "description_expression": "f\"Deterministic Severity Rule Result:\\n{json.dumps(deterministic_sev, indent=2)}\\n\"\n                    f\"Telemetry: Users={users_impacted}, ServiceTier={srv_tier}, OutageDuration={outage_dur}m.\\n\"\n                    f\"Correlated Context: {symptom_text}\\n\"\n                    f\"Confirm or refine the final severity level (SEV-1..SEV-4) with clear SLA justification.\"",
+          "description_literals": [
+            "Deterministic Severity Rule Result:",
+            "Telemetry: Users=",
+            ", ServiceTier=",
+            ", OutageDuration=",
+            "m.\nCorrelated Context:",
+            "Confirm or refine the final severity level (SEV-1..SEV-4) with clear SLA justification."
+          ],
+          "expected_output": "JSON with severity_level, governing_sla_rule, and justification.",
+          "agent_expression": "severity_agent"
+        },
+        {
+          "line": 172,
+          "description_expression": "f\"Based on the selected runbook and diagnosis:\\n\"\n                    f\"Runbook: {runbook_text}\\n\"\n                    f\"Diagnosis & Symptoms: {symptom_text}\\n\"\n                    f\"Recommend step-by-step troubleshooting and remediation actions. \"\n                    f\"Must be safe, documented, and fully reversible. Do not execute real infrastructure changes.\"",
+          "description_literals": [
+            "Based on the selected runbook and diagnosis:\nRunbook:",
+            "Diagnosis & Symptoms:",
+            "Recommend step-by-step troubleshooting and remediation actions. Must be safe, documented, and fully reversible. Do not execute real infrastructure changes."
+          ],
+          "expected_output": "JSON with ordered remediation_steps, rollback_plan, and safety_verification.",
+          "agent_expression": "remediation_agent"
+        },
+        {
+          "line": 193,
+          "description_expression": "f\"Audit all 6 preceding stages for agreement and missing info:\\n\"\n                    f\"Intake: {intake_text}\\n\"\n                    f\"Classification: {classification_text}\\n\"\n                    f\"Runbook: {runbook_text}\\n\"\n                    f\"Symptoms: {symptom_text}\\n\"\n                    f\"Severity: {severity_text}\\n\"\n                    f\"Remediation: {remediation_text}\\n\"\n                    f\"Produce the final structured incident triage report in clean JSON.\"",
+          "description_literals": [
+            "Audit all 6 preceding stages for agreement and missing info:\nIntake:",
+            "Classification:",
+            "Runbook:",
+            "Symptoms:",
+            "Severity:",
+            "Remediation:",
+            "Produce the final structured incident triage report in clean JSON."
+          ],
+          "expected_output": "Complete final incident triage JSON report.",
+          "agent_expression": "review_agent"
+        }
+      ],
+      "crew_definitions": [
+        {
+          "line": 66,
+          "agents_expression": "[intake_agent]",
+          "tasks_expression": "[intake_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 87,
+          "agents_expression": "[classification_agent]",
+          "tasks_expression": "[classification_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 115,
+          "agents_expression": "[runbook_agent]",
+          "tasks_expression": "[runbook_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 137,
+          "agents_expression": "[symptom_agent]",
+          "tasks_expression": "[symptom_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 162,
+          "agents_expression": "[severity_agent]",
+          "tasks_expression": "[severity_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 183,
+          "agents_expression": "[remediation_agent]",
+          "tasks_expression": "[remediation_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 207,
+          "agents_expression": "[review_agent]",
+          "tasks_expression": "[review_task]",
+          "process_expression": "Process.sequential"
+        }
+      ],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_incident_triage_workflow",
+          "line": 32,
+          "classification": "function_candidate",
+          "docstring": "Execute the 7-agent IT Incident Triage workflow."
+        }
+      ],
+      "execution_calls": [
+        {
+          "call": "agent_span",
+          "line": 54
+        },
+        {
+          "call": "crew1.kickoff",
+          "line": 67
+        },
+        {
+          "call": "agent_span",
+          "line": 75
+        },
+        {
+          "call": "crew2.kickoff",
+          "line": 88
+        },
+        {
+          "call": "agent_span",
+          "line": 103
+        },
+        {
+          "call": "crew3.kickoff",
+          "line": 116
+        },
+        {
+          "call": "agent_span",
+          "line": 125
+        },
+        {
+          "call": "crew4.kickoff",
+          "line": 138
+        },
+        {
+          "call": "agent_span",
+          "line": 150
+        },
+        {
+          "call": "crew5.kickoff",
+          "line": 163
+        },
+        {
+          "call": "agent_span",
+          "line": 170
+        },
+        {
+          "call": "crew6.kickoff",
+          "line": 184
+        },
+        {
+          "call": "agent_span",
+          "line": 191
+        },
+        {
+          "call": "crew7.kickoff",
+          "line": 208
+        }
+      ],
+      "string_literals": [
+        {
+          "value": "IT Incident Triage Baseline Multi-Agent Workflow.\n\nWorkflow One: Exactly 7 agents executing sequentially:\n1. Intake Agent\n2. Classification Agent\n3. Runbook Agent\n4. Symptom Agent\n5. Severity Agent\n6. Remediation Agent\n7. Review Agent\n",
+          "line": 1
+        },
+        {
+          "value": "Execute the 7-agent IT Incident Triage workflow.",
+          "line": 36
+        },
+        {
+          "value": "Valid JSON string containing normalized incident telemetry and missing fields.",
+          "line": 63
+        },
+        {
+          "value": "JSON containing category, apparent_complexity, and classification_reasoning.",
+          "line": 84
+        },
+        {
+          "value": "JSON with selected_runbook_id, match_confidence, prerequisites, and safety_notes.",
+          "line": 112
+        },
+        {
+          "value": "JSON with correlated_incident_ids, recurring_patterns, and diagnostic_stage_assessment.",
+          "line": 134
+        },
+        {
+          "value": "JSON with severity_level, governing_sla_rule, and justification.",
+          "line": 159
+        },
+        {
+          "value": "JSON with ordered remediation_steps, rollback_plan, and safety_verification.",
+          "line": 180
+        },
+        {
+          "value": "Complete final incident triage JSON report.",
+          "line": 204
+        },
+        {
+          "value": "Normalize this raw incident ticket and extract structured fields:\nRaw Ticket: ",
+          "line": 58
+        },
+        {
+          "value": "\nReturn JSON with: normalized_title, affected_service, symptoms, timestamps, reported_impact_users, outage_minutes, and missing_fields.",
+          "line": 59
+        },
+        {
+          "value": "Based on the intake findings below, classify the primary failure category (network_failure, application_error, authentication_issue, database_problem, storage_exhaustion) and apparent complexity (Simple, Moderate, Complex):\nIntake Findings: ",
+          "line": 79
+        },
+        {
+          "value": "Evaluate these candidate operational runbooks for category '",
+          "line": 107
+        },
+        {
+          "value": "\nSelect the best matching runbook_id, outline why it applies, and state its safety notes.",
+          "line": 109
+        },
+        {
+          "value": "Correlate current symptoms with historical incidents and log records:\nHistorical Evidence: ",
+          "line": 129
+        },
+        {
+          "value": "\nReturn matching past incident IDs, recurring error signatures, and diagnosis confidence.",
+          "line": 131
+        },
+        {
+          "value": "Deterministic Severity Rule Result:\n",
+          "line": 154
+        },
+        {
+          "value": "\nConfirm or refine the final severity level (SEV-1..SEV-4) with clear SLA justification.",
+          "line": 156
+        },
+        {
+          "value": "Based on the selected runbook and diagnosis:\nRunbook: ",
+          "line": 174
+        },
+        {
+          "value": "\nRecommend step-by-step troubleshooting and remediation actions. Must be safe, documented, and fully reversible. Do not execute real infrastructure changes.",
+          "line": 176
+        },
+        {
+          "value": "Audit all 6 preceding stages for agreement and missing info:\nIntake: ",
+          "line": 195
+        },
+        {
+          "value": "\nProduce the final structured incident triage report in clean JSON.",
+          "line": 201
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "file": "runs/incident_triage/live_20261023_070642_incide.json",
+      "filename": "live_20261023_070642_incide.json",
+      "suffix": ".json",
+      "workflow_name": "incident_triage",
+      "run_id": "live_20261023_070642_incide",
+      "status": "SUCCESS",
+      "total_duration_seconds": 22.71664719999535,
+      "agent_count": 7,
+      "total_tokens": null,
+      "estimated_cost_usd": 0.011413
+    },
+    {
+      "file": "runs/runs_summary.jsonl",
+      "filename": "runs_summary.jsonl",
+      "suffix": ".jsonl",
+      "record_count": 3,
+      "first_record_keys": [
+        "timestamp",
+        "run_id",
+        "workflow",
+        "status",
+        "agent_count",
+        "duration_seconds",
+        "total_tokens",
+        "error"
+      ],
+      "workflow_name": "incident_triage"
+    }
+  ]
+}

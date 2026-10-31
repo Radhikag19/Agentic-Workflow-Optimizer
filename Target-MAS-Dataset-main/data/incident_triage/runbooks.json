@@ -1,0 +1,826 @@
+{
+  "runbooks": [
+    {
+      "runbook_id": "RB-101",
+      "title": "Standard Mitigation for Network Failure - Scenario 1",
+      "category": "network_failure",
+      "target_service": "payment-processor",
+      "matching_symptoms": [
+        "DNS resolution timeout on route53",
+        "Secondary metric: Elevated latency during dns resolution timeout on route53"
+      ],
+      "prerequisites": [
+        "Root access or AWS SSO role ProdOperations",
+        "Kubectl context set to prod-us-east-1"
+      ],
+      "diagnostic_commands": [
+        "kubectl logs -l app=network -n production --tail=200",
+        "curl -s -o /dev/null -w '%{http_code}' https://status.internal/healthz",
+        "promtool query instant 'rate(http_requests_total{status=~\"5..\"}[5m])'"
+      ],
+      "remediation_steps": [
+        "Step 1: Drain traffic from degraded pods or instances for DNS",
+        "Step 2: Apply temporary rate-limit or failover to standby replica/pool",
+        "Step 3: Execute graceful restart via rolling deployment rollback",
+        "Step 4: Verify error rates drop below 0.1% for 5 consecutive minutes"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Do not terminate primary node without promoting read-replica first. Verify write freeze before reboot.",
+      "verification_procedure": "Check Grafana dashboard 'Core Microservices SLA' to ensure 2xx ratio >= 99.95%",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-102",
+      "title": "Standard Mitigation for Network Failure - Scenario 2",
+      "category": "network_failure",
+      "target_service": "auth-gateway",
+      "matching_symptoms": [
+        "504 Gateway Timeout on ingress-lb",
+        "Secondary metric: Elevated latency during 504 gateway timeout on ingress-lb"
+      ],
+      "prerequisites": [
+        "Root access or AWS SSO role ProdOperations",
+        "Kubectl context set to prod-us-east-1"
+      ],
+      "diagnostic_commands": [
+        "kubectl logs -l app=network -n production --tail=200",
+        "curl -s -o /dev/null -w '%{http_code}' https://status.internal/healthz",
+        "promtool query instant 'rate(http_requests_total{status=~\"5..\"}[5m])'"
+      ],
+      "remediation_steps": [
+        "Step 1: Drain traffic from degraded pods or instances for 504",
+        "Step 2: Apply temporary rate-limit or failover to standby replica/pool",
+        "Step 3: Execute graceful restart via rolling deployment rollback",
+        "Step 4: Verify error rates drop below 0.1% for 5 consecutive minutes"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Do not terminate primary node without promoting read-replica first. Verify write freeze before reboot.",
+      "verification_procedure": "Check Grafana dashboard 'Core Microservices SLA' to ensure 2xx ratio >= 99.95%",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-103",
+      "title": "Standard Mitigation for Network Failure - Scenario 3",
+      "category": "network_failure",
+      "target_service": "notification-hub",
+      "matching_symptoms": [
+        "Packet drop rate spike > 12% across az-us-east-1a",
+        "Secondary metric: Elevated latency during packet drop rate spike > 12% across az-us-east-1a"
+      ],
+      "prerequisites": [
+        "Root access or AWS SSO role ProdOperations",
+        "Kubectl context set to prod-us-east-1"
+      ],
+      "diagnostic_commands": [
+        "kubectl logs -l app=network -n production --tail=200",
+        "curl -s -o /dev/null -w '%{http_code}' https://status.internal/healthz",
+        "promtool query instant 'rate(http_requests_total{status=~\"5..\"}[5m])'"
+      ],
+      "remediation_steps": [
+        "Step 1: Drain traffic from degraded pods or instances for Packet",
+        "Step 2: Apply temporary rate-limit or failover to standby replica/pool",
+        "Step 3: Execute graceful restart via rolling deployment rollback",
+        "Step 4: Verify error rates drop below 0.1% for 5 consecutive minutes"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Do not terminate primary node without promoting read-replica first. Verify write freeze before reboot.",
+      "verification_procedure": "Check Grafana dashboard 'Core Microservices SLA' to ensure 2xx ratio >= 99.95%",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-104",
+      "title": "Standard Mitigation for Network Failure - Scenario 4",
+      "category": "network_failure",
+      "target_service": "inventory-api",
+      "matching_symptoms": [
+        "BGP flap detected on transit gateway",
+        "Secondary metric: Elevated latency during bgp flap detected on transit gateway"
+      ],
+      "prerequisites": [
+        "Root access or AWS SSO role ProdOperations",
+        "Kubectl context set to prod-us-east-1"
+      ],
+      "diagnostic_commands": [
+        "kubectl logs -l app=network -n production --tail=200",
+        "curl -s -o /dev/null -w '%{http_code}' https://status.internal/healthz",
+        "promtool query instant 'rate(http_requests_total{status=~\"5..\"}[5m])'"
+      ],
+      "remediation_steps": [
+        "Step 1: Drain traffic from degraded pods or instances for BGP",
+        "Step 2: Apply temporary rate-limit or failover to standby replica/pool",
+        "Step 3: Execute graceful restart via rolling deployment rollback",
+        "Step 4: Verify error rates drop below 0.1% for 5 consecutive minutes"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Do not terminate primary node without promoting read-replica first. Verify write freeze before reboot.",
+      "verification_procedure": "Check Grafana dashboard 'Core Microservices SLA' to ensure 2xx ratio >= 99.95%",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-105",
+      "title": "Standard Mitigation for Application Error - Scenario 1",
+      "category": "application_error",
+      "target_service": "inventory-api",
+      "matching_symptoms": [
+        "Unhandled NullPointerException in CheckoutController",
+        "Secondary metric: Elevated latency during unhandled nullpointerexception in checkoutcontroller"
+      ],
+      "prerequisites": [
+        "Root access or AWS SSO role ProdOperations",
+        "Kubectl context set to prod-us-east-1"
+      ],
+      "diagnostic_commands": [
+        "kubectl logs -l app=application -n production --tail=200",
+        "curl -s -o /dev/null -w '%{http_code}' https://status.internal/healthz",
+        "promtool query instant 'rate(http_requests_total{status=~\"5..\"}[5m])'"
+      ],
+      "remediation_steps": [
+        "Step 1: Drain traffic from degraded pods or instances for Unhandled",
+        "Step 2: Apply temporary rate-limit or failover to standby replica/pool",
+        "Step 3: Execute graceful restart via rolling deployment rollback",
+        "Step 4: Verify error rates drop below 0.1% for 5 consecutive minutes"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Do not terminate primary node without promoting read-replica first. Verify write freeze before reboot.",
+      "verification_procedure": "Check Grafana dashboard 'Core Microservices SLA' to ensure 2xx ratio >= 99.95%",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-106",
+      "title": "Standard Mitigation for Application Error - Scenario 2",
+      "category": "application_error",
+      "target_service": "order-service",
+      "matching_symptoms": [
+        "OOMKilled exit code 137 on worker pods",
+        "Secondary metric: Elevated latency during oomkilled exit code 137 on worker pods"
+      ],
+      "prerequisites": [
+        "Root access or AWS SSO role ProdOperations",
+        "Kubectl context set to prod-us-east-1"
+      ],
+      "diagnostic_commands": [
+        "kubectl logs -l app=application -n production --tail=200",
+        "curl -s -o /dev/null -w '%{http_code}' https://status.internal/healthz",
+        "promtool query instant 'rate(http_requests_total{status=~\"5..\"}[5m])'"
+      ],
+      "remediation_steps": [
+        "Step 1: Drain traffic from degraded pods or instances for OOMKilled",
+        "Step 2: Apply temporary rate-limit or failover to standby replica/pool",
+        "Step 3: Execute graceful restart via rolling deployment rollback",
+        "Step 4: Verify error rates drop below 0.1% for 5 consecutive minutes"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Do not terminate primary node without promoting read-replica first. Verify write freeze before reboot.",
+      "verification_procedure": "Check Grafana dashboard 'Core Microservices SLA' to ensure 2xx ratio >= 99.95%",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-107",
+      "title": "Standard Mitigation for Application Error - Scenario 3",
+      "category": "application_error",
+      "target_service": "payment-processor",
+      "matching_symptoms": [
+        "HTTP 500 spike reaching 42% of traffic",
+        "Secondary metric: Elevated latency during http 500 spike reaching 42% of traffic"
+      ],
+      "prerequisites": [
+        "Root access or AWS SSO role ProdOperations",
+        "Kubectl context set to prod-us-east-1"
+      ],
+      "diagnostic_commands": [
+        "kubectl logs -l app=application -n production --tail=200",
+        "curl -s -o /dev/null -w '%{http_code}' https://status.internal/healthz",
+        "promtool query instant 'rate(http_requests_total{status=~\"5..\"}[5m])'"
+      ],
+      "remediation_steps": [
+        "Step 1: Drain traffic from degraded pods or instances for HTTP",
+        "Step 2: Apply temporary rate-limit or failover to standby replica/pool",
+        "Step 3: Execute graceful restart via rolling deployment rollback",
+        "Step 4: Verify error rates drop below 0.1% for 5 consecutive minutes"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Do not terminate primary node without promoting read-replica first. Verify write freeze before reboot.",
+      "verification_procedure": "Check Grafana dashboard 'Core Microservices SLA' to ensure 2xx ratio >= 99.95%",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-108",
+      "title": "Standard Mitigation for Application Error - Scenario 4",
+      "category": "application_error",
+      "target_service": "search-indexer",
+      "matching_symptoms": [
+        "Thread deadlock detected in OrderFulfillmentWorker",
+        "Secondary metric: Elevated latency during thread deadlock detected in orderfulfillmentworker"
+      ],
+      "prerequisites": [
+        "Root access or AWS SSO role ProdOperations",
+        "Kubectl context set to prod-us-east-1"
+      ],
+      "diagnostic_commands": [
+        "kubectl logs -l app=application -n production --tail=200",
+        "curl -s -o /dev/null -w '%{http_code}' https://status.internal/healthz",
+        "promtool query instant 'rate(http_requests_total{status=~\"5..\"}[5m])'"
+      ],
+      "remediation_steps": [
+        "Step 1: Drain traffic from degraded pods or instances for Thread",
+        "Step 2: Apply temporary rate-limit or failover to standby replica/pool",
+        "Step 3: Execute graceful restart via rolling deployment rollback",
+        "Step 4: Verify error rates drop below 0.1% for 5 consecutive minutes"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Do not terminate primary node without promoting read-replica first. Verify write freeze before reboot.",
+      "verification_procedure": "Check Grafana dashboard 'Core Microservices SLA' to ensure 2xx ratio >= 99.95%",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-109",
+      "title": "Standard Mitigation for Authentication Issue - Scenario 1",
+      "category": "authentication_issue",
+      "target_service": "payment-processor",
+      "matching_symptoms": [
+        "JWT token signature verification failure",
+        "Secondary metric: Elevated latency during jwt token signature verification failure"
+      ],
+      "prerequisites": [
+        "Root access or AWS SSO role ProdOperations",
+        "Kubectl context set to prod-us-east-1"
+      ],
+      "diagnostic_commands": [
+        "kubectl logs -l app=authentication -n production --tail=200",
+        "curl -s -o /dev/null -w '%{http_code}' https://status.internal/healthz",
+        "promtool query instant 'rate(http_requests_total{status=~\"5..\"}[5m])'"
+      ],
+      "remediation_steps": [
+        "Step 1: Drain traffic from degraded pods or instances for JWT",
+        "Step 2: Apply temporary rate-limit or failover to standby replica/pool",
+        "Step 3: Execute graceful restart via rolling deployment rollback",
+        "Step 4: Verify error rates drop below 0.1% for 5 consecutive minutes"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Do not terminate primary node without promoting read-replica first. Verify write freeze before reboot.",
+      "verification_procedure": "Check Grafana dashboard 'Core Microservices SLA' to ensure 2xx ratio >= 99.95%",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-110",
+      "title": "Standard Mitigation for Authentication Issue - Scenario 2",
+      "category": "authentication_issue",
+      "target_service": "analytics-pipeline",
+      "matching_symptoms": [
+        "Expired OAuth certificate on identity-provider",
+        "Secondary metric: Elevated latency during expired oauth certificate on identity-provider"
+      ],
+      "prerequisites": [
+        "Root access or AWS SSO role ProdOperations",
+        "Kubectl context set to prod-us-east-1"
+      ],
+      "diagnostic_commands": [
+        "kubectl logs -l app=authentication -n production --tail=200",
+        "curl -s -o /dev/null -w '%{http_code}' https://status.internal/healthz",
+        "promtool query instant 'rate(http_requests_total{status=~\"5..\"}[5m])'"
+      ],
+      "remediation_steps": [
+        "Step 1: Drain traffic from degraded pods or instances for Expired",
+        "Step 2: Apply temporary rate-limit or failover to standby replica/pool",
+        "Step 3: Execute graceful restart via rolling deployment rollback",
+        "Step 4: Verify error rates drop below 0.1% for 5 consecutive minutes"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Do not terminate primary node without promoting read-replica first. Verify write freeze before reboot.",
+      "verification_procedure": "Check Grafana dashboard 'Core Microservices SLA' to ensure 2xx ratio >= 99.95%",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-111",
+      "title": "Standard Mitigation for Authentication Issue - Scenario 3",
+      "category": "authentication_issue",
+      "target_service": "redis-cluster",
+      "matching_symptoms": [
+        "OAuth2 callback returns 401 Unauthorized",
+        "Secondary metric: Elevated latency during oauth2 callback returns 401 unauthorized"
+      ],
+      "prerequisites": [
+        "Root access or AWS SSO role ProdOperations",
+        "Kubectl context set to prod-us-east-1"
+      ],
+      "diagnostic_commands": [
+        "kubectl logs -l app=authentication -n production --tail=200",
+        "curl -s -o /dev/null -w '%{http_code}' https://status.internal/healthz",
+        "promtool query instant 'rate(http_requests_total{status=~\"5..\"}[5m])'"
+      ],
+      "remediation_steps": [
+        "Step 1: Drain traffic from degraded pods or instances for OAuth2",
+        "Step 2: Apply temporary rate-limit or failover to standby replica/pool",
+        "Step 3: Execute graceful restart via rolling deployment rollback",
+        "Step 4: Verify error rates drop below 0.1% for 5 consecutive minutes"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Do not terminate primary node without promoting read-replica first. Verify write freeze before reboot.",
+      "verification_procedure": "Check Grafana dashboard 'Core Microservices SLA' to ensure 2xx ratio >= 99.95%",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-112",
+      "title": "Standard Mitigation for Authentication Issue - Scenario 4",
+      "category": "authentication_issue",
+      "target_service": "auth-gateway",
+      "matching_symptoms": [
+        "LDAP sync daemon timeout after 30000ms",
+        "Secondary metric: Elevated latency during ldap sync daemon timeout after 30000ms"
+      ],
+      "prerequisites": [
+        "Root access or AWS SSO role ProdOperations",
+        "Kubectl context set to prod-us-east-1"
+      ],
+      "diagnostic_commands": [
+        "kubectl logs -l app=authentication -n production --tail=200",
+        "curl -s -o /dev/null -w '%{http_code}' https://status.internal/healthz",
+        "promtool query instant 'rate(http_requests_total{status=~\"5..\"}[5m])'"
+      ],
+      "remediation_steps": [
+        "Step 1: Drain traffic from degraded pods or instances for LDAP",
+        "Step 2: Apply temporary rate-limit or failover to standby replica/pool",
+        "Step 3: Execute graceful restart via rolling deployment rollback",
+        "Step 4: Verify error rates drop below 0.1% for 5 consecutive minutes"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Do not terminate primary node without promoting read-replica first. Verify write freeze before reboot.",
+      "verification_procedure": "Check Grafana dashboard 'Core Microservices SLA' to ensure 2xx ratio >= 99.95%",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-113",
+      "title": "Standard Mitigation for Database Problem - Scenario 1",
+      "category": "database_problem",
+      "target_service": "auth-gateway",
+      "matching_symptoms": [
+        "PostgreSQL active connection pool reached 100% (250/250)",
+        "Secondary metric: Elevated latency during postgresql active connection pool reached 100% (250/250)"
+      ],
+      "prerequisites": [
+        "Root access or AWS SSO role ProdOperations",
+        "Kubectl context set to prod-us-east-1"
+      ],
+      "diagnostic_commands": [
+        "kubectl logs -l app=database -n production --tail=200",
+        "curl -s -o /dev/null -w '%{http_code}' https://status.internal/healthz",
+        "promtool query instant 'rate(http_requests_total{status=~\"5..\"}[5m])'"
+      ],
+      "remediation_steps": [
+        "Step 1: Drain traffic from degraded pods or instances for PostgreSQL",
+        "Step 2: Apply temporary rate-limit or failover to standby replica/pool",
+        "Step 3: Execute graceful restart via rolling deployment rollback",
+        "Step 4: Verify error rates drop below 0.1% for 5 consecutive minutes"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Do not terminate primary node without promoting read-replica first. Verify write freeze before reboot.",
+      "verification_procedure": "Check Grafana dashboard 'Core Microservices SLA' to ensure 2xx ratio >= 99.95%",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-114",
+      "title": "Standard Mitigation for Database Problem - Scenario 2",
+      "category": "database_problem",
+      "target_service": "payment-processor",
+      "matching_symptoms": [
+        "Deadlock detected on table order_transactions",
+        "Secondary metric: Elevated latency during deadlock detected on table order_transactions"
+      ],
+      "prerequisites": [
+        "Root access or AWS SSO role ProdOperations",
+        "Kubectl context set to prod-us-east-1"
+      ],
+      "diagnostic_commands": [
+        "kubectl logs -l app=database -n production --tail=200",
+        "curl -s -o /dev/null -w '%{http_code}' https://status.internal/healthz",
+        "promtool query instant 'rate(http_requests_total{status=~\"5..\"}[5m])'"
+      ],
+      "remediation_steps": [
+        "Step 1: Drain traffic from degraded pods or instances for Deadlock",
+        "Step 2: Apply temporary rate-limit or failover to standby replica/pool",
+        "Step 3: Execute graceful restart via rolling deployment rollback",
+        "Step 4: Verify error rates drop below 0.1% for 5 consecutive minutes"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Do not terminate primary node without promoting read-replica first. Verify write freeze before reboot.",
+      "verification_procedure": "Check Grafana dashboard 'Core Microservices SLA' to ensure 2xx ratio >= 99.95%",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-115",
+      "title": "Standard Mitigation for Database Problem - Scenario 3",
+      "category": "database_problem",
+      "target_service": "inventory-api",
+      "matching_symptoms": [
+        "Write latency spiked to 4200ms on primary-db",
+        "Secondary metric: Elevated latency during write latency spiked to 4200ms on primary-db"
+      ],
+      "prerequisites": [
+        "Root access or AWS SSO role ProdOperations",
+        "Kubectl context set to prod-us-east-1"
+      ],
+      "diagnostic_commands": [
+        "kubectl logs -l app=database -n production --tail=200",
+        "curl -s -o /dev/null -w '%{http_code}' https://status.internal/healthz",
+        "promtool query instant 'rate(http_requests_total{status=~\"5..\"}[5m])'"
+      ],
+      "remediation_steps": [
+        "Step 1: Drain traffic from degraded pods or instances for Write",
+        "Step 2: Apply temporary rate-limit or failover to standby replica/pool",
+        "Step 3: Execute graceful restart via rolling deployment rollback",
+        "Step 4: Verify error rates drop below 0.1% for 5 consecutive minutes"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Do not terminate primary node without promoting read-replica first. Verify write freeze before reboot.",
+      "verification_procedure": "Check Grafana dashboard 'Core Microservices SLA' to ensure 2xx ratio >= 99.95%",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-116",
+      "title": "Standard Mitigation for Database Problem - Scenario 4",
+      "category": "database_problem",
+      "target_service": "inventory-api",
+      "matching_symptoms": [
+        "Replication lag exceeded 450 seconds on replica-02",
+        "Secondary metric: Elevated latency during replication lag exceeded 450 seconds on replica-02"
+      ],
+      "prerequisites": [
+        "Root access or AWS SSO role ProdOperations",
+        "Kubectl context set to prod-us-east-1"
+      ],
+      "diagnostic_commands": [
+        "kubectl logs -l app=database -n production --tail=200",
+        "curl -s -o /dev/null -w '%{http_code}' https://status.internal/healthz",
+        "promtool query instant 'rate(http_requests_total{status=~\"5..\"}[5m])'"
+      ],
+      "remediation_steps": [
+        "Step 1: Drain traffic from degraded pods or instances for Replication",
+        "Step 2: Apply temporary rate-limit or failover to standby replica/pool",
+        "Step 3: Execute graceful restart via rolling deployment rollback",
+        "Step 4: Verify error rates drop below 0.1% for 5 consecutive minutes"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Do not terminate primary node without promoting read-replica first. Verify write freeze before reboot.",
+      "verification_procedure": "Check Grafana dashboard 'Core Microservices SLA' to ensure 2xx ratio >= 99.95%",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-117",
+      "title": "Standard Mitigation for Storage Exhaustion - Scenario 1",
+      "category": "storage_exhaustion",
+      "target_service": "search-indexer",
+      "matching_symptoms": [
+        "Disk usage /var/log exceeded 96% on host node-prod-4",
+        "Secondary metric: Elevated latency during disk usage /var/log exceeded 96% on host node-prod-4"
+      ],
+      "prerequisites": [
+        "Root access or AWS SSO role ProdOperations",
+        "Kubectl context set to prod-us-east-1"
+      ],
+      "diagnostic_commands": [
+        "kubectl logs -l app=storage -n production --tail=200",
+        "curl -s -o /dev/null -w '%{http_code}' https://status.internal/healthz",
+        "promtool query instant 'rate(http_requests_total{status=~\"5..\"}[5m])'"
+      ],
+      "remediation_steps": [
+        "Step 1: Drain traffic from degraded pods or instances for Disk",
+        "Step 2: Apply temporary rate-limit or failover to standby replica/pool",
+        "Step 3: Execute graceful restart via rolling deployment rollback",
+        "Step 4: Verify error rates drop below 0.1% for 5 consecutive minutes"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Do not terminate primary node without promoting read-replica first. Verify write freeze before reboot.",
+      "verification_procedure": "Check Grafana dashboard 'Core Microservices SLA' to ensure 2xx ratio >= 99.95%",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-118",
+      "title": "Standard Mitigation for Storage Exhaustion - Scenario 2",
+      "category": "storage_exhaustion",
+      "target_service": "analytics-pipeline",
+      "matching_symptoms": [
+        "EBS volume IOPS throttled at burst balance 0%",
+        "Secondary metric: Elevated latency during ebs volume iops throttled at burst balance 0%"
+      ],
+      "prerequisites": [
+        "Root access or AWS SSO role ProdOperations",
+        "Kubectl context set to prod-us-east-1"
+      ],
+      "diagnostic_commands": [
+        "kubectl logs -l app=storage -n production --tail=200",
+        "curl -s -o /dev/null -w '%{http_code}' https://status.internal/healthz",
+        "promtool query instant 'rate(http_requests_total{status=~\"5..\"}[5m])'"
+      ],
+      "remediation_steps": [
+        "Step 1: Drain traffic from degraded pods or instances for EBS",
+        "Step 2: Apply temporary rate-limit or failover to standby replica/pool",
+        "Step 3: Execute graceful restart via rolling deployment rollback",
+        "Step 4: Verify error rates drop below 0.1% for 5 consecutive minutes"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Do not terminate primary node without promoting read-replica first. Verify write freeze before reboot.",
+      "verification_procedure": "Check Grafana dashboard 'Core Microservices SLA' to ensure 2xx ratio >= 99.95%",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-119",
+      "title": "Standard Mitigation for Storage Exhaustion - Scenario 3",
+      "category": "storage_exhaustion",
+      "target_service": "auth-gateway",
+      "matching_symptoms": [
+        "S3 multipart upload rejected with QuotaExceeded",
+        "Secondary metric: Elevated latency during s3 multipart upload rejected with quotaexceeded"
+      ],
+      "prerequisites": [
+        "Root access or AWS SSO role ProdOperations",
+        "Kubectl context set to prod-us-east-1"
+      ],
+      "diagnostic_commands": [
+        "kubectl logs -l app=storage -n production --tail=200",
+        "curl -s -o /dev/null -w '%{http_code}' https://status.internal/healthz",
+        "promtool query instant 'rate(http_requests_total{status=~\"5..\"}[5m])'"
+      ],
+      "remediation_steps": [
+        "Step 1: Drain traffic from degraded pods or instances for S3",
+        "Step 2: Apply temporary rate-limit or failover to standby replica/pool",
+        "Step 3: Execute graceful restart via rolling deployment rollback",
+        "Step 4: Verify error rates drop below 0.1% for 5 consecutive minutes"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Do not terminate primary node without promoting read-replica first. Verify write freeze before reboot.",
+      "verification_procedure": "Check Grafana dashboard 'Core Microservices SLA' to ensure 2xx ratio >= 99.95%",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-120",
+      "title": "Standard Mitigation for Storage Exhaustion - Scenario 4",
+      "category": "storage_exhaustion",
+      "target_service": "search-indexer",
+      "matching_symptoms": [
+        "Redis memory usage > 98% with maxmemory-policy noeviction",
+        "Secondary metric: Elevated latency during redis memory usage > 98% with maxmemory-policy noeviction"
+      ],
+      "prerequisites": [
+        "Root access or AWS SSO role ProdOperations",
+        "Kubectl context set to prod-us-east-1"
+      ],
+      "diagnostic_commands": [
+        "kubectl logs -l app=storage -n production --tail=200",
+        "curl -s -o /dev/null -w '%{http_code}' https://status.internal/healthz",
+        "promtool query instant 'rate(http_requests_total{status=~\"5..\"}[5m])'"
+      ],
+      "remediation_steps": [
+        "Step 1: Drain traffic from degraded pods or instances for Redis",
+        "Step 2: Apply temporary rate-limit or failover to standby replica/pool",
+        "Step 3: Execute graceful restart via rolling deployment rollback",
+        "Step 4: Verify error rates drop below 0.1% for 5 consecutive minutes"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Do not terminate primary node without promoting read-replica first. Verify write freeze before reboot.",
+      "verification_procedure": "Check Grafana dashboard 'Core Microservices SLA' to ensure 2xx ratio >= 99.95%",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-121",
+      "title": "Emergency Traffic Shedding via Cloudflare WAF",
+      "category": "network_failure",
+      "target_service": "payment-processor",
+      "matching_symptoms": [
+        "System-wide degradation under unexpected load",
+        "Cascade failure across upstream services"
+      ],
+      "prerequisites": [
+        "Emergency incident commander authorization"
+      ],
+      "diagnostic_commands": [
+        "kubectl top nodes",
+        "pg_stat_activity inspection"
+      ],
+      "remediation_steps": [
+        "Execute graceful degradation script: ./scripts/emergency-failover.sh"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Must notify customer support before execution.",
+      "verification_procedure": "Monitor response latency p99 under 200ms.",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-122",
+      "title": "Postgres Connection Pool Flush and Client Throttling",
+      "category": "database_problem",
+      "target_service": "payment-processor",
+      "matching_symptoms": [
+        "System-wide degradation under unexpected load",
+        "Cascade failure across upstream services"
+      ],
+      "prerequisites": [
+        "Emergency incident commander authorization"
+      ],
+      "diagnostic_commands": [
+        "kubectl top nodes",
+        "pg_stat_activity inspection"
+      ],
+      "remediation_steps": [
+        "Execute graceful degradation script: ./scripts/emergency-failover.sh"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Must notify customer support before execution.",
+      "verification_procedure": "Monitor response latency p99 under 200ms.",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-123",
+      "title": "Redis Cache Invalidation and Memory Compaction",
+      "category": "storage_exhaustion",
+      "target_service": "payment-processor",
+      "matching_symptoms": [
+        "System-wide degradation under unexpected load",
+        "Cascade failure across upstream services"
+      ],
+      "prerequisites": [
+        "Emergency incident commander authorization"
+      ],
+      "diagnostic_commands": [
+        "kubectl top nodes",
+        "pg_stat_activity inspection"
+      ],
+      "remediation_steps": [
+        "Execute graceful degradation script: ./scripts/emergency-failover.sh"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Must notify customer support before execution.",
+      "verification_procedure": "Monitor response latency p99 under 200ms.",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-124",
+      "title": "Identity Provider Failover to Backup Okta Tenant",
+      "category": "authentication_issue",
+      "target_service": "auth-gateway",
+      "matching_symptoms": [
+        "System-wide degradation under unexpected load",
+        "Cascade failure across upstream services"
+      ],
+      "prerequisites": [
+        "Emergency incident commander authorization"
+      ],
+      "diagnostic_commands": [
+        "kubectl top nodes",
+        "pg_stat_activity inspection"
+      ],
+      "remediation_steps": [
+        "Execute graceful degradation script: ./scripts/emergency-failover.sh"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Must notify customer support before execution.",
+      "verification_procedure": "Monitor response latency p99 under 200ms.",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-125",
+      "title": "Worker Pod Horizontal Scale-Out Under Deadlock",
+      "category": "application_error",
+      "target_service": "payment-processor",
+      "matching_symptoms": [
+        "System-wide degradation under unexpected load",
+        "Cascade failure across upstream services"
+      ],
+      "prerequisites": [
+        "Emergency incident commander authorization"
+      ],
+      "diagnostic_commands": [
+        "kubectl top nodes",
+        "pg_stat_activity inspection"
+      ],
+      "remediation_steps": [
+        "Execute graceful degradation script: ./scripts/emergency-failover.sh"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Must notify customer support before execution.",
+      "verification_procedure": "Monitor response latency p99 under 200ms.",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-126",
+      "title": "EBS Volume Burst Balance Replenishment & Volume Expansion",
+      "category": "storage_exhaustion",
+      "target_service": "payment-processor",
+      "matching_symptoms": [
+        "System-wide degradation under unexpected load",
+        "Cascade failure across upstream services"
+      ],
+      "prerequisites": [
+        "Emergency incident commander authorization"
+      ],
+      "diagnostic_commands": [
+        "kubectl top nodes",
+        "pg_stat_activity inspection"
+      ],
+      "remediation_steps": [
+        "Execute graceful degradation script: ./scripts/emergency-failover.sh"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Must notify customer support before execution.",
+      "verification_procedure": "Monitor response latency p99 under 200ms.",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-127",
+      "title": "Kafka Consumer Rebalance Hang Recovery",
+      "category": "application_error",
+      "target_service": "payment-processor",
+      "matching_symptoms": [
+        "System-wide degradation under unexpected load",
+        "Cascade failure across upstream services"
+      ],
+      "prerequisites": [
+        "Emergency incident commander authorization"
+      ],
+      "diagnostic_commands": [
+        "kubectl top nodes",
+        "pg_stat_activity inspection"
+      ],
+      "remediation_steps": [
+        "Execute graceful degradation script: ./scripts/emergency-failover.sh"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Must notify customer support before execution.",
+      "verification_procedure": "Monitor response latency p99 under 200ms.",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-128",
+      "title": "Transit Gateway Route Table Reset",
+      "category": "network_failure",
+      "target_service": "payment-processor",
+      "matching_symptoms": [
+        "System-wide degradation under unexpected load",
+        "Cascade failure across upstream services"
+      ],
+      "prerequisites": [
+        "Emergency incident commander authorization"
+      ],
+      "diagnostic_commands": [
+        "kubectl top nodes",
+        "pg_stat_activity inspection"
+      ],
+      "remediation_steps": [
+        "Execute graceful degradation script: ./scripts/emergency-failover.sh"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Must notify customer support before execution.",
+      "verification_procedure": "Monitor response latency p99 under 200ms.",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-129",
+      "title": "Stale OAuth2 Token Revocation and Redis Session Flush",
+      "category": "authentication_issue",
+      "target_service": "payment-processor",
+      "matching_symptoms": [
+        "System-wide degradation under unexpected load",
+        "Cascade failure across upstream services"
+      ],
+      "prerequisites": [
+        "Emergency incident commander authorization"
+      ],
+      "diagnostic_commands": [
+        "kubectl top nodes",
+        "pg_stat_activity inspection"
+      ],
+      "remediation_steps": [
+        "Execute graceful degradation script: ./scripts/emergency-failover.sh"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Must notify customer support before execution.",
+      "verification_procedure": "Monitor response latency p99 under 200ms.",
+      "synthetic": true
+    },
+    {
+      "runbook_id": "RB-130",
+      "title": "PostgreSQL Read-Replica Promotion under Primary Failure",
+      "category": "database_problem",
+      "target_service": "payment-processor",
+      "matching_symptoms": [
+        "System-wide degradation under unexpected load",
+        "Cascade failure across upstream services"
+      ],
+      "prerequisites": [
+        "Emergency incident commander authorization"
+      ],
+      "diagnostic_commands": [
+        "kubectl top nodes",
+        "pg_stat_activity inspection"
+      ],
+      "remediation_steps": [
+        "Execute graceful degradation script: ./scripts/emergency-failover.sh"
+      ],
+      "is_reversible": true,
+      "safety_notes": "Must notify customer support before execution.",
+      "verification_procedure": "Monitor response latency p99 under 200ms.",
+      "synthetic": true
+    }
+  ],
+  "synthetic": true,
+  "count": 30
+}

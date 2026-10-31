@@ -1,0 +1,1887 @@
+{
+  "schema_version": "1.0",
+  "workflow_metadata": {
+    "workflow_id": "inventory_replenishment",
+    "workflow_name": "Inventory Replenishment",
+    "source_directory": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment",
+    "workflow_entrypoint": "workflow.py",
+    "analysis_status": "completed"
+  },
+  "source_inventory": {
+    "total_python_files": 7,
+    "agent_candidate_files": 6,
+    "parsed_files": 7,
+    "failed_files": 0,
+    "files": [
+      {
+        "path": "demand_forecast_agent.py",
+        "sha256": "faac7b3bc9804a83664818b1085e5cd8269fe67dbe7c11846c82007ba6fe0530",
+        "parse_status": "parsed"
+      },
+      {
+        "path": "intake_agent.py",
+        "sha256": "86ae6f249da42f8c8ca7fbb4aca3ec650f3f7d87ee77c51de936f3f7a8115cdf",
+        "parse_status": "parsed"
+      },
+      {
+        "path": "replenishment_planning_agent.py",
+        "sha256": "2c11df557f329d86569acc1b38674b773c6da80c52c16ca4018034e02f7c7ada",
+        "parse_status": "parsed"
+      },
+      {
+        "path": "review_agent.py",
+        "sha256": "09623109289ad9a0fb72240387648984aafd05b2987bfc679cd848791bf22cf6",
+        "parse_status": "parsed"
+      },
+      {
+        "path": "stock_policy_agent.py",
+        "sha256": "21e57b054a13a362315c41099adccb24ee4b286e859f790547c196da853a31fe",
+        "parse_status": "parsed"
+      },
+      {
+        "path": "supplier_agent.py",
+        "sha256": "876983fca4528f941257ecf34f9f385cf2b914784bb9dec96375c169d3ec5df4",
+        "parse_status": "parsed"
+      },
+      {
+        "path": "workflow.py",
+        "sha256": "ba402832fdc5b9407f8490481fc72ff18b58ec991908466bc227ba165bc9d68d",
+        "parse_status": "parsed"
+      }
+    ]
+  },
+  "agent_inventory": {
+    "discovered_agent_files": 6,
+    "identified_agent_definitions": 6,
+    "workflow_invoked_agents": 6,
+    "uninvoked_agent_definitions": 0,
+    "agents": [
+      {
+        "agent_id": "demand_forecast_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment\\demand_forecast_agent.py",
+        "definition_status": "static",
+        "invocation_status": "invoked",
+        "evidence_refs": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "agent_id": "inventory_intake_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment\\intake_agent.py",
+        "definition_status": "static",
+        "invocation_status": "invoked",
+        "evidence_refs": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "agent_id": "replenishment_planning_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment\\replenishment_planning_agent.py",
+        "definition_status": "static",
+        "invocation_status": "invoked",
+        "evidence_refs": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "agent_id": "inventory_review_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment\\review_agent.py",
+        "definition_status": "static",
+        "invocation_status": "invoked",
+        "evidence_refs": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "agent_id": "stock_policy_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment\\stock_policy_agent.py",
+        "definition_status": "static",
+        "invocation_status": "invoked",
+        "evidence_refs": [
+          "ev_agent_010"
+        ]
+      },
+      {
+        "agent_id": "supplier_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment\\supplier_agent.py",
+        "definition_status": "static",
+        "invocation_status": "invoked",
+        "evidence_refs": [
+          "ev_agent_012"
+        ]
+      }
+    ]
+  },
+  "agent_details": [
+    {
+      "agent_id": "demand_forecast_agent",
+      "definition": {
+        "type": "function",
+        "name": "demand_forecast_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment\\demand_forecast_agent.py",
+        "start_line": 74,
+        "end_line": 81
+      },
+      "role": "Demand Forecasting and Sales History Specialist",
+      "goal": "Compute transparent, deterministic demand projections from recorded sales history, characterizing demand volatility and flagging anomalies without fabricating numbers.",
+      "backstory": "You are a supply chain quantitative demand planner. You calculate moving averages, analyze daily sales variance, detect sudden volume spikes, and declare uncertainty when sample size or historical duration is insufficient.",
+      "llm": {
+        "provider": null,
+        "model": null,
+        "resolution_status": "unresolved"
+      },
+      "tasks": [
+        {
+          "task_id": "task_demand_forecast_agent_1",
+          "agent_id": "demand_forecast_agent",
+          "description": "f'''\\nSKU ID: {sku_id}\\nForecast Horizon: {horizon_days} days\\nTotal Recorded History: {history_days} days\\nDaily Sales Samples: {(daily_sales[-10:] if len(daily_sales) > 10 else daily_sales)}\\n\\nDeterministic Moving Average Calculation:\\n- Average Daily Sales: {det['avg_daily']} units/day\\n- Forecast Demand over {horizon_days} days: {det['forecast_units']} units\\n- Volatility: {det['volatility']}\\n- Demand Spikes Detected: {det['has_spikes']}\\n- Sufficient Historical Data: {det['sufficient_history']}\\n\\nStructure the forecast output with documented assumptions:\\nReturn structured JSON matching:\\n{{\\n  \"sku_id\": \"{sku_id}\",\\n  \"forecast_horizon_days\": {horizon_days},\\n  \"historical_avg_daily_demand\": {det['avg_daily']},\\n  \"forecast_demand_units\": {det['forecast_units']},\\n  \"volatility_metric\": \"{det['volatility']}\",\\n  \"demand_spikes_detected\": {str(det['has_spikes']).lower()},\\n  \"has_sufficient_history\": {str(det['sufficient_history']).lower()},\\n  \"source_record_ids\": [\"SALES-{sku_id}\"],\\n  \"assumptions\": [\\n    \"Baseline forecast computed using {history_days}-day arithmetic moving average\",\\n    \"Demand volatility classified as {det['volatility']}\"\\n  ]\\n}}\\n'''",
+          "expected_output": "Valid JSON matching DemandForecastOutput schema.",
+          "context_task_ids": [],
+          "evidence_refs": [
+            "ev_task_014"
+          ]
+        }
+      ],
+      "registered_tools": [],
+      "helper_functions": [
+        "calculate_deterministic_forecast"
+      ],
+      "explicit_code_invocations": [],
+      "evidence_refs": [
+        "ev_agent_002"
+      ]
+    },
+    {
+      "agent_id": "inventory_intake_agent",
+      "definition": {
+        "type": "function",
+        "name": "inventory_intake_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment\\intake_agent.py",
+        "start_line": 31,
+        "end_line": 38
+      },
+      "role": "Inventory Intake Coordinator",
+      "goal": "Assemble, normalize, and validate all relevant inventory snapshots, sales history, supplier profiles, and replenishment policies for the target SKU.",
+      "backstory": "You are a supply chain data coordinator. You gather inventory levels, outstanding orders, and vendor parameters into a coherent, validated planning package, highlighting any data integrity defects before quantitative planning begins.",
+      "llm": {
+        "provider": null,
+        "model": null,
+        "resolution_status": "unresolved"
+      },
+      "tasks": [
+        {
+          "task_id": "task_inventory_intake_agent_1",
+          "agent_id": "inventory_intake_agent",
+          "description": "f'''\\nRequest ID: {req_id}\\nTarget SKU ID: {sku_id}\\nWarehouse: {warehouse_id}\\n\\nInventory Data:\\n{sku}\\n\\nSupplier Data:\\n{supplier}\\n\\nPolicy Data:\\n{policy}\\n\\nRecorded Sales Days: {sales_days}\\n\\nValidate and structure the intake package:\\n1. Normalize SKU ID, Warehouse ID, and product name.\\n2. Verify all required fields (current_stock, reserved_stock, lead_time_days) are present.\\n3. Check for data quality anomalies (e.g., negative stock, zero lead time, or missing sales).\\n4. Catalog all source record IDs (e.g., INV-{sku_id}, SUP-{supplier.get('supplier_id', '00')}).\\n\\nReturn structured JSON matching:\\n{{\\n  \"request_id\": \"{req_id}\",\\n  \"sku_id\": \"{sku_id}\",\\n  \"warehouse_id\": \"{warehouse_id}\",\\n  \"sku_name\": \"{sku_name}\",\\n  \"source_record_ids\": [\"INV-{sku_id}\", \"SUP-{supplier.get('supplier_id', '00')}\"],\\n  \"raw_inventory_record\": {sku},\\n  \"raw_supplier_record\": {supplier},\\n  \"raw_policy_record\": {policy},\\n  \"sales_history_days\": {sales_days},\\n  \"data_quality_issues\": []\\n}}\\n'''",
+          "expected_output": "Valid JSON matching InventoryIntakeOutput schema.",
+          "context_task_ids": [],
+          "evidence_refs": [
+            "ev_task_015"
+          ]
+        }
+      ],
+      "registered_tools": [],
+      "helper_functions": [],
+      "explicit_code_invocations": [],
+      "evidence_refs": [
+        "ev_agent_004"
+      ]
+    },
+    {
+      "agent_id": "replenishment_planning_agent",
+      "definition": {
+        "type": "function",
+        "name": "replenishment_planning_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment\\replenishment_planning_agent.py",
+        "start_line": 100,
+        "end_line": 107
+      },
+      "role": "Replenishment Optimization Planner",
+      "goal": "Synthesize stock levels, demand rates, and supplier constraints to compute exact baseline and adjusted order quantities using rigorous deterministic logic.",
+      "backstory": "You are a master inventory replenishment planner. You use deterministic arithmetic for supply/demand balances, strictly rounding up to package increments and applying MOQs while explaining every step with absolute transparency.",
+      "llm": {
+        "provider": null,
+        "model": null,
+        "resolution_status": "unresolved"
+      },
+      "tasks": [
+        {
+          "task_id": "task_replenishment_planning_agent_1",
+          "agent_id": "replenishment_planning_agent",
+          "description": "f'''\\nSKU ID: {sku_id}\\nStock Policy Input: {stock_policy_data}\\nDemand Forecast Input: {demand_forecast_data}\\nSupplier Parameters: {supplier_data}\\n\\nDeterministic Calculation Breakdown:\\n{calc['calculation_breakdown']}\\nBase Quantity: {calc['base_replenishment_quantity']}\\nRecommended Order Quantity (with MOQ & Pack Size): {calc['recommended_order_quantity']}\\nStockout Risk: {calc['stockout_risk']}\\n\\nSynthesize the replenishment plan and return structured JSON matching:\\n{{\\n  \"sku_id\": \"{sku_id}\",\\n  \"base_replenishment_quantity\": {calc['base_replenishment_quantity']},\\n  \"recommended_order_quantity\": {calc['recommended_order_quantity']},\\n  \"calculation_breakdown\": \"{calc['calculation_breakdown']}\",\\n  \"adjustment_reasoning\": \"{calc['adjustment_reasoning']}\",\\n  \"stockout_risk\": \"{calc['stockout_risk']}\",\\n  \"infeasible_flag\": false\\n}}\\n'''",
+          "expected_output": "Valid JSON matching ReplenishmentPlanningOutput schema.",
+          "context_task_ids": [],
+          "evidence_refs": [
+            "ev_task_016"
+          ]
+        }
+      ],
+      "registered_tools": [],
+      "helper_functions": [
+        "calculate_deterministic_replenishment"
+      ],
+      "explicit_code_invocations": [],
+      "evidence_refs": [
+        "ev_agent_006"
+      ]
+    },
+    {
+      "agent_id": "inventory_review_agent",
+      "definition": {
+        "type": "function",
+        "name": "inventory_review_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment\\review_agent.py",
+        "start_line": 30,
+        "end_line": 37
+      },
+      "role": "Replenishment Integrity and Compliance Auditor",
+      "goal": "Conduct an independent audit of proposed replenishment quantities, verifying mathematical consistency, constraints compliance, and absence of double-counting before assembling the final plan.",
+      "backstory": "You are a supply chain compliance auditor. You cross-examine every proposed order, ensuring available stock arithmetic is sound, minimum pack increments were honored, and warnings are recorded for volatile or stockout-prone items.",
+      "llm": {
+        "provider": null,
+        "model": null,
+        "resolution_status": "unresolved"
+      },
+      "tasks": [
+        {
+          "task_id": "task_inventory_review_agent_1",
+          "agent_id": "inventory_review_agent",
+          "description": "f'\\nAudit and assemble the final structured replenishment plan:\\n- Run ID: {run_id}\\n- Planning Date: {planning_date}\\n- Warehouse: {warehouse_id}\\n- SKU ID: {sku_id}\\n- Current Stock: {cur_stock}\\n- Reserved Stock: {res_stock}\\n- Available Stock (Current - Reserved): {avail_stock}\\n- Incoming Stock: {inc_stock}\\n- Forecast Demand: {f_demand} ({f_horizon})\\n- Supplier ID: {supplier_id} (Lead Time: {lead_time} days, Expected Arrival: {expected_arr})\\n- Safety Stock: {safety_stock}\\n- Reorder Threshold: {reorder_thresh}\\n- Base Replenishment Quantity: {base_qty}\\n- Recommended Order Quantity: {rec_qty}\\n- Stockout Risk: {stockout_risk}\\n- Reasoning: {reasoning}\\n- Source IDs: {source_ids}\\n- Pre-Audit Warnings: {warnings}\\n- Human Review Required: {str(human_review_required).lower()}\\n\\nReturn structured JSON strictly matching:\\n{{\\n  \"run_id\": \"{run_id}\",\\n  \"planning_date\": \"{planning_date}\",\\n  \"warehouse_id\": \"{warehouse_id}\",\\n  \"sku_id\": \"{sku_id}\",\\n  \"current_stock\": {cur_stock},\\n  \"reserved_stock\": {res_stock},\\n  \"available_stock\": {avail_stock},\\n  \"incoming_stock\": {inc_stock},\\n  \"forecast_demand\": {f_demand},\\n  \"forecast_horizon\": \"{f_horizon}\",\\n  \"supplier_id\": \"{supplier_id}\",\\n  \"lead_time_days\": {lead_time},\\n  \"safety_stock\": {safety_stock},\\n  \"reorder_threshold\": {reorder_thresh},\\n  \"base_replenishment_quantity\": {base_qty},\\n  \"recommended_order_quantity\": {rec_qty},\\n  \"expected_arrival_date\": \"{expected_arr}\",\\n  \"stockout_risk\": \"{stockout_risk}\",\\n  \"reasoning\": \"{reasoning}\",\\n  \"source_record_ids\": {source_ids},\\n  \"validation_warnings\": {warnings},\\n  \"human_review_required\": {str(human_review_required).lower()},\\n  \"disclaimer\": \"Planning tool recommendation only. Does NOT execute real purchases.\"\\n}}\\n'",
+          "expected_output": "Valid JSON matching InventoryFinalPlanOutput schema.",
+          "context_task_ids": [],
+          "evidence_refs": [
+            "ev_task_017"
+          ]
+        }
+      ],
+      "registered_tools": [],
+      "helper_functions": [],
+      "explicit_code_invocations": [],
+      "evidence_refs": [
+        "ev_agent_008"
+      ]
+    },
+    {
+      "agent_id": "stock_policy_agent",
+      "definition": {
+        "type": "function",
+        "name": "stock_policy_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment\\stock_policy_agent.py",
+        "start_line": 38,
+        "end_line": 45
+      },
+      "role": "Stock Policy and Inventory Level Specialist",
+      "goal": "Evaluate physical stock, reservations, and incoming orders against safety thresholds, calculating exact usable inventory and determining replenishment need.",
+      "backstory": "You are an inventory control analyst. You rigorously calculate usable and available stock using exact mathematical formulas to prevent double-counting of incoming goods, benchmarking net stock against defined reorder triggers.",
+      "llm": {
+        "provider": null,
+        "model": null,
+        "resolution_status": "unresolved"
+      },
+      "tasks": [
+        {
+          "task_id": "task_stock_policy_agent_1",
+          "agent_id": "stock_policy_agent",
+          "description": "f'\\nSKU ID: {sku_id}\\nWarehouse: {warehouse_id}\\nStock Levels:\\n- Current Physical Stock: {current_stock}\\n- Reserved Stock: {reserved_stock}\\n- Incoming Stock (In-Transit / Open POs): {incoming_stock}\\n- Reorder Threshold: {reorder_threshold}\\n- Safety Stock Requirement: {safety_stock}\\n\\nDeterministic Arithmetic Verified:\\n- Usable Inventory = Current ({current_stock}) - Reserved ({reserved_stock}) + Incoming ({incoming_stock}) = {usable_inventory}\\n- Replenishment Needed = (Usable <= Threshold) = {str(replenishment_needed).lower()}\\n\\nAssess policy conformance and return structured JSON matching:\\n{{\\n  \"sku_id\": \"{sku_id}\",\\n  \"warehouse_id\": \"{warehouse_id}\",\\n  \"current_stock\": {current_stock},\\n  \"reserved_stock\": {reserved_stock},\\n  \"incoming_stock\": {incoming_stock},\\n  \"usable_inventory\": {usable_inventory},\\n  \"reorder_threshold\": {reorder_threshold},\\n  \"safety_stock\": {safety_stock},\\n  \"replenishment_needed\": {str(replenishment_needed).lower()},\\n  \"policy_notes\": [\\n    \"Usable inventory incorporates incoming purchase orders without double-counting\",\\n    \"Current stock is below reorder threshold\" if replenishment_needed else \"Stock is healthy\"\\n  ]\\n}}\\n'",
+          "expected_output": "Valid JSON matching StockPolicyOutput schema.",
+          "context_task_ids": [],
+          "evidence_refs": [
+            "ev_task_018"
+          ]
+        }
+      ],
+      "registered_tools": [],
+      "helper_functions": [
+        "calculate_usable_inventory"
+      ],
+      "explicit_code_invocations": [],
+      "evidence_refs": [
+        "ev_agent_010"
+      ]
+    },
+    {
+      "agent_id": "supplier_agent",
+      "definition": {
+        "type": "function",
+        "name": "supplier_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment\\supplier_agent.py",
+        "start_line": 39,
+        "end_line": 46
+      },
+      "role": "Supplier Lead-Time and Constraints Specialist",
+      "goal": "Extract and validate vendor lead times, order increments (pack size), and minimum order quantities (MOQ), calculating projected shipment arrival dates.",
+      "backstory": "You are a procurement vendor manager. You verify supplier performance terms, ensure lead time calculations reflect delivery reality, and safeguard purchasing constraints.",
+      "llm": {
+        "provider": null,
+        "model": null,
+        "resolution_status": "unresolved"
+      },
+      "tasks": [
+        {
+          "task_id": "task_supplier_agent_1",
+          "agent_id": "supplier_agent",
+          "description": "f'\\nSupplier Record:\\n- Supplier ID: {sup_id}\\n- Lead Time: {lead_time} days\\n- Minimum Order Quantity (MOQ): {moq} units\\n- Pack Size: {pack_size} units/pack\\n- Reliability Score: {reliability}\\n- Planning Date: {planning_date}\\n- Deterministic Expected Arrival Date: {expected_arrival}\\n\\nVerify supplier parameters and constraints.\\nReturn structured JSON matching:\\n{{\\n  \"supplier_id\": \"{sup_id}\",\\n  \"lead_time_days\": {lead_time},\\n  \"minimum_order_quantity\": {moq},\\n  \"pack_size\": {pack_size},\\n  \"expected_arrival_date\": \"{expected_arrival}\",\\n  \"supplier_reliability_notes\": [\\n    \"Supplier reliability rated at {int(reliability * 100)}%\",\\n    \"Expected lead time of {lead_time} days from order placement\"\\n  ],\\n  \"source_record_ids\": [\"SUP-{sup_id}\"]\\n}}\\n'",
+          "expected_output": "Valid JSON matching SupplierLeadTimeOutput schema.",
+          "context_task_ids": [],
+          "evidence_refs": [
+            "ev_task_019"
+          ]
+        }
+      ],
+      "registered_tools": [],
+      "helper_functions": [
+        "calculate_expected_arrival"
+      ],
+      "explicit_code_invocations": [],
+      "evidence_refs": [
+        "ev_agent_012"
+      ]
+    }
+  ],
+  "outer_workflow_flow": {
+    "entrypoint": "workflow.py",
+    "execution_steps": [
+      {
+        "step_id": "step_00",
+        "operation": "function_call",
+        "target": "os.path.join",
+        "sequence_index": 0,
+        "arguments": [
+          "data_dir",
+          "inventory_records.json"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_020"
+        ]
+      },
+      {
+        "step_id": "step_01",
+        "operation": "function_call",
+        "target": "os.path.join",
+        "sequence_index": 1,
+        "arguments": [
+          "data_dir",
+          "suppliers.json"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_021"
+        ]
+      },
+      {
+        "step_id": "step_02",
+        "operation": "function_call",
+        "target": "os.path.join",
+        "sequence_index": 2,
+        "arguments": [
+          "data_dir",
+          "sales_history.json"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_022"
+        ]
+      },
+      {
+        "step_id": "step_03",
+        "operation": "function_call",
+        "target": "os.path.join",
+        "sequence_index": 3,
+        "arguments": [
+          "data_dir",
+          "policies.json"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_023"
+        ]
+      },
+      {
+        "step_id": "step_04",
+        "operation": "function_call",
+        "target": "open",
+        "sequence_index": 4,
+        "arguments": {
+          "encoding": "utf-8"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_024"
+        ]
+      },
+      {
+        "step_id": "step_05",
+        "operation": "function_call",
+        "target": "json.load",
+        "sequence_index": 5,
+        "arguments": [
+          "f"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_025"
+        ]
+      },
+      {
+        "step_id": "step_06",
+        "operation": "function_call",
+        "target": "open",
+        "sequence_index": 6,
+        "arguments": {
+          "encoding": "utf-8"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_026"
+        ]
+      },
+      {
+        "step_id": "step_07",
+        "operation": "function_call",
+        "target": "json.load",
+        "sequence_index": 7,
+        "arguments": [
+          "f"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_027"
+        ]
+      },
+      {
+        "step_id": "step_08",
+        "operation": "function_call",
+        "target": "open",
+        "sequence_index": 8,
+        "arguments": {
+          "encoding": "utf-8"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_028"
+        ]
+      },
+      {
+        "step_id": "step_09",
+        "operation": "function_call",
+        "target": "json.load",
+        "sequence_index": 9,
+        "arguments": [
+          "f"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_029"
+        ]
+      },
+      {
+        "step_id": "step_10",
+        "operation": "function_call",
+        "target": "open",
+        "sequence_index": 10,
+        "arguments": {
+          "encoding": "utf-8"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_030"
+        ]
+      },
+      {
+        "step_id": "step_11",
+        "operation": "function_call",
+        "target": "json.load",
+        "sequence_index": 11,
+        "arguments": [
+          "f"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_031"
+        ]
+      },
+      {
+        "step_id": "step_12",
+        "operation": "function_call",
+        "target": "len",
+        "sequence_index": 12,
+        "arguments": [
+          "skus"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_032"
+        ]
+      },
+      {
+        "step_id": "step_13",
+        "operation": "function_call",
+        "target": "sku.get",
+        "sequence_index": 13,
+        "arguments": [
+          "supplier_id"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_033"
+        ]
+      },
+      {
+        "step_id": "step_14",
+        "operation": "function_call",
+        "target": "next",
+        "sequence_index": 14,
+        "arguments": [
+          "(s for s in suppliers if s['supplier_id'] == sup_id)",
+          "suppliers[0]"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_034"
+        ]
+      },
+      {
+        "step_id": "step_15",
+        "operation": "function_call",
+        "target": "sales_hist.get",
+        "sequence_index": 15,
+        "arguments": [
+          "sku['sku_id']",
+          {
+            "daily_sales": [],
+            "recorded_days": 0
+          }
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_035"
+        ]
+      },
+      {
+        "step_id": "step_16",
+        "operation": "function_call",
+        "target": "uuid.uuid4",
+        "sequence_index": 16,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_036"
+        ]
+      },
+      {
+        "step_id": "step_17",
+        "operation": "function_call",
+        "target": "init_tracing",
+        "sequence_index": 17,
+        "arguments": {
+          "project_name": "awo-inventory-replenishment"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_037"
+        ]
+      },
+      {
+        "step_id": "step_18",
+        "operation": "agent_factory_call",
+        "target": "intake_agent.create_agent",
+        "sequence_index": 18,
+        "arguments": {
+          "llm": "self.llm"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_038"
+        ]
+      },
+      {
+        "step_id": "step_19",
+        "operation": "agent_factory_call",
+        "target": "stock_policy_agent.create_agent",
+        "sequence_index": 19,
+        "arguments": {
+          "llm": "self.llm"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_039"
+        ]
+      },
+      {
+        "step_id": "step_20",
+        "operation": "agent_factory_call",
+        "target": "demand_forecast_agent.create_agent",
+        "sequence_index": 20,
+        "arguments": {
+          "llm": "self.llm"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_040"
+        ]
+      },
+      {
+        "step_id": "step_21",
+        "operation": "agent_factory_call",
+        "target": "supplier_agent.create_agent",
+        "sequence_index": 21,
+        "arguments": {
+          "llm": "self.llm"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_041"
+        ]
+      },
+      {
+        "step_id": "step_22",
+        "operation": "agent_factory_call",
+        "target": "replenishment_planning_agent.create_agent",
+        "sequence_index": 22,
+        "arguments": {
+          "llm": "self.llm"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_042"
+        ]
+      },
+      {
+        "step_id": "step_23",
+        "operation": "agent_factory_call",
+        "target": "review_agent.create_agent",
+        "sequence_index": 23,
+        "arguments": {
+          "llm": "self.llm"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_043"
+        ]
+      },
+      {
+        "step_id": "step_24",
+        "operation": "function_call",
+        "target": "uuid.uuid4",
+        "sequence_index": 24,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_044"
+        ]
+      },
+      {
+        "step_id": "step_25",
+        "operation": "function_call",
+        "target": "MetricsTracker",
+        "sequence_index": 25,
+        "arguments": {
+          "workflow_name": "WORKFLOW_NAME",
+          "run_id": "active_run_id"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_045"
+        ]
+      },
+      {
+        "step_id": "step_26",
+        "operation": "function_call",
+        "target": "load_sample_inventory_input",
+        "sequence_index": 26,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_046"
+        ]
+      },
+      {
+        "step_id": "step_27",
+        "operation": "function_call",
+        "target": "input_data.get",
+        "sequence_index": 27,
+        "arguments": [
+          "planning_date",
+          "2026-10-15"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_047"
+        ]
+      },
+      {
+        "step_id": "step_28",
+        "operation": "function_call",
+        "target": "intake_agent.run_inventory_intake",
+        "sequence_index": 28,
+        "arguments": {
+          "request_data": "input_data",
+          "agent": "self.agent_1_intake",
+          "tracker": "tracker"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_048"
+        ]
+      },
+      {
+        "step_id": "step_29",
+        "operation": "function_call",
+        "target": "stock_policy_agent.run_stock_policy",
+        "sequence_index": 29,
+        "arguments": {
+          "intake_data": "intake_res",
+          "agent": "self.agent_2_stock_policy",
+          "tracker": "tracker"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_049"
+        ]
+      },
+      {
+        "step_id": "step_30",
+        "operation": "function_call",
+        "target": "demand_forecast_agent.run_demand_forecast",
+        "sequence_index": 30,
+        "arguments": {
+          "intake_data": "intake_res",
+          "sales_data": "input_data.get('sales_record', {})",
+          "horizon_days": 14,
+          "agent": "self.agent_3_demand_forecast",
+          "tracker": "tracker"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_050"
+        ]
+      },
+      {
+        "step_id": "step_31",
+        "operation": "function_call",
+        "target": "input_data.get",
+        "sequence_index": 31,
+        "arguments": [
+          "sales_record",
+          {}
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_051"
+        ]
+      },
+      {
+        "step_id": "step_32",
+        "operation": "function_call",
+        "target": "supplier_agent.run_supplier_analysis",
+        "sequence_index": 32,
+        "arguments": {
+          "intake_data": "intake_res",
+          "planning_date": "planning_date",
+          "agent": "self.agent_4_supplier",
+          "tracker": "tracker"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_052"
+        ]
+      },
+      {
+        "step_id": "step_33",
+        "operation": "function_call",
+        "target": "replenishment_planning_agent.run_replenishment_planning",
+        "sequence_index": 33,
+        "arguments": {
+          "sku_id": "intake_res.get('sku_id', '')",
+          "stock_policy_data": "stock_policy_res",
+          "demand_forecast_data": "demand_forecast_res",
+          "supplier_data": "supplier_res",
+          "agent": "self.agent_5_planning",
+          "tracker": "tracker"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_053"
+        ]
+      },
+      {
+        "step_id": "step_34",
+        "operation": "function_call",
+        "target": "intake_res.get",
+        "sequence_index": 34,
+        "arguments": [
+          "sku_id",
+          ""
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_054"
+        ]
+      },
+      {
+        "step_id": "step_35",
+        "operation": "function_call",
+        "target": "review_agent.run_inventory_review",
+        "sequence_index": 35,
+        "arguments": {
+          "run_id": "active_run_id",
+          "planning_date": "planning_date",
+          "intake_data": "intake_res",
+          "stock_policy_data": "stock_policy_res",
+          "demand_forecast_data": "demand_forecast_res",
+          "supplier_data": "supplier_res",
+          "planning_data": "planning_res",
+          "agent": "self.agent_6_review",
+          "tracker": "tracker"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_055"
+        ]
+      },
+      {
+        "step_id": "step_36",
+        "operation": "function_call",
+        "target": "tracker.finalize",
+        "sequence_index": 36,
+        "arguments": {
+          "output": "final_plan",
+          "status": "success",
+          "runs_base_dir": "runs_base_dir"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_056"
+        ]
+      },
+      {
+        "step_id": "step_37",
+        "operation": "function_call",
+        "target": "isinstance",
+        "sequence_index": 37,
+        "arguments": [
+          "final_plan",
+          "dict"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_057"
+        ]
+      },
+      {
+        "step_id": "step_38",
+        "operation": "function_call",
+        "target": "dict",
+        "sequence_index": 38,
+        "arguments": [
+          "final_plan"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_058"
+        ]
+      },
+      {
+        "step_id": "step_39",
+        "operation": "function_call",
+        "target": "hasattr",
+        "sequence_index": 39,
+        "arguments": [
+          "final_plan",
+          "model_dump"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_059"
+        ]
+      },
+      {
+        "step_id": "step_40",
+        "operation": "function_call",
+        "target": "final_plan.model_dump",
+        "sequence_index": 40,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_060"
+        ]
+      },
+      {
+        "step_id": "step_41",
+        "operation": "function_call",
+        "target": "output_dict.update",
+        "sequence_index": 41,
+        "arguments": [
+          "{'run_id': 'active_run_id', 'status': 'SUCCESS', 'duration_seconds': 'record.total_duration_seconds', 'total_tokens': \"record.token_usage.get('total_tokens', 0) if record.token_usage else 0\", 'prompt_tokens': \"record.token_usage.get('prompt_tokens', 0) if record.token_usage else 0\", 'completion_tokens': \"record.token_usage.get('completion_tokens', 0) if record.token_usage else 0\", 'estimated_cost_usd': 'record.estimated_cost_usd or 0.0', 'agent_executions': '[m.model_dump() for m in record.agent_metrics]', 'final_output': 'final_plan'}"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_061"
+        ]
+      },
+      {
+        "step_id": "step_42",
+        "operation": "function_call",
+        "target": "record.token_usage.get",
+        "sequence_index": 42,
+        "arguments": [
+          "total_tokens",
+          0
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_062"
+        ]
+      },
+      {
+        "step_id": "step_43",
+        "operation": "function_call",
+        "target": "record.token_usage.get",
+        "sequence_index": 43,
+        "arguments": [
+          "prompt_tokens",
+          0
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_063"
+        ]
+      },
+      {
+        "step_id": "step_44",
+        "operation": "function_call",
+        "target": "record.token_usage.get",
+        "sequence_index": 44,
+        "arguments": [
+          "completion_tokens",
+          0
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_064"
+        ]
+      },
+      {
+        "step_id": "step_45",
+        "operation": "function_call",
+        "target": "m.model_dump",
+        "sequence_index": 45,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_065"
+        ]
+      },
+      {
+        "step_id": "step_46",
+        "operation": "function_call",
+        "target": "tracker.finalize",
+        "sequence_index": 46,
+        "arguments": {
+          "output": "None",
+          "status": "failed",
+          "error": "str(exc)",
+          "runs_base_dir": "runs_base_dir"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_066"
+        ]
+      },
+      {
+        "step_id": "step_47",
+        "operation": "function_call",
+        "target": "str",
+        "sequence_index": 47,
+        "arguments": [
+          "exc"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_067"
+        ]
+      },
+      {
+        "step_id": "step_48",
+        "operation": "function_call",
+        "target": "InventoryReplenishmentWorkflow",
+        "sequence_index": 48,
+        "arguments": {
+          "enable_tracing": true
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_068"
+        ]
+      },
+      {
+        "step_id": "step_49",
+        "operation": "tool_invocation",
+        "target": "wf.run",
+        "sequence_index": 49,
+        "arguments": {
+          "input_data": "input_data",
+          "run_id": "run_id"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_069"
+        ]
+      }
+    ],
+    "conditional_branches": [
+      {
+        "condition": "enable_tracing",
+        "start_line": 73,
+        "end_line": 74
+      },
+      {
+        "condition": "input_data is None",
+        "start_line": 100,
+        "end_line": 101
+      }
+    ],
+    "loops": [],
+    "early_returns": [
+      {
+        "return_value": "{'request_id': \"f'REQ-INV-{uuid.uuid4().hex[:6]}'\", 'planning_date': '2026-10-15', 'sku_record': 'sku', 'supplier_record': 'supplier', 'sales_record': 'sales', 'policy_record': 'policies'}",
+        "start_line": 58,
+        "end_line": 65
+      },
+      {
+        "return_value": "wf.run(input_data=input_data, run_id=run_id)",
+        "start_line": 196,
+        "end_line": 196
+      },
+      {
+        "return_value": "EXPECTED_AGENT_COUNT",
+        "start_line": 86,
+        "end_line": 86
+      },
+      {
+        "return_value": "output_dict",
+        "start_line": 178,
+        "end_line": 178
+      }
+    ],
+    "workflow_inputs": [],
+    "workflow_outputs": []
+  },
+  "orchestrator_process": {
+    "framework": "crewai",
+    "process_type": {
+      "value": null,
+      "resolution_status": "unresolved"
+    },
+    "delegation_enabled_agents": [],
+    "manager": {
+      "manager_llm": null,
+      "manager_agent": null
+    },
+    "task_context_links": [],
+    "async_tasks": [],
+    "runtime_scheduling_observable": false
+  },
+  "dependency_graph": {
+    "nodes": [
+      {
+        "id": "workflow:workflow.py",
+        "type": "workflow",
+        "source_file": "workflow.py",
+        "evidence_refs": [
+          "ev_wf_001"
+        ]
+      },
+      {
+        "id": "agent:demand_forecast_agent",
+        "type": "agent",
+        "source_file": "demand_forecast_agent.py",
+        "evidence_refs": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "id": "agent:inventory_intake_agent",
+        "type": "agent",
+        "source_file": "intake_agent.py",
+        "evidence_refs": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "id": "agent:replenishment_planning_agent",
+        "type": "agent",
+        "source_file": "replenishment_planning_agent.py",
+        "evidence_refs": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "id": "agent:inventory_review_agent",
+        "type": "agent",
+        "source_file": "review_agent.py",
+        "evidence_refs": [
+          "ev_agent_009"
+        ]
+      },
+      {
+        "id": "agent:stock_policy_agent",
+        "type": "agent",
+        "source_file": "stock_policy_agent.py",
+        "evidence_refs": [
+          "ev_agent_011"
+        ]
+      },
+      {
+        "id": "agent:supplier_agent",
+        "type": "agent",
+        "source_file": "supplier_agent.py",
+        "evidence_refs": [
+          "ev_agent_013"
+        ]
+      },
+      {
+        "id": "task:task_demand_forecast_agent_1",
+        "type": "task",
+        "source_file": "demand_forecast_agent.py",
+        "evidence_refs": [
+          "ev_task_014"
+        ]
+      },
+      {
+        "id": "task:task_inventory_intake_agent_1",
+        "type": "task",
+        "source_file": "intake_agent.py",
+        "evidence_refs": [
+          "ev_task_015"
+        ]
+      },
+      {
+        "id": "task:task_replenishment_planning_agent_1",
+        "type": "task",
+        "source_file": "replenishment_planning_agent.py",
+        "evidence_refs": [
+          "ev_task_016"
+        ]
+      },
+      {
+        "id": "task:task_inventory_review_agent_1",
+        "type": "task",
+        "source_file": "review_agent.py",
+        "evidence_refs": [
+          "ev_task_017"
+        ]
+      },
+      {
+        "id": "task:task_stock_policy_agent_1",
+        "type": "task",
+        "source_file": "stock_policy_agent.py",
+        "evidence_refs": [
+          "ev_task_018"
+        ]
+      },
+      {
+        "id": "task:task_supplier_agent_1",
+        "type": "task",
+        "source_file": "supplier_agent.py",
+        "evidence_refs": [
+          "ev_task_019"
+        ]
+      },
+      {
+        "id": "function:calculate_expected_arrival",
+        "type": "function",
+        "source_file": null,
+        "evidence_refs": []
+      },
+      {
+        "id": "function:load_sample_inventory_input",
+        "type": "function",
+        "source_file": null,
+        "evidence_refs": []
+      },
+      {
+        "id": "function:calculate_deterministic_forecast",
+        "type": "function",
+        "source_file": null,
+        "evidence_refs": []
+      },
+      {
+        "id": "function:calculate_usable_inventory",
+        "type": "function",
+        "source_file": null,
+        "evidence_refs": []
+      },
+      {
+        "id": "function:run_inventory_replenishment_workflow",
+        "type": "function",
+        "source_file": null,
+        "evidence_refs": []
+      },
+      {
+        "id": "function:calculate_deterministic_replenishment",
+        "type": "function",
+        "source_file": null,
+        "evidence_refs": []
+      }
+    ],
+    "edges": [
+      {
+        "source": "workflow:workflow.py",
+        "target": "agent:inventory_intake_agent",
+        "relationship": "agent_invocation",
+        "data_reference": null,
+        "resolution_status": "static",
+        "evidence_refs": [
+          "ev_wf_001"
+        ]
+      },
+      {
+        "source": "workflow:workflow.py",
+        "target": "agent:stock_policy_agent",
+        "relationship": "agent_invocation",
+        "data_reference": null,
+        "resolution_status": "static",
+        "evidence_refs": [
+          "ev_wf_001"
+        ]
+      },
+      {
+        "source": "workflow:workflow.py",
+        "target": "agent:demand_forecast_agent",
+        "relationship": "agent_invocation",
+        "data_reference": null,
+        "resolution_status": "static",
+        "evidence_refs": [
+          "ev_wf_001"
+        ]
+      },
+      {
+        "source": "workflow:workflow.py",
+        "target": "agent:supplier_agent",
+        "relationship": "agent_invocation",
+        "data_reference": null,
+        "resolution_status": "static",
+        "evidence_refs": [
+          "ev_wf_001"
+        ]
+      },
+      {
+        "source": "workflow:workflow.py",
+        "target": "agent:replenishment_planning_agent",
+        "relationship": "agent_invocation",
+        "data_reference": null,
+        "resolution_status": "static",
+        "evidence_refs": [
+          "ev_wf_001"
+        ]
+      },
+      {
+        "source": "workflow:workflow.py",
+        "target": "agent:inventory_review_agent",
+        "relationship": "agent_invocation",
+        "data_reference": null,
+        "resolution_status": "static",
+        "evidence_refs": [
+          "ev_wf_001"
+        ]
+      }
+    ]
+  },
+  "tool_and_helper_inventory": {
+    "registered_tools": [],
+    "explicit_code_invocations": [],
+    "helper_functions": [
+      "calculate_deterministic_forecast",
+      "calculate_deterministic_replenishment",
+      "calculate_expected_arrival",
+      "calculate_usable_inventory",
+      "load_sample_inventory_input",
+      "run_inventory_replenishment_workflow"
+    ],
+    "runtime_llm_tool_selection": {
+      "observable": false,
+      "reason": "Runtime LLM tool selection is unobservable via static AST analysis"
+    }
+  },
+  "evidence_and_provenance": {
+    "evidence": [
+      {
+        "evidence_id": "ev_wf_001",
+        "source_file": "workflow.py",
+        "start_line": 1,
+        "end_line": 197,
+        "entity_id": "workflow:workflow.py",
+        "evidence_type": "workflow_entrypoint"
+      },
+      {
+        "evidence_id": "ev_agent_002",
+        "source_file": "demand_forecast_agent.py",
+        "start_line": 74,
+        "end_line": 81,
+        "entity_id": "agent:demand_forecast_agent",
+        "evidence_type": "agent_definition"
+      },
+      {
+        "evidence_id": "ev_agent_003",
+        "source_file": "demand_forecast_agent.py",
+        "start_line": 84,
+        "end_line": 141,
+        "entity_id": "agent:demand_forecast_agent",
+        "evidence_type": "agent_definition"
+      },
+      {
+        "evidence_id": "ev_agent_004",
+        "source_file": "intake_agent.py",
+        "start_line": 31,
+        "end_line": 38,
+        "entity_id": "agent:inventory_intake_agent",
+        "evidence_type": "agent_definition"
+      },
+      {
+        "evidence_id": "ev_agent_005",
+        "source_file": "intake_agent.py",
+        "start_line": 41,
+        "end_line": 106,
+        "entity_id": "agent:inventory_intake_agent",
+        "evidence_type": "agent_definition"
+      },
+      {
+        "evidence_id": "ev_agent_006",
+        "source_file": "replenishment_planning_agent.py",
+        "start_line": 100,
+        "end_line": 107,
+        "entity_id": "agent:replenishment_planning_agent",
+        "evidence_type": "agent_definition"
+      },
+      {
+        "evidence_id": "ev_agent_007",
+        "source_file": "replenishment_planning_agent.py",
+        "start_line": 110,
+        "end_line": 176,
+        "entity_id": "agent:replenishment_planning_agent",
+        "evidence_type": "agent_definition"
+      },
+      {
+        "evidence_id": "ev_agent_008",
+        "source_file": "review_agent.py",
+        "start_line": 30,
+        "end_line": 37,
+        "entity_id": "agent:inventory_review_agent",
+        "evidence_type": "agent_definition"
+      },
+      {
+        "evidence_id": "ev_agent_009",
+        "source_file": "review_agent.py",
+        "start_line": 40,
+        "end_line": 147,
+        "entity_id": "agent:inventory_review_agent",
+        "evidence_type": "agent_definition"
+      },
+      {
+        "evidence_id": "ev_agent_010",
+        "source_file": "stock_policy_agent.py",
+        "start_line": 38,
+        "end_line": 45,
+        "entity_id": "agent:stock_policy_agent",
+        "evidence_type": "agent_definition"
+      },
+      {
+        "evidence_id": "ev_agent_011",
+        "source_file": "stock_policy_agent.py",
+        "start_line": 48,
+        "end_line": 111,
+        "entity_id": "agent:stock_policy_agent",
+        "evidence_type": "agent_definition"
+      },
+      {
+        "evidence_id": "ev_agent_012",
+        "source_file": "supplier_agent.py",
+        "start_line": 39,
+        "end_line": 46,
+        "entity_id": "agent:supplier_agent",
+        "evidence_type": "agent_definition"
+      },
+      {
+        "evidence_id": "ev_agent_013",
+        "source_file": "supplier_agent.py",
+        "start_line": 49,
+        "end_line": 102,
+        "entity_id": "agent:supplier_agent",
+        "evidence_type": "agent_definition"
+      },
+      {
+        "evidence_id": "ev_task_014",
+        "source_file": "demand_forecast_agent.py",
+        "start_line": 133,
+        "end_line": 141,
+        "entity_id": "task:task_demand_forecast_agent_1",
+        "evidence_type": "task_definition"
+      },
+      {
+        "evidence_id": "ev_task_015",
+        "source_file": "intake_agent.py",
+        "start_line": 98,
+        "end_line": 106,
+        "entity_id": "task:task_inventory_intake_agent_1",
+        "evidence_type": "task_definition"
+      },
+      {
+        "evidence_id": "ev_task_016",
+        "source_file": "replenishment_planning_agent.py",
+        "start_line": 168,
+        "end_line": 176,
+        "entity_id": "task:task_replenishment_planning_agent_1",
+        "evidence_type": "task_definition"
+      },
+      {
+        "evidence_id": "ev_task_017",
+        "source_file": "review_agent.py",
+        "start_line": 139,
+        "end_line": 147,
+        "entity_id": "task:task_inventory_review_agent_1",
+        "evidence_type": "task_definition"
+      },
+      {
+        "evidence_id": "ev_task_018",
+        "source_file": "stock_policy_agent.py",
+        "start_line": 103,
+        "end_line": 111,
+        "entity_id": "task:task_stock_policy_agent_1",
+        "evidence_type": "task_definition"
+      },
+      {
+        "evidence_id": "ev_task_019",
+        "source_file": "supplier_agent.py",
+        "start_line": 94,
+        "end_line": 102,
+        "entity_id": "task:task_supplier_agent_1",
+        "evidence_type": "task_definition"
+      },
+      {
+        "evidence_id": "ev_step_020",
+        "source_file": "workflow.py",
+        "start_line": 39,
+        "end_line": 39,
+        "entity_id": "step:step_00",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_021",
+        "source_file": "workflow.py",
+        "start_line": 40,
+        "end_line": 40,
+        "entity_id": "step:step_01",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_022",
+        "source_file": "workflow.py",
+        "start_line": 41,
+        "end_line": 41,
+        "entity_id": "step:step_02",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_023",
+        "source_file": "workflow.py",
+        "start_line": 42,
+        "end_line": 42,
+        "entity_id": "step:step_03",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_024",
+        "source_file": "workflow.py",
+        "start_line": 44,
+        "end_line": 44,
+        "entity_id": "step:step_04",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_025",
+        "source_file": "workflow.py",
+        "start_line": 45,
+        "end_line": 45,
+        "entity_id": "step:step_05",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_026",
+        "source_file": "workflow.py",
+        "start_line": 46,
+        "end_line": 46,
+        "entity_id": "step:step_06",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_027",
+        "source_file": "workflow.py",
+        "start_line": 47,
+        "end_line": 47,
+        "entity_id": "step:step_07",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_028",
+        "source_file": "workflow.py",
+        "start_line": 48,
+        "end_line": 48,
+        "entity_id": "step:step_08",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_029",
+        "source_file": "workflow.py",
+        "start_line": 49,
+        "end_line": 49,
+        "entity_id": "step:step_09",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_030",
+        "source_file": "workflow.py",
+        "start_line": 50,
+        "end_line": 50,
+        "entity_id": "step:step_10",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_031",
+        "source_file": "workflow.py",
+        "start_line": 51,
+        "end_line": 51,
+        "entity_id": "step:step_11",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_032",
+        "source_file": "workflow.py",
+        "start_line": 53,
+        "end_line": 53,
+        "entity_id": "step:step_12",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_033",
+        "source_file": "workflow.py",
+        "start_line": 54,
+        "end_line": 54,
+        "entity_id": "step:step_13",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_034",
+        "source_file": "workflow.py",
+        "start_line": 55,
+        "end_line": 55,
+        "entity_id": "step:step_14",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_035",
+        "source_file": "workflow.py",
+        "start_line": 56,
+        "end_line": 56,
+        "entity_id": "step:step_15",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_036",
+        "source_file": "workflow.py",
+        "start_line": 59,
+        "end_line": 59,
+        "entity_id": "step:step_16",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_037",
+        "source_file": "workflow.py",
+        "start_line": 74,
+        "end_line": 74,
+        "entity_id": "step:step_17",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_038",
+        "source_file": "workflow.py",
+        "start_line": 77,
+        "end_line": 77,
+        "entity_id": "step:step_18",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_039",
+        "source_file": "workflow.py",
+        "start_line": 78,
+        "end_line": 78,
+        "entity_id": "step:step_19",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_040",
+        "source_file": "workflow.py",
+        "start_line": 79,
+        "end_line": 79,
+        "entity_id": "step:step_20",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_041",
+        "source_file": "workflow.py",
+        "start_line": 80,
+        "end_line": 80,
+        "entity_id": "step:step_21",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_042",
+        "source_file": "workflow.py",
+        "start_line": 81,
+        "end_line": 81,
+        "entity_id": "step:step_22",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_043",
+        "source_file": "workflow.py",
+        "start_line": 82,
+        "end_line": 82,
+        "entity_id": "step:step_23",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_044",
+        "source_file": "workflow.py",
+        "start_line": 97,
+        "end_line": 97,
+        "entity_id": "step:step_24",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_045",
+        "source_file": "workflow.py",
+        "start_line": 98,
+        "end_line": 98,
+        "entity_id": "step:step_25",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_046",
+        "source_file": "workflow.py",
+        "start_line": 101,
+        "end_line": 101,
+        "entity_id": "step:step_26",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_047",
+        "source_file": "workflow.py",
+        "start_line": 103,
+        "end_line": 103,
+        "entity_id": "step:step_27",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_048",
+        "source_file": "workflow.py",
+        "start_line": 107,
+        "end_line": 111,
+        "entity_id": "step:step_28",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_049",
+        "source_file": "workflow.py",
+        "start_line": 114,
+        "end_line": 118,
+        "entity_id": "step:step_29",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_050",
+        "source_file": "workflow.py",
+        "start_line": 121,
+        "end_line": 127,
+        "entity_id": "step:step_30",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_051",
+        "source_file": "workflow.py",
+        "start_line": 123,
+        "end_line": 123,
+        "entity_id": "step:step_31",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_052",
+        "source_file": "workflow.py",
+        "start_line": 130,
+        "end_line": 135,
+        "entity_id": "step:step_32",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_053",
+        "source_file": "workflow.py",
+        "start_line": 138,
+        "end_line": 145,
+        "entity_id": "step:step_33",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_054",
+        "source_file": "workflow.py",
+        "start_line": 139,
+        "end_line": 139,
+        "entity_id": "step:step_34",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_055",
+        "source_file": "workflow.py",
+        "start_line": 148,
+        "end_line": 158,
+        "entity_id": "step:step_35",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_056",
+        "source_file": "workflow.py",
+        "start_line": 161,
+        "end_line": 165,
+        "entity_id": "step:step_36",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_057",
+        "source_file": "workflow.py",
+        "start_line": 166,
+        "end_line": 166,
+        "entity_id": "step:step_37",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_058",
+        "source_file": "workflow.py",
+        "start_line": 166,
+        "end_line": 166,
+        "entity_id": "step:step_38",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_059",
+        "source_file": "workflow.py",
+        "start_line": 166,
+        "end_line": 166,
+        "entity_id": "step:step_39",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_060",
+        "source_file": "workflow.py",
+        "start_line": 166,
+        "end_line": 166,
+        "entity_id": "step:step_40",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_061",
+        "source_file": "workflow.py",
+        "start_line": 167,
+        "end_line": 177,
+        "entity_id": "step:step_41",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_062",
+        "source_file": "workflow.py",
+        "start_line": 171,
+        "end_line": 171,
+        "entity_id": "step:step_42",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_063",
+        "source_file": "workflow.py",
+        "start_line": 172,
+        "end_line": 172,
+        "entity_id": "step:step_43",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_064",
+        "source_file": "workflow.py",
+        "start_line": 173,
+        "end_line": 173,
+        "entity_id": "step:step_44",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_065",
+        "source_file": "workflow.py",
+        "start_line": 175,
+        "end_line": 175,
+        "entity_id": "step:step_45",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_066",
+        "source_file": "workflow.py",
+        "start_line": 181,
+        "end_line": 186,
+        "entity_id": "step:step_46",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_067",
+        "source_file": "workflow.py",
+        "start_line": 184,
+        "end_line": 184,
+        "entity_id": "step:step_47",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_068",
+        "source_file": "workflow.py",
+        "start_line": 195,
+        "end_line": 195,
+        "entity_id": "step:step_48",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_069",
+        "source_file": "workflow.py",
+        "start_line": 196,
+        "end_line": 196,
+        "entity_id": "step:step_49",
+        "evidence_type": "execution_step"
+      }
+    ]
+  },
+  "analysis_limitations": {
+    "unresolved_references": [],
+    "dynamic_expressions": [],
+    "unsupported_patterns": [],
+    "static_analysis_limitations": [
+      "Dynamic runtime LLM decisions and tool selection cannot be observed via static AST",
+      "Procedural workflow statement order does not imply internal framework agent scheduling"
+    ]
+  },
+  "analysis_summary": {
+    "total_agents": 6,
+    "invoked_agents": 6,
+    "uninvoked_agents": 0,
+    "total_tasks": 6,
+    "total_dependencies": 6,
+    "unresolved_relationships": 0,
+    "completeness": "complete",
+    "output_metrics": {
+      "serialized_bytes": 61975,
+      "estimated_tokens": 15493,
+      "token_estimation_method": "heuristic_character_ratio"
+    }
+  }
+}

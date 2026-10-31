@@ -1,0 +1,1950 @@
+{
+  "metadata": {
+    "workflow_id": "expense_reimbursement",
+    "workflow_name": "expense_reimbursement",
+    "evidence_schema_version": "1.0",
+    "generated_at": "2026-10-31T19:56:52.207240+00:00",
+    "traces_discovered": 30,
+    "traces_processed": 30,
+    "traces_failed": 0,
+    "input_files": {
+      "workflow_json": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\expense_reimbursement\\workflow.json",
+      "workflow_context_json": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\expense_reimbursement\\workflow_context.json",
+      "traces_directory": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Ingestion_Traces_final\\Ingestion_Traces\\expense_reimbursement",
+      "trace_files": [
+        "live_20261031_181836_trace01.json",
+        "live_20261031_181904_trace02.json",
+        "live_20261031_181918_trace03.json",
+        "live_20261031_181930_trace04.json",
+        "live_20261031_181943_trace05.json",
+        "live_20261031_181956_trace06.json",
+        "live_20261031_182012_trace07.json",
+        "live_20261031_182025_trace08.json",
+        "live_20261031_182039_trace09.json",
+        "live_20261031_182053_trace10.json",
+        "live_20261031_182106_trace11.json",
+        "live_20261031_182119_trace12.json",
+        "live_20261031_182134_trace13.json",
+        "live_20261031_182146_trace14.json",
+        "live_20261031_182200_trace15.json",
+        "live_20261031_182216_trace16.json",
+        "live_20261031_182235_trace17.json",
+        "live_20261031_182252_trace18.json",
+        "live_20261031_182309_trace19.json",
+        "live_20261031_182321_trace20.json",
+        "live_20261031_182337_trace21.json",
+        "live_20261031_182350_trace22.json",
+        "live_20261031_182406_trace23.json",
+        "live_20261031_182458_trace24.json",
+        "live_20261031_182555_trace25.json",
+        "live_20261031_182700_trace26.json",
+        "live_20261031_182752_trace27.json",
+        "live_20261031_182815_trace28.json",
+        "live_20261031_182837_trace29.json",
+        "live_20261031_182854_trace30.json"
+      ]
+    },
+    "aggregation_status": "complete"
+  },
+  "workflow_definition": {
+    "description": "Baseline 8-agent sequential employee expense reimbursement validation workflow.",
+    "version": "1.0.0",
+    "declared_agents": [
+      {
+        "agent_id": "",
+        "name": "Receipt Extraction Specialist",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "receipt_text",
+          "raw_claim"
+        ],
+        "declared_outputs": [
+          "merchant",
+          "transaction_date",
+          "currency",
+          "subtotal",
+          "tax",
+          "total",
+          "line_items"
+        ],
+        "declared_dependencies": [],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Expense Normalization Specialist",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "receipt_extracted_data",
+          "claim_input"
+        ],
+        "declared_outputs": [
+          "normalized_employee_id",
+          "normalized_merchant",
+          "normalized_date",
+          "currency",
+          "amounts"
+        ],
+        "declared_dependencies": [
+          "receipt_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Expense Categorization Specialist",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "normalized_claim"
+        ],
+        "declared_outputs": [
+          "category",
+          "classification_confidence",
+          "reasoning"
+        ],
+        "declared_dependencies": [
+          "normalize_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Expense Arithmetic Specialist",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "subtotal",
+          "tax",
+          "total"
+        ],
+        "declared_outputs": [
+          "is_arithmetic_valid",
+          "discrepancy_usd",
+          "verification_notes"
+        ],
+        "declared_dependencies": [
+          "normalize_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Reimbursement Policy Compliance Specialist",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "category",
+          "total",
+          "receipt_presence"
+        ],
+        "declared_outputs": [
+          "policy_compliance_status",
+          "cited_policy_ids",
+          "violation_reasons"
+        ],
+        "declared_dependencies": [
+          "category_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Duplicate Claim Detection Specialist",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "employee_id",
+          "merchant",
+          "total",
+          "date"
+        ],
+        "declared_outputs": [
+          "duplicate_status",
+          "matching_claim_ids",
+          "duplicate_risk_score"
+        ],
+        "declared_dependencies": [
+          "normalize_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Expense Exception & Audit Specialist",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "receipt_text",
+          "amount_status",
+          "policy_status",
+          "duplicate_status"
+        ],
+        "declared_outputs": [
+          "exceptions_found",
+          "severity_levels",
+          "audit_warnings"
+        ],
+        "declared_dependencies": [
+          "amount_agent",
+          "policy_agent",
+          "duplicate_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Expense Review & Adjudication Specialist",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "all_previous_stages"
+        ],
+        "declared_outputs": [
+          "final_reimbursement_decision",
+          "decision_reasons",
+          "audit_trail"
+        ],
+        "declared_dependencies": [
+          "exception_agent"
+        ],
+        "assigned_key_env": null
+      }
+    ],
+    "declared_dependencies": [
+      {
+        "source": "receipt_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "normalize_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "normalize_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "category_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "normalize_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "amount_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "policy_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "duplicate_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "exception_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      }
+    ],
+    "declared_execution_order": [
+      "receipt_agent",
+      "normalize_agent",
+      "category_agent",
+      "amount_agent",
+      "policy_agent",
+      "duplicate_agent",
+      "exception_agent",
+      "expense_review_agent"
+    ],
+    "declared_model_configuration": {
+      "model": "openai/gpt-oss-120b",
+      "provider": null,
+      "assigned_groq_key_env": null
+    },
+    "optimizer_annotations": {
+      "optimization_opportunities": [
+        "Pruning exception_agent by merging checks into policy_agent and amount_agent",
+        "Parallelizing amount_agent, policy_agent, and duplicate_agent",
+        "Fast-path routing for recurring verified merchants with subtotal < $25",
+        "Compressing prompts across combined compliance stages"
+      ],
+      "hypothesis_disclaimer": "Declared candidate hypothesis from workflow specification, not an empirical or validated optimization opportunity."
+    }
+  },
+  "static_implementation_context": {
+    "source_files": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "agents": [
+      {
+        "agent_id": "amount_agent",
+        "role": "Expense Arithmetic Specialist",
+        "goal": "Verify all arithmetic calculations on the claim: subtotal + tax = total. Flag rounding errors, negative sums, or declared total mismatches.",
+        "backstory": "You are a Forensic Financial Auditor who checks numerical calculations to the exact cent, ensuring books reconcile with mathematical precision.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'Deterministic Arithmetic Verification:\\n{json.dumps(arithmetic_check, indent=2)}\\nVerify if subtotal (${sub:.2f}) + tax (${tx:.2f}) equals total (${tot:.2f}). Confirm whether any negative amounts or rounding anomalies exist.'",
+            "expected_output": "JSON with is_arithmetic_valid, discrepancy_usd, and verification_notes.",
+            "tools": []
+          },
+          {
+            "task_name": null,
+            "description": "f'Synthesize all preceding 7 stages into a final reimbursement decision:\\n1. Receipt: {receipt_text}\\n2. Normalization: {normalize_text}\\n3. Category: {category_text}\\n4. Amount: {amount_text}\\n5. Policy: {policy_text}\\n6. Duplicate: {duplicate_text}\\n7. Exceptions: {exception_text}\\nOutput final decision: ELIGIBLE, INELIGIBLE, or NEEDS_REVIEW. Include clear rationale.'",
+            "expected_output": "Final Expense Adjudication JSON report.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'Deterministic Arithmetic Verification:\\n{json.dumps(arithmetic_check, indent=2)}\\nVerify if subtotal (${sub:.2f}) + tax (${tx:.2f}) equals total (${tot:.2f}). Confirm whether any negative amounts or rounding anomalies exist.'",
+          "f'Synthesize all preceding 7 stages into a final reimbursement decision:\\n1. Receipt: {receipt_text}\\n2. Normalization: {normalize_text}\\n3. Category: {category_text}\\n4. Amount: {amount_text}\\n5. Policy: {policy_text}\\n6. Duplicate: {duplicate_text}\\n7. Exceptions: {exception_text}\\nOutput final decision: ELIGIBLE, INELIGIBLE, or NEEDS_REVIEW. Include clear rationale.'",
+          "Backstory: You are a Forensic Financial Auditor who checks numerical calculations to the exact cent, ensuring books reconcile with mathematical precision."
+        ],
+        "model": "amount_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [
+          "calculate_deterministic_arithmetic"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\expense_reimbursement\\amount_agent.py",
+        "start_line": 29,
+        "end_line": 43,
+        "evidence_refs": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "agent_id": "category_agent",
+        "role": "Expense Categorization Specialist",
+        "goal": "Categorize the claim into Travel, Meals & Entertainment, Accommodation, Transport, Office Supplies, or Software & Cloud. Cite supporting merchant and line item evidence.",
+        "backstory": "You are a Corporate Controller who maps receipts to General Ledger accounting categories based on merchant type, business purpose, and line item context.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'Classify this expense into an official category:\\nAllowed: Travel, Meals & Entertainment, Accommodation, Transport, Office Supplies, Software & Cloud.\\nNormalized Context: {normalize_text}\\nState the assigned category and provide evidence for this classification.'",
+            "expected_output": "JSON containing category, classification_confidence, and reasoning.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'Classify this expense into an official category:\\nAllowed: Travel, Meals & Entertainment, Accommodation, Transport, Office Supplies, Software & Cloud.\\nNormalized Context: {normalize_text}\\nState the assigned category and provide evidence for this classification.'",
+          "Backstory: You are a Corporate Controller who maps receipts to General Ledger accounting categories based on merchant type, business purpose, and line item context."
+        ],
+        "model": "category_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\expense_reimbursement\\category_agent.py",
+        "start_line": 11,
+        "end_line": 25,
+        "evidence_refs": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "agent_id": "duplicate_agent",
+        "role": "Duplicate Claim Detection Specialist",
+        "goal": "Cross-reference active claim against historical submissions. Distinguish between confirmed duplicate submissions and coincidentally similar expenses.",
+        "backstory": "You are a Fraud Prevention Analyst who scans transaction histories to prevent double-reimbursements and duplicate receipt submissions across accounting periods.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Check for duplicate submissions against historical database:\\nCandidate Submissions:\\n{json.dumps(duplicate_candidates, indent=2)}\\nCurrent Claim: Employee={emp_id}, Merchant={merchant_name}, Total=${tot:.2f}, Date={claim_input.get('submission_date')}\\nDetermine if this is a Confirmed Duplicate, Possible Coincidence, or No Duplicate Found.\"",
+            "expected_output": "JSON with duplicate_status, matching_claim_ids, and duplicate_risk_score.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Check for duplicate submissions against historical database:\\nCandidate Submissions:\\n{json.dumps(duplicate_candidates, indent=2)}\\nCurrent Claim: Employee={emp_id}, Merchant={merchant_name}, Total=${tot:.2f}, Date={claim_input.get('submission_date')}\\nDetermine if this is a Confirmed Duplicate, Possible Coincidence, or No Duplicate Found.\"",
+          "Backstory: You are a Fraud Prevention Analyst who scans transaction histories to prevent double-reimbursements and duplicate receipt submissions across accounting periods."
+        ],
+        "model": "duplicate_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [
+          "query_candidate_duplicates"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\expense_reimbursement\\duplicate_agent.py",
+        "start_line": 36,
+        "end_line": 50,
+        "evidence_refs": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "agent_id": "exception_agent",
+        "role": "Expense Exception & Audit Specialist",
+        "goal": "Conduct an independent red-team audit of the claim: check for policy violations, missing receipt documentation, excessive sums, or unapproved perks. Generate structured warnings.",
+        "backstory": "You are an Internal Affairs Financial Auditor. You operate with healthy skepticism, spotting irregular spending patterns, missing documentation, and policy circumvention.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'Conduct an independent exception audit across all findings:\\nReceipt Info: {receipt_text}\\nArithmetic: {amount_text}\\nPolicy Check: {policy_text}\\nDuplicate Check: {duplicate_text}\\nIdentify all anomalies, unitemized receipts, policy breaches, or red flags.'",
+            "expected_output": "JSON with list of exceptions_found, severity_levels, and audit_warnings.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'Conduct an independent exception audit across all findings:\\nReceipt Info: {receipt_text}\\nArithmetic: {amount_text}\\nPolicy Check: {policy_text}\\nDuplicate Check: {duplicate_text}\\nIdentify all anomalies, unitemized receipts, policy breaches, or red flags.'",
+          "Backstory: You are an Internal Affairs Financial Auditor. You operate with healthy skepticism, spotting irregular spending patterns, missing documentation, and policy circumvention."
+        ],
+        "model": "exception_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\expense_reimbursement\\exception_agent.py",
+        "start_line": 11,
+        "end_line": 25,
+        "evidence_refs": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "agent_id": "normalize_agent",
+        "role": "Expense Normalization Specialist",
+        "goal": "Standardize extracted claim dates, numeric amounts, currency codes, and employee IDs. Flag inconsistencies between the claim submission and receipt evidence.",
+        "backstory": "You are a Financial Data Integrity Engineer who ensures all accounting records conform to strict ISO standards, uniform data schemas, and validated identifiers.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'Standardize and validate fields between claim and receipt:\\nClaim Payload: {json.dumps(claim_input, indent=2)}\\nReceipt Output: {receipt_text}\\nFormat dates to YYYY-MM-DD, currency to ISO code (e.g., USD), and numeric amounts to 2 decimals.'",
+            "expected_output": "JSON containing normalized employee_id, merchant, date, currency, subtotal, tax, and total.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'Standardize and validate fields between claim and receipt:\\nClaim Payload: {json.dumps(claim_input, indent=2)}\\nReceipt Output: {receipt_text}\\nFormat dates to YYYY-MM-DD, currency to ISO code (e.g., USD), and numeric amounts to 2 decimals.'",
+          "Backstory: You are a Financial Data Integrity Engineer who ensures all accounting records conform to strict ISO standards, uniform data schemas, and validated identifiers."
+        ],
+        "model": "normalize_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\expense_reimbursement\\normalize_agent.py",
+        "start_line": 11,
+        "end_line": 25,
+        "evidence_refs": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "agent_id": "policy_agent",
+        "role": "Reimbursement Policy Compliance Specialist",
+        "goal": "Apply corporate reimbursement policies against the claim details. Check caps, receipt requirements, and advance approval rules. Return policy IDs cited.",
+        "backstory": "You are a Corporate Compliance Officer with encyclopedic knowledge of company travel and expense policies, spending limits, and audit standards.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'Evaluate this claim against corporate policy limits:\\nApplicable Policies:\\n{json.dumps(policies, indent=2)}\\nClaim Details: Total=${tot:.2f}, Category={assigned_category}, HasReceipt={bool(raw_receipt)}\\nReturn which policy IDs apply, whether any limit is breached, and compliance status.'",
+            "expected_output": "JSON with policy_compliance_status, cited_policy_ids, and violation_reasons.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'Evaluate this claim against corporate policy limits:\\nApplicable Policies:\\n{json.dumps(policies, indent=2)}\\nClaim Details: Total=${tot:.2f}, Category={assigned_category}, HasReceipt={bool(raw_receipt)}\\nReturn which policy IDs apply, whether any limit is breached, and compliance status.'",
+          "Backstory: You are a Corporate Compliance Officer with encyclopedic knowledge of company travel and expense policies, spending limits, and audit standards."
+        ],
+        "model": "policy_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [
+          "query_policies_for_category"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\expense_reimbursement\\policy_agent.py",
+        "start_line": 28,
+        "end_line": 42,
+        "evidence_refs": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "agent_id": "receipt_agent",
+        "role": "Receipt Extraction Specialist",
+        "goal": "Extract merchant name, transaction date, currency, subtotal, tax amount, total amount, and itemized lines from raw receipt text. Flag any missing fields.",
+        "backstory": "You are a Forensic Accounts Payable Auditor specializing in reading receipt structures, itemized charges, and payment metadata accurately without guessing.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Read and parse this synthetic receipt text:\\n{(raw_receipt if raw_receipt else '[NO RECEIPT TEXT PROVIDED IN CLAIM]')}\\nExtract merchant, transaction_date, currency, subtotal, tax, total, and line items. Explicitly note if receipt is missing or illegible.\"",
+            "expected_output": "JSON containing extracted merchant, date, currency, subtotal, tax, total, and line items.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Read and parse this synthetic receipt text:\\n{(raw_receipt if raw_receipt else '[NO RECEIPT TEXT PROVIDED IN CLAIM]')}\\nExtract merchant, transaction_date, currency, subtotal, tax, total, and line items. Explicitly note if receipt is missing or illegible.\"",
+          "Backstory: You are a Forensic Accounts Payable Auditor specializing in reading receipt structures, itemized charges, and payment metadata accurately without guessing."
+        ],
+        "model": "receipt_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\expense_reimbursement\\receipt_agent.py",
+        "start_line": 11,
+        "end_line": 25,
+        "evidence_refs": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "agent_id": "expense_review_agent",
+        "role": "Expense Review & Adjudication Specialist",
+        "goal": "Synthesize outputs from receipt extraction, normalization, categorization, amount check, policy verification, duplicate check, and exception audit. Deliver final adjudication (ELIGIBLE, INELIGIBLE, NEEDS_REVIEW) with citations and justifications. Never disburse funds.",
+        "backstory": "You are the Head of Accounts Payable & Disbursements. You make the final compliance determination on expense claims, balancing fair employee reimbursement with strict governance.",
+        "tasks": [],
+        "prompts": [
+          "Backstory: You are the Head of Accounts Payable & Disbursements. You make the final compliance determination on expense claims, balancing fair employee reimbursement with strict governance."
+        ],
+        "model": "expense_review_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\expense_reimbursement\\review_agent.py",
+        "start_line": 11,
+        "end_line": 26,
+        "evidence_refs": [
+          "ev_agent_009"
+        ]
+      }
+    ],
+    "invocation_relationships": [],
+    "data_handoffs": [],
+    "conditional_branches": [],
+    "tools_and_helpers": {
+      "registered_tools": [],
+      "explicit_code_invocations": [],
+      "helper_functions": [
+        "calculate_deterministic_arithmetic",
+        "query_candidate_duplicates",
+        "query_policies_for_category",
+        "run_expense_workflow"
+      ],
+      "runtime_llm_tool_selection": {
+        "observable": false,
+        "reason": "Runtime LLM tool selection is unobservable via static AST analysis"
+      }
+    },
+    "analysis_limitations": {
+      "unresolved_references": [],
+      "dynamic_expressions": [],
+      "unsupported_patterns": [],
+      "static_analysis_limitations": [
+        "Dynamic runtime LLM decisions and tool selection cannot be observed via static AST",
+        "Procedural workflow statement order does not imply internal framework agent scheduling"
+      ]
+    }
+  },
+  "runtime_observations": {
+    "total_runs": 30,
+    "successful_runs": 30,
+    "failed_runs": 0,
+    "observed_models": [
+      "openai/gpt-oss-120b"
+    ],
+    "key_distribution": {
+      "GROQ_API_KEY_20": 30,
+      "GROQ_API_KEY_18": 30,
+      "GROQ_API_KEY_17": 30,
+      "GROQ_API_KEY_14": 30,
+      "GROQ_API_KEY_19": 30,
+      "GROQ_API_KEY_7": 30,
+      "GROQ_API_KEY_10": 15,
+      "GROQ_API_KEY_13": 30,
+      "GROQ_API_KEY_16": 15
+    },
+    "workflow_latency": {
+      "mean_seconds": 19.813,
+      "median_seconds": 13.9965,
+      "min_seconds": 11.317,
+      "max_seconds": 64.441,
+      "observation_count": 30
+    },
+    "workflow_tokens": {
+      "total_tokens": 206432,
+      "mean_tokens": 6881.1,
+      "min_tokens": 6418,
+      "max_tokens": 7963,
+      "total_prompt_tokens": 130633,
+      "mean_prompt_tokens": 4354.4,
+      "total_completion_tokens": 75799,
+      "mean_completion_tokens": 2526.6,
+      "observation_count": 30
+    },
+    "workflow_cost": {
+      "total_cost_usd": 0.13695,
+      "mean_cost_usd": 0.004565,
+      "pricing_source": "trace_telemetry_estimates",
+      "observation_count": 30
+    },
+    "agent_metrics": {
+      "receipt_agent": {
+        "agent_id": "receipt_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          1
+        ],
+        "latency": {
+          "mean_seconds": 4.0601,
+          "median_seconds": 1.5475,
+          "min_seconds": 1.252,
+          "max_seconds": 37.39,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 21299,
+          "mean_tokens": 710.0,
+          "min_tokens": 683,
+          "max_tokens": 761,
+          "total_prompt_tokens": 13700,
+          "mean_prompt_tokens": 456.7,
+          "total_completion_tokens": 7599,
+          "mean_completion_tokens": 253.3,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_20"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "merchant": "DELTA AIR LINES",
+          "transaction_date": "2026-09-24",
+          "currency": "USD",
+          "subtotal": 1191.13,
+          "tax": 89.33,
+          "total": 1280.46,
+          "line_items": [
+            {
+              "description": "Corporate Service Item 1",
+              "quantity": 1,
+              "price": 1191.13
+            }
+          ],
+          "missing_fields": []
+        },
+        "error_count": 0
+      },
+      "normalize_agent": {
+        "agent_id": "normalize_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          2
+        ],
+        "latency": {
+          "mean_seconds": 1.6,
+          "median_seconds": 1.469,
+          "min_seconds": 1.095,
+          "max_seconds": 3.034,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 28019,
+          "mean_tokens": 934.0,
+          "min_tokens": 866,
+          "max_tokens": 1044,
+          "total_prompt_tokens": 20550,
+          "mean_prompt_tokens": 685.0,
+          "total_completion_tokens": 7469,
+          "mean_completion_tokens": 249.0,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_18"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "employee_id": "EMP-405",
+          "merchant": "DELTA AIR LINES",
+          "date": "2026-09-24",
+          "currency": "USD",
+          "subtotal": 1191.13,
+          "tax": 89.33,
+          "total": 1280.46
+        },
+        "error_count": 0
+      },
+      "category_agent": {
+        "agent_id": "category_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          3
+        ],
+        "latency": {
+          "mean_seconds": 1.776,
+          "median_seconds": 1.3375,
+          "min_seconds": 1.069,
+          "max_seconds": 5.668,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 19621,
+          "mean_tokens": 654.0,
+          "min_tokens": 595,
+          "max_tokens": 764,
+          "total_prompt_tokens": 13471,
+          "mean_prompt_tokens": 449.0,
+          "total_completion_tokens": 6150,
+          "mean_completion_tokens": 205.0,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_17"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "category": "Travel",
+          "classification_confidence": 0.98,
+          "reasoning": "The merchant is Delta Air Lines, a carrier for air transportation. The expense amount includes a substantial subtotal and tax typical of airline ticket purchases. The original claim explicitly lists the category as Travel and the business purpose references a client engagement and operational workflow meeting, which aligns with travel for business purposes. Therefore, the expense is best classified under the Travel category."
+        },
+        "error_count": 0
+      },
+      "amount_agent": {
+        "agent_id": "amount_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          4
+        ],
+        "latency": {
+          "mean_seconds": 2.7236,
+          "median_seconds": 1.181,
+          "min_seconds": 0.969,
+          "max_seconds": 39.052,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 14540,
+          "mean_tokens": 484.7,
+          "min_tokens": 450,
+          "max_tokens": 529,
+          "total_prompt_tokens": 9585,
+          "mean_prompt_tokens": 319.5,
+          "total_completion_tokens": 4955,
+          "mean_completion_tokens": 165.2,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_14"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "is_arithmetic_valid": true,
+          "discrepancy_usd": 0.0,
+          "verification_notes": "Subtotal of 1191.13 plus tax of 89.33 equals the declared total of 1280.46 exactly. No negative amounts are present and the calculation matches to the cent with no rounding discrepancy."
+        },
+        "error_count": 0
+      },
+      "policy_agent": {
+        "agent_id": "policy_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          5
+        ],
+        "latency": {
+          "mean_seconds": 1.6616,
+          "median_seconds": 1.3315,
+          "min_seconds": 0.988,
+          "max_seconds": 5.707,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 18322,
+          "mean_tokens": 610.7,
+          "min_tokens": 495,
+          "max_tokens": 768,
+          "total_prompt_tokens": 11210,
+          "mean_prompt_tokens": 373.7,
+          "total_completion_tokens": 7112,
+          "mean_completion_tokens": 237.1,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_19"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "policy_compliance_status": "Non-compliant",
+          "cited_policy_ids": [
+            "POL-EXP-02"
+          ],
+          "violation_reasons": [
+            "Total claim amount $1280.46 exceeds the maximum allowed booking amount of $1200.0 for domestic airline flights.",
+            "Advance approval is required but not indicated as obtained."
+          ]
+        },
+        "error_count": 0
+      },
+      "duplicate_agent": {
+        "agent_id": "duplicate_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          6
+        ],
+        "latency": {
+          "mean_seconds": 1.5226,
+          "median_seconds": 1.2415,
+          "min_seconds": 1.022,
+          "max_seconds": 4.951,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 17012,
+          "mean_tokens": 567.1,
+          "min_tokens": 507,
+          "max_tokens": 632,
+          "total_prompt_tokens": 11528,
+          "mean_prompt_tokens": 384.3,
+          "total_completion_tokens": 5484,
+          "mean_completion_tokens": 182.8,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_7"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "duplicate_status": "Confirmed Duplicate",
+          "matching_claim_ids": [
+            "HIST-CLM-2001"
+          ],
+          "duplicate_risk_score": 0.95
+        },
+        "error_count": 0
+      },
+      "exception_agent": {
+        "agent_id": "exception_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          7
+        ],
+        "latency": {
+          "mean_seconds": 2.8901,
+          "median_seconds": 2.1275,
+          "min_seconds": 1.526,
+          "max_seconds": 9.447,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 34613,
+          "mean_tokens": 1153.8,
+          "min_tokens": 903,
+          "max_tokens": 1723,
+          "total_prompt_tokens": 18037,
+          "mean_prompt_tokens": 601.2,
+          "total_completion_tokens": 16576,
+          "mean_completion_tokens": 552.5,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_10",
+          "GROQ_API_KEY_16"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "exceptions_found": [
+            {
+              "type": "Excessive Amount",
+              "detail": "Total claim amount $1280.46 exceeds the maximum allowed $1200 for domestic airline flights.",
+              "policy_id": "POL-EXP-02",
+              "severity": "Critical"
+            },
+            {
+              "type": "Policy Violation",
+              "detail": "Advance approval not indicated as obtained for the airline booking.",
+              "policy_id": "POL-EXP-02",
+              "severity": "High"
+            },
+            {
+              "type": "Duplicate Claim",
+              "detail": "Claim matches a previously submitted claim HIST-CLM-2001 with duplicate risk score 0.95.",
+              "policy_id": null,
+              "severity": "High"
+            },
+            {
+              "type": "Unitemized Receipt",
+              "detail": "Line item description is generic ('Corporate Service Item 1') and lacks detailed breakdown of services.",
+              "policy_id": "POL-EXP-02",
+              "severity": "Medium"
+            }
+          ],
+          "severity_levels": {
+            "Critical": 1,
+            "High": 2,
+            "Medium": 1,
+            "Low": 0
+          },
+          "audit_warnings": [
+            "Duplicate claim detected with high risk score; further investigation required.",
+            "Receipt provides only a generic line item description, which may not satisfy itemization policy."
+          ]
+        },
+        "error_count": 0
+      },
+      "expense_review_agent": {
+        "agent_id": "expense_review_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          8
+        ],
+        "latency": {
+          "mean_seconds": 3.5754,
+          "median_seconds": 2.526,
+          "min_seconds": 1.962,
+          "max_seconds": 36.309,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 53006,
+          "mean_tokens": 1766.9,
+          "min_tokens": 1584,
+          "max_tokens": 2074,
+          "total_prompt_tokens": 32552,
+          "mean_prompt_tokens": 1085.1,
+          "total_completion_tokens": 20454,
+          "mean_completion_tokens": 681.8,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_13"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "claim_id": "CLM-2001",
+          "employee_id": "EMP-405",
+          "merchant": "Delta Air Lines",
+          "date": "2026-09-24",
+          "currency": "USD",
+          "total_amount": 1280.46,
+          "final_decision": "INELIGIBLE",
+          "rationale": [
+            "The total amount $1280.46 exceeds the policy maximum of $1200 for domestic airline bookings (POL-EXP-02).",
+            "Advance approval for the airline reservation was not documented, violating the same policy.",
+            "The claim is a confirmed duplicate of a previously submitted claim (HIST-CLM-2001) with a high duplicate risk score (0.95).",
+            "The receipt provides only a generic line‑item description and lacks the required itemization, further breaching policy."
+          ],
+          "cited_stages": {
+            "receipt_extraction": "Receipt captured all required fields; merchant Delta Air Lines, subtotal $1191.13, tax $89.33, total $1280.46, but line item description is generic.",
+            "normalization": "Data normalized correctly with employee ID EMP-405, date 2026-09-24, currency USD, and matching amounts.",
+            "categorization": "Expense classified as Travel with high confidence (0.98) based on merchant and business purpose.",
+            "amount_check": "Arithmetic validation passed; subtotal plus tax equals total with no discrepancy.",
+            "policy_verification": "Policy check flagged non‑compliance: amount exceeds $1200 limit and no advance approval recorded (POL-EXP-02).",
+            "duplicate_check": "Duplicate status confirmed; matches prior claim HIST-CLM-2001 with a 0.95 risk score.",
+            "exception_audit": "Exceptions identified: Excessive amount (Critical), missing advance approval (High), duplicate claim (High), and unitemized receipt (Medium)."
+          },
+          "recommendation": "Reject the claim as INELIGIBLE. Notify the employee of the policy violations (excess amount, missing approval, duplicate submission, and insufficient itemization) and advise resubmission with a compliant receipt, proper pre‑approval, and ensure no duplicate exists."
+        },
+        "error_count": 0
+      }
+    },
+    "runs_summary": [
+      {
+        "run_id": "live_20261031_181836_trace01",
+        "status": "SUCCESS",
+        "duration_seconds": 13.248,
+        "total_tokens": 7175,
+        "prompt_tokens": 4551,
+        "completion_tokens": 2624,
+        "estimated_cost_usd": 0.004758,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:18:49.602640+00:00",
+        "trace_file": "live_20261031_181836_trace01.json"
+      },
+      {
+        "run_id": "live_20261031_181904_trace02",
+        "status": "SUCCESS",
+        "duration_seconds": 12.757,
+        "total_tokens": 6662,
+        "prompt_tokens": 4348,
+        "completion_tokens": 2314,
+        "estimated_cost_usd": 0.004393,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:19:17.152685+00:00",
+        "trace_file": "live_20261031_181904_trace02.json"
+      },
+      {
+        "run_id": "live_20261031_181918_trace03",
+        "status": "SUCCESS",
+        "duration_seconds": 11.476,
+        "total_tokens": 6485,
+        "prompt_tokens": 4287,
+        "completion_tokens": 2198,
+        "estimated_cost_usd": 0.004266,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:19:29.649131+00:00",
+        "trace_file": "live_20261031_181918_trace03.json"
+      },
+      {
+        "run_id": "live_20261031_181930_trace04",
+        "status": "SUCCESS",
+        "duration_seconds": 12.15,
+        "total_tokens": 6670,
+        "prompt_tokens": 4234,
+        "completion_tokens": 2436,
+        "estimated_cost_usd": 0.004422,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:19:42.826714+00:00",
+        "trace_file": "live_20261031_181930_trace04.json"
+      },
+      {
+        "run_id": "live_20261031_181943_trace05",
+        "status": "SUCCESS",
+        "duration_seconds": 12.031,
+        "total_tokens": 6812,
+        "prompt_tokens": 4320,
+        "completion_tokens": 2492,
+        "estimated_cost_usd": 0.004517,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:19:55.880400+00:00",
+        "trace_file": "live_20261031_181943_trace05.json"
+      },
+      {
+        "run_id": "live_20261031_181956_trace06",
+        "status": "SUCCESS",
+        "duration_seconds": 14.25,
+        "total_tokens": 7963,
+        "prompt_tokens": 4537,
+        "completion_tokens": 3426,
+        "estimated_cost_usd": 0.005383,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:20:11.140782+00:00",
+        "trace_file": "live_20261031_181956_trace06.json"
+      },
+      {
+        "run_id": "live_20261031_182012_trace07",
+        "status": "SUCCESS",
+        "duration_seconds": 12.679,
+        "total_tokens": 6731,
+        "prompt_tokens": 4301,
+        "completion_tokens": 2430,
+        "estimated_cost_usd": 0.004457,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:20:24.832337+00:00",
+        "trace_file": "live_20261031_182012_trace07.json"
+      },
+      {
+        "run_id": "live_20261031_182025_trace08",
+        "status": "SUCCESS",
+        "duration_seconds": 13.063,
+        "total_tokens": 6717,
+        "prompt_tokens": 4279,
+        "completion_tokens": 2438,
+        "estimated_cost_usd": 0.004451,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:20:38.906754+00:00",
+        "trace_file": "live_20261031_182025_trace08.json"
+      },
+      {
+        "run_id": "live_20261031_182039_trace09",
+        "status": "SUCCESS",
+        "duration_seconds": 12.156,
+        "total_tokens": 7081,
+        "prompt_tokens": 4452,
+        "completion_tokens": 2629,
+        "estimated_cost_usd": 0.004704,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:20:52.072606+00:00",
+        "trace_file": "live_20261031_182039_trace09.json"
+      },
+      {
+        "run_id": "live_20261031_182053_trace10",
+        "status": "SUCCESS",
+        "duration_seconds": 12.244,
+        "total_tokens": 7282,
+        "prompt_tokens": 4485,
+        "completion_tokens": 2797,
+        "estimated_cost_usd": 0.004856,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:21:05.347237+00:00",
+        "trace_file": "live_20261031_182053_trace10.json"
+      },
+      {
+        "run_id": "live_20261031_182106_trace11",
+        "status": "SUCCESS",
+        "duration_seconds": 12.27,
+        "total_tokens": 7197,
+        "prompt_tokens": 4422,
+        "completion_tokens": 2775,
+        "estimated_cost_usd": 0.004801,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:21:18.630270+00:00",
+        "trace_file": "live_20261031_182106_trace11.json"
+      },
+      {
+        "run_id": "live_20261031_182119_trace12",
+        "status": "SUCCESS",
+        "duration_seconds": 13.743,
+        "total_tokens": 6525,
+        "prompt_tokens": 4258,
+        "completion_tokens": 2267,
+        "estimated_cost_usd": 0.004303,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:21:33.386802+00:00",
+        "trace_file": "live_20261031_182119_trace12.json"
+      },
+      {
+        "run_id": "live_20261031_182134_trace13",
+        "status": "SUCCESS",
+        "duration_seconds": 11.477,
+        "total_tokens": 6694,
+        "prompt_tokens": 4255,
+        "completion_tokens": 2439,
+        "estimated_cost_usd": 0.004437,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:21:45.879766+00:00",
+        "trace_file": "live_20261031_182134_trace13.json"
+      },
+      {
+        "run_id": "live_20261031_182146_trace14",
+        "status": "SUCCESS",
+        "duration_seconds": 12.666,
+        "total_tokens": 7088,
+        "prompt_tokens": 4366,
+        "completion_tokens": 2722,
+        "estimated_cost_usd": 0.004726,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:21:59.564566+00:00",
+        "trace_file": "live_20261031_182146_trace14.json"
+      },
+      {
+        "run_id": "live_20261031_182200_trace15",
+        "status": "SUCCESS",
+        "duration_seconds": 14.742,
+        "total_tokens": 6946,
+        "prompt_tokens": 4341,
+        "completion_tokens": 2605,
+        "estimated_cost_usd": 0.004619,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:22:15.332743+00:00",
+        "trace_file": "live_20261031_182200_trace15.json"
+      },
+      {
+        "run_id": "live_20261031_182216_trace16",
+        "status": "SUCCESS",
+        "duration_seconds": 18.479,
+        "total_tokens": 7435,
+        "prompt_tokens": 4498,
+        "completion_tokens": 2937,
+        "estimated_cost_usd": 0.004974,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:22:34.838218+00:00",
+        "trace_file": "live_20261031_182216_trace16.json"
+      },
+      {
+        "run_id": "live_20261031_182235_trace17",
+        "status": "SUCCESS",
+        "duration_seconds": 15.821,
+        "total_tokens": 6756,
+        "prompt_tokens": 4319,
+        "completion_tokens": 2437,
+        "estimated_cost_usd": 0.004473,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:22:51.676670+00:00",
+        "trace_file": "live_20261031_182235_trace17.json"
+      },
+      {
+        "run_id": "live_20261031_182252_trace18",
+        "status": "SUCCESS",
+        "duration_seconds": 15.436,
+        "total_tokens": 7200,
+        "prompt_tokens": 4408,
+        "completion_tokens": 2792,
+        "estimated_cost_usd": 0.004806,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:23:08.147173+00:00",
+        "trace_file": "live_20261031_182252_trace18.json"
+      },
+      {
+        "run_id": "live_20261031_182309_trace19",
+        "status": "SUCCESS",
+        "duration_seconds": 11.317,
+        "total_tokens": 6829,
+        "prompt_tokens": 4385,
+        "completion_tokens": 2444,
+        "estimated_cost_usd": 0.004518,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:23:20.472942+00:00",
+        "trace_file": "live_20261031_182309_trace19.json"
+      },
+      {
+        "run_id": "live_20261031_182321_trace20",
+        "status": "SUCCESS",
+        "duration_seconds": 15.138,
+        "total_tokens": 7120,
+        "prompt_tokens": 4386,
+        "completion_tokens": 2734,
+        "estimated_cost_usd": 0.004748,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:23:36.630271+00:00",
+        "trace_file": "live_20261031_182321_trace20.json"
+      },
+      {
+        "run_id": "live_20261031_182337_trace21",
+        "status": "SUCCESS",
+        "duration_seconds": 11.662,
+        "total_tokens": 6476,
+        "prompt_tokens": 4245,
+        "completion_tokens": 2231,
+        "estimated_cost_usd": 0.004267,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:23:49.308708+00:00",
+        "trace_file": "live_20261031_182337_trace21.json"
+      },
+      {
+        "run_id": "live_20261031_182350_trace22",
+        "status": "SUCCESS",
+        "duration_seconds": 15.481,
+        "total_tokens": 6418,
+        "prompt_tokens": 4184,
+        "completion_tokens": 2234,
+        "estimated_cost_usd": 0.004233,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:24:05.825742+00:00",
+        "trace_file": "live_20261031_182350_trace22.json"
+      },
+      {
+        "run_id": "live_20261031_182406_trace23",
+        "status": "SUCCESS",
+        "duration_seconds": 50.926,
+        "total_tokens": 6509,
+        "prompt_tokens": 4290,
+        "completion_tokens": 2219,
+        "estimated_cost_usd": 0.004284,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:24:57.776667+00:00",
+        "trace_file": "live_20261031_182406_trace23.json"
+      },
+      {
+        "run_id": "live_20261031_182458_trace24",
+        "status": "SUCCESS",
+        "duration_seconds": 55.245,
+        "total_tokens": 6719,
+        "prompt_tokens": 4379,
+        "completion_tokens": 2340,
+        "estimated_cost_usd": 0.004432,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:25:54.074738+00:00",
+        "trace_file": "live_20261031_182458_trace24.json"
+      },
+      {
+        "run_id": "live_20261031_182555_trace25",
+        "status": "SUCCESS",
+        "duration_seconds": 64.441,
+        "total_tokens": 7201,
+        "prompt_tokens": 4391,
+        "completion_tokens": 2810,
+        "estimated_cost_usd": 0.004811,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:26:59.551258+00:00",
+        "trace_file": "live_20261031_182555_trace25.json"
+      },
+      {
+        "run_id": "live_20261031_182700_trace26",
+        "status": "SUCCESS",
+        "duration_seconds": 50.855,
+        "total_tokens": 6938,
+        "prompt_tokens": 4375,
+        "completion_tokens": 2563,
+        "estimated_cost_usd": 0.004606,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:27:51.463620+00:00",
+        "trace_file": "live_20261031_182700_trace26.json"
+      },
+      {
+        "run_id": "live_20261031_182752_trace27",
+        "status": "SUCCESS",
+        "duration_seconds": 22.186,
+        "total_tokens": 6829,
+        "prompt_tokens": 4373,
+        "completion_tokens": 2456,
+        "estimated_cost_usd": 0.00452,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:28:14.702661+00:00",
+        "trace_file": "live_20261031_182752_trace27.json"
+      },
+      {
+        "run_id": "live_20261031_182815_trace28",
+        "status": "SUCCESS",
+        "duration_seconds": 20.451,
+        "total_tokens": 6891,
+        "prompt_tokens": 4364,
+        "completion_tokens": 2527,
+        "estimated_cost_usd": 0.004571,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:28:36.206832+00:00",
+        "trace_file": "live_20261031_182815_trace28.json"
+      },
+      {
+        "run_id": "live_20261031_182837_trace29",
+        "status": "SUCCESS",
+        "duration_seconds": 15.764,
+        "total_tokens": 6470,
+        "prompt_tokens": 4313,
+        "completion_tokens": 2157,
+        "estimated_cost_usd": 0.004249,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:28:53.063932+00:00",
+        "trace_file": "live_20261031_182837_trace29.json"
+      },
+      {
+        "run_id": "live_20261031_182854_trace30",
+        "status": "SUCCESS",
+        "duration_seconds": 20.236,
+        "total_tokens": 6613,
+        "prompt_tokens": 4287,
+        "completion_tokens": 2326,
+        "estimated_cost_usd": 0.004367,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T18:29:14.364664+00:00",
+        "trace_file": "live_20261031_182854_trace30.json"
+      }
+    ]
+  },
+  "workflow_graph": {
+    "nodes": [
+      {
+        "id": "workflow:expense_reimbursement",
+        "type": "workflow",
+        "name": "expense_reimbursement",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:",
+        "type": "agent",
+        "name": "",
+        "source": "declared"
+      },
+      {
+        "id": "agent:amount_agent",
+        "type": "agent",
+        "name": "amount_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:category_agent",
+        "type": "agent",
+        "name": "category_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:duplicate_agent",
+        "type": "agent",
+        "name": "duplicate_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:exception_agent",
+        "type": "agent",
+        "name": "exception_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:expense_review_agent",
+        "type": "agent",
+        "name": "expense_review_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:normalize_agent",
+        "type": "agent",
+        "name": "normalize_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:policy_agent",
+        "type": "agent",
+        "name": "policy_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:receipt_agent",
+        "type": "agent",
+        "name": "receipt_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "task:amount_agent_task",
+        "type": "task",
+        "name": "amount_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:category_agent_task",
+        "type": "task",
+        "name": "category_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:duplicate_agent_task",
+        "type": "task",
+        "name": "duplicate_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:exception_agent_task",
+        "type": "task",
+        "name": "exception_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:normalize_agent_task",
+        "type": "task",
+        "name": "normalize_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:policy_agent_task",
+        "type": "task",
+        "name": "policy_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:receipt_agent_task",
+        "type": "task",
+        "name": "receipt_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:calculate_deterministic_arithmetic",
+        "type": "function",
+        "name": "calculate_deterministic_arithmetic",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:query_candidate_duplicates",
+        "type": "function",
+        "name": "query_candidate_duplicates",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:query_policies_for_category",
+        "type": "function",
+        "name": "query_policies_for_category",
+        "source": "statically_observed"
+      }
+    ],
+    "edges": [
+      {
+        "source": "agent:amount_agent",
+        "target": "task:amount_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "source": "agent:amount_agent",
+        "target": "task:amount_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "source": "agent:category_agent",
+        "target": "task:category_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "source": "agent:duplicate_agent",
+        "target": "task:duplicate_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "source": "agent:exception_agent",
+        "target": "task:exception_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "source": "agent:normalize_agent",
+        "target": "task:normalize_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "source": "agent:policy_agent",
+        "target": "task:policy_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "source": "agent:receipt_agent",
+        "target": "task:receipt_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "source": "agent:amount_agent",
+        "target": "function:calculate_deterministic_arithmetic",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "source": "agent:duplicate_agent",
+        "target": "function:query_candidate_duplicates",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "source": "agent:policy_agent",
+        "target": "function:query_policies_for_category",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "source": "workflow:expense_reimbursement",
+        "target": "agent:exception_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:expense_reimbursement",
+        "target": "agent:normalize_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:expense_reimbursement",
+        "target": "agent:receipt_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:expense_reimbursement",
+        "target": "agent:amount_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:expense_reimbursement",
+        "target": "agent:duplicate_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:expense_reimbursement",
+        "target": "agent:expense_review_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:expense_reimbursement",
+        "target": "agent:category_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:expense_reimbursement",
+        "target": "agent:policy_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "agent:receipt_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:normalize_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:normalize_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:category_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:normalize_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:amount_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:policy_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:duplicate_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:exception_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:receipt_agent",
+        "target": "agent:normalize_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:normalize_agent",
+        "target": "agent:category_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:category_agent",
+        "target": "agent:amount_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:amount_agent",
+        "target": "agent:policy_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:policy_agent",
+        "target": "agent:duplicate_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:duplicate_agent",
+        "target": "agent:exception_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:exception_agent",
+        "target": "agent:expense_review_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      }
+    ]
+  },
+  "reconciliation_and_limitations": {
+    "agent_reconciliation": [
+      {
+        "agent_id": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "declared_unimplemented",
+        "notes": "Agent declared in design but not found in Python source code."
+      },
+      {
+        "agent_id": "amount_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      },
+      {
+        "agent_id": "category_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      },
+      {
+        "agent_id": "duplicate_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      },
+      {
+        "agent_id": "exception_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      },
+      {
+        "agent_id": "expense_review_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      },
+      {
+        "agent_id": "normalize_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      },
+      {
+        "agent_id": "policy_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      },
+      {
+        "agent_id": "receipt_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      }
+    ],
+    "dependency_reconciliation": [
+      {
+        "source": "receipt_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "normalize_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "normalize_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "category_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "normalize_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "amount_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "policy_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "duplicate_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "exception_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      }
+    ],
+    "model_reconciliation": {
+      "declared_model": "openai/gpt-oss-120b",
+      "statically_extracted_model": "exception_agent",
+      "runtime_observed_model": "openai/gpt-oss-120b",
+      "status": "matching",
+      "notes": "Declared model 'openai/gpt-oss-120b' matches runtime enforced model 'openai/gpt-oss-120b'."
+    },
+    "limitations": [
+      "Per-agent cost in traces is not tracked individually; only workflow-level cost is recorded.",
+      "Dynamic runtime branch outcomes and retry loops are recorded as sequential executions.",
+      "Static prompt text reflects task description parameters; dynamic LLM runtime prompt interpolations are reflected in trace prompt tokens.",
+      "Static AST dependency graph was a flat star topology; inter-agent dependencies are reconciled from workflow.json and runtime trace sequences."
+    ]
+  }
+}

@@ -1,0 +1,260 @@
+{
+  "run_id": "live_20261031_132050_trace27",
+  "workflow_name": "invoice_processing",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 16.727,
+  "agent_execution_count": 8,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.588,
+      "tokens": 966,
+      "prompt_tokens": 516,
+      "completion_tokens": 450,
+      "output": {
+        "extracted_invoice": {
+          "invoice_number": "INV-2026-0027",
+          "supplier_id": "SUP-107",
+          "supplier_name": "Echo Data Solutions",
+          "po_reference": "PO-2026-0027",
+          "invoice_date": "2026-10-03",
+          "due_date": "2026-11-02",
+          "currency": "USD",
+          "line_items": [
+            {
+              "description": "Ergonomic Office Chair",
+              "quantity": 2,
+              "unit_price": 250.0,
+              "line_total": 500.0
+            },
+            {
+              "description": "SSD NVMe 2TB Enterprise",
+              "quantity": 10,
+              "unit_price": 220.0,
+              "line_total": 2200.0
+            }
+          ],
+          "subtotal": 2700.0,
+          "tax": 216.0,
+          "discount": 0.0,
+          "total_amount": 2916.0
+        },
+        "extraction_flags": {
+          "missing_fields": [],
+          "ambiguous_fields": [],
+          "inconsistent_fields": []
+        }
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "invoice_extraction_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.228,
+      "tokens": 815,
+      "prompt_tokens": 569,
+      "completion_tokens": 246,
+      "output": {
+        "validation_status": "PASSED",
+        "math_audit": {
+          "is_arithmetic_valid": true,
+          "calculated_subtotal": 2700.0,
+          "calculated_total": 2916.0,
+          "stated_total": 2916.0,
+          "discrepancy_amount": 0.0,
+          "line_discrepancies": []
+        },
+        "validation_errors": []
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "invoice_validation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.034,
+      "tokens": 898,
+      "prompt_tokens": 736,
+      "completion_tokens": 162,
+      "output": {
+        "po_match_status": "EXACT_MATCH",
+        "matched_po_id": "PO-2026-0027",
+        "discrepancies": [],
+        "matching_confidence": 1.0
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "po_matching_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 1.654,
+      "tokens": 858,
+      "prompt_tokens": 544,
+      "completion_tokens": 314,
+      "output": {
+        "is_compliant": true,
+        "applied_policy_ids": [
+          "POL-AP-001",
+          "POL-AP-002",
+          "POL-AP-003"
+        ],
+        "violations": [],
+        "compliance_summary": {
+          "summary": "Invoice INV-2026-0027 complies with all applied purchasing policies. No fatal violations or flags were detected. All monetary thresholds are within allowed limits and the supplier is eligible. No secondary sign‑off is required.",
+          "policy_citations": {
+            "POL-AP-001": "Purchase order reference matches and total amount is below the $5,000 threshold for standard approval.",
+            "POL-AP-002": "Supplier eligibility verified; supplier is on the approved vendor list.",
+            "POL-AP-003": "Tax calculation aligns with the 8% rate for the jurisdiction; no discount anomalies detected."
+          },
+          "required_actions": "Proceed with standard payment processing."
+        }
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "policy_compliance_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 1.44,
+      "tokens": 970,
+      "prompt_tokens": 596,
+      "completion_tokens": 374,
+      "output": {
+        "duplicate_status": "EXACT_DUPLICATE",
+        "matching_records": [
+          {
+            "historical_invoice_id": "INV-HIST-0026",
+            "matched_fields": [
+              "supplier_id",
+              "po_reference",
+              "total_amount"
+            ],
+            "reason": "Exact invoice number or identical (supplier, PO, amount) duplicate."
+          }
+        ],
+        "risk_assessment": "High risk: invoice matches a previously processed invoice with identical supplier, PO, and total amount. Recommend reject or further investigation."
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "duplicate_detection_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 1.669,
+      "tokens": 1465,
+      "prompt_tokens": 1002,
+      "completion_tokens": 463,
+      "output": {
+        "has_exceptions": true,
+        "exception_count": 1,
+        "critical_exceptions": [],
+        "detailed_exceptions": [
+          {
+            "issue_type": "Duplicate Invoice",
+            "description": "Invoice INV-2026-0027 matches historical invoice INV-HIST-0026 on supplier_id, po_reference, and total_amount, flagged as exact duplicate.",
+            "severity": "HIGH",
+            "resolvable": true,
+            "blocker": true,
+            "recommended_action": "Reject payment pending investigation or obtain justification for duplicate."
+          }
+        ]
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "exception_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 1.266,
+      "tokens": 1521,
+      "prompt_tokens": 1167,
+      "completion_tokens": 354,
+      "output": {
+        "recommendation": "rejected",
+        "justification": "The invoice passes extraction, validation, PO matching, and policy compliance, but duplicate detection identified an exact duplicate of historical invoice INV-HIST-0026 with identical supplier_id, po_reference, and total_amount. Exception analysis classifies this as a HIGH severity blocker, requiring rejection pending investigation or justification.",
+        "conditions": {
+          "po_match_status": "EXACT_MATCH",
+          "policy_compliance": true,
+          "math_audit_valid": true,
+          "duplicate_status": "EXACT_DUPLICATE",
+          "exception_severity": "HIGH",
+          "blocker": true
+        }
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "approval_recommendation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_8 (gsk_yt...AwPO)",
+      "duration_seconds": 2.045,
+      "tokens": 1901,
+      "prompt_tokens": 1276,
+      "completion_tokens": 625,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "invoice_id": "INV-2026-0027",
+        "final_recommendation": "rejected",
+        "risk_level": "HIGH",
+        "summary_report": "Invoice INV-2026-0027 successfully passed extraction, arithmetic validation, PO matching, and policy compliance. However, duplicate detection flagged it as an exact duplicate of historical invoice INV-HIST-0026 with identical supplier, PO reference, and total amount. The exception analysis classified this as a HIGH severity blocker, mandating rejection pending investigation or justification. All other checks are clean, and no critical exceptions remain unaddressed.",
+        "audit_findings": {
+          "extraction": {
+            "status": "completed",
+            "issues": []
+          },
+          "validation": {
+            "math_audit_valid": true,
+            "discrepancy_amount": 0.0
+          },
+          "po_matching": {
+            "po_match_status": "EXACT_MATCH",
+            "matched_po_id": "PO-2026-0027"
+          },
+          "policy_compliance": {
+            "is_compliant": true,
+            "applied_policy_ids": [
+              "POL-AP-001",
+              "POL-AP-002",
+              "POL-AP-003"
+            ]
+          },
+          "duplicate_detection": {
+            "duplicate_status": "EXACT_DUPLICATE",
+            "risk_assessment": "High risk"
+          },
+          "exception_analysis": {
+            "has_exceptions": true,
+            "exception_count": 1,
+            "critical_exceptions": [],
+            "high_severity_blocker": true
+          },
+          "approval_recommendation": {
+            "recommendation": "rejected",
+            "justification": "Exact duplicate identified; high severity blocker requires rejection pending investigation."
+          }
+        }
+      },
+      "notes": "",
+      "order": 8,
+      "agent_id": "final_review_agent_invoice"
+    }
+  ],
+  "total_tokens": 9394,
+  "prompt_tokens": 6406,
+  "completion_tokens": 2988,
+  "estimated_cost_usd": 0.00614,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"invoice_id\": \"INV-2026-0027\",\n  \"final_recommendation\": \"rejected\",\n  \"risk_level\": \"HIGH\",\n  \"summary_report\": \"Invoice INV-2026-0027 successfully passed extraction, arithmetic validation, PO matching, and policy compliance. However, duplicate detection flagged it as an exact duplicate of historical invoice INV-HIST-0026 with identical supplier, PO reference, and total amount. The exception analysis classified this as a HIGH severity blocker, mandating rejection pending investigation or justification. All other checks are clean, and no critical exceptions remain unaddressed.\",\n  \"audit_findings\": {\n    \"extraction\": {\n      \"status\": \"completed\",\n      \"issues\": []\n    },\n    \"validation\": {\n      \"math_audit_valid\": true,\n      \"discrepancy_amount\": 0.0\n    },\n    \"po_matching\": {\n      \"po_match_status\": \"EXACT_MATCH\",\n      \"matched_po_id\": \"PO-2026-0027\"\n    },\n    \"policy_compliance\": {\n      \"is_compliant\": true,\n      \"applied_policy_ids\": [\n        \"POL-AP-001\",\n        \"POL-AP-002\",\n        \"POL-AP-003\"\n      ]\n    },\n    \"duplicate_detection\": {\n      \"duplicate_status\": \"EXACT_DUPLICATE\",\n      \"risk_assessment\": \"High risk\"\n    },\n    \"exception_analysis\": {\n      \"has_exceptions\": true,\n      \"exception_count\": 1,\n      \"critical_exceptions\": [],\n      \"high_severity_blocker\": true\n    },\n    \"approval_recommendation\": {\n      \"recommendation\": \"rejected\",\n      \"justification\": \"Exact duplicate identified; high severity blocker requires rejection pending investigation.\"\n    }\n  }\n}",
+  "timestamp": "2026-10-31T13:21:07.590742+00:00"
+}

@@ -1,0 +1,177 @@
+{
+  "run_id": "live_20261031_161520_trace13",
+  "workflow_name": "sales_lead_qualification",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 12.096,
+  "agent_execution_count": 7,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_11 (gsk_A9...C3BP)",
+      "duration_seconds": 2.053,
+      "tokens": 933,
+      "prompt_tokens": 399,
+      "completion_tokens": 534,
+      "output": {
+        "lead_id": "LEAD-2026-0003",
+        "enriched_lead_profile": {
+          "contact_name": "Marcus Vance",
+          "contact_email": "mvance@cloudscaledev.com",
+          "job_title": "Head of AI Architecture",
+          "stated_budget": 60000.0,
+          "purchase_timeline": "Within 6 months",
+          "test_case_tag": "moderate_fit_high_intent",
+          "company_name": "CloudScale DevOps Inc",
+          "industry": "Software & Technology",
+          "employee_count": 320,
+          "annual_revenue_usd": 48000000,
+          "region": "Europe"
+        },
+        "missing_attributes": [
+          "lead.is_synthetic (data is synthetic and not verified)",
+          "company.is_synthetic (data is synthetic and not verified)"
+        ]
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "lead_enrichment_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_12 (gsk_5G...OStT)",
+      "duration_seconds": 1.434,
+      "tokens": 820,
+      "prompt_tokens": 598,
+      "completion_tokens": 222,
+      "output": {
+        "fit_category": "STRONG_FIT",
+        "industry_fit_score": 10,
+        "company_size_fit_score": 9,
+        "fit_rationale": "The account operates in a target industry (Software & Technology) and meets the minimum employee threshold (320 >= 200) while staying well within the allowed range. The role (Head of AI Architecture) aligns with the target roles (Head of AI). Budget and timeline are appropriate, and there are no disqualifying industry flags, resulting in a strong overall fit."
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "lead_fit_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_13 (gsk_i9...Ujsn)",
+      "duration_seconds": 1.4,
+      "tokens": 666,
+      "prompt_tokens": 403,
+      "completion_tokens": 263,
+      "output": {
+        "intent_level": "HIGH_INTENT",
+        "intent_score": 82,
+        "high_value_signals": [
+          {
+            "type": "demo_request",
+            "date": "2026-09-14",
+            "notes": "Asked about API rate limits and CrewAI compatibility"
+          }
+        ],
+        "behavioral_summary": "Marcus Vance, Head of AI Architecture, has a stated budget of $60,000 and plans to purchase within 6 months. He submitted a demo request focusing on technical details (API rate limits, CrewAI compatibility), indicating strong product interest and readiness to evaluate fit. The combination of a concrete budget, near‑term timeline, and a high‑value demo request signals a high purchase intent."
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "intent_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_14 (gsk_6G...l7b1)",
+      "duration_seconds": 1.869,
+      "tokens": 806,
+      "prompt_tokens": 310,
+      "completion_tokens": 496,
+      "output": {
+        "total_score": 91,
+        "qualification_tier": "SALES_QUALIFIED_LEAD",
+        "component_scores": {
+          "industry_fit": 25,
+          "company_size_fit": 18,
+          "role_authority": 20,
+          "intent_signals": 20,
+          "budget_timeline": 8
+        },
+        "scoring_rationale": "The deterministic model assigns a maximum point pool to each dimension (e.g., industry_fit max 25, company_size_fit max 20, role_authority max 20, intent_signals max 20, budget_timeline max 15). The inbound prospect earned the listed points, which sum to a total_score of 91 out of a possible 100. Tier thresholds are defined as: SCORE >= 80 → SALES_QUALIFIED_LEAD, 50 <= SCORE < 80 → MARKETING_NURTURE, SCORE < 50 → DISQUALIFIED. With a score of 91, the lead qualifies as a SALES_QUALIFIED_LEAD. The highest-scoring dimension is industry_fit (25 points), indicating strong alignment with target verticals. The lowest-scoring dimension is budget_timeline (8 points), suggesting limited disclosed budget or unclear purchase timeline."
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "lead_scoring_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_15 (gsk_3b...vKIi)",
+      "duration_seconds": 1.648,
+      "tokens": 1332,
+      "prompt_tokens": 1010,
+      "completion_tokens": 322,
+      "output": {
+        "opportunity_viability": "HIGH",
+        "estimated_deal_size": 60000,
+        "pipeline_stage": "Opportunity - Discovery",
+        "key_risks": [
+          "Data is flagged as synthetic/unverified, which may affect confidence in the lead's authenticity.",
+          "Budget is modest ($60k) and scored low in the budget/timeline dimension, leaving limited room for price negotiation or upsell.",
+          "Purchase timeline of 6 months could be delayed by internal approval cycles or competing priorities.",
+          "Potential competition from established AI platform providers (e.g., OpenAI, Anthropic, Google Vertex AI) that may offer broader ecosystems.",
+          "Technical integration risk: requirement for API rate limits and CrewAI compatibility may surface unforeseen engineering challenges."
+        ]
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "opportunity_assessment_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_16 (gsk_ID...uEx3)",
+      "duration_seconds": 1.637,
+      "tokens": 1476,
+      "prompt_tokens": 1187,
+      "completion_tokens": 289,
+      "output": {
+        "recommended_action": "Immediate SDR outreach and schedule AE discovery call within 2 hours",
+        "target_team": "Enterprise AI SDR / AE Squad",
+        "priority": "High",
+        "action_justification": "Lead is a SALES_QUALIFIED_LEAD with a total score of 91, strong industry (Software & Technology) and role fit, high intent signals (demo request, intent score 82), declared $60k budget and 6‑month purchase timeline. The combination of strong fit, clear authority, and urgent interest justifies rapid engagement despite synthetic data flag, to secure the opportunity before competitors and address technical integration questions."
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "next_action_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 2.042,
+      "tokens": 1931,
+      "prompt_tokens": 1304,
+      "completion_tokens": 627,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "lead_id": "LEAD-2026-0003",
+        "final_qualification_tier": "SALES_QUALIFIED_LEAD",
+        "final_score": 91,
+        "summary_report": "Marcus Vance, Head of AI Architecture at CloudScale DevOps Inc, presents a strong alignment with the Ideal Customer Profile: target industry (Software & Technology), company size (320 employees), and senior authority role. The lead demonstrates high purchase intent (intent score 82, recent demo request) and a declared budget of $60,000 with a 6‑month purchase timeline. Scoring components total 91/100, placing the lead firmly in the SALES_QUALIFIED_LEAD tier. Although the data is flagged as synthetic/unverified and the budget/timeline dimension is the lowest scoring component, these factors do not create a conflict with the overall qualification. The recommended immediate SDR outreach and AE discovery call within 2 hours is consistent with the high priority and SLA for qualified leads. Key risks (synthetic data, modest budget, potential competition, integration complexity) are noted for follow‑up but do not preclude rapid engagement.",
+        "audit_findings": [
+          "ICP fit (STRONG_FIT) aligns with component scores and total score of 91.",
+          "Scoring rubric thresholds correctly map to the SALES_QUALIFIED_LEAD tier.",
+          "Recommended action (immediate SDR outreach) matches the high priority and SLA for SQ leads.",
+          "No contradictory routing decisions detected; target team assignment is appropriate.",
+          "Synthetic data flag is acknowledged as a risk but does not conflict with the routing recommendation.",
+          "Budget/timeline dimension is the lowest score (8) yet overall score remains above the SQ threshold."
+        ]
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "final_review_agent_sales"
+    }
+  ],
+  "total_tokens": 7964,
+  "prompt_tokens": 5211,
+  "completion_tokens": 2753,
+  "estimated_cost_usd": 0.005249,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"lead_id\": \"LEAD-2026-0003\",\n  \"final_qualification_tier\": \"SALES_QUALIFIED_LEAD\",\n  \"final_score\": 91,\n  \"summary_report\": \"Marcus Vance, Head of AI Architecture at CloudScale DevOps Inc, presents a strong alignment with the Ideal Customer Profile: target industry (Software & Technology), company size (320 employees), and senior authority role. The lead demonstrates high purchase intent (intent score 82, recent demo request) and a declared budget of $60,000 with a 6\\u2011month purchase timeline. Scoring components total 91/100, placing the lead firmly in the SALES_QUALIFIED_LEAD tier. Although the data is flagged as synthetic/unverified and the budget/timeline dimension is the lowest scoring component, these factors do not create a conflict with the overall qualification. The recommended immediate SDR outreach and AE discovery call within 2 hours is consistent with the high priority and SLA for qualified leads. Key risks (synthetic data, modest budget, potential competition, integration complexity) are noted for follow\\u2011up but do not preclude rapid engagement.\",\n  \"audit_findings\": [\n    \"ICP fit (STRONG_FIT) aligns with component scores and total score of 91.\",\n    \"Scoring rubric thresholds correctly map to the SALES_QUALIFIED_LEAD tier.\",\n    \"Recommended action (immediate SDR outreach) matches the high priority and SLA for SQ leads.\",\n    \"No contradictory routing decisions detected; target team assignment is appropriate.\",\n    \"Synthetic data flag is acknowledged as a risk but does not conflict with the routing recommendation.\",\n    \"Budget/timeline dimension is the lowest score (8) yet overall score remains above the SQ threshold.\"\n  ]\n}",
+  "timestamp": "2026-10-31T16:15:32.790711+00:00"
+}

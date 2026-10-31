@@ -1,0 +1,2628 @@
+{
+  "schema_version": "1.0",
+  "workflow_metadata": {
+    "workflow_id": "customer_support",
+    "workflow_name": "Customer Support",
+    "source_directory": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support",
+    "workflow_entrypoint": "workflow.py",
+    "analysis_status": "completed"
+  },
+  "source_inventory": {
+    "total_python_files": 7,
+    "agent_candidate_files": 6,
+    "parsed_files": 7,
+    "failed_files": 0,
+    "files": [
+      {
+        "path": "issue_investigation_agent.py",
+        "sha256": "a234e45a3425ef6f526d8a44e6c17beb7962828d3f44b2f15ca6ff240e793727",
+        "parse_status": "parsed"
+      },
+      {
+        "path": "policy_retrieval_agent.py",
+        "sha256": "5ff782038ac93d4013effe182835a812a9b936d989a6c601b0cfe2a356eb3c39",
+        "parse_status": "parsed"
+      },
+      {
+        "path": "resolution_agent.py",
+        "sha256": "2107554c16836be94dad8fd521ef5cd392d0a4ce6a92072a546744193c8bd580",
+        "parse_status": "parsed"
+      },
+      {
+        "path": "resolution_verification_agent.py",
+        "sha256": "0e78437d1c6f27afdeb16f3c4abcd93c33d40731f727892c043095b2d1c83ee4",
+        "parse_status": "parsed"
+      },
+      {
+        "path": "response_drafting_agent.py",
+        "sha256": "ed3e0e3b49d4563ab7aa5c6835144657023cfa7082001d8adee53b07209b00f5",
+        "parse_status": "parsed"
+      },
+      {
+        "path": "ticket_classification_agent.py",
+        "sha256": "6500542aaa386f72f671a063e06e023940d7833cdf02ba1c2acfc4ee5ffaf396",
+        "parse_status": "parsed"
+      },
+      {
+        "path": "workflow.py",
+        "sha256": "559e4ae9dfce1ddb0d69aa3542ab2b7575825c2ca2a77da61ee8b8762b6d0a0f",
+        "parse_status": "parsed"
+      }
+    ]
+  },
+  "agent_inventory": {
+    "discovered_agent_files": 6,
+    "identified_agent_definitions": 6,
+    "workflow_invoked_agents": 6,
+    "uninvoked_agent_definitions": 0,
+    "agents": [
+      {
+        "agent_id": "issue_investigation_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support\\issue_investigation_agent.py",
+        "definition_status": "static",
+        "invocation_status": "invoked",
+        "evidence_refs": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "agent_id": "policy_retrieval_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support\\policy_retrieval_agent.py",
+        "definition_status": "static",
+        "invocation_status": "invoked",
+        "evidence_refs": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "agent_id": "resolution_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support\\resolution_agent.py",
+        "definition_status": "static",
+        "invocation_status": "invoked",
+        "evidence_refs": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "agent_id": "resolution_verification_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support\\resolution_verification_agent.py",
+        "definition_status": "static",
+        "invocation_status": "invoked",
+        "evidence_refs": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "agent_id": "response_drafting_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support\\response_drafting_agent.py",
+        "definition_status": "static",
+        "invocation_status": "invoked",
+        "evidence_refs": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "agent_id": "ticket_classification_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support\\ticket_classification_agent.py",
+        "definition_status": "static",
+        "invocation_status": "invoked",
+        "evidence_refs": [
+          "ev_agent_007"
+        ]
+      }
+    ]
+  },
+  "agent_details": [
+    {
+      "agent_id": "issue_investigation_agent",
+      "definition": {
+        "type": "function",
+        "name": "issue_investigation_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support\\issue_investigation_agent.py",
+        "start_line": 38,
+        "end_line": 47
+      },
+      "role": "Technical Support Investigator",
+      "goal": "Investigate root causes, correlate customer account history, and separate confirmed facts from hypotheses.",
+      "backstory": "A diagnostic engineer reviewing backend logs, customer history, and issue symptoms.",
+      "llm": {
+        "provider": null,
+        "model": null,
+        "resolution_status": "unresolved"
+      },
+      "tasks": [
+        {
+          "task_id": "task_issue_investigation_agent_1",
+          "agent_id": "issue_investigation_agent",
+          "description": "f\"Investigate the customer's reported problem.\\nTicket Data:\\n{json.dumps(ticket_data, indent=2)}\\n\\nSynthetic Customer Record & System History:\\n{json.dumps(customer_context, indent=2)}\\n\\nInstructions:\\n1. Determine likely root cause based on symptoms and customer tier.\\n2. Separate confirmed facts from unconfirmed hypotheses.\\n3. State if further diagnostic data or user verification is required.\\nReturn strictly valid JSON with keys: 'investigation_findings', 'root_cause_hypothesis', 'confirmed_facts', and 'data_gaps'.\"",
+          "expected_output": "Strictly valid JSON containing investigation_findings, root_cause_hypothesis, confirmed_facts, and data_gaps.",
+          "context_task_ids": [],
+          "evidence_refs": [
+            "ev_task_008"
+          ]
+        }
+      ],
+      "registered_tools": [],
+      "helper_functions": [
+        "create_task",
+        "deterministic_customer_lookup"
+      ],
+      "explicit_code_invocations": [],
+      "evidence_refs": [
+        "ev_agent_002"
+      ]
+    },
+    {
+      "agent_id": "policy_retrieval_agent",
+      "definition": {
+        "type": "function",
+        "name": "policy_retrieval_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support\\policy_retrieval_agent.py",
+        "start_line": 40,
+        "end_line": 49
+      },
+      "role": "Customer Policy & Knowledge Base Specialist",
+      "goal": "Retrieve authoritative support guidelines, SLAs, and troubleshooting procedures for the ticket.",
+      "backstory": "A knowledge manager providing certified procedures to support agents without guessing.",
+      "llm": {
+        "provider": null,
+        "model": null,
+        "resolution_status": "unresolved"
+      },
+      "tasks": [
+        {
+          "task_id": "task_policy_retrieval_agent_1",
+          "agent_id": "policy_retrieval_agent",
+          "description": "f\"Retrieve applicable policies and SOPs for this support ticket.\\nTicket Data:\\n{json.dumps(ticket_data, indent=2)}\\n\\nRetrieved Policy & Knowledge Base Records:\\n{json.dumps(retrieval_data, indent=2)}\\n\\nInstructions:\\n1. Identify the primary governing policy ID and troubleshooting guide ID.\\n2. Detail eligibility conditions, SLAs, and restrictions.\\n3. Note explicitly if no relevant policy covers this specific issue.\\nReturn strictly valid JSON with keys: 'applicable_policy_ids', 'applicable_guide_ids', 'policy_conditions', and 'retrieval_summary'.\"",
+          "expected_output": "Strictly valid JSON containing applicable_policy_ids, applicable_guide_ids, policy_conditions, and retrieval_summary.",
+          "context_task_ids": [],
+          "evidence_refs": [
+            "ev_task_009"
+          ]
+        }
+      ],
+      "registered_tools": [],
+      "helper_functions": [
+        "create_task",
+        "deterministic_policy_retrieval"
+      ],
+      "explicit_code_invocations": [],
+      "evidence_refs": [
+        "ev_agent_003"
+      ]
+    },
+    {
+      "agent_id": "resolution_agent",
+      "definition": {
+        "type": "function",
+        "name": "resolution_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support\\resolution_agent.py",
+        "start_line": 12,
+        "end_line": 21
+      },
+      "role": "Customer Resolution Strategist",
+      "goal": "Synthesize policies and technical investigation into a clear, actionable customer resolution.",
+      "backstory": "A tier-3 senior resolution specialist with authority to recommend credits, troubleshooting, or escalations.",
+      "llm": {
+        "provider": null,
+        "model": null,
+        "resolution_status": "unresolved"
+      },
+      "tasks": [
+        {
+          "task_id": "task_resolution_agent_1",
+          "agent_id": "resolution_agent",
+          "description": "f\"Formulate a concrete resolution recommendation for this ticket.\\nTicket Data:\\n{json.dumps(ticket_data, indent=2)}\\n\\nUpstream Evidence:\\n{json.dumps(stage_evidence, indent=2)}\\n\\nInstructions:\\n1. Recommend resolution type: 'immediate_resolution', 'requires_user_action', or 'escalate_to_engineering'.\\n2. Provide step-by-step resolution actions conforming strictly to retrieved policy rules.\\n3. Note: Never execute actual database alterations or financial credits.\\nReturn strictly valid JSON with keys: 'resolution_type', 'recommended_action', 'policy_justification', and 'escalation_required'.\"",
+          "expected_output": "Strictly valid JSON containing resolution_type, recommended_action, policy_justification, and escalation_required.",
+          "context_task_ids": [],
+          "evidence_refs": [
+            "ev_task_010"
+          ]
+        }
+      ],
+      "registered_tools": [],
+      "helper_functions": [
+        "create_task"
+      ],
+      "explicit_code_invocations": [],
+      "evidence_refs": [
+        "ev_agent_004"
+      ]
+    },
+    {
+      "agent_id": "resolution_verification_agent",
+      "definition": {
+        "type": "function",
+        "name": "resolution_verification_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support\\resolution_verification_agent.py",
+        "start_line": 12,
+        "end_line": 21
+      },
+      "role": "Support QA & Verification Auditor",
+      "goal": "Verify that the drafted response fully addresses the ticket within policy boundaries.",
+      "backstory": "A quality assurance lead ensuring high customer satisfaction and strict policy adherence.",
+      "llm": {
+        "provider": null,
+        "model": null,
+        "resolution_status": "unresolved"
+      },
+      "tasks": [
+        {
+          "task_id": "task_resolution_verification_agent_1",
+          "agent_id": "resolution_verification_agent",
+          "description": "f\"Perform quality audit on the proposed ticket resolution and customer draft.\\nFull Support Audit Trail:\\n{json.dumps(full_ticket_audit, indent=2)}\\n\\nVerification Checks:\\n1. Does the drafted response completely solve the customer's stated complaint?\\n2. Are there any unsupported commitments, policy contradictions, or missing instructions?\\n3. Mark final status: 'RESOLVED', 'ACTION_REQUIRED_BY_USER', or 'ESCALATED'.\\nReturn strictly valid JSON with keys: 'qa_status' ('APPROVED' or 'REJECTED'), 'final_ticket_status', 'verification_notes', and 'support_summary_report'.\"",
+          "expected_output": "Strictly valid JSON containing qa_status, final_ticket_status, verification_notes, and support_summary_report.",
+          "context_task_ids": [],
+          "evidence_refs": [
+            "ev_task_011"
+          ]
+        }
+      ],
+      "registered_tools": [],
+      "helper_functions": [
+        "create_task"
+      ],
+      "explicit_code_invocations": [],
+      "evidence_refs": [
+        "ev_agent_005"
+      ]
+    },
+    {
+      "agent_id": "response_drafting_agent",
+      "definition": {
+        "type": "function",
+        "name": "response_drafting_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support\\response_drafting_agent.py",
+        "start_line": 12,
+        "end_line": 21
+      },
+      "role": "Customer Communications Specialist",
+      "goal": "Draft clear, empathetic, and professional customer responses explaining the resolution.",
+      "backstory": "An expert in customer experience communication ensuring clear guidance and professional empathy.",
+      "llm": {
+        "provider": null,
+        "model": null,
+        "resolution_status": "unresolved"
+      },
+      "tasks": [
+        {
+          "task_id": "task_response_drafting_agent_1",
+          "agent_id": "response_drafting_agent",
+          "description": "f\"Draft a formal, customer-facing response message.\\nTicket Context:\\n{json.dumps(ticket_data, indent=2)}\\n\\nApproved Resolution Strategy:\\n{json.dumps(resolution_data, indent=2)}\\n\\nGuidelines:\\n1. Acknowledge the customer's specific issue empathetically.\\n2. Explain the resolution or required user action with clear bullet points.\\n3. Do not disclose internal reasoning, prompt names, or unverified claims.\\n4. Do not promise external actions the system cannot guarantee.\\nReturn strictly valid JSON with keys: 'response_text', 'tone', 'next_steps_for_customer', and 'ticket_status'.\"",
+          "expected_output": "Strictly valid JSON containing response_text, tone, next_steps_for_customer, and ticket_status.",
+          "context_task_ids": [],
+          "evidence_refs": [
+            "ev_task_012"
+          ]
+        }
+      ],
+      "registered_tools": [],
+      "helper_functions": [
+        "create_task"
+      ],
+      "explicit_code_invocations": [],
+      "evidence_refs": [
+        "ev_agent_006"
+      ]
+    },
+    {
+      "agent_id": "ticket_classification_agent",
+      "definition": {
+        "type": "function",
+        "name": "ticket_classification_agent",
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\customer_support\\ticket_classification_agent.py",
+        "start_line": 38,
+        "end_line": 47
+      },
+      "role": "Customer Support Triage Specialist",
+      "goal": "Classify customer tickets into accurate operational categories, urgency tiers, and complexity levels.",
+      "backstory": "An experienced support dispatcher who routes customer inquiries quickly and accurately.",
+      "llm": {
+        "provider": null,
+        "model": null,
+        "resolution_status": "unresolved"
+      },
+      "tasks": [
+        {
+          "task_id": "task_ticket_classification_agent_1",
+          "agent_id": "ticket_classification_agent",
+          "description": "f\"Classify the following customer support ticket.\\nTicket Data:\\n{json.dumps(ticket_data, indent=2)}\\n\\nRule-Based Triage Signals:\\n{json.dumps(hints, indent=2)}\\n\\nInstructions:\\n1. Classify category (account_access, billing, payment, delivery, technical_failure, refund_request).\\n2. Assess urgency ('low', 'medium', 'high', 'critical') and customer impact.\\n3. Classify apparent complexity ('simple', 'moderate', 'complex').\\n4. Identify missing customer details or ambiguities.\\nReturn strictly valid JSON with keys: 'category', 'urgency', 'complexity', 'customer_impact', and 'routing_recommendation'.\"",
+          "expected_output": "Strictly valid JSON containing category, urgency, complexity, customer_impact, and routing_recommendation.",
+          "context_task_ids": [],
+          "evidence_refs": [
+            "ev_task_013"
+          ]
+        }
+      ],
+      "registered_tools": [],
+      "helper_functions": [
+        "create_task",
+        "deterministic_classification_hints"
+      ],
+      "explicit_code_invocations": [],
+      "evidence_refs": [
+        "ev_agent_007"
+      ]
+    }
+  ],
+  "outer_workflow_flow": {
+    "entrypoint": "workflow.py",
+    "execution_steps": [
+      {
+        "step_id": "step_00",
+        "operation": "function_call",
+        "target": "init_phoenix",
+        "sequence_index": 0,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_014"
+        ]
+      },
+      {
+        "step_id": "step_01",
+        "operation": "function_call",
+        "target": "WorkflowRunTracker(WORKFLOW_NAME, run_id).start",
+        "sequence_index": 1,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_015"
+        ]
+      },
+      {
+        "step_id": "step_02",
+        "operation": "function_call",
+        "target": "WorkflowRunTracker",
+        "sequence_index": 2,
+        "arguments": [
+          "WORKFLOW_NAME",
+          "run_id"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_016"
+        ]
+      },
+      {
+        "step_id": "step_03",
+        "operation": "function_call",
+        "target": "print",
+        "sequence_index": 3,
+        "arguments": [
+          "f'\\n========================================================'"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_017"
+        ]
+      },
+      {
+        "step_id": "step_04",
+        "operation": "function_call",
+        "target": "print",
+        "sequence_index": 4,
+        "arguments": [
+          "f'Starting Workflow: {WORKFLOW_NAME} (Run ID: {tracker.run_id})'"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_018"
+        ]
+      },
+      {
+        "step_id": "step_05",
+        "operation": "function_call",
+        "target": "print",
+        "sequence_index": 5,
+        "arguments": [
+          "f\"Target Ticket: {ticket_data.get('ticket_id', 'UNKNOWN')} | Category: {ticket_data.get('category', 'UNKNOWN')}\""
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_019"
+        ]
+      },
+      {
+        "step_id": "step_06",
+        "operation": "function_call",
+        "target": "ticket_data.get",
+        "sequence_index": 6,
+        "arguments": [
+          "ticket_id",
+          "UNKNOWN"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_020"
+        ]
+      },
+      {
+        "step_id": "step_07",
+        "operation": "function_call",
+        "target": "ticket_data.get",
+        "sequence_index": 7,
+        "arguments": [
+          "category",
+          "UNKNOWN"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_021"
+        ]
+      },
+      {
+        "step_id": "step_08",
+        "operation": "function_call",
+        "target": "print",
+        "sequence_index": 8,
+        "arguments": [
+          "f'========================================================'"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_022"
+        ]
+      },
+      {
+        "step_id": "step_09",
+        "operation": "function_call",
+        "target": "time.time",
+        "sequence_index": 9,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_023"
+        ]
+      },
+      {
+        "step_id": "step_10",
+        "operation": "function_call",
+        "target": "get_key_for_agent",
+        "sequence_index": 10,
+        "arguments": [
+          "AGENT_CLASSIFICATION_ID"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_024"
+        ]
+      },
+      {
+        "step_id": "step_11",
+        "operation": "function_call",
+        "target": "deterministic_classification_hints",
+        "sequence_index": 11,
+        "arguments": [
+          "ticket_data"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_025"
+        ]
+      },
+      {
+        "step_id": "step_12",
+        "operation": "agent_factory_call",
+        "target": "create_classification_agent",
+        "sequence_index": 12,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_026"
+        ]
+      },
+      {
+        "step_id": "step_13",
+        "operation": "function_call",
+        "target": "create_classification_task",
+        "sequence_index": 13,
+        "arguments": [
+          "agent1",
+          "ticket_data"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_027"
+        ]
+      },
+      {
+        "step_id": "step_14",
+        "operation": "crew_creation",
+        "target": "Crew",
+        "sequence_index": 14,
+        "arguments": {
+          "agents": [
+            "agent1"
+          ],
+          "tasks": [
+            "task1"
+          ],
+          "verbose": false
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_028"
+        ]
+      },
+      {
+        "step_id": "step_15",
+        "operation": "crew_kickoff",
+        "target": "crew1.kickoff",
+        "sequence_index": 15,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_029"
+        ]
+      },
+      {
+        "step_id": "step_16",
+        "operation": "function_call",
+        "target": "hasattr",
+        "sequence_index": 16,
+        "arguments": [
+          "res1",
+          "raw"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_030"
+        ]
+      },
+      {
+        "step_id": "step_17",
+        "operation": "function_call",
+        "target": "str",
+        "sequence_index": 17,
+        "arguments": [
+          "res1"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_031"
+        ]
+      },
+      {
+        "step_id": "step_18",
+        "operation": "function_call",
+        "target": "extract_token_usage",
+        "sequence_index": 18,
+        "arguments": [
+          "res1",
+          "crew1"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_032"
+        ]
+      },
+      {
+        "step_id": "step_19",
+        "operation": "function_call",
+        "target": "time.time",
+        "sequence_index": 19,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_033"
+        ]
+      },
+      {
+        "step_id": "step_20",
+        "operation": "function_call",
+        "target": "tracker.log_agent_execution",
+        "sequence_index": 20,
+        "arguments": {
+          "status": "SUCCESS",
+          "tokens": "tot1",
+          "prompt_tokens": "p1",
+          "completion_tokens": "c1",
+          "output": "out1"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_034"
+        ]
+      },
+      {
+        "step_id": "step_21",
+        "operation": "function_call",
+        "target": "print",
+        "sequence_index": 21,
+        "arguments": [
+          "f' -> [Agent 1/6] {AGENT_CLASSIFICATION_ID} completed in {dur1:.2f}s ({tot1} tokens)'"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_035"
+        ]
+      },
+      {
+        "step_id": "step_22",
+        "operation": "function_call",
+        "target": "time.time",
+        "sequence_index": 22,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_036"
+        ]
+      },
+      {
+        "step_id": "step_23",
+        "operation": "function_call",
+        "target": "get_key_for_agent",
+        "sequence_index": 23,
+        "arguments": [
+          "AGENT_RETRIEVAL_ID"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_037"
+        ]
+      },
+      {
+        "step_id": "step_24",
+        "operation": "function_call",
+        "target": "ticket_data.get",
+        "sequence_index": 24,
+        "arguments": [
+          "category",
+          "hints.get('suggested_category', 'general')"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_038"
+        ]
+      },
+      {
+        "step_id": "step_25",
+        "operation": "function_call",
+        "target": "hints.get",
+        "sequence_index": 25,
+        "arguments": [
+          "suggested_category",
+          "general"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_039"
+        ]
+      },
+      {
+        "step_id": "step_26",
+        "operation": "function_call",
+        "target": "deterministic_policy_retrieval",
+        "sequence_index": 26,
+        "arguments": [
+          "cat"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_040"
+        ]
+      },
+      {
+        "step_id": "step_27",
+        "operation": "agent_factory_call",
+        "target": "create_retrieval_agent",
+        "sequence_index": 27,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_041"
+        ]
+      },
+      {
+        "step_id": "step_28",
+        "operation": "function_call",
+        "target": "create_retrieval_task",
+        "sequence_index": 28,
+        "arguments": [
+          "agent2",
+          "ticket_data",
+          "{'category': 'cat'}"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_042"
+        ]
+      },
+      {
+        "step_id": "step_29",
+        "operation": "crew_creation",
+        "target": "Crew",
+        "sequence_index": 29,
+        "arguments": {
+          "agents": [
+            "agent2"
+          ],
+          "tasks": [
+            "task2"
+          ],
+          "verbose": false
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_043"
+        ]
+      },
+      {
+        "step_id": "step_30",
+        "operation": "crew_kickoff",
+        "target": "crew2.kickoff",
+        "sequence_index": 30,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_044"
+        ]
+      },
+      {
+        "step_id": "step_31",
+        "operation": "function_call",
+        "target": "hasattr",
+        "sequence_index": 31,
+        "arguments": [
+          "res2",
+          "raw"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_045"
+        ]
+      },
+      {
+        "step_id": "step_32",
+        "operation": "function_call",
+        "target": "str",
+        "sequence_index": 32,
+        "arguments": [
+          "res2"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_046"
+        ]
+      },
+      {
+        "step_id": "step_33",
+        "operation": "function_call",
+        "target": "extract_token_usage",
+        "sequence_index": 33,
+        "arguments": [
+          "res2",
+          "crew2"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_047"
+        ]
+      },
+      {
+        "step_id": "step_34",
+        "operation": "function_call",
+        "target": "time.time",
+        "sequence_index": 34,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_048"
+        ]
+      },
+      {
+        "step_id": "step_35",
+        "operation": "function_call",
+        "target": "tracker.log_agent_execution",
+        "sequence_index": 35,
+        "arguments": {
+          "status": "SUCCESS",
+          "tokens": "tot2",
+          "prompt_tokens": "p2",
+          "completion_tokens": "c2",
+          "output": "out2"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_049"
+        ]
+      },
+      {
+        "step_id": "step_36",
+        "operation": "function_call",
+        "target": "print",
+        "sequence_index": 36,
+        "arguments": [
+          "f' -> [Agent 2/6] {AGENT_RETRIEVAL_ID} completed in {dur2:.2f}s ({tot2} tokens)'"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_050"
+        ]
+      },
+      {
+        "step_id": "step_37",
+        "operation": "function_call",
+        "target": "time.time",
+        "sequence_index": 37,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_051"
+        ]
+      },
+      {
+        "step_id": "step_38",
+        "operation": "function_call",
+        "target": "get_key_for_agent",
+        "sequence_index": 38,
+        "arguments": [
+          "AGENT_INVESTIGATION_ID"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_052"
+        ]
+      },
+      {
+        "step_id": "step_39",
+        "operation": "agent_factory_call",
+        "target": "create_investigation_agent",
+        "sequence_index": 39,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_053"
+        ]
+      },
+      {
+        "step_id": "step_40",
+        "operation": "function_call",
+        "target": "create_investigation_task",
+        "sequence_index": 40,
+        "arguments": [
+          "agent3",
+          "ticket_data"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_054"
+        ]
+      },
+      {
+        "step_id": "step_41",
+        "operation": "crew_creation",
+        "target": "Crew",
+        "sequence_index": 41,
+        "arguments": {
+          "agents": [
+            "agent3"
+          ],
+          "tasks": [
+            "task3"
+          ],
+          "verbose": false
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_055"
+        ]
+      },
+      {
+        "step_id": "step_42",
+        "operation": "crew_kickoff",
+        "target": "crew3.kickoff",
+        "sequence_index": 42,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_056"
+        ]
+      },
+      {
+        "step_id": "step_43",
+        "operation": "function_call",
+        "target": "hasattr",
+        "sequence_index": 43,
+        "arguments": [
+          "res3",
+          "raw"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_057"
+        ]
+      },
+      {
+        "step_id": "step_44",
+        "operation": "function_call",
+        "target": "str",
+        "sequence_index": 44,
+        "arguments": [
+          "res3"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_058"
+        ]
+      },
+      {
+        "step_id": "step_45",
+        "operation": "function_call",
+        "target": "extract_token_usage",
+        "sequence_index": 45,
+        "arguments": [
+          "res3",
+          "crew3"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_059"
+        ]
+      },
+      {
+        "step_id": "step_46",
+        "operation": "function_call",
+        "target": "time.time",
+        "sequence_index": 46,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_060"
+        ]
+      },
+      {
+        "step_id": "step_47",
+        "operation": "function_call",
+        "target": "tracker.log_agent_execution",
+        "sequence_index": 47,
+        "arguments": {
+          "status": "SUCCESS",
+          "tokens": "tot3",
+          "prompt_tokens": "p3",
+          "completion_tokens": "c3",
+          "output": "out3"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_061"
+        ]
+      },
+      {
+        "step_id": "step_48",
+        "operation": "function_call",
+        "target": "print",
+        "sequence_index": 48,
+        "arguments": [
+          "f' -> [Agent 3/6] {AGENT_INVESTIGATION_ID} completed in {dur3:.2f}s ({tot3} tokens)'"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_062"
+        ]
+      },
+      {
+        "step_id": "step_49",
+        "operation": "function_call",
+        "target": "time.time",
+        "sequence_index": 49,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_063"
+        ]
+      },
+      {
+        "step_id": "step_50",
+        "operation": "function_call",
+        "target": "get_key_for_agent",
+        "sequence_index": 50,
+        "arguments": [
+          "AGENT_RESOLUTION_ID"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_064"
+        ]
+      },
+      {
+        "step_id": "step_51",
+        "operation": "agent_factory_call",
+        "target": "create_resolution_agent",
+        "sequence_index": 51,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_065"
+        ]
+      },
+      {
+        "step_id": "step_52",
+        "operation": "function_call",
+        "target": "create_resolution_task",
+        "sequence_index": 52,
+        "arguments": [
+          "agent4",
+          "ticket_data",
+          "stage_evidence"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_066"
+        ]
+      },
+      {
+        "step_id": "step_53",
+        "operation": "crew_creation",
+        "target": "Crew",
+        "sequence_index": 53,
+        "arguments": {
+          "agents": [
+            "agent4"
+          ],
+          "tasks": [
+            "task4"
+          ],
+          "verbose": false
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_067"
+        ]
+      },
+      {
+        "step_id": "step_54",
+        "operation": "crew_kickoff",
+        "target": "crew4.kickoff",
+        "sequence_index": 54,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_068"
+        ]
+      },
+      {
+        "step_id": "step_55",
+        "operation": "function_call",
+        "target": "hasattr",
+        "sequence_index": 55,
+        "arguments": [
+          "res4",
+          "raw"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_069"
+        ]
+      },
+      {
+        "step_id": "step_56",
+        "operation": "function_call",
+        "target": "str",
+        "sequence_index": 56,
+        "arguments": [
+          "res4"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_070"
+        ]
+      },
+      {
+        "step_id": "step_57",
+        "operation": "function_call",
+        "target": "extract_token_usage",
+        "sequence_index": 57,
+        "arguments": [
+          "res4",
+          "crew4"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_071"
+        ]
+      },
+      {
+        "step_id": "step_58",
+        "operation": "function_call",
+        "target": "time.time",
+        "sequence_index": 58,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_072"
+        ]
+      },
+      {
+        "step_id": "step_59",
+        "operation": "function_call",
+        "target": "tracker.log_agent_execution",
+        "sequence_index": 59,
+        "arguments": {
+          "status": "SUCCESS",
+          "tokens": "tot4",
+          "prompt_tokens": "p4",
+          "completion_tokens": "c4",
+          "output": "out4"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_073"
+        ]
+      },
+      {
+        "step_id": "step_60",
+        "operation": "function_call",
+        "target": "print",
+        "sequence_index": 60,
+        "arguments": [
+          "f' -> [Agent 4/6] {AGENT_RESOLUTION_ID} completed in {dur4:.2f}s ({tot4} tokens)'"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_074"
+        ]
+      },
+      {
+        "step_id": "step_61",
+        "operation": "function_call",
+        "target": "time.time",
+        "sequence_index": 61,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_075"
+        ]
+      },
+      {
+        "step_id": "step_62",
+        "operation": "function_call",
+        "target": "get_key_for_agent",
+        "sequence_index": 62,
+        "arguments": [
+          "AGENT_DRAFTING_ID"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_076"
+        ]
+      },
+      {
+        "step_id": "step_63",
+        "operation": "agent_factory_call",
+        "target": "create_drafting_agent",
+        "sequence_index": 63,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_077"
+        ]
+      },
+      {
+        "step_id": "step_64",
+        "operation": "function_call",
+        "target": "create_drafting_task",
+        "sequence_index": 64,
+        "arguments": [
+          "agent5",
+          "ticket_data",
+          "{'resolution': 'out4'}"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_078"
+        ]
+      },
+      {
+        "step_id": "step_65",
+        "operation": "crew_creation",
+        "target": "Crew",
+        "sequence_index": 65,
+        "arguments": {
+          "agents": [
+            "agent5"
+          ],
+          "tasks": [
+            "task5"
+          ],
+          "verbose": false
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_079"
+        ]
+      },
+      {
+        "step_id": "step_66",
+        "operation": "crew_kickoff",
+        "target": "crew5.kickoff",
+        "sequence_index": 66,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_080"
+        ]
+      },
+      {
+        "step_id": "step_67",
+        "operation": "function_call",
+        "target": "hasattr",
+        "sequence_index": 67,
+        "arguments": [
+          "res5",
+          "raw"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_081"
+        ]
+      },
+      {
+        "step_id": "step_68",
+        "operation": "function_call",
+        "target": "str",
+        "sequence_index": 68,
+        "arguments": [
+          "res5"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_082"
+        ]
+      },
+      {
+        "step_id": "step_69",
+        "operation": "function_call",
+        "target": "extract_token_usage",
+        "sequence_index": 69,
+        "arguments": [
+          "res5",
+          "crew5"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_083"
+        ]
+      },
+      {
+        "step_id": "step_70",
+        "operation": "function_call",
+        "target": "time.time",
+        "sequence_index": 70,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_084"
+        ]
+      },
+      {
+        "step_id": "step_71",
+        "operation": "function_call",
+        "target": "tracker.log_agent_execution",
+        "sequence_index": 71,
+        "arguments": {
+          "status": "SUCCESS",
+          "tokens": "tot5",
+          "prompt_tokens": "p5",
+          "completion_tokens": "c5",
+          "output": "out5"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_085"
+        ]
+      },
+      {
+        "step_id": "step_72",
+        "operation": "function_call",
+        "target": "print",
+        "sequence_index": 72,
+        "arguments": [
+          "f' -> [Agent 5/6] {AGENT_DRAFTING_ID} completed in {dur5:.2f}s ({tot5} tokens)'"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_086"
+        ]
+      },
+      {
+        "step_id": "step_73",
+        "operation": "function_call",
+        "target": "time.time",
+        "sequence_index": 73,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_087"
+        ]
+      },
+      {
+        "step_id": "step_74",
+        "operation": "function_call",
+        "target": "get_key_for_agent",
+        "sequence_index": 74,
+        "arguments": [
+          "AGENT_VERIFICATION_ID"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_088"
+        ]
+      },
+      {
+        "step_id": "step_75",
+        "operation": "agent_factory_call",
+        "target": "create_verification_agent",
+        "sequence_index": 75,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_089"
+        ]
+      },
+      {
+        "step_id": "step_76",
+        "operation": "function_call",
+        "target": "create_verification_task",
+        "sequence_index": 76,
+        "arguments": [
+          "agent6",
+          "stage_evidence"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_090"
+        ]
+      },
+      {
+        "step_id": "step_77",
+        "operation": "crew_creation",
+        "target": "Crew",
+        "sequence_index": 77,
+        "arguments": {
+          "agents": [
+            "agent6"
+          ],
+          "tasks": [
+            "task6"
+          ],
+          "verbose": false
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_091"
+        ]
+      },
+      {
+        "step_id": "step_78",
+        "operation": "crew_kickoff",
+        "target": "crew6.kickoff",
+        "sequence_index": 78,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_092"
+        ]
+      },
+      {
+        "step_id": "step_79",
+        "operation": "function_call",
+        "target": "hasattr",
+        "sequence_index": 79,
+        "arguments": [
+          "res6",
+          "raw"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_093"
+        ]
+      },
+      {
+        "step_id": "step_80",
+        "operation": "function_call",
+        "target": "str",
+        "sequence_index": 80,
+        "arguments": [
+          "res6"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_094"
+        ]
+      },
+      {
+        "step_id": "step_81",
+        "operation": "function_call",
+        "target": "extract_token_usage",
+        "sequence_index": 81,
+        "arguments": [
+          "res6",
+          "crew6"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_095"
+        ]
+      },
+      {
+        "step_id": "step_82",
+        "operation": "function_call",
+        "target": "time.time",
+        "sequence_index": 82,
+        "arguments": [],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_096"
+        ]
+      },
+      {
+        "step_id": "step_83",
+        "operation": "function_call",
+        "target": "tracker.log_agent_execution",
+        "sequence_index": 83,
+        "arguments": {
+          "status": "SUCCESS",
+          "tokens": "tot6",
+          "prompt_tokens": "p6",
+          "completion_tokens": "c6",
+          "output": "final_output"
+        },
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_097"
+        ]
+      },
+      {
+        "step_id": "step_84",
+        "operation": "function_call",
+        "target": "print",
+        "sequence_index": 84,
+        "arguments": [
+          "f' -> [Agent 6/6] {AGENT_VERIFICATION_ID} completed in {dur6:.2f}s ({tot6} tokens)'"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_098"
+        ]
+      },
+      {
+        "step_id": "step_85",
+        "operation": "function_call",
+        "target": "tracker.complete",
+        "sequence_index": 85,
+        "arguments": [
+          "final_output"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_099"
+        ]
+      },
+      {
+        "step_id": "step_86",
+        "operation": "function_call",
+        "target": "print",
+        "sequence_index": 86,
+        "arguments": [
+          "f\"Workflow '{WORKFLOW_NAME}' finished successfully in {tracker.duration_seconds}s (Total Tokens: {tracker.total_tokens}).\""
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_100"
+        ]
+      },
+      {
+        "step_id": "step_87",
+        "operation": "function_call",
+        "target": "tracker.fail",
+        "sequence_index": 87,
+        "arguments": [
+          "exc"
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_101"
+        ]
+      },
+      {
+        "step_id": "step_88",
+        "operation": "function_call",
+        "target": "print",
+        "sequence_index": 88,
+        "arguments": [
+          "f\"Workflow '{WORKFLOW_NAME}' FAILED: {exc}\""
+        ],
+        "assigned_variable": null,
+        "evidence_refs": [
+          "ev_step_102"
+        ]
+      }
+    ],
+    "conditional_branches": [],
+    "loops": [],
+    "early_returns": [
+      {
+        "return_value": "{'run_id': 'tracker.run_id', 'status': 'SUCCESS', 'duration_seconds': 'tracker.duration_seconds', 'total_tokens': 'tracker.total_tokens', 'prompt_tokens': 'tracker.prompt_tokens', 'completion_tokens': 'tracker.completion_tokens', 'estimated_cost_usd': 'tracker.estimated_cost_usd', 'agent_executions': 'tracker.agent_executions', 'final_output': 'final_output'}",
+        "start_line": 156,
+        "end_line": 166
+      }
+    ],
+    "workflow_inputs": [],
+    "workflow_outputs": []
+  },
+  "orchestrator_process": {
+    "framework": "crewai",
+    "process_type": {
+      "value": null,
+      "resolution_status": "unresolved"
+    },
+    "delegation_enabled_agents": [],
+    "manager": {
+      "manager_llm": null,
+      "manager_agent": null
+    },
+    "task_context_links": [],
+    "async_tasks": [],
+    "runtime_scheduling_observable": false
+  },
+  "dependency_graph": {
+    "nodes": [
+      {
+        "id": "workflow:workflow.py",
+        "type": "workflow",
+        "source_file": "workflow.py",
+        "evidence_refs": [
+          "ev_wf_001"
+        ]
+      },
+      {
+        "id": "agent:issue_investigation_agent",
+        "type": "agent",
+        "source_file": "issue_investigation_agent.py",
+        "evidence_refs": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "id": "agent:policy_retrieval_agent",
+        "type": "agent",
+        "source_file": "policy_retrieval_agent.py",
+        "evidence_refs": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "id": "agent:resolution_agent",
+        "type": "agent",
+        "source_file": "resolution_agent.py",
+        "evidence_refs": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "id": "agent:resolution_verification_agent",
+        "type": "agent",
+        "source_file": "resolution_verification_agent.py",
+        "evidence_refs": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "id": "agent:response_drafting_agent",
+        "type": "agent",
+        "source_file": "response_drafting_agent.py",
+        "evidence_refs": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "id": "agent:ticket_classification_agent",
+        "type": "agent",
+        "source_file": "ticket_classification_agent.py",
+        "evidence_refs": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "id": "task:task_issue_investigation_agent_1",
+        "type": "task",
+        "source_file": "issue_investigation_agent.py",
+        "evidence_refs": [
+          "ev_task_008"
+        ]
+      },
+      {
+        "id": "task:task_policy_retrieval_agent_1",
+        "type": "task",
+        "source_file": "policy_retrieval_agent.py",
+        "evidence_refs": [
+          "ev_task_009"
+        ]
+      },
+      {
+        "id": "task:task_resolution_agent_1",
+        "type": "task",
+        "source_file": "resolution_agent.py",
+        "evidence_refs": [
+          "ev_task_010"
+        ]
+      },
+      {
+        "id": "task:task_resolution_verification_agent_1",
+        "type": "task",
+        "source_file": "resolution_verification_agent.py",
+        "evidence_refs": [
+          "ev_task_011"
+        ]
+      },
+      {
+        "id": "task:task_response_drafting_agent_1",
+        "type": "task",
+        "source_file": "response_drafting_agent.py",
+        "evidence_refs": [
+          "ev_task_012"
+        ]
+      },
+      {
+        "id": "task:task_ticket_classification_agent_1",
+        "type": "task",
+        "source_file": "ticket_classification_agent.py",
+        "evidence_refs": [
+          "ev_task_013"
+        ]
+      },
+      {
+        "id": "function:create_task",
+        "type": "function",
+        "source_file": null,
+        "evidence_refs": []
+      },
+      {
+        "id": "function:deterministic_customer_lookup",
+        "type": "function",
+        "source_file": null,
+        "evidence_refs": []
+      },
+      {
+        "id": "function:deterministic_classification_hints",
+        "type": "function",
+        "source_file": null,
+        "evidence_refs": []
+      },
+      {
+        "id": "function:run_customer_support_workflow",
+        "type": "function",
+        "source_file": null,
+        "evidence_refs": []
+      },
+      {
+        "id": "function:deterministic_policy_retrieval",
+        "type": "function",
+        "source_file": null,
+        "evidence_refs": []
+      }
+    ],
+    "edges": [
+      {
+        "source": "workflow:workflow.py",
+        "target": "agent:ticket_classification_agent",
+        "relationship": "agent_invocation",
+        "data_reference": null,
+        "resolution_status": "static",
+        "evidence_refs": [
+          "ev_wf_001"
+        ]
+      },
+      {
+        "source": "workflow:workflow.py",
+        "target": "agent:policy_retrieval_agent",
+        "relationship": "agent_invocation",
+        "data_reference": null,
+        "resolution_status": "static",
+        "evidence_refs": [
+          "ev_wf_001"
+        ]
+      },
+      {
+        "source": "workflow:workflow.py",
+        "target": "agent:issue_investigation_agent",
+        "relationship": "agent_invocation",
+        "data_reference": null,
+        "resolution_status": "static",
+        "evidence_refs": [
+          "ev_wf_001"
+        ]
+      },
+      {
+        "source": "workflow:workflow.py",
+        "target": "agent:resolution_agent",
+        "relationship": "agent_invocation",
+        "data_reference": null,
+        "resolution_status": "static",
+        "evidence_refs": [
+          "ev_wf_001"
+        ]
+      },
+      {
+        "source": "workflow:workflow.py",
+        "target": "agent:response_drafting_agent",
+        "relationship": "agent_invocation",
+        "data_reference": null,
+        "resolution_status": "static",
+        "evidence_refs": [
+          "ev_wf_001"
+        ]
+      },
+      {
+        "source": "workflow:workflow.py",
+        "target": "agent:resolution_verification_agent",
+        "relationship": "agent_invocation",
+        "data_reference": null,
+        "resolution_status": "static",
+        "evidence_refs": [
+          "ev_wf_001"
+        ]
+      }
+    ]
+  },
+  "tool_and_helper_inventory": {
+    "registered_tools": [],
+    "explicit_code_invocations": [],
+    "helper_functions": [
+      "create_task",
+      "deterministic_classification_hints",
+      "deterministic_customer_lookup",
+      "deterministic_policy_retrieval",
+      "run_customer_support_workflow"
+    ],
+    "runtime_llm_tool_selection": {
+      "observable": false,
+      "reason": "Runtime LLM tool selection is unobservable via static AST analysis"
+    }
+  },
+  "evidence_and_provenance": {
+    "evidence": [
+      {
+        "evidence_id": "ev_wf_001",
+        "source_file": "workflow.py",
+        "start_line": 1,
+        "end_line": 171,
+        "entity_id": "workflow:workflow.py",
+        "evidence_type": "workflow_entrypoint"
+      },
+      {
+        "evidence_id": "ev_agent_002",
+        "source_file": "issue_investigation_agent.py",
+        "start_line": 38,
+        "end_line": 47,
+        "entity_id": "agent:issue_investigation_agent",
+        "evidence_type": "agent_definition"
+      },
+      {
+        "evidence_id": "ev_agent_003",
+        "source_file": "policy_retrieval_agent.py",
+        "start_line": 40,
+        "end_line": 49,
+        "entity_id": "agent:policy_retrieval_agent",
+        "evidence_type": "agent_definition"
+      },
+      {
+        "evidence_id": "ev_agent_004",
+        "source_file": "resolution_agent.py",
+        "start_line": 12,
+        "end_line": 21,
+        "entity_id": "agent:resolution_agent",
+        "evidence_type": "agent_definition"
+      },
+      {
+        "evidence_id": "ev_agent_005",
+        "source_file": "resolution_verification_agent.py",
+        "start_line": 12,
+        "end_line": 21,
+        "entity_id": "agent:resolution_verification_agent",
+        "evidence_type": "agent_definition"
+      },
+      {
+        "evidence_id": "ev_agent_006",
+        "source_file": "response_drafting_agent.py",
+        "start_line": 12,
+        "end_line": 21,
+        "entity_id": "agent:response_drafting_agent",
+        "evidence_type": "agent_definition"
+      },
+      {
+        "evidence_id": "ev_agent_007",
+        "source_file": "ticket_classification_agent.py",
+        "start_line": 38,
+        "end_line": 47,
+        "entity_id": "agent:ticket_classification_agent",
+        "evidence_type": "agent_definition"
+      },
+      {
+        "evidence_id": "ev_task_008",
+        "source_file": "issue_investigation_agent.py",
+        "start_line": 63,
+        "end_line": 67,
+        "entity_id": "task:task_issue_investigation_agent_1",
+        "evidence_type": "task_definition"
+      },
+      {
+        "evidence_id": "ev_task_009",
+        "source_file": "policy_retrieval_agent.py",
+        "start_line": 65,
+        "end_line": 69,
+        "entity_id": "task:task_policy_retrieval_agent_1",
+        "evidence_type": "task_definition"
+      },
+      {
+        "evidence_id": "ev_task_010",
+        "source_file": "resolution_agent.py",
+        "start_line": 35,
+        "end_line": 39,
+        "entity_id": "task:task_resolution_agent_1",
+        "evidence_type": "task_definition"
+      },
+      {
+        "evidence_id": "ev_task_011",
+        "source_file": "resolution_verification_agent.py",
+        "start_line": 34,
+        "end_line": 38,
+        "entity_id": "task:task_resolution_verification_agent_1",
+        "evidence_type": "task_definition"
+      },
+      {
+        "evidence_id": "ev_task_012",
+        "source_file": "response_drafting_agent.py",
+        "start_line": 36,
+        "end_line": 40,
+        "entity_id": "task:task_response_drafting_agent_1",
+        "evidence_type": "task_definition"
+      },
+      {
+        "evidence_id": "ev_task_013",
+        "source_file": "ticket_classification_agent.py",
+        "start_line": 63,
+        "end_line": 67,
+        "entity_id": "task:task_ticket_classification_agent_1",
+        "evidence_type": "task_definition"
+      },
+      {
+        "evidence_id": "ev_step_014",
+        "source_file": "workflow.py",
+        "start_line": 57,
+        "end_line": 57,
+        "entity_id": "step:step_00",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_015",
+        "source_file": "workflow.py",
+        "start_line": 58,
+        "end_line": 58,
+        "entity_id": "step:step_01",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_016",
+        "source_file": "workflow.py",
+        "start_line": 58,
+        "end_line": 58,
+        "entity_id": "step:step_02",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_017",
+        "source_file": "workflow.py",
+        "start_line": 60,
+        "end_line": 60,
+        "entity_id": "step:step_03",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_018",
+        "source_file": "workflow.py",
+        "start_line": 61,
+        "end_line": 61,
+        "entity_id": "step:step_04",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_019",
+        "source_file": "workflow.py",
+        "start_line": 62,
+        "end_line": 62,
+        "entity_id": "step:step_05",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_020",
+        "source_file": "workflow.py",
+        "start_line": 62,
+        "end_line": 62,
+        "entity_id": "step:step_06",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_021",
+        "source_file": "workflow.py",
+        "start_line": 62,
+        "end_line": 62,
+        "entity_id": "step:step_07",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_022",
+        "source_file": "workflow.py",
+        "start_line": 63,
+        "end_line": 63,
+        "entity_id": "step:step_08",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_023",
+        "source_file": "workflow.py",
+        "start_line": 69,
+        "end_line": 69,
+        "entity_id": "step:step_09",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_024",
+        "source_file": "workflow.py",
+        "start_line": 70,
+        "end_line": 70,
+        "entity_id": "step:step_10",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_025",
+        "source_file": "workflow.py",
+        "start_line": 71,
+        "end_line": 71,
+        "entity_id": "step:step_11",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_026",
+        "source_file": "workflow.py",
+        "start_line": 72,
+        "end_line": 72,
+        "entity_id": "step:step_12",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_027",
+        "source_file": "workflow.py",
+        "start_line": 73,
+        "end_line": 73,
+        "entity_id": "step:step_13",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_028",
+        "source_file": "workflow.py",
+        "start_line": 74,
+        "end_line": 74,
+        "entity_id": "step:step_14",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_029",
+        "source_file": "workflow.py",
+        "start_line": 75,
+        "end_line": 75,
+        "entity_id": "step:step_15",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_030",
+        "source_file": "workflow.py",
+        "start_line": 76,
+        "end_line": 76,
+        "entity_id": "step:step_16",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_031",
+        "source_file": "workflow.py",
+        "start_line": 76,
+        "end_line": 76,
+        "entity_id": "step:step_17",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_032",
+        "source_file": "workflow.py",
+        "start_line": 77,
+        "end_line": 77,
+        "entity_id": "step:step_18",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_033",
+        "source_file": "workflow.py",
+        "start_line": 78,
+        "end_line": 78,
+        "entity_id": "step:step_19",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_034",
+        "source_file": "workflow.py",
+        "start_line": 79,
+        "end_line": 79,
+        "entity_id": "step:step_20",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_035",
+        "source_file": "workflow.py",
+        "start_line": 81,
+        "end_line": 81,
+        "entity_id": "step:step_21",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_036",
+        "source_file": "workflow.py",
+        "start_line": 84,
+        "end_line": 84,
+        "entity_id": "step:step_22",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_037",
+        "source_file": "workflow.py",
+        "start_line": 85,
+        "end_line": 85,
+        "entity_id": "step:step_23",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_038",
+        "source_file": "workflow.py",
+        "start_line": 86,
+        "end_line": 86,
+        "entity_id": "step:step_24",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_039",
+        "source_file": "workflow.py",
+        "start_line": 86,
+        "end_line": 86,
+        "entity_id": "step:step_25",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_040",
+        "source_file": "workflow.py",
+        "start_line": 87,
+        "end_line": 87,
+        "entity_id": "step:step_26",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_041",
+        "source_file": "workflow.py",
+        "start_line": 88,
+        "end_line": 88,
+        "entity_id": "step:step_27",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_042",
+        "source_file": "workflow.py",
+        "start_line": 89,
+        "end_line": 89,
+        "entity_id": "step:step_28",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_043",
+        "source_file": "workflow.py",
+        "start_line": 90,
+        "end_line": 90,
+        "entity_id": "step:step_29",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_044",
+        "source_file": "workflow.py",
+        "start_line": 91,
+        "end_line": 91,
+        "entity_id": "step:step_30",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_045",
+        "source_file": "workflow.py",
+        "start_line": 92,
+        "end_line": 92,
+        "entity_id": "step:step_31",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_046",
+        "source_file": "workflow.py",
+        "start_line": 92,
+        "end_line": 92,
+        "entity_id": "step:step_32",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_047",
+        "source_file": "workflow.py",
+        "start_line": 93,
+        "end_line": 93,
+        "entity_id": "step:step_33",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_048",
+        "source_file": "workflow.py",
+        "start_line": 94,
+        "end_line": 94,
+        "entity_id": "step:step_34",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_049",
+        "source_file": "workflow.py",
+        "start_line": 95,
+        "end_line": 95,
+        "entity_id": "step:step_35",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_050",
+        "source_file": "workflow.py",
+        "start_line": 97,
+        "end_line": 97,
+        "entity_id": "step:step_36",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_051",
+        "source_file": "workflow.py",
+        "start_line": 100,
+        "end_line": 100,
+        "entity_id": "step:step_37",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_052",
+        "source_file": "workflow.py",
+        "start_line": 101,
+        "end_line": 101,
+        "entity_id": "step:step_38",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_053",
+        "source_file": "workflow.py",
+        "start_line": 102,
+        "end_line": 102,
+        "entity_id": "step:step_39",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_054",
+        "source_file": "workflow.py",
+        "start_line": 103,
+        "end_line": 103,
+        "entity_id": "step:step_40",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_055",
+        "source_file": "workflow.py",
+        "start_line": 104,
+        "end_line": 104,
+        "entity_id": "step:step_41",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_056",
+        "source_file": "workflow.py",
+        "start_line": 105,
+        "end_line": 105,
+        "entity_id": "step:step_42",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_057",
+        "source_file": "workflow.py",
+        "start_line": 106,
+        "end_line": 106,
+        "entity_id": "step:step_43",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_058",
+        "source_file": "workflow.py",
+        "start_line": 106,
+        "end_line": 106,
+        "entity_id": "step:step_44",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_059",
+        "source_file": "workflow.py",
+        "start_line": 107,
+        "end_line": 107,
+        "entity_id": "step:step_45",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_060",
+        "source_file": "workflow.py",
+        "start_line": 108,
+        "end_line": 108,
+        "entity_id": "step:step_46",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_061",
+        "source_file": "workflow.py",
+        "start_line": 109,
+        "end_line": 109,
+        "entity_id": "step:step_47",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_062",
+        "source_file": "workflow.py",
+        "start_line": 111,
+        "end_line": 111,
+        "entity_id": "step:step_48",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_063",
+        "source_file": "workflow.py",
+        "start_line": 114,
+        "end_line": 114,
+        "entity_id": "step:step_49",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_064",
+        "source_file": "workflow.py",
+        "start_line": 115,
+        "end_line": 115,
+        "entity_id": "step:step_50",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_065",
+        "source_file": "workflow.py",
+        "start_line": 116,
+        "end_line": 116,
+        "entity_id": "step:step_51",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_066",
+        "source_file": "workflow.py",
+        "start_line": 117,
+        "end_line": 117,
+        "entity_id": "step:step_52",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_067",
+        "source_file": "workflow.py",
+        "start_line": 118,
+        "end_line": 118,
+        "entity_id": "step:step_53",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_068",
+        "source_file": "workflow.py",
+        "start_line": 119,
+        "end_line": 119,
+        "entity_id": "step:step_54",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_069",
+        "source_file": "workflow.py",
+        "start_line": 120,
+        "end_line": 120,
+        "entity_id": "step:step_55",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_070",
+        "source_file": "workflow.py",
+        "start_line": 120,
+        "end_line": 120,
+        "entity_id": "step:step_56",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_071",
+        "source_file": "workflow.py",
+        "start_line": 121,
+        "end_line": 121,
+        "entity_id": "step:step_57",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_072",
+        "source_file": "workflow.py",
+        "start_line": 122,
+        "end_line": 122,
+        "entity_id": "step:step_58",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_073",
+        "source_file": "workflow.py",
+        "start_line": 123,
+        "end_line": 123,
+        "entity_id": "step:step_59",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_074",
+        "source_file": "workflow.py",
+        "start_line": 125,
+        "end_line": 125,
+        "entity_id": "step:step_60",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_075",
+        "source_file": "workflow.py",
+        "start_line": 128,
+        "end_line": 128,
+        "entity_id": "step:step_61",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_076",
+        "source_file": "workflow.py",
+        "start_line": 129,
+        "end_line": 129,
+        "entity_id": "step:step_62",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_077",
+        "source_file": "workflow.py",
+        "start_line": 130,
+        "end_line": 130,
+        "entity_id": "step:step_63",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_078",
+        "source_file": "workflow.py",
+        "start_line": 131,
+        "end_line": 131,
+        "entity_id": "step:step_64",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_079",
+        "source_file": "workflow.py",
+        "start_line": 132,
+        "end_line": 132,
+        "entity_id": "step:step_65",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_080",
+        "source_file": "workflow.py",
+        "start_line": 133,
+        "end_line": 133,
+        "entity_id": "step:step_66",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_081",
+        "source_file": "workflow.py",
+        "start_line": 134,
+        "end_line": 134,
+        "entity_id": "step:step_67",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_082",
+        "source_file": "workflow.py",
+        "start_line": 134,
+        "end_line": 134,
+        "entity_id": "step:step_68",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_083",
+        "source_file": "workflow.py",
+        "start_line": 135,
+        "end_line": 135,
+        "entity_id": "step:step_69",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_084",
+        "source_file": "workflow.py",
+        "start_line": 136,
+        "end_line": 136,
+        "entity_id": "step:step_70",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_085",
+        "source_file": "workflow.py",
+        "start_line": 137,
+        "end_line": 137,
+        "entity_id": "step:step_71",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_086",
+        "source_file": "workflow.py",
+        "start_line": 139,
+        "end_line": 139,
+        "entity_id": "step:step_72",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_087",
+        "source_file": "workflow.py",
+        "start_line": 142,
+        "end_line": 142,
+        "entity_id": "step:step_73",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_088",
+        "source_file": "workflow.py",
+        "start_line": 143,
+        "end_line": 143,
+        "entity_id": "step:step_74",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_089",
+        "source_file": "workflow.py",
+        "start_line": 144,
+        "end_line": 144,
+        "entity_id": "step:step_75",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_090",
+        "source_file": "workflow.py",
+        "start_line": 145,
+        "end_line": 145,
+        "entity_id": "step:step_76",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_091",
+        "source_file": "workflow.py",
+        "start_line": 146,
+        "end_line": 146,
+        "entity_id": "step:step_77",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_092",
+        "source_file": "workflow.py",
+        "start_line": 147,
+        "end_line": 147,
+        "entity_id": "step:step_78",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_093",
+        "source_file": "workflow.py",
+        "start_line": 148,
+        "end_line": 148,
+        "entity_id": "step:step_79",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_094",
+        "source_file": "workflow.py",
+        "start_line": 148,
+        "end_line": 148,
+        "entity_id": "step:step_80",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_095",
+        "source_file": "workflow.py",
+        "start_line": 149,
+        "end_line": 149,
+        "entity_id": "step:step_81",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_096",
+        "source_file": "workflow.py",
+        "start_line": 150,
+        "end_line": 150,
+        "entity_id": "step:step_82",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_097",
+        "source_file": "workflow.py",
+        "start_line": 151,
+        "end_line": 151,
+        "entity_id": "step:step_83",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_098",
+        "source_file": "workflow.py",
+        "start_line": 152,
+        "end_line": 152,
+        "entity_id": "step:step_84",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_099",
+        "source_file": "workflow.py",
+        "start_line": 154,
+        "end_line": 154,
+        "entity_id": "step:step_85",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_100",
+        "source_file": "workflow.py",
+        "start_line": 155,
+        "end_line": 155,
+        "entity_id": "step:step_86",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_101",
+        "source_file": "workflow.py",
+        "start_line": 169,
+        "end_line": 169,
+        "entity_id": "step:step_87",
+        "evidence_type": "execution_step"
+      },
+      {
+        "evidence_id": "ev_step_102",
+        "source_file": "workflow.py",
+        "start_line": 170,
+        "end_line": 170,
+        "entity_id": "step:step_88",
+        "evidence_type": "execution_step"
+      }
+    ]
+  },
+  "analysis_limitations": {
+    "unresolved_references": [],
+    "dynamic_expressions": [],
+    "unsupported_patterns": [],
+    "static_analysis_limitations": [
+      "Dynamic runtime LLM decisions and tool selection cannot be observed via static AST",
+      "Procedural workflow statement order does not imply internal framework agent scheduling"
+    ]
+  },
+  "analysis_summary": {
+    "total_agents": 6,
+    "invoked_agents": 6,
+    "uninvoked_agents": 0,
+    "total_tasks": 6,
+    "total_dependencies": 6,
+    "unresolved_relationships": 0,
+    "completeness": "complete",
+    "output_metrics": {
+      "serialized_bytes": 75871,
+      "estimated_tokens": 18967,
+      "token_estimation_method": "heuristic_character_ratio"
+    }
+  }
+}

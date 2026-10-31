@@ -1,0 +1,1725 @@
+{
+  "metadata": {
+    "workflow_id": "inventory_replenishment",
+    "workflow_name": "inventory_replenishment",
+    "evidence_schema_version": "1.0",
+    "generated_at": "2026-10-31T19:56:52.227787+00:00",
+    "traces_discovered": 30,
+    "traces_processed": 30,
+    "traces_failed": 0,
+    "input_files": {
+      "workflow_json": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment\\workflow.json",
+      "workflow_context_json": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment\\workflow_context.json",
+      "traces_directory": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Ingestion_Traces_final\\Ingestion_Traces\\inventory_replenishment",
+      "trace_files": [
+        "live_20261031_165343_trace01.json",
+        "live_20261031_165418_trace02.json",
+        "live_20261031_165431_trace03.json",
+        "live_20261031_165444_trace04.json",
+        "live_20261031_165501_trace05.json",
+        "live_20261031_165531_trace06.json",
+        "live_20261031_165548_trace07.json",
+        "live_20261031_165615_trace08.json",
+        "live_20261031_165645_trace09.json",
+        "live_20261031_165713_trace10.json",
+        "live_20261031_165740_trace11.json",
+        "live_20261031_165814_trace12.json",
+        "live_20261031_165840_trace13.json",
+        "live_20261031_165911_trace14.json",
+        "live_20261031_165941_trace15.json",
+        "live_20261031_170009_trace16.json",
+        "live_20261031_170038_trace17.json",
+        "live_20261031_170109_trace18.json",
+        "live_20261031_170136_trace19.json",
+        "live_20261031_170205_trace20.json",
+        "live_20261031_170234_trace21.json",
+        "live_20261031_170248_trace22.json",
+        "live_20261031_170319_trace23.json",
+        "live_20261031_170348_trace24.json",
+        "live_20261031_170417_trace25.json",
+        "live_20261031_170447_trace26.json",
+        "live_20261031_170517_trace27.json",
+        "live_20261031_170550_trace28.json",
+        "live_20261031_170618_trace29.json",
+        "live_20261031_170648_trace30.json"
+      ]
+    },
+    "aggregation_status": "complete"
+  },
+  "workflow_definition": {
+    "description": "Baseline 6-agent inventory replenishment planning workflow with deterministic arithmetic.",
+    "version": "1.0.0",
+    "declared_agents": [
+      {
+        "agent_id": "inventory_intake_agent",
+        "name": "Inventory Intake Agent",
+        "role": "Inventory Intake Coordinator",
+        "responsibilities": "Normalize identifiers, assemble inventory snapshots, sales history, and vendor terms.",
+        "declared_inputs": [
+          "sku_record",
+          "supplier_record",
+          "policy_record",
+          "sales_record"
+        ],
+        "declared_outputs": [
+          "sku_id",
+          "warehouse_id",
+          "source_record_ids",
+          "raw_inventory_record",
+          "raw_supplier_record"
+        ],
+        "declared_dependencies": [],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "stock_policy_agent",
+        "name": "Stock and Reorder Policy Agent",
+        "role": "Stock Policy and Inventory Level Specialist",
+        "responsibilities": "Evaluate usable inventory (current - reserved + incoming) and reorder triggers.",
+        "declared_inputs": [
+          "raw_inventory_record",
+          "warehouse_id"
+        ],
+        "declared_outputs": [
+          "current_stock",
+          "reserved_stock",
+          "incoming_stock",
+          "usable_inventory",
+          "reorder_threshold",
+          "safety_stock",
+          "replenishment_needed"
+        ],
+        "declared_dependencies": [
+          "inventory_intake_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "demand_forecast_agent",
+        "name": "Sales History and Demand Forecast Agent",
+        "role": "Demand Forecasting and Sales History Specialist",
+        "responsibilities": "Calculate moving average demand projections and characterize demand volatility.",
+        "declared_inputs": [
+          "sales_record",
+          "forecast_horizon_days"
+        ],
+        "declared_outputs": [
+          "historical_avg_daily_demand",
+          "forecast_demand_units",
+          "volatility_metric",
+          "demand_spikes_detected"
+        ],
+        "declared_dependencies": [
+          "inventory_intake_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "supplier_agent",
+        "name": "Supplier and Lead-Time Agent",
+        "role": "Supplier Lead-Time and Constraints Specialist",
+        "responsibilities": "Verify vendor lead times, minimum order quantities (MOQ), and pack size increments.",
+        "declared_inputs": [
+          "raw_supplier_record",
+          "planning_date"
+        ],
+        "declared_outputs": [
+          "lead_time_days",
+          "minimum_order_quantity",
+          "pack_size",
+          "expected_arrival_date"
+        ],
+        "declared_dependencies": [
+          "inventory_intake_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "replenishment_planning_agent",
+        "name": "Replenishment Planning Agent",
+        "role": "Replenishment Optimization Planner",
+        "responsibilities": "Calculate base replenishment quantity and adjust for pack size and supplier MOQ.",
+        "declared_inputs": [
+          "usable_inventory",
+          "historical_avg_daily_demand",
+          "lead_time_days",
+          "safety_stock",
+          "pack_size",
+          "minimum_order_quantity"
+        ],
+        "declared_outputs": [
+          "base_replenishment_quantity",
+          "recommended_order_quantity",
+          "calculation_breakdown",
+          "stockout_risk"
+        ],
+        "declared_dependencies": [
+          "stock_policy_agent",
+          "demand_forecast_agent",
+          "supplier_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "inventory_review_agent",
+        "name": "Validation and Final Review Agent",
+        "role": "Replenishment Integrity and Compliance Auditor",
+        "responsibilities": "Audit calculations against double-counting and assemble final verified plan.",
+        "declared_inputs": [
+          "base_replenishment_quantity",
+          "recommended_order_quantity",
+          "stockout_risk",
+          "stock_policy_data"
+        ],
+        "declared_outputs": [
+          "run_id",
+          "planning_date",
+          "warehouse_id",
+          "sku_id",
+          "current_stock",
+          "reserved_stock",
+          "available_stock",
+          "incoming_stock",
+          "forecast_demand",
+          "forecast_horizon",
+          "supplier_id",
+          "lead_time_days",
+          "safety_stock",
+          "reorder_threshold",
+          "base_replenishment_quantity",
+          "recommended_order_quantity",
+          "expected_arrival_date",
+          "stockout_risk",
+          "reasoning",
+          "source_record_ids",
+          "validation_warnings",
+          "human_review_required"
+        ],
+        "declared_dependencies": [
+          "replenishment_planning_agent"
+        ],
+        "assigned_key_env": null
+      }
+    ],
+    "declared_dependencies": [
+      {
+        "source": "inventory_intake_agent",
+        "target": "stock_policy_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "inventory_intake_agent",
+        "target": "demand_forecast_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "inventory_intake_agent",
+        "target": "supplier_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "stock_policy_agent",
+        "target": "replenishment_planning_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "demand_forecast_agent",
+        "target": "replenishment_planning_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "supplier_agent",
+        "target": "replenishment_planning_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "replenishment_planning_agent",
+        "target": "inventory_review_agent",
+        "relationship_type": "declared_dependency"
+      }
+    ],
+    "declared_execution_order": [
+      "inventory_intake_agent",
+      "stock_policy_agent",
+      "demand_forecast_agent",
+      "supplier_agent",
+      "replenishment_planning_agent",
+      "inventory_review_agent"
+    ],
+    "declared_model_configuration": {
+      "model": "openai/gpt-oss-120b",
+      "provider": "Groq",
+      "assigned_groq_key_env": "GROQ_API_KEY_6"
+    },
+    "optimizer_annotations": {
+      "optimizer_annotations": {
+        "potential_parallel_branches": [
+          [
+            "stock_policy_agent",
+            "demand_forecast_agent",
+            "supplier_agent"
+          ]
+        ],
+        "consolidation_candidates": [
+          [
+            "stock_policy_agent",
+            "replenishment_planning_agent"
+          ]
+        ],
+        "pruning_candidates": [
+          "inventory_review_agent"
+        ],
+        "routing_conditions": {
+          "routine_replenishment_bypass": "If SKU is normal volatility with zero stockout risk, skip intensive multi-agent audit and execute direct planning."
+        }
+      },
+      "optimization_opportunities": {
+        "parallel_candidates": [
+          "stock_policy_agent + demand_forecast_agent + supplier_agent"
+        ],
+        "pruning_candidates": [
+          "inventory_review_agent"
+        ],
+        "consolidation_candidates": [
+          "stock_policy_agent + replenishment_planning_agent"
+        ]
+      },
+      "hypothesis_disclaimer": "Declared candidate hypothesis from workflow specification, not an empirical or validated optimization opportunity."
+    }
+  },
+  "static_implementation_context": {
+    "source_files": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "agents": [
+      {
+        "agent_id": "demand_forecast_agent",
+        "role": "Demand Forecasting and Sales History Specialist",
+        "goal": "Compute transparent, deterministic demand projections from recorded sales history, characterizing demand volatility and flagging anomalies without fabricating numbers.",
+        "backstory": "You are a supply chain quantitative demand planner. You calculate moving averages, analyze daily sales variance, detect sudden volume spikes, and declare uncertainty when sample size or historical duration is insufficient.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'''\\nSKU ID: {sku_id}\\nForecast Horizon: {horizon_days} days\\nTotal Recorded History: {history_days} days\\nDaily Sales Samples: {(daily_sales[-10:] if len(daily_sales) > 10 else daily_sales)}\\n\\nDeterministic Moving Average Calculation:\\n- Average Daily Sales: {det['avg_daily']} units/day\\n- Forecast Demand over {horizon_days} days: {det['forecast_units']} units\\n- Volatility: {det['volatility']}\\n- Demand Spikes Detected: {det['has_spikes']}\\n- Sufficient Historical Data: {det['sufficient_history']}\\n\\nStructure the forecast output with documented assumptions:\\nReturn structured JSON matching:\\n{{\\n  \"sku_id\": \"{sku_id}\",\\n  \"forecast_horizon_days\": {horizon_days},\\n  \"historical_avg_daily_demand\": {det['avg_daily']},\\n  \"forecast_demand_units\": {det['forecast_units']},\\n  \"volatility_metric\": \"{det['volatility']}\",\\n  \"demand_spikes_detected\": {str(det['has_spikes']).lower()},\\n  \"has_sufficient_history\": {str(det['sufficient_history']).lower()},\\n  \"source_record_ids\": [\"SALES-{sku_id}\"],\\n  \"assumptions\": [\\n    \"Baseline forecast computed using {history_days}-day arithmetic moving average\",\\n    \"Demand volatility classified as {det['volatility']}\"\\n  ]\\n}}\\n'''",
+            "expected_output": "Valid JSON matching DemandForecastOutput schema.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'''\\nSKU ID: {sku_id}\\nForecast Horizon: {horizon_days} days\\nTotal Recorded History: {history_days} days\\nDaily Sales Samples: {(daily_sales[-10:] if len(daily_sales) > 10 else daily_sales)}\\n\\nDeterministic Moving Average Calculation:\\n- Average Daily Sales: {det['avg_daily']} units/day\\n- Forecast Demand over {horizon_days} days: {det['forecast_units']} units\\n- Volatility: {det['volatility']}\\n- Demand Spikes Detected: {det['has_spikes']}\\n- Sufficient Historical Data: {det['sufficient_history']}\\n\\nStructure the forecast output with documented assumptions:\\nReturn structured JSON matching:\\n{{\\n  \"sku_id\": \"{sku_id}\",\\n  \"forecast_horizon_days\": {horizon_days},\\n  \"historical_avg_daily_demand\": {det['avg_daily']},\\n  \"forecast_demand_units\": {det['forecast_units']},\\n  \"volatility_metric\": \"{det['volatility']}\",\\n  \"demand_spikes_detected\": {str(det['has_spikes']).lower()},\\n  \"has_sufficient_history\": {str(det['sufficient_history']).lower()},\\n  \"source_record_ids\": [\"SALES-{sku_id}\"],\\n  \"assumptions\": [\\n    \"Baseline forecast computed using {history_days}-day arithmetic moving average\",\\n    \"Demand volatility classified as {det['volatility']}\"\\n  ]\\n}}\\n'''",
+          "Backstory: You are a supply chain quantitative demand planner. You calculate moving averages, analyze daily sales variance, detect sudden volume spikes, and declare uncertainty when sample size or historical duration is insufficient."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "calculate_deterministic_forecast"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment\\demand_forecast_agent.py",
+        "start_line": 74,
+        "end_line": 81,
+        "evidence_refs": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "agent_id": "inventory_intake_agent",
+        "role": "Inventory Intake Coordinator",
+        "goal": "Assemble, normalize, and validate all relevant inventory snapshots, sales history, supplier profiles, and replenishment policies for the target SKU.",
+        "backstory": "You are a supply chain data coordinator. You gather inventory levels, outstanding orders, and vendor parameters into a coherent, validated planning package, highlighting any data integrity defects before quantitative planning begins.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'''\\nRequest ID: {req_id}\\nTarget SKU ID: {sku_id}\\nWarehouse: {warehouse_id}\\n\\nInventory Data:\\n{sku}\\n\\nSupplier Data:\\n{supplier}\\n\\nPolicy Data:\\n{policy}\\n\\nRecorded Sales Days: {sales_days}\\n\\nValidate and structure the intake package:\\n1. Normalize SKU ID, Warehouse ID, and product name.\\n2. Verify all required fields (current_stock, reserved_stock, lead_time_days) are present.\\n3. Check for data quality anomalies (e.g., negative stock, zero lead time, or missing sales).\\n4. Catalog all source record IDs (e.g., INV-{sku_id}, SUP-{supplier.get('supplier_id', '00')}).\\n\\nReturn structured JSON matching:\\n{{\\n  \"request_id\": \"{req_id}\",\\n  \"sku_id\": \"{sku_id}\",\\n  \"warehouse_id\": \"{warehouse_id}\",\\n  \"sku_name\": \"{sku_name}\",\\n  \"source_record_ids\": [\"INV-{sku_id}\", \"SUP-{supplier.get('supplier_id', '00')}\"],\\n  \"raw_inventory_record\": {sku},\\n  \"raw_supplier_record\": {supplier},\\n  \"raw_policy_record\": {policy},\\n  \"sales_history_days\": {sales_days},\\n  \"data_quality_issues\": []\\n}}\\n'''",
+            "expected_output": "Valid JSON matching InventoryIntakeOutput schema.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'''\\nRequest ID: {req_id}\\nTarget SKU ID: {sku_id}\\nWarehouse: {warehouse_id}\\n\\nInventory Data:\\n{sku}\\n\\nSupplier Data:\\n{supplier}\\n\\nPolicy Data:\\n{policy}\\n\\nRecorded Sales Days: {sales_days}\\n\\nValidate and structure the intake package:\\n1. Normalize SKU ID, Warehouse ID, and product name.\\n2. Verify all required fields (current_stock, reserved_stock, lead_time_days) are present.\\n3. Check for data quality anomalies (e.g., negative stock, zero lead time, or missing sales).\\n4. Catalog all source record IDs (e.g., INV-{sku_id}, SUP-{supplier.get('supplier_id', '00')}).\\n\\nReturn structured JSON matching:\\n{{\\n  \"request_id\": \"{req_id}\",\\n  \"sku_id\": \"{sku_id}\",\\n  \"warehouse_id\": \"{warehouse_id}\",\\n  \"sku_name\": \"{sku_name}\",\\n  \"source_record_ids\": [\"INV-{sku_id}\", \"SUP-{supplier.get('supplier_id', '00')}\"],\\n  \"raw_inventory_record\": {sku},\\n  \"raw_supplier_record\": {supplier},\\n  \"raw_policy_record\": {policy},\\n  \"sales_history_days\": {sales_days},\\n  \"data_quality_issues\": []\\n}}\\n'''",
+          "Backstory: You are a supply chain data coordinator. You gather inventory levels, outstanding orders, and vendor parameters into a coherent, validated planning package, highlighting any data integrity defects before quantitative planning begins."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment\\intake_agent.py",
+        "start_line": 31,
+        "end_line": 38,
+        "evidence_refs": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "agent_id": "replenishment_planning_agent",
+        "role": "Replenishment Optimization Planner",
+        "goal": "Synthesize stock levels, demand rates, and supplier constraints to compute exact baseline and adjusted order quantities using rigorous deterministic logic.",
+        "backstory": "You are a master inventory replenishment planner. You use deterministic arithmetic for supply/demand balances, strictly rounding up to package increments and applying MOQs while explaining every step with absolute transparency.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'''\\nSKU ID: {sku_id}\\nStock Policy Input: {stock_policy_data}\\nDemand Forecast Input: {demand_forecast_data}\\nSupplier Parameters: {supplier_data}\\n\\nDeterministic Calculation Breakdown:\\n{calc['calculation_breakdown']}\\nBase Quantity: {calc['base_replenishment_quantity']}\\nRecommended Order Quantity (with MOQ & Pack Size): {calc['recommended_order_quantity']}\\nStockout Risk: {calc['stockout_risk']}\\n\\nSynthesize the replenishment plan and return structured JSON matching:\\n{{\\n  \"sku_id\": \"{sku_id}\",\\n  \"base_replenishment_quantity\": {calc['base_replenishment_quantity']},\\n  \"recommended_order_quantity\": {calc['recommended_order_quantity']},\\n  \"calculation_breakdown\": \"{calc['calculation_breakdown']}\",\\n  \"adjustment_reasoning\": \"{calc['adjustment_reasoning']}\",\\n  \"stockout_risk\": \"{calc['stockout_risk']}\",\\n  \"infeasible_flag\": false\\n}}\\n'''",
+            "expected_output": "Valid JSON matching ReplenishmentPlanningOutput schema.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'''\\nSKU ID: {sku_id}\\nStock Policy Input: {stock_policy_data}\\nDemand Forecast Input: {demand_forecast_data}\\nSupplier Parameters: {supplier_data}\\n\\nDeterministic Calculation Breakdown:\\n{calc['calculation_breakdown']}\\nBase Quantity: {calc['base_replenishment_quantity']}\\nRecommended Order Quantity (with MOQ & Pack Size): {calc['recommended_order_quantity']}\\nStockout Risk: {calc['stockout_risk']}\\n\\nSynthesize the replenishment plan and return structured JSON matching:\\n{{\\n  \"sku_id\": \"{sku_id}\",\\n  \"base_replenishment_quantity\": {calc['base_replenishment_quantity']},\\n  \"recommended_order_quantity\": {calc['recommended_order_quantity']},\\n  \"calculation_breakdown\": \"{calc['calculation_breakdown']}\",\\n  \"adjustment_reasoning\": \"{calc['adjustment_reasoning']}\",\\n  \"stockout_risk\": \"{calc['stockout_risk']}\",\\n  \"infeasible_flag\": false\\n}}\\n'''",
+          "Backstory: You are a master inventory replenishment planner. You use deterministic arithmetic for supply/demand balances, strictly rounding up to package increments and applying MOQs while explaining every step with absolute transparency."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "calculate_deterministic_replenishment"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment\\replenishment_planning_agent.py",
+        "start_line": 100,
+        "end_line": 107,
+        "evidence_refs": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "agent_id": "inventory_review_agent",
+        "role": "Replenishment Integrity and Compliance Auditor",
+        "goal": "Conduct an independent audit of proposed replenishment quantities, verifying mathematical consistency, constraints compliance, and absence of double-counting before assembling the final plan.",
+        "backstory": "You are a supply chain compliance auditor. You cross-examine every proposed order, ensuring available stock arithmetic is sound, minimum pack increments were honored, and warnings are recorded for volatile or stockout-prone items.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'\\nAudit and assemble the final structured replenishment plan:\\n- Run ID: {run_id}\\n- Planning Date: {planning_date}\\n- Warehouse: {warehouse_id}\\n- SKU ID: {sku_id}\\n- Current Stock: {cur_stock}\\n- Reserved Stock: {res_stock}\\n- Available Stock (Current - Reserved): {avail_stock}\\n- Incoming Stock: {inc_stock}\\n- Forecast Demand: {f_demand} ({f_horizon})\\n- Supplier ID: {supplier_id} (Lead Time: {lead_time} days, Expected Arrival: {expected_arr})\\n- Safety Stock: {safety_stock}\\n- Reorder Threshold: {reorder_thresh}\\n- Base Replenishment Quantity: {base_qty}\\n- Recommended Order Quantity: {rec_qty}\\n- Stockout Risk: {stockout_risk}\\n- Reasoning: {reasoning}\\n- Source IDs: {source_ids}\\n- Pre-Audit Warnings: {warnings}\\n- Human Review Required: {str(human_review_required).lower()}\\n\\nReturn structured JSON strictly matching:\\n{{\\n  \"run_id\": \"{run_id}\",\\n  \"planning_date\": \"{planning_date}\",\\n  \"warehouse_id\": \"{warehouse_id}\",\\n  \"sku_id\": \"{sku_id}\",\\n  \"current_stock\": {cur_stock},\\n  \"reserved_stock\": {res_stock},\\n  \"available_stock\": {avail_stock},\\n  \"incoming_stock\": {inc_stock},\\n  \"forecast_demand\": {f_demand},\\n  \"forecast_horizon\": \"{f_horizon}\",\\n  \"supplier_id\": \"{supplier_id}\",\\n  \"lead_time_days\": {lead_time},\\n  \"safety_stock\": {safety_stock},\\n  \"reorder_threshold\": {reorder_thresh},\\n  \"base_replenishment_quantity\": {base_qty},\\n  \"recommended_order_quantity\": {rec_qty},\\n  \"expected_arrival_date\": \"{expected_arr}\",\\n  \"stockout_risk\": \"{stockout_risk}\",\\n  \"reasoning\": \"{reasoning}\",\\n  \"source_record_ids\": {source_ids},\\n  \"validation_warnings\": {warnings},\\n  \"human_review_required\": {str(human_review_required).lower()},\\n  \"disclaimer\": \"Planning tool recommendation only. Does NOT execute real purchases.\"\\n}}\\n'",
+            "expected_output": "Valid JSON matching InventoryFinalPlanOutput schema.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'\\nAudit and assemble the final structured replenishment plan:\\n- Run ID: {run_id}\\n- Planning Date: {planning_date}\\n- Warehouse: {warehouse_id}\\n- SKU ID: {sku_id}\\n- Current Stock: {cur_stock}\\n- Reserved Stock: {res_stock}\\n- Available Stock (Current - Reserved): {avail_stock}\\n- Incoming Stock: {inc_stock}\\n- Forecast Demand: {f_demand} ({f_horizon})\\n- Supplier ID: {supplier_id} (Lead Time: {lead_time} days, Expected Arrival: {expected_arr})\\n- Safety Stock: {safety_stock}\\n- Reorder Threshold: {reorder_thresh}\\n- Base Replenishment Quantity: {base_qty}\\n- Recommended Order Quantity: {rec_qty}\\n- Stockout Risk: {stockout_risk}\\n- Reasoning: {reasoning}\\n- Source IDs: {source_ids}\\n- Pre-Audit Warnings: {warnings}\\n- Human Review Required: {str(human_review_required).lower()}\\n\\nReturn structured JSON strictly matching:\\n{{\\n  \"run_id\": \"{run_id}\",\\n  \"planning_date\": \"{planning_date}\",\\n  \"warehouse_id\": \"{warehouse_id}\",\\n  \"sku_id\": \"{sku_id}\",\\n  \"current_stock\": {cur_stock},\\n  \"reserved_stock\": {res_stock},\\n  \"available_stock\": {avail_stock},\\n  \"incoming_stock\": {inc_stock},\\n  \"forecast_demand\": {f_demand},\\n  \"forecast_horizon\": \"{f_horizon}\",\\n  \"supplier_id\": \"{supplier_id}\",\\n  \"lead_time_days\": {lead_time},\\n  \"safety_stock\": {safety_stock},\\n  \"reorder_threshold\": {reorder_thresh},\\n  \"base_replenishment_quantity\": {base_qty},\\n  \"recommended_order_quantity\": {rec_qty},\\n  \"expected_arrival_date\": \"{expected_arr}\",\\n  \"stockout_risk\": \"{stockout_risk}\",\\n  \"reasoning\": \"{reasoning}\",\\n  \"source_record_ids\": {source_ids},\\n  \"validation_warnings\": {warnings},\\n  \"human_review_required\": {str(human_review_required).lower()},\\n  \"disclaimer\": \"Planning tool recommendation only. Does NOT execute real purchases.\"\\n}}\\n'",
+          "Backstory: You are a supply chain compliance auditor. You cross-examine every proposed order, ensuring available stock arithmetic is sound, minimum pack increments were honored, and warnings are recorded for volatile or stockout-prone items."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment\\review_agent.py",
+        "start_line": 30,
+        "end_line": 37,
+        "evidence_refs": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "agent_id": "stock_policy_agent",
+        "role": "Stock Policy and Inventory Level Specialist",
+        "goal": "Evaluate physical stock, reservations, and incoming orders against safety thresholds, calculating exact usable inventory and determining replenishment need.",
+        "backstory": "You are an inventory control analyst. You rigorously calculate usable and available stock using exact mathematical formulas to prevent double-counting of incoming goods, benchmarking net stock against defined reorder triggers.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'\\nSKU ID: {sku_id}\\nWarehouse: {warehouse_id}\\nStock Levels:\\n- Current Physical Stock: {current_stock}\\n- Reserved Stock: {reserved_stock}\\n- Incoming Stock (In-Transit / Open POs): {incoming_stock}\\n- Reorder Threshold: {reorder_threshold}\\n- Safety Stock Requirement: {safety_stock}\\n\\nDeterministic Arithmetic Verified:\\n- Usable Inventory = Current ({current_stock}) - Reserved ({reserved_stock}) + Incoming ({incoming_stock}) = {usable_inventory}\\n- Replenishment Needed = (Usable <= Threshold) = {str(replenishment_needed).lower()}\\n\\nAssess policy conformance and return structured JSON matching:\\n{{\\n  \"sku_id\": \"{sku_id}\",\\n  \"warehouse_id\": \"{warehouse_id}\",\\n  \"current_stock\": {current_stock},\\n  \"reserved_stock\": {reserved_stock},\\n  \"incoming_stock\": {incoming_stock},\\n  \"usable_inventory\": {usable_inventory},\\n  \"reorder_threshold\": {reorder_threshold},\\n  \"safety_stock\": {safety_stock},\\n  \"replenishment_needed\": {str(replenishment_needed).lower()},\\n  \"policy_notes\": [\\n    \"Usable inventory incorporates incoming purchase orders without double-counting\",\\n    \"Current stock is below reorder threshold\" if replenishment_needed else \"Stock is healthy\"\\n  ]\\n}}\\n'",
+            "expected_output": "Valid JSON matching StockPolicyOutput schema.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'\\nSKU ID: {sku_id}\\nWarehouse: {warehouse_id}\\nStock Levels:\\n- Current Physical Stock: {current_stock}\\n- Reserved Stock: {reserved_stock}\\n- Incoming Stock (In-Transit / Open POs): {incoming_stock}\\n- Reorder Threshold: {reorder_threshold}\\n- Safety Stock Requirement: {safety_stock}\\n\\nDeterministic Arithmetic Verified:\\n- Usable Inventory = Current ({current_stock}) - Reserved ({reserved_stock}) + Incoming ({incoming_stock}) = {usable_inventory}\\n- Replenishment Needed = (Usable <= Threshold) = {str(replenishment_needed).lower()}\\n\\nAssess policy conformance and return structured JSON matching:\\n{{\\n  \"sku_id\": \"{sku_id}\",\\n  \"warehouse_id\": \"{warehouse_id}\",\\n  \"current_stock\": {current_stock},\\n  \"reserved_stock\": {reserved_stock},\\n  \"incoming_stock\": {incoming_stock},\\n  \"usable_inventory\": {usable_inventory},\\n  \"reorder_threshold\": {reorder_threshold},\\n  \"safety_stock\": {safety_stock},\\n  \"replenishment_needed\": {str(replenishment_needed).lower()},\\n  \"policy_notes\": [\\n    \"Usable inventory incorporates incoming purchase orders without double-counting\",\\n    \"Current stock is below reorder threshold\" if replenishment_needed else \"Stock is healthy\"\\n  ]\\n}}\\n'",
+          "Backstory: You are an inventory control analyst. You rigorously calculate usable and available stock using exact mathematical formulas to prevent double-counting of incoming goods, benchmarking net stock against defined reorder triggers."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "calculate_usable_inventory"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment\\stock_policy_agent.py",
+        "start_line": 38,
+        "end_line": 45,
+        "evidence_refs": [
+          "ev_agent_010"
+        ]
+      },
+      {
+        "agent_id": "supplier_agent",
+        "role": "Supplier Lead-Time and Constraints Specialist",
+        "goal": "Extract and validate vendor lead times, order increments (pack size), and minimum order quantities (MOQ), calculating projected shipment arrival dates.",
+        "backstory": "You are a procurement vendor manager. You verify supplier performance terms, ensure lead time calculations reflect delivery reality, and safeguard purchasing constraints.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'\\nSupplier Record:\\n- Supplier ID: {sup_id}\\n- Lead Time: {lead_time} days\\n- Minimum Order Quantity (MOQ): {moq} units\\n- Pack Size: {pack_size} units/pack\\n- Reliability Score: {reliability}\\n- Planning Date: {planning_date}\\n- Deterministic Expected Arrival Date: {expected_arrival}\\n\\nVerify supplier parameters and constraints.\\nReturn structured JSON matching:\\n{{\\n  \"supplier_id\": \"{sup_id}\",\\n  \"lead_time_days\": {lead_time},\\n  \"minimum_order_quantity\": {moq},\\n  \"pack_size\": {pack_size},\\n  \"expected_arrival_date\": \"{expected_arrival}\",\\n  \"supplier_reliability_notes\": [\\n    \"Supplier reliability rated at {int(reliability * 100)}%\",\\n    \"Expected lead time of {lead_time} days from order placement\"\\n  ],\\n  \"source_record_ids\": [\"SUP-{sup_id}\"]\\n}}\\n'",
+            "expected_output": "Valid JSON matching SupplierLeadTimeOutput schema.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'\\nSupplier Record:\\n- Supplier ID: {sup_id}\\n- Lead Time: {lead_time} days\\n- Minimum Order Quantity (MOQ): {moq} units\\n- Pack Size: {pack_size} units/pack\\n- Reliability Score: {reliability}\\n- Planning Date: {planning_date}\\n- Deterministic Expected Arrival Date: {expected_arrival}\\n\\nVerify supplier parameters and constraints.\\nReturn structured JSON matching:\\n{{\\n  \"supplier_id\": \"{sup_id}\",\\n  \"lead_time_days\": {lead_time},\\n  \"minimum_order_quantity\": {moq},\\n  \"pack_size\": {pack_size},\\n  \"expected_arrival_date\": \"{expected_arrival}\",\\n  \"supplier_reliability_notes\": [\\n    \"Supplier reliability rated at {int(reliability * 100)}%\",\\n    \"Expected lead time of {lead_time} days from order placement\"\\n  ],\\n  \"source_record_ids\": [\"SUP-{sup_id}\"]\\n}}\\n'",
+          "Backstory: You are a procurement vendor manager. You verify supplier performance terms, ensure lead time calculations reflect delivery reality, and safeguard purchasing constraints."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "calculate_expected_arrival"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\inventory_replenishment\\supplier_agent.py",
+        "start_line": 39,
+        "end_line": 46,
+        "evidence_refs": [
+          "ev_agent_012"
+        ]
+      }
+    ],
+    "invocation_relationships": [],
+    "data_handoffs": [],
+    "conditional_branches": [],
+    "tools_and_helpers": {
+      "registered_tools": [],
+      "explicit_code_invocations": [],
+      "helper_functions": [
+        "calculate_deterministic_forecast",
+        "calculate_deterministic_replenishment",
+        "calculate_expected_arrival",
+        "calculate_usable_inventory",
+        "load_sample_inventory_input",
+        "run_inventory_replenishment_workflow"
+      ],
+      "runtime_llm_tool_selection": {
+        "observable": false,
+        "reason": "Runtime LLM tool selection is unobservable via static AST analysis"
+      }
+    },
+    "analysis_limitations": {
+      "unresolved_references": [],
+      "dynamic_expressions": [],
+      "unsupported_patterns": [],
+      "static_analysis_limitations": [
+        "Dynamic runtime LLM decisions and tool selection cannot be observed via static AST",
+        "Procedural workflow statement order does not imply internal framework agent scheduling"
+      ]
+    }
+  },
+  "runtime_observations": {
+    "total_runs": 30,
+    "successful_runs": 30,
+    "failed_runs": 0,
+    "observed_models": [
+      "openai/gpt-oss-120b"
+    ],
+    "key_distribution": {
+      "GROQ_API_KEY_17": 30,
+      "GROQ_API_KEY_18": 30,
+      "GROQ_API_KEY_19": 30,
+      "GROQ_API_KEY_20": 30,
+      "GROQ_API_KEY_11": 30,
+      "GROQ_API_KEY_13": 30
+    },
+    "workflow_latency": {
+      "mean_seconds": 26.4612,
+      "median_seconds": 28.6265,
+      "min_seconds": 12.642,
+      "max_seconds": 33.394,
+      "observation_count": 30
+    },
+    "workflow_tokens": {
+      "total_tokens": 297428,
+      "mean_tokens": 9914.3,
+      "min_tokens": 6737,
+      "max_tokens": 10701,
+      "total_prompt_tokens": 202684,
+      "mean_prompt_tokens": 6756.1,
+      "total_completion_tokens": 94744,
+      "mean_completion_tokens": 3158.1,
+      "observation_count": 30
+    },
+    "workflow_cost": {
+      "total_cost_usd": 0.19443,
+      "mean_cost_usd": 0.006481,
+      "pricing_source": "trace_telemetry_estimates",
+      "observation_count": 30
+    },
+    "agent_metrics": {
+      "inventory_intake_agent": {
+        "agent_id": "inventory_intake_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          1
+        ],
+        "latency": {
+          "mean_seconds": 15.2196,
+          "median_seconds": 17.551,
+          "min_seconds": 2.453,
+          "max_seconds": 21.039,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 113439,
+          "mean_tokens": 3781.3,
+          "min_tokens": 1878,
+          "max_tokens": 4113,
+          "total_prompt_tokens": 93609,
+          "mean_prompt_tokens": 3120.3,
+          "total_completion_tokens": 19830,
+          "mean_completion_tokens": 661.0,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_17"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "request_id": "REQ-INV-0001",
+          "sku_id": "SKU-0001",
+          "warehouse_id": "WH-EAST-02",
+          "sku_name": "Office Supplies Component Model 001",
+          "source_record_ids": [
+            "INV-SKU-0001",
+            "SUP-SUP-01"
+          ],
+          "raw_inventory_record": {
+            "sku_id": "SKU-0001",
+            "sku_name": "Office Supplies Component Model 001",
+            "category": "Office Supplies",
+            "warehouse_id": "WH-EAST-02",
+            "supplier_id": "SUP-01",
+            "current_stock": 0,
+            "reserved_stock": 0,
+            "incoming_stock": 0,
+            "unit_cost": 29.44,
+            "reorder_threshold": 105,
+            "safety_stock": 50,
+            "edge_case_type": "stockout",
+            "source_record_ids": [
+              "INV-SKU-0001",
+              "SUP-SUP-01"
+            ]
+          },
+          "raw_supplier_record": {
+            "supplier_id": "SUP-01",
+            "supplier_name": "Vendor Supply Partner 1",
+            "lead_time_days": 7,
+            "minimum_order_quantity": 200,
+            "pack_size": 10,
+            "reliability_score": 0.83,
+            "contact_email": "orders@vendor1.example.com"
+          },
+          "raw_policy_record": {
+            "planning_rules": {
+              "default_safety_stock_days": 5,
+              "lead_time_demand_formula": "daily_avg_demand * lead_time_days",
+              "base_replenishment_formula": "max(0, lead_time_demand + safety_stock - (current_stock - reserved_stock + incoming_stock))",
+              "rounding_rule": "round_up_to_nearest_pack_size",
+              "moq_rule": "max(rounded_quantity, supplier_moq) if base_replenishment > 0 else 0"
+            }
+          },
+          "sales_history_days": 90,
+          "data_quality_issues": [
+            "source_record_ids contain identifier SUP-SUP-01 which does not match any provided supplier record (expected SUP-01)."
+          ]
+        },
+        "error_count": 0
+      },
+      "stock_policy_agent": {
+        "agent_id": "stock_policy_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          2
+        ],
+        "latency": {
+          "mean_seconds": 1.6114,
+          "median_seconds": 1.496,
+          "min_seconds": 1.184,
+          "max_seconds": 2.483,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 17132,
+          "mean_tokens": 571.1,
+          "min_tokens": 524,
+          "max_tokens": 780,
+          "total_prompt_tokens": 10974,
+          "mean_prompt_tokens": 365.8,
+          "total_completion_tokens": 6158,
+          "mean_completion_tokens": 205.3,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_18"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "sku_id": "SKU-0001",
+          "warehouse_id": "WH-EAST-02",
+          "current_stock": 0,
+          "reserved_stock": 0,
+          "incoming_stock": 0,
+          "usable_inventory": 0,
+          "reorder_threshold": 105,
+          "safety_stock": 50,
+          "replenishment_needed": true,
+          "policy_notes": [
+            "Usable inventory incorporates incoming purchase orders without double-counting",
+            "Current stock position evaluated against defined reorder threshold"
+          ]
+        },
+        "error_count": 0
+      },
+      "demand_forecast_agent": {
+        "agent_id": "demand_forecast_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          3
+        ],
+        "latency": {
+          "mean_seconds": 3.7374,
+          "median_seconds": 3.8105,
+          "min_seconds": 1.681,
+          "max_seconds": 4.842,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 64538,
+          "mean_tokens": 2151.3,
+          "min_tokens": 927,
+          "max_tokens": 2643,
+          "total_prompt_tokens": 27260,
+          "mean_prompt_tokens": 908.7,
+          "total_completion_tokens": 37278,
+          "mean_completion_tokens": 1242.6,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_19"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "sku_id": "SKU-0001",
+          "forecast_horizon_days": 14,
+          "historical_avg_daily_demand": 9.5,
+          "forecast_demand_units": 133.0,
+          "volatility_metric": "low",
+          "demand_spikes_detected": false,
+          "has_sufficient_history": true,
+          "source_record_ids": [
+            "SALES-SKU-0001"
+          ],
+          "assumptions": [
+            "Baseline forecast computed using arithmetic moving average",
+            "Demand volatility classified as low"
+          ]
+        },
+        "error_count": 0
+      },
+      "supplier_agent": {
+        "agent_id": "supplier_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          4
+        ],
+        "latency": {
+          "mean_seconds": 1.6656,
+          "median_seconds": 1.5325,
+          "min_seconds": 1.065,
+          "max_seconds": 4.312,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 17199,
+          "mean_tokens": 573.3,
+          "min_tokens": 549,
+          "max_tokens": 713,
+          "total_prompt_tokens": 12060,
+          "mean_prompt_tokens": 402.0,
+          "total_completion_tokens": 5139,
+          "mean_completion_tokens": 171.3,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_20"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "supplier_id": "SUP-01",
+          "lead_time_days": 7,
+          "minimum_order_quantity": 200,
+          "pack_size": 10,
+          "expected_arrival_date": "2026-10-22",
+          "supplier_reliability_notes": [
+            "Supplier reliability rated at 83%",
+            "Expected lead time of 7 days from order placement"
+          ],
+          "source_record_ids": [
+            "SUP-SUP-01"
+          ]
+        },
+        "error_count": 0
+      },
+      "replenishment_planning_agent": {
+        "agent_id": "replenishment_planning_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          5
+        ],
+        "latency": {
+          "mean_seconds": 2.0162,
+          "median_seconds": 1.926,
+          "min_seconds": 1.443,
+          "max_seconds": 3.278,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 24190,
+          "mean_tokens": 806.3,
+          "min_tokens": 642,
+          "max_tokens": 1034,
+          "total_prompt_tokens": 12910,
+          "mean_prompt_tokens": 430.3,
+          "total_completion_tokens": 11280,
+          "mean_completion_tokens": 376.0,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_11"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "sku_id": "SKU-0001",
+          "base_replenishment_quantity": 117,
+          "recommended_order_quantity": 200,
+          "calculation_breakdown": "Usable Inv=0 (Current=0 - Reserved=0 + Inbound=0). LeadTimeDemand=66.5 + Safety=50 = Gross 116.5. Deficit=116.5 -> Base Qty=117 (rounded up to nearest whole unit).",
+          "adjustment_reasoning": "The base need of 117 units was first rounded up to the nearest pack size of 10, giving 120 units. Supplier minimum order quantity (MOQ) is 200, which is higher than the pack‑rounded amount, so the final recommended order is set to the MOQ of 200 units.",
+          "stockout_risk": "high",
+          "replenishment_status": "ORDER_RECOMMENDED"
+        },
+        "error_count": 0
+      },
+      "inventory_review_agent": {
+        "agent_id": "inventory_review_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          6
+        ],
+        "latency": {
+          "mean_seconds": 2.2054,
+          "median_seconds": 2.0925,
+          "min_seconds": 1.722,
+          "max_seconds": 3.075,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 60930,
+          "mean_tokens": 2031.0,
+          "min_tokens": 1871,
+          "max_tokens": 2236,
+          "total_prompt_tokens": 45871,
+          "mean_prompt_tokens": 1529.0,
+          "total_completion_tokens": 15059,
+          "mean_completion_tokens": 502.0,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_13"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "run_id": "live_20261031_165343_trace01",
+          "planning_date": "2026-10-15",
+          "warehouse_id": "WH-EAST-02",
+          "sku_id": "SKU-0001",
+          "current_stock": 0,
+          "reserved_stock": 0,
+          "available_stock": 0,
+          "incoming_stock": 0,
+          "forecast_demand": 133.0,
+          "forecast_horizon": 14,
+          "supplier_id": "SUP-01",
+          "lead_time_days": 7,
+          "safety_stock": 50,
+          "reorder_threshold": 105,
+          "base_replenishment_quantity": 117,
+          "recommended_order_quantity": 200,
+          "expected_arrival_date": "2026-10-22",
+          "stockout_risk": "high",
+          "reasoning": "Audit verified: Usable inventory accurately accounts for incoming stock without double-counting. Recommended order of 200 units complies with pack size 10 and supplier MOQ 200.",
+          "source_record_ids": [
+            "INV-SKU-0001",
+            "SUP-SUP-01",
+            "SALES-SKU-0001"
+          ],
+          "validation_warnings": [],
+          "human_review_required": true
+        },
+        "error_count": 0
+      }
+    },
+    "runs_summary": [
+      {
+        "run_id": "live_20261031_165343_trace01",
+        "status": "SUCCESS",
+        "duration_seconds": 12.642,
+        "total_tokens": 10087,
+        "prompt_tokens": 6922,
+        "completion_tokens": 3165,
+        "estimated_cost_usd": 0.006584,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T16:53:55.803315+00:00",
+        "trace_file": "live_20261031_165343_trace01.json"
+      },
+      {
+        "run_id": "live_20261031_165418_trace02",
+        "status": "SUCCESS",
+        "duration_seconds": 12.966,
+        "total_tokens": 10135,
+        "prompt_tokens": 6917,
+        "completion_tokens": 3218,
+        "estimated_cost_usd": 0.006623,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T16:54:31.203921+00:00",
+        "trace_file": "live_20261031_165418_trace02.json"
+      },
+      {
+        "run_id": "live_20261031_165431_trace03",
+        "status": "SUCCESS",
+        "duration_seconds": 13.454,
+        "total_tokens": 10316,
+        "prompt_tokens": 6916,
+        "completion_tokens": 3400,
+        "estimated_cost_usd": 0.006766,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T16:54:44.703124+00:00",
+        "trace_file": "live_20261031_165431_trace03.json"
+      },
+      {
+        "run_id": "live_20261031_165444_trace04",
+        "status": "SUCCESS",
+        "duration_seconds": 17.124,
+        "total_tokens": 10183,
+        "prompt_tokens": 6873,
+        "completion_tokens": 3310,
+        "estimated_cost_usd": 0.00667,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T16:55:01.832636+00:00",
+        "trace_file": "live_20261031_165444_trace04.json"
+      },
+      {
+        "run_id": "live_20261031_165501_trace05",
+        "status": "SUCCESS",
+        "duration_seconds": 30.114,
+        "total_tokens": 9396,
+        "prompt_tokens": 6913,
+        "completion_tokens": 2483,
+        "estimated_cost_usd": 0.00604,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T16:55:31.955671+00:00",
+        "trace_file": "live_20261031_165501_trace05.json"
+      },
+      {
+        "run_id": "live_20261031_165531_trace06",
+        "status": "SUCCESS",
+        "duration_seconds": 16.335,
+        "total_tokens": 7007,
+        "prompt_tokens": 4513,
+        "completion_tokens": 2494,
+        "estimated_cost_usd": 0.004633,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T16:55:48.299946+00:00",
+        "trace_file": "live_20261031_165531_trace06.json"
+      },
+      {
+        "run_id": "live_20261031_165548_trace07",
+        "status": "SUCCESS",
+        "duration_seconds": 27.143,
+        "total_tokens": 10297,
+        "prompt_tokens": 6960,
+        "completion_tokens": 3337,
+        "estimated_cost_usd": 0.006743,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T16:56:15.454034+00:00",
+        "trace_file": "live_20261031_165548_trace07.json"
+      },
+      {
+        "run_id": "live_20261031_165615_trace08",
+        "status": "SUCCESS",
+        "duration_seconds": 30.059,
+        "total_tokens": 9855,
+        "prompt_tokens": 6868,
+        "completion_tokens": 2987,
+        "estimated_cost_usd": 0.006412,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T16:56:45.535586+00:00",
+        "trace_file": "live_20261031_165615_trace08.json"
+      },
+      {
+        "run_id": "live_20261031_165645_trace09",
+        "status": "SUCCESS",
+        "duration_seconds": 28.072,
+        "total_tokens": 10142,
+        "prompt_tokens": 6912,
+        "completion_tokens": 3230,
+        "estimated_cost_usd": 0.00663,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T16:57:13.620026+00:00",
+        "trace_file": "live_20261031_165645_trace09.json"
+      },
+      {
+        "run_id": "live_20261031_165713_trace10",
+        "status": "SUCCESS",
+        "duration_seconds": 26.988,
+        "total_tokens": 9761,
+        "prompt_tokens": 6867,
+        "completion_tokens": 2894,
+        "estimated_cost_usd": 0.006338,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T16:57:40.619847+00:00",
+        "trace_file": "live_20261031_165713_trace10.json"
+      },
+      {
+        "run_id": "live_20261031_165740_trace11",
+        "status": "SUCCESS",
+        "duration_seconds": 33.394,
+        "total_tokens": 10363,
+        "prompt_tokens": 6946,
+        "completion_tokens": 3417,
+        "estimated_cost_usd": 0.006798,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T16:58:14.019547+00:00",
+        "trace_file": "live_20261031_165740_trace11.json"
+      },
+      {
+        "run_id": "live_20261031_165814_trace12",
+        "status": "SUCCESS",
+        "duration_seconds": 26.049,
+        "total_tokens": 10201,
+        "prompt_tokens": 6857,
+        "completion_tokens": 3344,
+        "estimated_cost_usd": 0.006687,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T16:58:40.077169+00:00",
+        "trace_file": "live_20261031_165814_trace12.json"
+      },
+      {
+        "run_id": "live_20261031_165840_trace13",
+        "status": "SUCCESS",
+        "duration_seconds": 31.222,
+        "total_tokens": 10701,
+        "prompt_tokens": 6880,
+        "completion_tokens": 3821,
+        "estimated_cost_usd": 0.007078,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T16:59:11.306702+00:00",
+        "trace_file": "live_20261031_165840_trace13.json"
+      },
+      {
+        "run_id": "live_20261031_165911_trace14",
+        "status": "SUCCESS",
+        "duration_seconds": 30.505,
+        "total_tokens": 10022,
+        "prompt_tokens": 6931,
+        "completion_tokens": 3091,
+        "estimated_cost_usd": 0.006531,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T16:59:41.820302+00:00",
+        "trace_file": "live_20261031_165911_trace14.json"
+      },
+      {
+        "run_id": "live_20261031_165941_trace15",
+        "status": "SUCCESS",
+        "duration_seconds": 27.935,
+        "total_tokens": 10053,
+        "prompt_tokens": 6870,
+        "completion_tokens": 3183,
+        "estimated_cost_usd": 0.006568,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T17:00:09.764586+00:00",
+        "trace_file": "live_20261031_165941_trace15.json"
+      },
+      {
+        "run_id": "live_20261031_170009_trace16",
+        "status": "SUCCESS",
+        "duration_seconds": 28.989,
+        "total_tokens": 10056,
+        "prompt_tokens": 6859,
+        "completion_tokens": 3197,
+        "estimated_cost_usd": 0.006572,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T17:00:38.761338+00:00",
+        "trace_file": "live_20261031_170009_trace16.json"
+      },
+      {
+        "run_id": "live_20261031_170038_trace17",
+        "status": "SUCCESS",
+        "duration_seconds": 30.292,
+        "total_tokens": 10614,
+        "prompt_tokens": 6944,
+        "completion_tokens": 3670,
+        "estimated_cost_usd": 0.006996,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T17:01:09.059043+00:00",
+        "trace_file": "live_20261031_170038_trace17.json"
+      },
+      {
+        "run_id": "live_20261031_170109_trace18",
+        "status": "SUCCESS",
+        "duration_seconds": 27.856,
+        "total_tokens": 10270,
+        "prompt_tokens": 6962,
+        "completion_tokens": 3308,
+        "estimated_cost_usd": 0.006721,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T17:01:36.920858+00:00",
+        "trace_file": "live_20261031_170109_trace18.json"
+      },
+      {
+        "run_id": "live_20261031_170136_trace19",
+        "status": "SUCCESS",
+        "duration_seconds": 28.795,
+        "total_tokens": 10258,
+        "prompt_tokens": 6977,
+        "completion_tokens": 3281,
+        "estimated_cost_usd": 0.006708,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T17:02:05.724489+00:00",
+        "trace_file": "live_20261031_170136_trace19.json"
+      },
+      {
+        "run_id": "live_20261031_170205_trace20",
+        "status": "SUCCESS",
+        "duration_seconds": 28.331,
+        "total_tokens": 9480,
+        "prompt_tokens": 6892,
+        "completion_tokens": 2588,
+        "estimated_cost_usd": 0.006111,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T17:02:34.065330+00:00",
+        "trace_file": "live_20261031_170205_trace20.json"
+      },
+      {
+        "run_id": "live_20261031_170234_trace21",
+        "status": "SUCCESS",
+        "duration_seconds": 14.315,
+        "total_tokens": 6737,
+        "prompt_tokens": 4558,
+        "completion_tokens": 2179,
+        "estimated_cost_usd": 0.004411,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T17:02:48.389915+00:00",
+        "trace_file": "live_20261031_170234_trace21.json"
+      },
+      {
+        "run_id": "live_20261031_170248_trace22",
+        "status": "SUCCESS",
+        "duration_seconds": 31.32,
+        "total_tokens": 10081,
+        "prompt_tokens": 6867,
+        "completion_tokens": 3214,
+        "estimated_cost_usd": 0.006591,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T17:03:19.723274+00:00",
+        "trace_file": "live_20261031_170248_trace22.json"
+      },
+      {
+        "run_id": "live_20261031_170319_trace23",
+        "status": "SUCCESS",
+        "duration_seconds": 28.458,
+        "total_tokens": 10148,
+        "prompt_tokens": 6941,
+        "completion_tokens": 3207,
+        "estimated_cost_usd": 0.006629,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T17:03:48.186363+00:00",
+        "trace_file": "live_20261031_170319_trace23.json"
+      },
+      {
+        "run_id": "live_20261031_170348_trace24",
+        "status": "SUCCESS",
+        "duration_seconds": 29.429,
+        "total_tokens": 9993,
+        "prompt_tokens": 6929,
+        "completion_tokens": 3064,
+        "estimated_cost_usd": 0.006509,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T17:04:17.621091+00:00",
+        "trace_file": "live_20261031_170348_trace24.json"
+      },
+      {
+        "run_id": "live_20261031_170417_trace25",
+        "status": "SUCCESS",
+        "duration_seconds": 29.563,
+        "total_tokens": 10134,
+        "prompt_tokens": 6942,
+        "completion_tokens": 3192,
+        "estimated_cost_usd": 0.006617,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T17:04:47.188960+00:00",
+        "trace_file": "live_20261031_170417_trace25.json"
+      },
+      {
+        "run_id": "live_20261031_170447_trace26",
+        "status": "SUCCESS",
+        "duration_seconds": 29.881,
+        "total_tokens": 10299,
+        "prompt_tokens": 6987,
+        "completion_tokens": 3312,
+        "estimated_cost_usd": 0.006739,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T17:05:17.081901+00:00",
+        "trace_file": "live_20261031_170447_trace26.json"
+      },
+      {
+        "run_id": "live_20261031_170517_trace27",
+        "status": "SUCCESS",
+        "duration_seconds": 33.128,
+        "total_tokens": 10403,
+        "prompt_tokens": 6885,
+        "completion_tokens": 3518,
+        "estimated_cost_usd": 0.006841,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T17:05:50.216956+00:00",
+        "trace_file": "live_20261031_170517_trace27.json"
+      },
+      {
+        "run_id": "live_20261031_170550_trace28",
+        "status": "SUCCESS",
+        "duration_seconds": 27.912,
+        "total_tokens": 9982,
+        "prompt_tokens": 6953,
+        "completion_tokens": 3029,
+        "estimated_cost_usd": 0.006495,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T17:06:18.147822+00:00",
+        "trace_file": "live_20261031_170550_trace28.json"
+      },
+      {
+        "run_id": "live_20261031_170618_trace29",
+        "status": "SUCCESS",
+        "duration_seconds": 30.719,
+        "total_tokens": 10158,
+        "prompt_tokens": 6984,
+        "completion_tokens": 3174,
+        "estimated_cost_usd": 0.006628,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T17:06:48.881679+00:00",
+        "trace_file": "live_20261031_170618_trace29.json"
+      },
+      {
+        "run_id": "live_20261031_170648_trace30",
+        "status": "SUCCESS",
+        "duration_seconds": 30.847,
+        "total_tokens": 10296,
+        "prompt_tokens": 6859,
+        "completion_tokens": 3437,
+        "estimated_cost_usd": 0.006762,
+        "agent_count": 6,
+        "timestamp": "2026-10-31T17:07:19.732376+00:00",
+        "trace_file": "live_20261031_170648_trace30.json"
+      }
+    ]
+  },
+  "workflow_graph": {
+    "nodes": [
+      {
+        "id": "workflow:inventory_replenishment",
+        "type": "workflow",
+        "name": "inventory_replenishment",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:demand_forecast_agent",
+        "type": "agent",
+        "name": "demand_forecast_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:inventory_intake_agent",
+        "type": "agent",
+        "name": "inventory_intake_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:inventory_review_agent",
+        "type": "agent",
+        "name": "inventory_review_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:replenishment_planning_agent",
+        "type": "agent",
+        "name": "replenishment_planning_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:stock_policy_agent",
+        "type": "agent",
+        "name": "stock_policy_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:supplier_agent",
+        "type": "agent",
+        "name": "supplier_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "task:demand_forecast_agent_task",
+        "type": "task",
+        "name": "demand_forecast_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:inventory_intake_agent_task",
+        "type": "task",
+        "name": "inventory_intake_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:replenishment_planning_agent_task",
+        "type": "task",
+        "name": "replenishment_planning_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:inventory_review_agent_task",
+        "type": "task",
+        "name": "inventory_review_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:stock_policy_agent_task",
+        "type": "task",
+        "name": "stock_policy_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:supplier_agent_task",
+        "type": "task",
+        "name": "supplier_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:calculate_deterministic_forecast",
+        "type": "function",
+        "name": "calculate_deterministic_forecast",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:calculate_deterministic_replenishment",
+        "type": "function",
+        "name": "calculate_deterministic_replenishment",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:calculate_usable_inventory",
+        "type": "function",
+        "name": "calculate_usable_inventory",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:calculate_expected_arrival",
+        "type": "function",
+        "name": "calculate_expected_arrival",
+        "source": "statically_observed"
+      }
+    ],
+    "edges": [
+      {
+        "source": "agent:demand_forecast_agent",
+        "target": "task:demand_forecast_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "source": "agent:inventory_intake_agent",
+        "target": "task:inventory_intake_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "source": "agent:replenishment_planning_agent",
+        "target": "task:replenishment_planning_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "source": "agent:inventory_review_agent",
+        "target": "task:inventory_review_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "source": "agent:stock_policy_agent",
+        "target": "task:stock_policy_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_010"
+        ]
+      },
+      {
+        "source": "agent:supplier_agent",
+        "target": "task:supplier_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_012"
+        ]
+      },
+      {
+        "source": "agent:demand_forecast_agent",
+        "target": "function:calculate_deterministic_forecast",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "source": "agent:replenishment_planning_agent",
+        "target": "function:calculate_deterministic_replenishment",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "source": "agent:stock_policy_agent",
+        "target": "function:calculate_usable_inventory",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_010"
+        ]
+      },
+      {
+        "source": "agent:supplier_agent",
+        "target": "function:calculate_expected_arrival",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_012"
+        ]
+      },
+      {
+        "source": "workflow:inventory_replenishment",
+        "target": "agent:replenishment_planning_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:inventory_replenishment",
+        "target": "agent:demand_forecast_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:inventory_replenishment",
+        "target": "agent:inventory_intake_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:inventory_replenishment",
+        "target": "agent:inventory_review_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:inventory_replenishment",
+        "target": "agent:stock_policy_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:inventory_replenishment",
+        "target": "agent:supplier_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "agent:inventory_intake_agent",
+        "target": "agent:stock_policy_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:inventory_intake_agent",
+        "target": "agent:demand_forecast_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:inventory_intake_agent",
+        "target": "agent:supplier_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:stock_policy_agent",
+        "target": "agent:replenishment_planning_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:demand_forecast_agent",
+        "target": "agent:replenishment_planning_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:supplier_agent",
+        "target": "agent:replenishment_planning_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:replenishment_planning_agent",
+        "target": "agent:inventory_review_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:inventory_intake_agent",
+        "target": "agent:stock_policy_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:stock_policy_agent",
+        "target": "agent:demand_forecast_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:demand_forecast_agent",
+        "target": "agent:supplier_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:supplier_agent",
+        "target": "agent:replenishment_planning_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:replenishment_planning_agent",
+        "target": "agent:inventory_review_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      }
+    ]
+  },
+  "reconciliation_and_limitations": {
+    "agent_reconciliation": [
+      {
+        "agent_id": "demand_forecast_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "inventory_intake_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "inventory_review_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "replenishment_planning_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "stock_policy_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "supplier_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      }
+    ],
+    "dependency_reconciliation": [
+      {
+        "source": "inventory_intake_agent",
+        "target": "stock_policy_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "inventory_intake_agent",
+        "target": "demand_forecast_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "inventory_intake_agent",
+        "target": "supplier_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "stock_policy_agent",
+        "target": "replenishment_planning_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "demand_forecast_agent",
+        "target": "replenishment_planning_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "supplier_agent",
+        "target": "replenishment_planning_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "replenishment_planning_agent",
+        "target": "inventory_review_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      }
+    ],
+    "model_reconciliation": {
+      "declared_model": "openai/gpt-oss-120b",
+      "statically_extracted_model": null,
+      "runtime_observed_model": "openai/gpt-oss-120b",
+      "status": "matching",
+      "notes": "Declared model 'openai/gpt-oss-120b' matches runtime enforced model 'openai/gpt-oss-120b'."
+    },
+    "limitations": [
+      "Per-agent cost in traces is not tracked individually; only workflow-level cost is recorded.",
+      "Dynamic runtime branch outcomes and retry loops are recorded as sequential executions.",
+      "Static prompt text reflects task description parameters; dynamic LLM runtime prompt interpolations are reflected in trace prompt tokens.",
+      "Static AST dependency graph was a flat star topology; inter-agent dependencies are reconciled from workflow.json and runtime trace sequences."
+    ]
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "run_id": "live_20261031_132747_trace16",
+  "workflow_name": "customer_support",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 19.447,
+  "agent_execution_count": 6,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.545,
+      "tokens": 851,
+      "prompt_tokens": 432,
+      "completion_tokens": 419,
+      "output": {
+        "category": "technical_failure",
+        "urgency": "high",
+        "complexity": "complex",
+        "customer_impact": "major operational disruption affecting data export processes",
+        "routing_recommendation": "Escalate to Tier 2 Database Engineering team (senior engineer) with high priority handling; request additional details such as DB version, query logs, and environment specifics."
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "ticket_classification_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.254,
+      "tokens": 887,
+      "prompt_tokens": 507,
+      "completion_tokens": 380,
+      "output": {
+        "applicable_policy_ids": [],
+        "applicable_guide_ids": [
+          "TSG-203"
+        ],
+        "policy_conditions": {
+          "policy_coverage": "No specific governing policy was found for this issue; therefore standard support terms for the Pro tier apply.",
+          "eligibility": "Customer is a Pro‑tier enterprise client with a high‑urgency, complex technical failure. The issue falls under the general Technical Failure category.",
+          "sla": {
+            "initial_response_time": "4 business hours from ticket creation",
+            "resolution_target": "24 business hours for high‑urgency technical failures, subject to complexity and required engineering involvement"
+          },
+          "restrictions": "If escalation to engineering is required (e.g., API endpoint returns 502/503), resolution time may extend beyond the standard SLA. No policy‑specific exemptions or overrides apply."
+        },
+        "retrieval_summary": "Policy search returned no matching policy records; one synthetic troubleshooting guide (TSG-203) was matched for technical_failure. The guide provides diagnostic steps and escalation triggers. Standard Pro‑tier SLAs are therefore applicable."
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "policy_retrieval_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 2.008,
+      "tokens": 1329,
+      "prompt_tokens": 669,
+      "completion_tokens": 660,
+      "output": {
+        "investigation_findings": "The export query consistently stalls at 99% completion, indicating that the execution reaches the final stages but cannot finish. This pattern is typical of resource bottlenecks (CPU, I/O, memory), lock contention, or an inefficient execution plan that escalates near the end of processing. The customer is a Pro‑tier enterprise client, which usually runs large‑scale exports, increasing the likelihood of volume‑related performance issues.",
+        "root_cause_hypothesis": "The most probable cause is a performance‑related bottleneck during the final phase of the export operation, such as:\n- Missing or outdated indexes causing a full scan on a large table near the end of the export.\n- Lock or deadlock contention with concurrent write operations.\n- Disk I/O saturation or insufficient memory causing paging when the result set grows large.\n- Out‑of‑date statistics leading the optimizer to choose a sub‑optimal plan that only fails near completion.\nAny of these could manifest as the query hanging at 99%.\n",
+        "confirmed_facts": [
+          "Ticket ID: TICK-2026-0016",
+          "Customer ID: CUST-0016 (Pro tier, synthetic account)",
+          "Issue category: technical_failure",
+          "Symptom: Database export query hangs at 99% and does not complete",
+          "Urgency: high, apparent complexity: complex",
+          "Ticket created on 2026-09-05",
+          "Customer has prior synthetic cases resolved via standard SOPs (billing and one technical_failure)",
+          "All provided data is synthetic"
+        ],
+        "data_gaps": [
+          "Exact SQL query text and parameters used for the export",
+          "Database engine version and configuration (e.g., max parallelism, timeout settings)",
+          "Execution plan and statistics for the problematic query",
+          "Current system resource metrics during the export (CPU, memory, disk I/O, network)",
+          "Lock and deadlock logs for the timeframe of the export attempt",
+          "Recent schema changes, index modifications, or data volume growth",
+          "Any recent patches or configuration changes to the database server",
+          "User verification of whether the export works on smaller data subsets or with different filters"
+        ]
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "issue_investigation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 1.775,
+      "tokens": 1732,
+      "prompt_tokens": 1234,
+      "completion_tokens": 498,
+      "output": {
+        "resolution_type": "escalate_to_engineering",
+        "recommended_action": "1. Acknowledge the ticket within 4 business hours and inform the customer that the issue requires senior database engineering assistance.\n2. Collect the missing data gaps: request the exact export SQL query, database engine version, current configuration settings, execution plan, and resource utilization metrics (CPU, memory, I/O) during the export attempt.\n3. Ask the customer to run the export on a smaller data subset or with reduced filters to verify whether the problem is volume‑related.\n4. In parallel, follow TSG-203 diagnostic steps: capture lock and deadlock logs, verify index health, and refresh statistics on the involved tables.\n5. Package all gathered information and hand off to the Tier‑2 Database Engineering team with a high‑priority flag, citing the hypothesis of a performance bottleneck (index, lock contention, I/O saturation, or stale statistics).\n6. Engineering will analyze the execution plan, adjust indexes or statistics as needed, and provide a remediation plan. Keep the customer updated on progress at least every 4 business hours until resolution.",
+        "policy_justification": "Standard Pro‑tier support terms apply (no specific policy overrides). SLA mandates an initial response within 4 business hours and a 24‑hour resolution target for high‑urgency technical failures, but escalation to engineering may extend the timeline per the policy restrictions. Therefore escalation is required to meet the technical complexity and ensure compliance with the SLA framework.",
+        "escalation_required": true
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "resolution_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 6.327,
+      "tokens": 1267,
+      "prompt_tokens": 725,
+      "completion_tokens": 542,
+      "output": {
+        "response_text": "Dear Enterprise Client 16,\n\nThank you for contacting us regarding the database export query that is hanging at 99%. We understand how critical this operation is for your workflows, and we apologize for the inconvenience.\n\nTo resolve this promptly, we have escalated the case to our senior Database Engineering team. In order for them to investigate effectively, we kindly ask you to provide the following information:\n\n- The exact SQL export query you are running.\n- The database engine version and current configuration settings.\n- The execution plan for the export query (if available).\n- Resource utilization metrics (CPU, memory, I/O) captured during the export attempt.\n- Results of running the export on a smaller data subset or with reduced filters, to determine if the issue is volume‑related.\n\nOur engineering team will also be performing diagnostic steps on their side, including capturing lock and deadlock logs, verifying index health, and refreshing table statistics. We will keep you updated on progress at least every four business hours.\n\nWe appreciate your cooperation and patience as we work to resolve this issue.\n\nSincerely,\nCustomer Support Team",
+        "tone": "Professional and Empathetic",
+        "next_steps_for_customer": [
+          "Provide the exact export SQL query you are using.",
+          "Share the database engine version and current configuration settings.",
+          "Send the execution plan for the query, if available.",
+          "Supply resource utilization metrics (CPU, memory, I/O) recorded during the export attempt.",
+          "Run the export on a smaller data subset or with reduced filters and report the outcome."
+        ],
+        "ticket_status": "Escalated to Tier‑2 Database Engineering"
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "response_drafting_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 2.137,
+      "tokens": 2439,
+      "prompt_tokens": 1787,
+      "completion_tokens": 652,
+      "output": {
+        "qa_status": "APPROVED",
+        "final_ticket_status": "ESCALATED",
+        "verification_notes": "The drafted response does not fully resolve the export hang issue, which is appropriate given the need for additional diagnostic data and the complexity of the problem. The response correctly escalates to Tier‑2 Database Engineering, aligns with the SLA (initial response within 4 business hours, updates every 4 business hours), and makes no unsupported commitments or policy contradictions. The only pending action is the customer's provision of required information, which is clearly listed.",
+        "support_summary_report": "Audit confirms that the response follows TSG-203 guidance, adheres to Pro‑tier SLA, and properly escalates the case. No policy violations were found. The ticket should remain in an ESCALATED state pending the customer's data submission."
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "resolution_verification_agent"
+    }
+  ],
+  "total_tokens": 8505,
+  "prompt_tokens": 5354,
+  "completion_tokens": 3151,
+  "estimated_cost_usd": 0.005648,
+  "error_message": null,
+  "final_output": "{\n  \"qa_status\": \"APPROVED\",\n  \"final_ticket_status\": \"ESCALATED\",\n  \"verification_notes\": \"The drafted response does not fully resolve the export hang issue, which is appropriate given the need for additional diagnostic data and the complexity of the problem. The response correctly escalates to Tier\\u20112 Database Engineering, aligns with the SLA (initial response within 4 business hours, updates every 4 business hours), and makes no unsupported commitments or policy contradictions. The only pending action is the customer's provision of required information, which is clearly listed.\",\n  \"support_summary_report\": \"Audit confirms that the response follows TSG-203 guidance, adheres to Pro\\u2011tier SLA, and properly escalates the case. No policy violations were found. The ticket should remain in an ESCALATED state pending the customer's data submission.\"\n}",
+  "timestamp": "2026-10-31T13:28:07.225411+00:00"
+}

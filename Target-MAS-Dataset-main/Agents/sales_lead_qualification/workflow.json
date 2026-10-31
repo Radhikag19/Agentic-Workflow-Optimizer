@@ -1,0 +1,85 @@
+{
+  "workflow_name": "sales_lead_qualification",
+  "version": "1.0.0",
+  "description": "Baseline Sales Lead Qualification Multi-Agent Workflow",
+  "fixed_model": "openai/gpt-oss-120b",
+  "assigned_groq_key_env": "GROQ_API_KEY_4",
+  "total_agents": 7,
+  "execution_mode": "sequential",
+  "execution_order": [
+    "lead_enrichment_agent",
+    "lead_fit_agent",
+    "intent_analysis_agent",
+    "lead_scoring_agent",
+    "opportunity_assessment_agent",
+    "next_action_agent",
+    "final_review_agent_sales"
+  ],
+  "agents": [
+    {
+      "agent_id": "lead_enrichment_agent",
+      "role": "Lead Enrichment & Intelligence Specialist",
+      "assigned_key_env": "GROQ_API_KEY_4",
+      "dependencies": [],
+      "inputs": ["raw_lead_record", "company_profiles.json"],
+      "outputs": ["lead_id", "enriched_lead_profile", "missing_attributes"]
+    },
+    {
+      "agent_id": "lead_fit_agent",
+      "role": "Ideal Customer Profile (ICP) Fit Evaluator",
+      "assigned_key_env": "GROQ_API_KEY_4",
+      "dependencies": ["lead_enrichment_agent"],
+      "inputs": ["enriched_lead_profile", "ideal_customer_profiles.json"],
+      "outputs": ["fit_category", "industry_fit_score", "company_size_fit_score", "fit_rationale"],
+      "optimization_note": "Primary trigger for early disqualification and short-circuit routing."
+    },
+    {
+      "agent_id": "intent_analysis_agent",
+      "role": "Buyer Intent & Behavioral Analyst",
+      "assigned_key_env": "GROQ_API_KEY_4",
+      "dependencies": ["lead_enrichment_agent"],
+      "inputs": ["lead_data", "engagement_histories.json"],
+      "outputs": ["intent_level", "intent_score", "high_value_signals", "behavioral_summary"],
+      "optimization_note": "Can be skipped if lead_fit_agent concludes DISQUALIFIED."
+    },
+    {
+      "agent_id": "lead_scoring_agent",
+      "role": "Lead Qualification Scoring Specialist",
+      "assigned_key_env": "GROQ_API_KEY_4",
+      "dependencies": ["lead_fit_agent", "intent_analysis_agent"],
+      "inputs": ["lead_data", "fit_evaluation", "intent_evaluation", "qualification_rules.json"],
+      "outputs": ["total_score", "qualification_tier", "component_scores", "scoring_rationale"]
+    },
+    {
+      "agent_id": "opportunity_assessment_agent",
+      "role": "Commercial Opportunity Assessor",
+      "assigned_key_env": "GROQ_API_KEY_4",
+      "dependencies": ["lead_scoring_agent"],
+      "inputs": ["lead_scoring_results", "lead_fit_results", "intent_results"],
+      "outputs": ["opportunity_viability", "estimated_deal_size", "pipeline_stage", "key_risks"],
+      "optimization_note": "Candidate for pruning when lead is clearly unsuitable or already definitively scored."
+    },
+    {
+      "agent_id": "next_action_agent",
+      "role": "Sales Engagement Strategy Lead",
+      "assigned_key_env": "GROQ_API_KEY_4",
+      "dependencies": ["opportunity_assessment_agent", "lead_scoring_agent"],
+      "inputs": ["opportunity_assessment", "qualification_tier"],
+      "outputs": ["recommended_action", "target_team", "priority", "action_justification"]
+    },
+    {
+      "agent_id": "final_review_agent_sales",
+      "role": "Revenue Operations QA Lead",
+      "assigned_key_env": "GROQ_API_KEY_4",
+      "dependencies": ["next_action_agent"],
+      "inputs": ["complete_lead_audit"],
+      "outputs": ["workflow_status", "lead_id", "final_qualification_tier", "final_score", "summary_report", "audit_findings"]
+    }
+  ],
+  "optimization_opportunities": [
+    "Dynamic routing: Early-stop and disqualify immediately after lead_fit_agent if the company is in disqualified industries",
+    "Pruning opportunity_assessment_agent when qualification score is under 45 points",
+    "Parallelize lead_fit_agent and intent_analysis_agent immediately after enrichment",
+    "Prompt compression: Pass only structured numeric feature vectors to lead_scoring_agent"
+  ]
+}

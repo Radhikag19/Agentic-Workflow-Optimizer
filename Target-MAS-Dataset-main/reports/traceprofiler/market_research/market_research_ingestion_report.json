@@ -1,0 +1,3644 @@
+{
+  "workflow_name": "market_research",
+  "report_type": "traceprofiler_single_workflow_ingestion",
+  "analysis_mode": "static_ast_non_executing",
+  "metrics": {
+    "declared_agents": 9,
+    "implemented_agents": 9,
+    "python_files": 10,
+    "telemetry_runs": 1,
+    "discrepancy_count": 2
+  },
+  "manifest": {
+    "file": "Agents/market_research/workflow.json",
+    "dir": "Agents/market_research",
+    "workflow_name": "market_research",
+    "version": "1.0.0",
+    "description": "Baseline 9-agent sequential competitor research and fact-checked synthesis workflow.",
+    "fixed_model": "openai/gpt-oss-120b",
+    "total_agents": 9,
+    "execution_mode": "sequential",
+    "execution_order": [
+      "planning_agent",
+      "profile_agent",
+      "product_agent",
+      "pricing_agent",
+      "feedback_agent",
+      "evidence_agent",
+      "comparison_agent",
+      "synthesis_agent",
+      "fact_check_agent"
+    ],
+    "optimization_opportunities": [
+      "Parallel execution of 4 data collection agents (profile, product, pricing, feedback)",
+      "Consolidating comparison and synthesis into a single-pass executive briefing agent",
+      "Direct retrieval of source citations during synthesis to prune independent fact-check overhead",
+      "Early routing for single-competitor deep dives"
+    ],
+    "agents": [
+      {
+        "id": "planning_agent",
+        "name": "Research Planning Specialist",
+        "role": "Research Planning Specialist",
+        "declared_file": "planning_agent.py",
+        "dependencies": [],
+        "inputs": [
+          "research_query"
+        ],
+        "outputs": [
+          "target_competitors",
+          "evaluation_dimensions",
+          "evidence_gathering_plan"
+        ],
+        "assigned_key": "GROQ_API_KEY_8",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "id": "planning_agent",
+          "name": "Research Planning Specialist",
+          "assigned_key": "GROQ_API_KEY_8",
+          "file": "planning_agent.py",
+          "dependencies": [],
+          "inputs": [
+            "research_query"
+          ],
+          "outputs": [
+            "target_competitors",
+            "evaluation_dimensions",
+            "evidence_gathering_plan"
+          ],
+          "parallelizable": false
+        }
+      },
+      {
+        "id": "profile_agent",
+        "name": "Company Profiling Specialist",
+        "role": "Company Profiling Specialist",
+        "declared_file": "profile_agent.py",
+        "dependencies": [
+          "planning_agent"
+        ],
+        "inputs": [
+          "target_competitors",
+          "profile_documents"
+        ],
+        "outputs": [
+          "competitor_profiles",
+          "source_doc_ids"
+        ],
+        "assigned_key": "GROQ_API_KEY_9",
+        "parallelizable": true,
+        "parallel_group": "data_collection_branch",
+        "pruning_candidate": null,
+        "raw": {
+          "id": "profile_agent",
+          "name": "Company Profiling Specialist",
+          "assigned_key": "GROQ_API_KEY_9",
+          "file": "profile_agent.py",
+          "dependencies": [
+            "planning_agent"
+          ],
+          "inputs": [
+            "target_competitors",
+            "profile_documents"
+          ],
+          "outputs": [
+            "competitor_profiles",
+            "source_doc_ids"
+          ],
+          "parallelizable": true,
+          "parallel_group": "data_collection_branch"
+        }
+      },
+      {
+        "id": "product_agent",
+        "name": "Product Capabilities Analyst",
+        "role": "Product Capabilities Analyst",
+        "declared_file": "product_agent.py",
+        "dependencies": [
+          "planning_agent"
+        ],
+        "inputs": [
+          "product_documents"
+        ],
+        "outputs": [
+          "technical_capabilities",
+          "metrics",
+          "sdk_support",
+          "source_doc_ids"
+        ],
+        "assigned_key": "GROQ_API_KEY_10",
+        "parallelizable": true,
+        "parallel_group": "data_collection_branch",
+        "pruning_candidate": null,
+        "raw": {
+          "id": "product_agent",
+          "name": "Product Capabilities Analyst",
+          "assigned_key": "GROQ_API_KEY_10",
+          "file": "product_agent.py",
+          "dependencies": [
+            "planning_agent"
+          ],
+          "inputs": [
+            "product_documents"
+          ],
+          "outputs": [
+            "technical_capabilities",
+            "metrics",
+            "sdk_support",
+            "source_doc_ids"
+          ],
+          "parallelizable": true,
+          "parallel_group": "data_collection_branch"
+        }
+      },
+      {
+        "id": "pricing_agent",
+        "name": "Pricing & Commercial Terms Specialist",
+        "role": "Pricing & Commercial Terms Specialist",
+        "declared_file": "pricing_agent.py",
+        "dependencies": [
+          "planning_agent"
+        ],
+        "inputs": [
+          "pricing_documents"
+        ],
+        "outputs": [
+          "commercial_tiers",
+          "overage_clauses",
+          "minimums",
+          "source_doc_ids"
+        ],
+        "assigned_key": "GROQ_API_KEY_11",
+        "parallelizable": true,
+        "parallel_group": "data_collection_branch",
+        "pruning_candidate": null,
+        "raw": {
+          "id": "pricing_agent",
+          "name": "Pricing & Commercial Terms Specialist",
+          "assigned_key": "GROQ_API_KEY_11",
+          "file": "pricing_agent.py",
+          "dependencies": [
+            "planning_agent"
+          ],
+          "inputs": [
+            "pricing_documents"
+          ],
+          "outputs": [
+            "commercial_tiers",
+            "overage_clauses",
+            "minimums",
+            "source_doc_ids"
+          ],
+          "parallelizable": true,
+          "parallel_group": "data_collection_branch"
+        }
+      },
+      {
+        "id": "feedback_agent",
+        "name": "Customer Feedback & Review Analyst",
+        "role": "Customer Feedback & Review Analyst",
+        "declared_file": "feedback_agent.py",
+        "dependencies": [
+          "planning_agent"
+        ],
+        "inputs": [
+          "feedback_documents"
+        ],
+        "outputs": [
+          "customer_sentiments",
+          "reported_outages",
+          "praise",
+          "source_doc_ids"
+        ],
+        "assigned_key": "GROQ_API_KEY_12",
+        "parallelizable": true,
+        "parallel_group": "data_collection_branch",
+        "pruning_candidate": null,
+        "raw": {
+          "id": "feedback_agent",
+          "name": "Customer Feedback & Review Analyst",
+          "assigned_key": "GROQ_API_KEY_12",
+          "file": "feedback_agent.py",
+          "dependencies": [
+            "planning_agent"
+          ],
+          "inputs": [
+            "feedback_documents"
+          ],
+          "outputs": [
+            "customer_sentiments",
+            "reported_outages",
+            "praise",
+            "source_doc_ids"
+          ],
+          "parallelizable": true,
+          "parallel_group": "data_collection_branch"
+        }
+      },
+      {
+        "id": "evidence_agent",
+        "name": "Evidence Correlation & Conflict Analyst",
+        "role": "Evidence Correlation & Conflict Analyst",
+        "declared_file": "evidence_agent.py",
+        "dependencies": [
+          "profile_agent",
+          "product_agent",
+          "pricing_agent",
+          "feedback_agent"
+        ],
+        "inputs": [
+          "profiles",
+          "products",
+          "pricing",
+          "feedback"
+        ],
+        "outputs": [
+          "triangulated_evidence",
+          "verified_contradictions",
+          "citation_gaps"
+        ],
+        "assigned_key": "GROQ_API_KEY_13",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "id": "evidence_agent",
+          "name": "Evidence Correlation & Conflict Analyst",
+          "assigned_key": "GROQ_API_KEY_13",
+          "file": "evidence_agent.py",
+          "dependencies": [
+            "profile_agent",
+            "product_agent",
+            "pricing_agent",
+            "feedback_agent"
+          ],
+          "inputs": [
+            "profiles",
+            "products",
+            "pricing",
+            "feedback"
+          ],
+          "outputs": [
+            "triangulated_evidence",
+            "verified_contradictions",
+            "citation_gaps"
+          ],
+          "parallelizable": false
+        }
+      },
+      {
+        "id": "comparison_agent",
+        "name": "Competitor Comparison & Matrix Specialist",
+        "role": "Competitor Comparison & Matrix Specialist",
+        "declared_file": "comparison_agent.py",
+        "dependencies": [
+          "evidence_agent"
+        ],
+        "inputs": [
+          "triangulated_evidence"
+        ],
+        "outputs": [
+          "comparison_matrix",
+          "factual_specifications"
+        ],
+        "assigned_key": "GROQ_API_KEY_14",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "id": "comparison_agent",
+          "name": "Competitor Comparison & Matrix Specialist",
+          "assigned_key": "GROQ_API_KEY_14",
+          "file": "comparison_agent.py",
+          "dependencies": [
+            "evidence_agent"
+          ],
+          "inputs": [
+            "triangulated_evidence"
+          ],
+          "outputs": [
+            "comparison_matrix",
+            "factual_specifications"
+          ],
+          "parallelizable": false
+        }
+      },
+      {
+        "id": "synthesis_agent",
+        "name": "Research Synthesis & Narrative Specialist",
+        "role": "Research Synthesis & Narrative Specialist",
+        "declared_file": "synthesis_agent.py",
+        "dependencies": [
+          "comparison_agent"
+        ],
+        "inputs": [
+          "comparison_matrix",
+          "evidence_report"
+        ],
+        "outputs": [
+          "executive_research_narrative",
+          "recommendations"
+        ],
+        "assigned_key": "GROQ_API_KEY_8",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "id": "synthesis_agent",
+          "name": "Research Synthesis & Narrative Specialist",
+          "assigned_key": "GROQ_API_KEY_8",
+          "file": "synthesis_agent.py",
+          "dependencies": [
+            "comparison_agent"
+          ],
+          "inputs": [
+            "comparison_matrix",
+            "evidence_report"
+          ],
+          "outputs": [
+            "executive_research_narrative",
+            "recommendations"
+          ],
+          "parallelizable": false
+        }
+      },
+      {
+        "id": "fact_check_agent",
+        "name": "Fact-Checking & Citation Verification Specialist",
+        "role": "Fact-Checking & Citation Verification Specialist",
+        "declared_file": "fact_check_agent.py",
+        "dependencies": [
+          "synthesis_agent"
+        ],
+        "inputs": [
+          "synthesis_narrative",
+          "all_source_documents"
+        ],
+        "outputs": [
+          "final_checked_report",
+          "verified_citations",
+          "audit_flags"
+        ],
+        "assigned_key": "GROQ_API_KEY_9",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "id": "fact_check_agent",
+          "name": "Fact-Checking & Citation Verification Specialist",
+          "assigned_key": "GROQ_API_KEY_9",
+          "file": "fact_check_agent.py",
+          "dependencies": [
+            "synthesis_agent"
+          ],
+          "inputs": [
+            "synthesis_narrative",
+            "all_source_documents"
+          ],
+          "outputs": [
+            "final_checked_report",
+            "verified_citations",
+            "audit_flags"
+          ],
+          "parallelizable": false
+        }
+      }
+    ]
+  },
+  "agent_inventory": [
+    {
+      "id": "planning_agent",
+      "name": "Research Planning Specialist",
+      "role": "Research Planning Specialist",
+      "workflow": "market_research",
+      "declared_file": "planning_agent.py",
+      "assigned_key": "GROQ_API_KEY_8",
+      "dependencies": [],
+      "inputs": [
+        "research_query"
+      ],
+      "outputs": [
+        "target_competitors",
+        "evaluation_dimensions",
+        "evidence_gathering_plan"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/market_research/planning_agent.py",
+      "agent_constructors": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Research Planning Specialist",
+          "goal": "Deconstruct the user's market inquiry into key comparison dimensions (architecture, latency, pricing, SLA, customer sentiment). Identify target competitors and define the evidence matrix.",
+          "backstory": "You are a Strategic Market Intelligence Lead who designs structured, rigorous competitive research methodologies and investigative plans.",
+          "llm_expression": "create_agent_llm(\"planning_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_planning_agent",
+          "line": 11,
+          "end_line": 26,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    },
+    {
+      "id": "profile_agent",
+      "name": "Company Profiling Specialist",
+      "role": "Company Profiling Specialist",
+      "workflow": "market_research",
+      "declared_file": "profile_agent.py",
+      "assigned_key": "GROQ_API_KEY_9",
+      "dependencies": [
+        "planning_agent"
+      ],
+      "inputs": [
+        "target_competitors",
+        "profile_documents"
+      ],
+      "outputs": [
+        "competitor_profiles",
+        "source_doc_ids"
+      ],
+      "parallelizable": true,
+      "parallel_group": "data_collection_branch",
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/market_research/profile_agent.py",
+      "agent_constructors": [
+        {
+          "line": 35,
+          "constructor": "Agent",
+          "role": "Company Profiling Specialist",
+          "goal": "Extract competitor corporate identities, funding stage, employee count, market positioning, and Ideal Customer Profile (ICP). Always cite stable source IDs.",
+          "backstory": "You are a Venture Capital Intelligence Analyst who creates crisp corporate dossiers, strictly referencing primary corporate source documents.",
+          "llm_expression": "create_agent_llm(\"profile_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "query_company_profiles",
+          "line": 16,
+          "end_line": 31,
+          "docstring": "Retrieve competitor metadata and corporate profile documents.",
+          "args": [],
+          "decorators": []
+        },
+        {
+          "name": "create_profile_agent",
+          "line": 34,
+          "end_line": 48,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 7
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 10
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 11
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "query_company_profiles",
+          "line": 16,
+          "classification": "function_candidate",
+          "docstring": "Retrieve competitor metadata and corporate profile documents."
+        }
+      ]
+    },
+    {
+      "id": "product_agent",
+      "name": "Product Capabilities Analyst",
+      "role": "Product Capabilities Analyst",
+      "workflow": "market_research",
+      "declared_file": "product_agent.py",
+      "assigned_key": "GROQ_API_KEY_10",
+      "dependencies": [
+        "planning_agent"
+      ],
+      "inputs": [
+        "product_documents"
+      ],
+      "outputs": [
+        "technical_capabilities",
+        "metrics",
+        "sdk_support",
+        "source_doc_ids"
+      ],
+      "parallelizable": true,
+      "parallel_group": "data_collection_branch",
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/market_research/product_agent.py",
+      "agent_constructors": [
+        {
+          "line": 26,
+          "constructor": "Agent",
+          "role": "Product Capabilities Analyst",
+          "goal": "Extract technical features, platform throughput, integrations, SDK support, and architectural limitations across competitors. Attribute every claim to its source doc_id.",
+          "backstory": "You are a Principal Solutions Architect who dissects technical whitepapers, feature sheets, and system SLAs to understand real engineering capabilities.",
+          "llm_expression": "create_agent_llm(\"product_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "query_product_documents",
+          "line": 16,
+          "end_line": 22,
+          "docstring": "Retrieve product capabilities and benchmark source documents.",
+          "args": [],
+          "decorators": []
+        },
+        {
+          "name": "create_product_agent",
+          "line": 25,
+          "end_line": 39,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 7
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 10
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 11
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "query_product_documents",
+          "line": 16,
+          "classification": "function_candidate",
+          "docstring": "Retrieve product capabilities and benchmark source documents."
+        }
+      ]
+    },
+    {
+      "id": "pricing_agent",
+      "name": "Pricing & Commercial Terms Specialist",
+      "role": "Pricing & Commercial Terms Specialist",
+      "workflow": "market_research",
+      "declared_file": "pricing_agent.py",
+      "assigned_key": "GROQ_API_KEY_11",
+      "dependencies": [
+        "planning_agent"
+      ],
+      "inputs": [
+        "pricing_documents"
+      ],
+      "outputs": [
+        "commercial_tiers",
+        "overage_clauses",
+        "minimums",
+        "source_doc_ids"
+      ],
+      "parallelizable": true,
+      "parallel_group": "data_collection_branch",
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/market_research/pricing_agent.py",
+      "agent_constructors": [
+        {
+          "line": 26,
+          "constructor": "Agent",
+          "role": "Pricing & Commercial Terms Specialist",
+          "goal": "Extract commercial pricing schedules, monthly tiers, overage fees, contract minimums, and billing units. Explicitly mark unstated pricing as UNKNOWN and cite source doc_ids.",
+          "backstory": "You are a SaaS Pricing & Licensing Strategist who scrutinizes Master Services Agreements, rate cards, and hidden overage terms to establish true total cost of ownership (TCO).",
+          "llm_expression": "create_agent_llm(\"pricing_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "query_pricing_documents",
+          "line": 16,
+          "end_line": 22,
+          "docstring": "Retrieve commercial pricing and licensing source documents.",
+          "args": [],
+          "decorators": []
+        },
+        {
+          "name": "create_pricing_agent",
+          "line": 25,
+          "end_line": 39,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 7
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 10
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 11
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "query_pricing_documents",
+          "line": 16,
+          "classification": "function_candidate",
+          "docstring": "Retrieve commercial pricing and licensing source documents."
+        }
+      ]
+    },
+    {
+      "id": "feedback_agent",
+      "name": "Customer Feedback & Review Analyst",
+      "role": "Customer Feedback & Review Analyst",
+      "workflow": "market_research",
+      "declared_file": "feedback_agent.py",
+      "assigned_key": "GROQ_API_KEY_12",
+      "dependencies": [
+        "planning_agent"
+      ],
+      "inputs": [
+        "feedback_documents"
+      ],
+      "outputs": [
+        "customer_sentiments",
+        "reported_outages",
+        "praise",
+        "source_doc_ids"
+      ],
+      "parallelizable": true,
+      "parallel_group": "data_collection_branch",
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/market_research/feedback_agent.py",
+      "agent_constructors": [
+        {
+          "line": 26,
+          "constructor": "Agent",
+          "role": "Customer Feedback & Review Analyst",
+          "goal": "Extract real-world customer feedback, reported production outages, praise, and usability complaints across competitors. Keep recorded quotes strictly separate from conclusions.",
+          "backstory": "You are a Voice of Customer (VoC) Market Researcher who analyzes verified user testimonials, G2 reviews, and community sentiment to assess customer satisfaction.",
+          "llm_expression": "create_agent_llm(\"feedback_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "query_feedback_documents",
+          "line": 16,
+          "end_line": 22,
+          "docstring": "Retrieve customer feedback and review documents.",
+          "args": [],
+          "decorators": []
+        },
+        {
+          "name": "create_feedback_agent",
+          "line": 25,
+          "end_line": 39,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 7
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 10
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 11
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "query_feedback_documents",
+          "line": 16,
+          "classification": "function_candidate",
+          "docstring": "Retrieve customer feedback and review documents."
+        }
+      ]
+    },
+    {
+      "id": "evidence_agent",
+      "name": "Evidence Correlation & Conflict Analyst",
+      "role": "Evidence Correlation & Conflict Analyst",
+      "workflow": "market_research",
+      "declared_file": "evidence_agent.py",
+      "assigned_key": "GROQ_API_KEY_13",
+      "dependencies": [
+        "profile_agent",
+        "product_agent",
+        "pricing_agent",
+        "feedback_agent"
+      ],
+      "inputs": [
+        "profiles",
+        "products",
+        "pricing",
+        "feedback"
+      ],
+      "outputs": [
+        "triangulated_evidence",
+        "verified_contradictions",
+        "citation_gaps"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/market_research/evidence_agent.py",
+      "agent_constructors": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Evidence Correlation & Conflict Analyst",
+          "goal": "Cross-examine findings from profile, product, pricing, and feedback agents. Highlight contradictions (e.g., advertised SLAs vs customer reported outages, flat rates vs hidden overages), missing citations, and unresolved discrepancies.",
+          "backstory": "You are an Investigative Research Editor who verifies information triangulation, identifies inconsistencies between marketing claims and customer experiences, and ensures source attribution.",
+          "llm_expression": "create_agent_llm(\"evidence_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_evidence_agent",
+          "line": 11,
+          "end_line": 26,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    },
+    {
+      "id": "comparison_agent",
+      "name": "Competitor Comparison & Matrix Specialist",
+      "role": "Competitor Comparison & Matrix Specialist",
+      "workflow": "market_research",
+      "declared_file": "comparison_agent.py",
+      "assigned_key": "GROQ_API_KEY_14",
+      "dependencies": [
+        "evidence_agent"
+      ],
+      "inputs": [
+        "triangulated_evidence"
+      ],
+      "outputs": [
+        "comparison_matrix",
+        "factual_specifications"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/market_research/comparison_agent.py",
+      "agent_constructors": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Competitor Comparison & Matrix Specialist",
+          "goal": "Construct a multi-dimensional comparison matrix contrasting all 4 competitors. Clearly distinguish measured factual specifications from qualitative assessments. Cite doc_ids.",
+          "backstory": "You are a Competitive Strategy Director who synthesizes fragmented technical data into clear, actionable side-by-side matrices for executive evaluation.",
+          "llm_expression": "create_agent_llm(\"comparison_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_comparison_agent",
+          "line": 11,
+          "end_line": 25,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    },
+    {
+      "id": "synthesis_agent",
+      "name": "Research Synthesis & Narrative Specialist",
+      "role": "Research Synthesis & Narrative Specialist",
+      "workflow": "market_research",
+      "declared_file": "synthesis_agent.py",
+      "assigned_key": "GROQ_API_KEY_8",
+      "dependencies": [
+        "comparison_agent"
+      ],
+      "inputs": [
+        "comparison_matrix",
+        "evidence_report"
+      ],
+      "outputs": [
+        "executive_research_narrative",
+        "recommendations"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/market_research/synthesis_agent.py",
+      "agent_constructors": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Research Synthesis & Narrative Specialist",
+          "goal": "Synthesize the competitor comparison and evidence analysis into an executive research narrative. Highlight key trade-offs and recommendations without repetitive boilerplate.",
+          "backstory": "You are a Senior Industry Analyst known for writing concise, incisive market research reports that deliver executive-level clarity backed by empirical data.",
+          "llm_expression": "create_agent_llm(\"synthesis_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_synthesis_agent",
+          "line": 11,
+          "end_line": 25,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    },
+    {
+      "id": "fact_check_agent",
+      "name": "Fact-Checking & Citation Verification Specialist",
+      "role": "Fact-Checking & Citation Verification Specialist",
+      "workflow": "market_research",
+      "declared_file": "fact_check_agent.py",
+      "assigned_key": "GROQ_API_KEY_9",
+      "dependencies": [
+        "synthesis_agent"
+      ],
+      "inputs": [
+        "synthesis_narrative",
+        "all_source_documents"
+      ],
+      "outputs": [
+        "final_checked_report",
+        "verified_citations",
+        "audit_flags"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/market_research/fact_check_agent.py",
+      "agent_constructors": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Fact-Checking & Citation Verification Specialist",
+          "goal": "Audit all factual statements and metrics in the synthesis report against source doc_ids. Flag unsupported claims, verify citations, and guarantee the report is marked as synthetic data.",
+          "backstory": "You are a Head of Research Integrity and Fact-Checking. You ensure no unverified assertion, hallucination, or fabricated citation survives into the published report.",
+          "llm_expression": "create_agent_llm(\"fact_check_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_fact_check_agent",
+          "line": 11,
+          "end_line": 25,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "create_fact_check_agent",
+          "line": 11,
+          "classification": "function_candidate",
+          "docstring": null
+        }
+      ]
+    }
+  ],
+  "workflow_analysis": {
+    "file": "Agents/market_research/workflow.py",
+    "classes": [],
+    "entry_points": [
+      {
+        "name": "run_market_research_workflow",
+        "line": 36,
+        "args": [
+          "research_query",
+          "run_id"
+        ],
+        "docstring": "Execute the 9-agent Market and Competitor Research workflow."
+      }
+    ],
+    "crew_constructions": [
+      {
+        "line": 73,
+        "source": "Crew(agents=[planning_agent], tasks=[planning_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 92,
+        "source": "Crew(agents=[profile_agent], tasks=[profile_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 111,
+        "source": "Crew(agents=[product_agent], tasks=[product_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 130,
+        "source": "Crew(agents=[pricing_agent], tasks=[pricing_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 149,
+        "source": "Crew(agents=[feedback_agent], tasks=[feedback_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 171,
+        "source": "Crew(agents=[evidence_agent], tasks=[evidence_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 191,
+        "source": "Crew(agents=[comparison_agent], tasks=[comparison_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 211,
+        "source": "Crew(agents=[synthesis_agent], tasks=[synthesis_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 230,
+        "source": "Crew(agents=[fact_check_agent], tasks=[fact_check_task], process=Process.sequential, verbose=False)"
+      }
+    ],
+    "assignments": [
+      {
+        "line": 42,
+        "targets": [
+          "run_id"
+        ],
+        "value_names": [
+          "generate_run_id",
+          "run_id"
+        ],
+        "expression": "run_id or generate_run_id(\"market\")"
+      },
+      {
+        "line": 43,
+        "targets": [
+          "start_total"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 44,
+        "targets": [
+          "agent_durations"
+        ],
+        "value_names": [],
+        "expression": "{}"
+      },
+      {
+        "line": 45,
+        "targets": [
+          "order"
+        ],
+        "value_names": [],
+        "expression": "[\n        \"planning_agent\",\n        \"profile_agent\",\n        \"product_agent\",\n        \"pricing_agent\",\n        \"feedback_agent\",\n        \"evidence_agent\",\n        \"comparison_agent\",\n        \"synthesis_agent\",\n        \"fact_check_agent\",\n    ]"
+      },
+      {
+        "line": 235,
+        "targets": [
+          "total_duration"
+        ],
+        "value_names": [
+          "start_total",
+          "time"
+        ],
+        "expression": "time.perf_counter() - start_total"
+      },
+      {
+        "line": 237,
+        "targets": [
+          "final_payload"
+        ],
+        "value_names": [
+          "comp_text",
+          "evid_text",
+          "fact_text",
+          "feed_text",
+          "plan_text",
+          "price_text",
+          "prod_text",
+          "prof_text",
+          "research_query",
+          "run_id",
+          "synth_text"
+        ],
+        "expression": "{\n        \"workflow\": \"market_research\",\n        \"run_id\": run_id,\n        \"input\": research_query,\n        \"stages\": {\n            \"planning\": plan_text,\n            \"profiles\": prof_text,\n            \"product\": prod_text,\n            \"pricing\": price_text,\n            \"feedback\": feed_text,\n      "
+      },
+      {
+        "line": 255,
+        "targets": [
+          "tracker_data"
+        ],
+        "value_names": [
+          "ACTIVE_TRACKER"
+        ],
+        "expression": "ACTIVE_TRACKER.snapshot()"
+      },
+      {
+        "line": 256,
+        "targets": [
+          "result"
+        ],
+        "value_names": [
+          "WorkflowExecutionResult",
+          "agent_durations",
+          "final_payload",
+          "len",
+          "order",
+          "run_id",
+          "total_duration",
+          "tracker_data"
+        ],
+        "expression": "WorkflowExecutionResult(\n        workflow_name=\"market_research\",\n        run_id=run_id,\n        status=\"SUCCESS\",\n        execution_order=order,\n        agent_durations=agent_durations,\n        total_duration_seconds=total_duration,\n        agent_count=len(order),\n        llm_call_count=tracker_dat"
+      },
+      {
+        "line": 59,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 60,
+        "targets": [
+          "q_text"
+        ],
+        "value_names": [
+          "research_query"
+        ],
+        "expression": "research_query.get(\"query\", \"Comprehensive evaluation of enterprise agent platforms\")"
+      },
+      {
+        "line": 76,
+        "targets": [
+          "plan_text"
+        ],
+        "value_names": [
+          "hasattr",
+          "plan_out",
+          "str"
+        ],
+        "expression": "str(plan_out.raw if hasattr(plan_out, \"raw\") else plan_out)"
+      },
+      {
+        "line": 79,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 80,
+        "targets": [
+          "profiles_data"
+        ],
+        "value_names": [
+          "query_company_profiles"
+        ],
+        "expression": "query_company_profiles()"
+      },
+      {
+        "line": 95,
+        "targets": [
+          "prof_text"
+        ],
+        "value_names": [
+          "hasattr",
+          "prof_out",
+          "str"
+        ],
+        "expression": "str(prof_out.raw if hasattr(prof_out, \"raw\") else prof_out)"
+      },
+      {
+        "line": 98,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 99,
+        "targets": [
+          "product_docs"
+        ],
+        "value_names": [
+          "query_product_documents"
+        ],
+        "expression": "query_product_documents()"
+      },
+      {
+        "line": 114,
+        "targets": [
+          "prod_text"
+        ],
+        "value_names": [
+          "hasattr",
+          "prod_out",
+          "str"
+        ],
+        "expression": "str(prod_out.raw if hasattr(prod_out, \"raw\") else prod_out)"
+      },
+      {
+        "line": 117,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 118,
+        "targets": [
+          "pricing_docs"
+        ],
+        "value_names": [
+          "query_pricing_documents"
+        ],
+        "expression": "query_pricing_documents()"
+      },
+      {
+        "line": 133,
+        "targets": [
+          "price_text"
+        ],
+        "value_names": [
+          "hasattr",
+          "price_out",
+          "str"
+        ],
+        "expression": "str(price_out.raw if hasattr(price_out, \"raw\") else price_out)"
+      },
+      {
+        "line": 136,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 137,
+        "targets": [
+          "feedback_docs"
+        ],
+        "value_names": [
+          "query_feedback_documents"
+        ],
+        "expression": "query_feedback_documents()"
+      },
+      {
+        "line": 152,
+        "targets": [
+          "feed_text"
+        ],
+        "value_names": [
+          "feed_out",
+          "hasattr",
+          "str"
+        ],
+        "expression": "str(feed_out.raw if hasattr(feed_out, \"raw\") else feed_out)"
+      },
+      {
+        "line": 155,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 174,
+        "targets": [
+          "evid_text"
+        ],
+        "value_names": [
+          "evid_out",
+          "hasattr",
+          "str"
+        ],
+        "expression": "str(evid_out.raw if hasattr(evid_out, \"raw\") else evid_out)"
+      },
+      {
+        "line": 177,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 194,
+        "targets": [
+          "comp_text"
+        ],
+        "value_names": [
+          "comp_out",
+          "hasattr",
+          "str"
+        ],
+        "expression": "str(comp_out.raw if hasattr(comp_out, \"raw\") else comp_out)"
+      },
+      {
+        "line": 197,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 214,
+        "targets": [
+          "synth_text"
+        ],
+        "value_names": [
+          "hasattr",
+          "str",
+          "synth_out"
+        ],
+        "expression": "str(synth_out.raw if hasattr(synth_out, \"raw\") else synth_out)"
+      },
+      {
+        "line": 217,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 233,
+        "targets": [
+          "fact_text"
+        ],
+        "value_names": [
+          "fact_out",
+          "hasattr",
+          "str"
+        ],
+        "expression": "str(fact_out.raw if hasattr(fact_out, \"raw\") else fact_out)"
+      },
+      {
+        "line": 62,
+        "targets": [
+          "planning_agent"
+        ],
+        "value_names": [
+          "create_planning_agent"
+        ],
+        "expression": "create_planning_agent()"
+      },
+      {
+        "line": 63,
+        "targets": [
+          "planning_task"
+        ],
+        "value_names": [
+          "Task",
+          "planning_agent",
+          "q_text"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Develop a structured research plan for this market inquiry:\\n\"\n                    f\"Inquiry: {q_text}\\n\"\n                    f\"Identify key comparison dimensions (architecture, throughput, pricing, SLA, customer sentiment) \"\n                "
+      },
+      {
+        "line": 73,
+        "targets": [
+          "crew1"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "planning_agent",
+          "planning_task"
+        ],
+        "expression": "Crew(agents=[planning_agent], tasks=[planning_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 74,
+        "targets": [
+          "plan_out"
+        ],
+        "value_names": [
+          "crew1"
+        ],
+        "expression": "crew1.kickoff()"
+      },
+      {
+        "line": 82,
+        "targets": [
+          "profile_agent"
+        ],
+        "value_names": [
+          "create_profile_agent"
+        ],
+        "expression": "create_profile_agent()"
+      },
+      {
+        "line": 83,
+        "targets": [
+          "profile_task"
+        ],
+        "value_names": [
+          "Task",
+          "json",
+          "profile_agent",
+          "profiles_data"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Using this corporate profiles dataset:\\n{json.dumps(profiles_data, indent=2)}\\n\"\n                    f\"Extract headquarters, founding year, headcount, funding, and positioning for each competitor. \"\n                    f\"Cite all source docum"
+      },
+      {
+        "line": 92,
+        "targets": [
+          "crew2"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "profile_agent",
+          "profile_task"
+        ],
+        "expression": "Crew(agents=[profile_agent], tasks=[profile_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 93,
+        "targets": [
+          "prof_out"
+        ],
+        "value_names": [
+          "crew2"
+        ],
+        "expression": "crew2.kickoff()"
+      },
+      {
+        "line": 101,
+        "targets": [
+          "product_agent"
+        ],
+        "value_names": [
+          "create_product_agent"
+        ],
+        "expression": "create_product_agent()"
+      },
+      {
+        "line": 102,
+        "targets": [
+          "product_task"
+        ],
+        "value_names": [
+          "Task",
+          "json",
+          "product_agent",
+          "product_docs"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Analyze technical capabilities from these source documents:\\n{json.dumps(product_docs, indent=2)}\\n\"\n                    f\"Extract features, latency/throughput metrics, SDKs, and architectural limitations for each competitor. \"\n              "
+      },
+      {
+        "line": 111,
+        "targets": [
+          "crew3"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "product_agent",
+          "product_task"
+        ],
+        "expression": "Crew(agents=[product_agent], tasks=[product_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 112,
+        "targets": [
+          "prod_out"
+        ],
+        "value_names": [
+          "crew3"
+        ],
+        "expression": "crew3.kickoff()"
+      },
+      {
+        "line": 120,
+        "targets": [
+          "pricing_agent"
+        ],
+        "value_names": [
+          "create_pricing_agent"
+        ],
+        "expression": "create_pricing_agent()"
+      },
+      {
+        "line": 121,
+        "targets": [
+          "pricing_task"
+        ],
+        "value_names": [
+          "Task",
+          "json",
+          "pricing_agent",
+          "pricing_docs"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Extract commercial pricing and licensing from these documents:\\n{json.dumps(pricing_docs, indent=2)}\\n\"\n                    f\"Detail monthly subscription tiers, overage clauses, and contract minimums. \"\n                    f\"Preserve exact cu"
+      },
+      {
+        "line": 130,
+        "targets": [
+          "crew4"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "pricing_agent",
+          "pricing_task"
+        ],
+        "expression": "Crew(agents=[pricing_agent], tasks=[pricing_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 131,
+        "targets": [
+          "price_out"
+        ],
+        "value_names": [
+          "crew4"
+        ],
+        "expression": "crew4.kickoff()"
+      },
+      {
+        "line": 139,
+        "targets": [
+          "feedback_agent"
+        ],
+        "value_names": [
+          "create_feedback_agent"
+        ],
+        "expression": "create_feedback_agent()"
+      },
+      {
+        "line": 140,
+        "targets": [
+          "feedback_task"
+        ],
+        "value_names": [
+          "Task",
+          "feedback_agent",
+          "feedback_docs",
+          "json"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Analyze customer reviews and reported field experiences:\\n{json.dumps(feedback_docs, indent=2)}\\n\"\n                    f\"Summarize user feedback, reported outages, praise, and usability friction. \"\n                    f\"Separate recorded quot"
+      },
+      {
+        "line": 149,
+        "targets": [
+          "crew5"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "feedback_agent",
+          "feedback_task"
+        ],
+        "expression": "Crew(agents=[feedback_agent], tasks=[feedback_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 150,
+        "targets": [
+          "feed_out"
+        ],
+        "value_names": [
+          "crew5"
+        ],
+        "expression": "crew5.kickoff()"
+      },
+      {
+        "line": 157,
+        "targets": [
+          "evidence_agent"
+        ],
+        "value_names": [
+          "create_evidence_agent"
+        ],
+        "expression": "create_evidence_agent()"
+      },
+      {
+        "line": 158,
+        "targets": [
+          "evidence_task"
+        ],
+        "value_names": [
+          "Task",
+          "evidence_agent",
+          "feed_text",
+          "price_text",
+          "prod_text",
+          "prof_text"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Cross-examine the evidence collected across all 4 domains:\\n\"\n                    f\"Profiles: {prof_text}\\n\"\n                    f\"Product: {prod_text}\\n\"\n                    f\"Pricing: {price_text}\\n\"\n                    f\"Feedback: {feed_te"
+      },
+      {
+        "line": 171,
+        "targets": [
+          "crew6"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "evidence_agent",
+          "evidence_task"
+        ],
+        "expression": "Crew(agents=[evidence_agent], tasks=[evidence_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 172,
+        "targets": [
+          "evid_out"
+        ],
+        "value_names": [
+          "crew6"
+        ],
+        "expression": "crew6.kickoff()"
+      },
+      {
+        "line": 179,
+        "targets": [
+          "comparison_agent"
+        ],
+        "value_names": [
+          "create_comparison_agent"
+        ],
+        "expression": "create_comparison_agent()"
+      },
+      {
+        "line": 180,
+        "targets": [
+          "comparison_task"
+        ],
+        "value_names": [
+          "Task",
+          "comparison_agent",
+          "evid_text"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Construct a side-by-side competitor matrix for CloudScale AI, DataPulse Systems, \"\n                    f\"NexusOps Technologies, and Veloce Security across dimensions:\\n\"\n                    f\"Focus, Architecture, Key Strengths, Known Weakness"
+      },
+      {
+        "line": 191,
+        "targets": [
+          "crew7"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "comparison_agent",
+          "comparison_task"
+        ],
+        "expression": "Crew(agents=[comparison_agent], tasks=[comparison_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 192,
+        "targets": [
+          "comp_out"
+        ],
+        "value_names": [
+          "crew7"
+        ],
+        "expression": "crew7.kickoff()"
+      },
+      {
+        "line": 199,
+        "targets": [
+          "synthesis_agent"
+        ],
+        "value_names": [
+          "create_synthesis_agent"
+        ],
+        "expression": "create_synthesis_agent()"
+      },
+      {
+        "line": 200,
+        "targets": [
+          "synthesis_task"
+        ],
+        "value_names": [
+          "Task",
+          "comp_text",
+          "evid_text",
+          "synthesis_agent"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Author an executive competitive research report synthesized from:\\n\"\n                    f\"Comparison Matrix: {comp_text}\\n\"\n                    f\"Evidence & Contradictions: {evid_text}\\n\"\n                    f\"Structure into: Executive Summa"
+      },
+      {
+        "line": 211,
+        "targets": [
+          "crew8"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "synthesis_agent",
+          "synthesis_task"
+        ],
+        "expression": "Crew(agents=[synthesis_agent], tasks=[synthesis_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 212,
+        "targets": [
+          "synth_out"
+        ],
+        "value_names": [
+          "crew8"
+        ],
+        "expression": "crew8.kickoff()"
+      },
+      {
+        "line": 219,
+        "targets": [
+          "fact_check_agent"
+        ],
+        "value_names": [
+          "create_fact_check_agent"
+        ],
+        "expression": "create_fact_check_agent()"
+      },
+      {
+        "line": 220,
+        "targets": [
+          "fact_check_task"
+        ],
+        "value_names": [
+          "Task",
+          "fact_check_agent",
+          "synth_text"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Perform an audit on this final synthesis report:\\n\"\n                    f\"{synth_text}\\n\"\n                    f\"Verify that key claims reference valid doc_ids (DOC-CS-*, DOC-DP-*, DOC-NO-*, DOC-VS-*). \"\n                    f\"Flag any unsuppor"
+      },
+      {
+        "line": 230,
+        "targets": [
+          "crew9"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "fact_check_agent",
+          "fact_check_task"
+        ],
+        "expression": "Crew(agents=[fact_check_agent], tasks=[fact_check_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 231,
+        "targets": [
+          "fact_out"
+        ],
+        "value_names": [
+          "crew9"
+        ],
+        "expression": "crew9.kickoff()"
+      }
+    ],
+    "task_handoffs": [
+      {
+        "line": 63,
+        "referenced_variables": [
+          "q_text"
+        ],
+        "description_literals": [
+          "Develop a structured research plan for this market inquiry:\nInquiry:",
+          "Identify key comparison dimensions (architecture, throughput, pricing, SLA, customer sentiment) for competitors: CloudScale AI, DataPulse Systems, NexusOps Technologies, and Veloce Security."
+        ],
+        "agent_expression": "planning_agent"
+      },
+      {
+        "line": 83,
+        "referenced_variables": [
+          "json",
+          "profiles_data"
+        ],
+        "description_literals": [
+          "Using this corporate profiles dataset:",
+          "Extract headquarters, founding year, headcount, funding, and positioning for each competitor. Cite all source document IDs (e.g., DOC-CS-01, DOC-DP-01)."
+        ],
+        "agent_expression": "profile_agent"
+      },
+      {
+        "line": 102,
+        "referenced_variables": [
+          "json",
+          "product_docs"
+        ],
+        "description_literals": [
+          "Analyze technical capabilities from these source documents:",
+          "Extract features, latency/throughput metrics, SDKs, and architectural limitations for each competitor. Cite specific source doc_ids for each claim."
+        ],
+        "agent_expression": "product_agent"
+      },
+      {
+        "line": 121,
+        "referenced_variables": [
+          "json",
+          "pricing_docs"
+        ],
+        "description_literals": [
+          "Extract commercial pricing and licensing from these documents:",
+          "Detail monthly subscription tiers, overage clauses, and contract minimums. Preserve exact currency units and mark unknown values. Cite source doc_ids."
+        ],
+        "agent_expression": "pricing_agent"
+      },
+      {
+        "line": 140,
+        "referenced_variables": [
+          "feedback_docs",
+          "json"
+        ],
+        "description_literals": [
+          "Analyze customer reviews and reported field experiences:",
+          "Summarize user feedback, reported outages, praise, and usability friction. Separate recorded quotes from subjective conclusions and cite doc_ids."
+        ],
+        "agent_expression": "feedback_agent"
+      },
+      {
+        "line": 158,
+        "referenced_variables": [
+          "feed_text",
+          "price_text",
+          "prod_text",
+          "prof_text"
+        ],
+        "description_literals": [
+          "Cross-examine the evidence collected across all 4 domains:\nProfiles:",
+          "Product:",
+          "Pricing:",
+          "Feedback:",
+          "Identify deliberate conflicts (e.g., uptime SLA vs customer reported outages, flat fees vs hidden overages). Flag any unsupported claims and preserve all source doc_ids."
+        ],
+        "agent_expression": "evidence_agent"
+      },
+      {
+        "line": 180,
+        "referenced_variables": [
+          "evid_text"
+        ],
+        "description_literals": [
+          "Construct a side-by-side competitor matrix for CloudScale AI, DataPulse Systems, NexusOps Technologies, and Veloce Security across dimensions:\nFocus, Architecture, Key Strengths, Known Weaknesses, Starting Price, and SLA.\nCorrelated Evidence:",
+          "Clearly distinguish factual specs from analytical opinions. Include doc_ids."
+        ],
+        "agent_expression": "comparison_agent"
+      },
+      {
+        "line": 200,
+        "referenced_variables": [
+          "comp_text",
+          "evid_text"
+        ],
+        "description_literals": [
+          "Author an executive competitive research report synthesized from:\nComparison Matrix:",
+          "Evidence & Contradictions:",
+          "Structure into: Executive Summary, Competitive Landscape, Strategic Trade-Offs, and Key Recommendations. Avoid repetitive prose."
+        ],
+        "agent_expression": "synthesis_agent"
+      },
+      {
+        "line": 220,
+        "referenced_variables": [
+          "synth_text"
+        ],
+        "description_literals": [
+          "Perform an audit on this final synthesis report:",
+          "Verify that key claims reference valid doc_ids (DOC-CS-*, DOC-DP-*, DOC-NO-*, DOC-VS-*). Flag any unsupported statements. Confirm the report is marked as synthetic data."
+        ],
+        "agent_expression": "fact_check_agent"
+      }
+    ],
+    "observed_order": [
+      "planning_agent",
+      "profile_agent",
+      "product_agent",
+      "pricing_agent",
+      "feedback_agent",
+      "evidence_agent",
+      "comparison_agent",
+      "synthesis_agent",
+      "fact_check_agent"
+    ],
+    "sequential_kickoffs": 9
+  },
+  "comparison": {
+    "workflow": "market_research",
+    "manifest_file": "Agents/market_research/workflow.json",
+    "workflow_source": "Agents/market_research/workflow.py",
+    "declared_order": [
+      "planning_agent",
+      "profile_agent",
+      "product_agent",
+      "pricing_agent",
+      "feedback_agent",
+      "evidence_agent",
+      "comparison_agent",
+      "synthesis_agent",
+      "fact_check_agent"
+    ],
+    "source_observed_order": [
+      "planning_agent",
+      "profile_agent",
+      "product_agent",
+      "pricing_agent",
+      "feedback_agent",
+      "evidence_agent",
+      "comparison_agent",
+      "synthesis_agent",
+      "fact_check_agent"
+    ],
+    "declared_agent_count": 9,
+    "observed_agent_count": 9,
+    "discrepancy_count": 2,
+    "findings": [
+      {
+        "type": "DECLARED_PARALLELIZABLE",
+        "severity": "INFO",
+        "agents": [
+          "profile_agent",
+          "product_agent",
+          "pricing_agent",
+          "feedback_agent"
+        ],
+        "note": "Agents declared parallelizable in manifest; confirm concurrency in runtime traces."
+      },
+      {
+        "type": "MULTIPLE_KICKOFF_CALLS",
+        "severity": "WARNING",
+        "count": 9,
+        "note": "Workflow invokes 9 sequential Crew kickoff calls instead of single execution graph."
+      }
+    ]
+  },
+  "python_files": [
+    {
+      "file": "Agents/market_research/comparison_agent.py",
+      "filename": "comparison_agent.py",
+      "stem": "comparison_agent",
+      "sha256": "caa95a24b1140b21d01ab200793d9a7cfa26565b14eba6d598ac214095219d8c",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_comparison_agent",
+          "line": 11,
+          "end_line": 25,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Competitor Comparison & Matrix Specialist",
+          "goal": "Construct a multi-dimensional comparison matrix contrasting all 4 competitors. Clearly distinguish measured factual specifications from qualitative assessments. Cite doc_ids.",
+          "backstory": "You are a Competitive Strategy Director who synthesizes fragmented technical data into clear, actionable side-by-side matrices for executive evaluation.",
+          "llm_expression": "create_agent_llm(\"comparison_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 22,
+          "arguments": [
+            "\"comparison_agent\""
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Comparison Agent for Market and Competitor Research.\n\nConstructs structured competitive comparison matrices across architecture,\npricing, performance, and operational security dimensions.\n",
+          "line": 1
+        },
+        {
+          "value": "Competitor Comparison & Matrix Specialist",
+          "line": 13
+        },
+        {
+          "value": "Construct a multi-dimensional comparison matrix contrasting all 4 competitors. Clearly distinguish measured factual specifications from qualitative assessments. Cite doc_ids.",
+          "line": 15
+        },
+        {
+          "value": "You are a Competitive Strategy Director who synthesizes fragmented technical data into clear, actionable side-by-side matrices for executive evaluation.",
+          "line": 19
+        }
+      ]
+    },
+    {
+      "file": "Agents/market_research/evidence_agent.py",
+      "filename": "evidence_agent.py",
+      "stem": "evidence_agent",
+      "sha256": "87e8a5ad10ea999d7092db8d9180f1f406a3d9798a6a1cfb8c106761bbb97cf5",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_evidence_agent",
+          "line": 11,
+          "end_line": 26,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Evidence Correlation & Conflict Analyst",
+          "goal": "Cross-examine findings from profile, product, pricing, and feedback agents. Highlight contradictions (e.g., advertised SLAs vs customer reported outages, flat rates vs hidden overages), missing citations, and unresolved discrepancies.",
+          "backstory": "You are an Investigative Research Editor who verifies information triangulation, identifies inconsistencies between marketing claims and customer experiences, and ensures source attribution.",
+          "llm_expression": "create_agent_llm(\"evidence_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 23,
+          "arguments": [
+            "\"evidence_agent\""
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Evidence Agent for Market and Competitor Research.\n\nCorrelates findings across profiles, product capabilities, pricing schedules,\nand customer feedback. Highlights contradictions and missing documentation.\n",
+          "line": 1
+        },
+        {
+          "value": "Evidence Correlation & Conflict Analyst",
+          "line": 13
+        },
+        {
+          "value": "Cross-examine findings from profile, product, pricing, and feedback agents. Highlight contradictions (e.g., advertised SLAs vs customer reported outages, flat rates vs hidden overages), missing citations, and unresolved discrepancies.",
+          "line": 15
+        },
+        {
+          "value": "You are an Investigative Research Editor who verifies information triangulation, identifies inconsistencies between marketing claims and customer experiences, and ensures source attribution.",
+          "line": 20
+        }
+      ]
+    },
+    {
+      "file": "Agents/market_research/fact_check_agent.py",
+      "filename": "fact_check_agent.py",
+      "stem": "fact_check_agent",
+      "sha256": "a826dc5f57d2b1da8ebdff0f8c10c806bb69a06887ccc6eec3ab870b790c6136",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_fact_check_agent",
+          "line": 11,
+          "end_line": 25,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Fact-Checking & Citation Verification Specialist",
+          "goal": "Audit all factual statements and metrics in the synthesis report against source doc_ids. Flag unsupported claims, verify citations, and guarantee the report is marked as synthetic data.",
+          "backstory": "You are a Head of Research Integrity and Fact-Checking. You ensure no unverified assertion, hallucination, or fabricated citation survives into the published report.",
+          "llm_expression": "create_agent_llm(\"fact_check_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 22,
+          "arguments": [
+            "\"fact_check_agent\""
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "create_fact_check_agent",
+          "line": 11,
+          "classification": "function_candidate",
+          "docstring": null
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Fact-Check Agent for Market and Competitor Research.\n\nAudits the final synthesis report against local source documents,\nvalidating source IDs, flagging uncorroborated assertions, and ensuring synthetic data labeling.\n",
+          "line": 1
+        },
+        {
+          "value": "Fact-Checking & Citation Verification Specialist",
+          "line": 13
+        },
+        {
+          "value": "Audit all factual statements and metrics in the synthesis report against source doc_ids. Flag unsupported claims, verify citations, and guarantee the report is marked as synthetic data.",
+          "line": 15
+        },
+        {
+          "value": "You are a Head of Research Integrity and Fact-Checking. You ensure no unverified assertion, hallucination, or fabricated citation survives into the published report.",
+          "line": 19
+        }
+      ]
+    },
+    {
+      "file": "Agents/market_research/feedback_agent.py",
+      "filename": "feedback_agent.py",
+      "stem": "feedback_agent",
+      "sha256": "be4fd401ab0a69bf4af0b8006636b5b02a7726a3e6a9c12aaf80dfd427379323",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 7
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 10
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 11
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "query_feedback_documents",
+          "line": 16,
+          "end_line": 22,
+          "docstring": "Retrieve customer feedback and review documents.",
+          "args": [],
+          "decorators": []
+        },
+        {
+          "name": "create_feedback_agent",
+          "line": 25,
+          "end_line": 39,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 26,
+          "constructor": "Agent",
+          "role": "Customer Feedback & Review Analyst",
+          "goal": "Extract real-world customer feedback, reported production outages, praise, and usability complaints across competitors. Keep recorded quotes strictly separate from conclusions.",
+          "backstory": "You are a Voice of Customer (VoC) Market Researcher who analyzes verified user testimonials, G2 reviews, and community sentiment to assess customer satisfaction.",
+          "llm_expression": "create_agent_llm(\"feedback_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 36,
+          "arguments": [
+            "\"feedback_agent\""
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "query_feedback_documents",
+          "line": 16,
+          "classification": "function_candidate",
+          "docstring": "Retrieve customer feedback and review documents."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Feedback Agent for Market and Competitor Research.\n\nRetrieves verified customer reviews, implementation feedback, and field observations.\nSeparates recorded quotes from interpretations and cites source doc_ids.\n",
+          "line": 1
+        },
+        {
+          "value": "Retrieve customer feedback and review documents.",
+          "line": 17
+        },
+        {
+          "value": "Extract real-world customer feedback, reported production outages, praise, and usability complaints across competitors. Keep recorded quotes strictly separate from conclusions.",
+          "line": 29
+        },
+        {
+          "value": "You are a Voice of Customer (VoC) Market Researcher who analyzes verified user testimonials, G2 reviews, and community sentiment to assess customer satisfaction.",
+          "line": 33
+        }
+      ]
+    },
+    {
+      "file": "Agents/market_research/planning_agent.py",
+      "filename": "planning_agent.py",
+      "stem": "planning_agent",
+      "sha256": "90b73d8010bff04e8c9db893d4e8004e8e4d7aa853c07d57576c889908e2163a",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_planning_agent",
+          "line": 11,
+          "end_line": 26,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Research Planning Specialist",
+          "goal": "Deconstruct the user's market inquiry into key comparison dimensions (architecture, latency, pricing, SLA, customer sentiment). Identify target competitors and define the evidence matrix.",
+          "backstory": "You are a Strategic Market Intelligence Lead who designs structured, rigorous competitive research methodologies and investigative plans.",
+          "llm_expression": "create_agent_llm(\"planning_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 23,
+          "arguments": [
+            "\"planning_agent\""
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Planning Agent for Market and Competitor Research.\n\nDeconstructs the research question into structured inquiry dimensions,\nidentifies target competitors, and defines required evidence types.\n",
+          "line": 1
+        },
+        {
+          "value": "Deconstruct the user's market inquiry into key comparison dimensions (architecture, latency, pricing, SLA, customer sentiment). Identify target competitors and define the evidence matrix.",
+          "line": 15
+        },
+        {
+          "value": "You are a Strategic Market Intelligence Lead who designs structured, rigorous competitive research methodologies and investigative plans.",
+          "line": 20
+        }
+      ]
+    },
+    {
+      "file": "Agents/market_research/pricing_agent.py",
+      "filename": "pricing_agent.py",
+      "stem": "pricing_agent",
+      "sha256": "a8e567f42409165eee2b02eaa520b8258907fc9e2922f5bf607bd0a5e592bd29",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 7
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 10
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 11
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "query_pricing_documents",
+          "line": 16,
+          "end_line": 22,
+          "docstring": "Retrieve commercial pricing and licensing source documents.",
+          "args": [],
+          "decorators": []
+        },
+        {
+          "name": "create_pricing_agent",
+          "line": 25,
+          "end_line": 39,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 26,
+          "constructor": "Agent",
+          "role": "Pricing & Commercial Terms Specialist",
+          "goal": "Extract commercial pricing schedules, monthly tiers, overage fees, contract minimums, and billing units. Explicitly mark unstated pricing as UNKNOWN and cite source doc_ids.",
+          "backstory": "You are a SaaS Pricing & Licensing Strategist who scrutinizes Master Services Agreements, rate cards, and hidden overage terms to establish true total cost of ownership (TCO).",
+          "llm_expression": "create_agent_llm(\"pricing_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 36,
+          "arguments": [
+            "\"pricing_agent\""
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "query_pricing_documents",
+          "line": 16,
+          "classification": "function_candidate",
+          "docstring": "Retrieve commercial pricing and licensing source documents."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Pricing Agent for Market and Competitor Research.\n\nRetrieves commercial pricing schedules, subscription tiers, overage clauses,\nand contract minimums. Preserves exact currency units and dates.\n",
+          "line": 1
+        },
+        {
+          "value": "Retrieve commercial pricing and licensing source documents.",
+          "line": 17
+        },
+        {
+          "value": "Pricing & Commercial Terms Specialist",
+          "line": 27
+        },
+        {
+          "value": "Extract commercial pricing schedules, monthly tiers, overage fees, contract minimums, and billing units. Explicitly mark unstated pricing as UNKNOWN and cite source doc_ids.",
+          "line": 29
+        },
+        {
+          "value": "You are a SaaS Pricing & Licensing Strategist who scrutinizes Master Services Agreements, rate cards, and hidden overage terms to establish true total cost of ownership (TCO).",
+          "line": 33
+        }
+      ]
+    },
+    {
+      "file": "Agents/market_research/product_agent.py",
+      "filename": "product_agent.py",
+      "stem": "product_agent",
+      "sha256": "d5a050b2574ac2c2bde002eac6063c7d0b46a582becbd9a3a12b21a8f685a3e5",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 7
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 10
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 11
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "query_product_documents",
+          "line": 16,
+          "end_line": 22,
+          "docstring": "Retrieve product capabilities and benchmark source documents.",
+          "args": [],
+          "decorators": []
+        },
+        {
+          "name": "create_product_agent",
+          "line": 25,
+          "end_line": 39,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 26,
+          "constructor": "Agent",
+          "role": "Product Capabilities Analyst",
+          "goal": "Extract technical features, platform throughput, integrations, SDK support, and architectural limitations across competitors. Attribute every claim to its source doc_id.",
+          "backstory": "You are a Principal Solutions Architect who dissects technical whitepapers, feature sheets, and system SLAs to understand real engineering capabilities.",
+          "llm_expression": "create_agent_llm(\"product_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 36,
+          "arguments": [
+            "\"product_agent\""
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "query_product_documents",
+          "line": 16,
+          "classification": "function_candidate",
+          "docstring": "Retrieve product capabilities and benchmark source documents."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Product Agent for Market and Competitor Research.\n\nRetrieves technical specifications, features, architectural models,\nand product differentiators with stable source IDs.\n",
+          "line": 1
+        },
+        {
+          "value": "Retrieve product capabilities and benchmark source documents.",
+          "line": 17
+        },
+        {
+          "value": "Extract technical features, platform throughput, integrations, SDK support, and architectural limitations across competitors. Attribute every claim to its source doc_id.",
+          "line": 29
+        },
+        {
+          "value": "You are a Principal Solutions Architect who dissects technical whitepapers, feature sheets, and system SLAs to understand real engineering capabilities.",
+          "line": 33
+        }
+      ]
+    },
+    {
+      "file": "Agents/market_research/profile_agent.py",
+      "filename": "profile_agent.py",
+      "stem": "profile_agent",
+      "sha256": "da076abe952792cafee9da187388faf88ac475da3fdf271d8db62c92525fe219",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 7
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 10
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 11
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "query_company_profiles",
+          "line": 16,
+          "end_line": 31,
+          "docstring": "Retrieve competitor metadata and corporate profile documents.",
+          "args": [],
+          "decorators": []
+        },
+        {
+          "name": "create_profile_agent",
+          "line": 34,
+          "end_line": 48,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 35,
+          "constructor": "Agent",
+          "role": "Company Profiling Specialist",
+          "goal": "Extract competitor corporate identities, funding stage, employee count, market positioning, and Ideal Customer Profile (ICP). Always cite stable source IDs.",
+          "backstory": "You are a Venture Capital Intelligence Analyst who creates crisp corporate dossiers, strictly referencing primary corporate source documents.",
+          "llm_expression": "create_agent_llm(\"profile_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 45,
+          "arguments": [
+            "\"profile_agent\""
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "query_company_profiles",
+          "line": 16,
+          "classification": "function_candidate",
+          "docstring": "Retrieve competitor metadata and corporate profile documents."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Profile Agent for Market and Competitor Research.\n\nRetrieves company profiles, headquarters, funding, headcount,\nand target customer profiles with stable source document IDs.\n",
+          "line": 1
+        },
+        {
+          "value": "Retrieve competitor metadata and corporate profile documents.",
+          "line": 17
+        },
+        {
+          "value": "Extract competitor corporate identities, funding stage, employee count, market positioning, and Ideal Customer Profile (ICP). Always cite stable source IDs.",
+          "line": 38
+        },
+        {
+          "value": "You are a Venture Capital Intelligence Analyst who creates crisp corporate dossiers, strictly referencing primary corporate source documents.",
+          "line": 42
+        }
+      ]
+    },
+    {
+      "file": "Agents/market_research/synthesis_agent.py",
+      "filename": "synthesis_agent.py",
+      "stem": "synthesis_agent",
+      "sha256": "4a58e55f5506d1e8340dc3bb48584c2f969138654a8b28decdf897b769719806",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_synthesis_agent",
+          "line": 11,
+          "end_line": 25,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Research Synthesis & Narrative Specialist",
+          "goal": "Synthesize the competitor comparison and evidence analysis into an executive research narrative. Highlight key trade-offs and recommendations without repetitive boilerplate.",
+          "backstory": "You are a Senior Industry Analyst known for writing concise, incisive market research reports that deliver executive-level clarity backed by empirical data.",
+          "llm_expression": "create_agent_llm(\"synthesis_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 22,
+          "arguments": [
+            "\"synthesis_agent\""
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Synthesis Agent for Market and Competitor Research.\n\nProduces the comprehensive competitive research narrative, executive summary,\nstrategic trade-offs, and market positioning synthesis.\n",
+          "line": 1
+        },
+        {
+          "value": "Research Synthesis & Narrative Specialist",
+          "line": 13
+        },
+        {
+          "value": "Synthesize the competitor comparison and evidence analysis into an executive research narrative. Highlight key trade-offs and recommendations without repetitive boilerplate.",
+          "line": 15
+        },
+        {
+          "value": "You are a Senior Industry Analyst known for writing concise, incisive market research reports that deliver executive-level clarity backed by empirical data.",
+          "line": 19
+        }
+      ]
+    },
+    {
+      "file": "Agents/market_research/workflow.py",
+      "filename": "workflow.py",
+      "stem": "workflow",
+      "sha256": "1f70127786cab3fb5317002d808f102d715854b604da5c1fedd51cc59f43d460",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "__future__",
+          "level": 0,
+          "names": [
+            "annotations"
+          ],
+          "aliases": {},
+          "line": 15
+        },
+        {
+          "module": "json",
+          "asname": null,
+          "line": 17
+        },
+        {
+          "module": "time",
+          "asname": null,
+          "line": 18
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 19
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Crew",
+            "Process",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 21
+        },
+        {
+          "module": "Agents.market_research.comparison_agent",
+          "level": 0,
+          "names": [
+            "create_comparison_agent"
+          ],
+          "aliases": {},
+          "line": 23
+        },
+        {
+          "module": "Agents.market_research.evidence_agent",
+          "level": 0,
+          "names": [
+            "create_evidence_agent"
+          ],
+          "aliases": {},
+          "line": 24
+        },
+        {
+          "module": "Agents.market_research.fact_check_agent",
+          "level": 0,
+          "names": [
+            "create_fact_check_agent"
+          ],
+          "aliases": {},
+          "line": 25
+        },
+        {
+          "module": "Agents.market_research.feedback_agent",
+          "level": 0,
+          "names": [
+            "create_feedback_agent",
+            "query_feedback_documents"
+          ],
+          "aliases": {},
+          "line": 26
+        },
+        {
+          "module": "Agents.market_research.planning_agent",
+          "level": 0,
+          "names": [
+            "create_planning_agent"
+          ],
+          "aliases": {},
+          "line": 27
+        },
+        {
+          "module": "Agents.market_research.pricing_agent",
+          "level": 0,
+          "names": [
+            "create_pricing_agent",
+            "query_pricing_documents"
+          ],
+          "aliases": {},
+          "line": 28
+        },
+        {
+          "module": "Agents.market_research.product_agent",
+          "level": 0,
+          "names": [
+            "create_product_agent",
+            "query_product_documents"
+          ],
+          "aliases": {},
+          "line": 29
+        },
+        {
+          "module": "Agents.market_research.profile_agent",
+          "level": 0,
+          "names": [
+            "create_profile_agent",
+            "query_company_profiles"
+          ],
+          "aliases": {},
+          "line": 30
+        },
+        {
+          "module": "Agents.market_research.synthesis_agent",
+          "level": 0,
+          "names": [
+            "create_synthesis_agent"
+          ],
+          "aliases": {},
+          "line": 31
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "ACTIVE_TRACKER",
+            "WorkflowExecutionResult",
+            "generate_run_id",
+            "save_run_result"
+          ],
+          "aliases": {},
+          "line": 32
+        },
+        {
+          "module": "common.tracing",
+          "level": 0,
+          "names": [
+            "agent_span",
+            "workflow_span"
+          ],
+          "aliases": {},
+          "line": 33
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "run_market_research_workflow",
+          "line": 36,
+          "end_line": 271,
+          "docstring": "Execute the 9-agent Market and Competitor Research workflow.",
+          "args": [
+            "research_query",
+            "run_id"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [],
+      "task_definitions": [
+        {
+          "line": 63,
+          "description_expression": "f\"Develop a structured research plan for this market inquiry:\\n\"\n                    f\"Inquiry: {q_text}\\n\"\n                    f\"Identify key comparison dimensions (architecture, throughput, pricing, SLA, customer sentiment) \"\n                    f\"for competitors: CloudScale AI, DataPulse Systems, NexusOps Technologies, and Veloce Security.\"",
+          "description_literals": [
+            "Develop a structured research plan for this market inquiry:\nInquiry:",
+            "Identify key comparison dimensions (architecture, throughput, pricing, SLA, customer sentiment) for competitors: CloudScale AI, DataPulse Systems, NexusOps Technologies, and Veloce Security."
+          ],
+          "expected_output": "JSON containing target_competitors, evaluation_dimensions, and evidence_gathering_plan.",
+          "agent_expression": "planning_agent"
+        },
+        {
+          "line": 83,
+          "description_expression": "f\"Using this corporate profiles dataset:\\n{json.dumps(profiles_data, indent=2)}\\n\"\n                    f\"Extract headquarters, founding year, headcount, funding, and positioning for each competitor. \"\n                    f\"Cite all source document IDs (e.g., DOC-CS-01, DOC-DP-01).\"",
+          "description_literals": [
+            "Using this corporate profiles dataset:",
+            "Extract headquarters, founding year, headcount, funding, and positioning for each competitor. Cite all source document IDs (e.g., DOC-CS-01, DOC-DP-01)."
+          ],
+          "expected_output": "JSON structured competitor profiles with cited doc_ids.",
+          "agent_expression": "profile_agent"
+        },
+        {
+          "line": 102,
+          "description_expression": "f\"Analyze technical capabilities from these source documents:\\n{json.dumps(product_docs, indent=2)}\\n\"\n                    f\"Extract features, latency/throughput metrics, SDKs, and architectural limitations for each competitor. \"\n                    f\"Cite specific source doc_ids for each claim.\"",
+          "description_literals": [
+            "Analyze technical capabilities from these source documents:",
+            "Extract features, latency/throughput metrics, SDKs, and architectural limitations for each competitor. Cite specific source doc_ids for each claim."
+          ],
+          "expected_output": "JSON structured product capabilities by competitor with doc_id citations.",
+          "agent_expression": "product_agent"
+        },
+        {
+          "line": 121,
+          "description_expression": "f\"Extract commercial pricing and licensing from these documents:\\n{json.dumps(pricing_docs, indent=2)}\\n\"\n                    f\"Detail monthly subscription tiers, overage clauses, and contract minimums. \"\n                    f\"Preserve exact currency units and mark unknown values. Cite source doc_ids.\"",
+          "description_literals": [
+            "Extract commercial pricing and licensing from these documents:",
+            "Detail monthly subscription tiers, overage clauses, and contract minimums. Preserve exact currency units and mark unknown values. Cite source doc_ids."
+          ],
+          "expected_output": "JSON structured pricing breakdown with doc_id citations.",
+          "agent_expression": "pricing_agent"
+        },
+        {
+          "line": 140,
+          "description_expression": "f\"Analyze customer reviews and reported field experiences:\\n{json.dumps(feedback_docs, indent=2)}\\n\"\n                    f\"Summarize user feedback, reported outages, praise, and usability friction. \"\n                    f\"Separate recorded quotes from subjective conclusions and cite doc_ids.\"",
+          "description_literals": [
+            "Analyze customer reviews and reported field experiences:",
+            "Summarize user feedback, reported outages, praise, and usability friction. Separate recorded quotes from subjective conclusions and cite doc_ids."
+          ],
+          "expected_output": "JSON customer feedback analysis citing specific review doc_ids.",
+          "agent_expression": "feedback_agent"
+        },
+        {
+          "line": 158,
+          "description_expression": "f\"Cross-examine the evidence collected across all 4 domains:\\n\"\n                    f\"Profiles: {prof_text}\\n\"\n                    f\"Product: {prod_text}\\n\"\n                    f\"Pricing: {price_text}\\n\"\n                    f\"Feedback: {feed_text}\\n\"\n                    f\"Identify deliberate conflicts (e.g., uptime SLA vs customer reported outages, flat fees vs hidden overages). \"\n                    f\"Flag any unsupported claims and preserve all source doc_ids.\"",
+          "description_literals": [
+            "Cross-examine the evidence collected across all 4 domains:\nProfiles:",
+            "Product:",
+            "Pricing:",
+            "Feedback:",
+            "Identify deliberate conflicts (e.g., uptime SLA vs customer reported outages, flat fees vs hidden overages). Flag any unsupported claims and preserve all source doc_ids."
+          ],
+          "expected_output": "JSON containing triangulated evidence, verified contradictions, and citation gaps.",
+          "agent_expression": "evidence_agent"
+        },
+        {
+          "line": 180,
+          "description_expression": "f\"Construct a side-by-side competitor matrix for CloudScale AI, DataPulse Systems, \"\n                    f\"NexusOps Technologies, and Veloce Security across dimensions:\\n\"\n                    f\"Focus, Architecture, Key Strengths, Known Weaknesses, Starting Price, and SLA.\\n\"\n                    f\"Correlated Evidence: {evid_text}\\n\"\n                    f\"Clearly distinguish factual specs from analytical opinions. Include doc_ids.\"",
+          "description_literals": [
+            "Construct a side-by-side competitor matrix for CloudScale AI, DataPulse Systems, NexusOps Technologies, and Veloce Security across dimensions:\nFocus, Architecture, Key Strengths, Known Weaknesses, Starting Price, and SLA.\nCorrelated Evidence:",
+            "Clearly distinguish factual specs from analytical opinions. Include doc_ids."
+          ],
+          "expected_output": "Structured competitor comparison matrix with citations.",
+          "agent_expression": "comparison_agent"
+        },
+        {
+          "line": 200,
+          "description_expression": "f\"Author an executive competitive research report synthesized from:\\n\"\n                    f\"Comparison Matrix: {comp_text}\\n\"\n                    f\"Evidence & Contradictions: {evid_text}\\n\"\n                    f\"Structure into: Executive Summary, Competitive Landscape, Strategic Trade-Offs, \"\n                    f\"and Key Recommendations. Avoid repetitive prose.\"",
+          "description_literals": [
+            "Author an executive competitive research report synthesized from:\nComparison Matrix:",
+            "Evidence & Contradictions:",
+            "Structure into: Executive Summary, Competitive Landscape, Strategic Trade-Offs, and Key Recommendations. Avoid repetitive prose."
+          ],
+          "expected_output": "Incisive executive research narrative with integrated source citations.",
+          "agent_expression": "synthesis_agent"
+        },
+        {
+          "line": 220,
+          "description_expression": "f\"Perform an audit on this final synthesis report:\\n\"\n                    f\"{synth_text}\\n\"\n                    f\"Verify that key claims reference valid doc_ids (DOC-CS-*, DOC-DP-*, DOC-NO-*, DOC-VS-*). \"\n                    f\"Flag any unsupported statements. Confirm the report is marked as synthetic data.\"",
+          "description_literals": [
+            "Perform an audit on this final synthesis report:",
+            "Verify that key claims reference valid doc_ids (DOC-CS-*, DOC-DP-*, DOC-NO-*, DOC-VS-*). Flag any unsupported statements. Confirm the report is marked as synthetic data."
+          ],
+          "expected_output": "Final checked report with fact-check audit summary and verified citations.",
+          "agent_expression": "fact_check_agent"
+        }
+      ],
+      "crew_definitions": [
+        {
+          "line": 73,
+          "agents_expression": "[planning_agent]",
+          "tasks_expression": "[planning_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 92,
+          "agents_expression": "[profile_agent]",
+          "tasks_expression": "[profile_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 111,
+          "agents_expression": "[product_agent]",
+          "tasks_expression": "[product_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 130,
+          "agents_expression": "[pricing_agent]",
+          "tasks_expression": "[pricing_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 149,
+          "agents_expression": "[feedback_agent]",
+          "tasks_expression": "[feedback_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 171,
+          "agents_expression": "[evidence_agent]",
+          "tasks_expression": "[evidence_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 191,
+          "agents_expression": "[comparison_agent]",
+          "tasks_expression": "[comparison_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 211,
+          "agents_expression": "[synthesis_agent]",
+          "tasks_expression": "[synthesis_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 230,
+          "agents_expression": "[fact_check_agent]",
+          "tasks_expression": "[fact_check_task]",
+          "process_expression": "Process.sequential"
+        }
+      ],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_market_research_workflow",
+          "line": 36,
+          "classification": "function_candidate",
+          "docstring": "Execute the 9-agent Market and Competitor Research workflow."
+        }
+      ],
+      "execution_calls": [
+        {
+          "call": "agent_span",
+          "line": 61
+        },
+        {
+          "call": "crew1.kickoff",
+          "line": 74
+        },
+        {
+          "call": "agent_span",
+          "line": 81
+        },
+        {
+          "call": "crew2.kickoff",
+          "line": 93
+        },
+        {
+          "call": "agent_span",
+          "line": 100
+        },
+        {
+          "call": "crew3.kickoff",
+          "line": 112
+        },
+        {
+          "call": "agent_span",
+          "line": 119
+        },
+        {
+          "call": "crew4.kickoff",
+          "line": 131
+        },
+        {
+          "call": "agent_span",
+          "line": 138
+        },
+        {
+          "call": "crew5.kickoff",
+          "line": 150
+        },
+        {
+          "call": "agent_span",
+          "line": 156
+        },
+        {
+          "call": "crew6.kickoff",
+          "line": 172
+        },
+        {
+          "call": "agent_span",
+          "line": 178
+        },
+        {
+          "call": "crew7.kickoff",
+          "line": 192
+        },
+        {
+          "call": "agent_span",
+          "line": 198
+        },
+        {
+          "call": "crew8.kickoff",
+          "line": 212
+        },
+        {
+          "call": "agent_span",
+          "line": 218
+        },
+        {
+          "call": "crew9.kickoff",
+          "line": 231
+        }
+      ],
+      "string_literals": [
+        {
+          "value": "Market and Competitor Research Baseline Multi-Agent Workflow.\n\nWorkflow Three: Exactly 9 agents executing sequentially:\n1. Planning Agent\n2. Profile Agent\n3. Product Agent\n4. Pricing Agent\n5. Feedback Agent\n6. Evidence Agent\n7. Comparison Agent\n8. Synthesis Agent\n9. Fact-Check Agent\n",
+          "line": 1
+        },
+        {
+          "value": "Execute the 9-agent Market and Competitor Research workflow.",
+          "line": 40
+        },
+        {
+          "value": "Comprehensive evaluation of enterprise agent platforms",
+          "line": 60
+        },
+        {
+          "value": "JSON containing target_competitors, evaluation_dimensions, and evidence_gathering_plan.",
+          "line": 70
+        },
+        {
+          "value": "JSON structured competitor profiles with cited doc_ids.",
+          "line": 89
+        },
+        {
+          "value": "JSON structured product capabilities by competitor with doc_id citations.",
+          "line": 108
+        },
+        {
+          "value": "JSON structured pricing breakdown with doc_id citations.",
+          "line": 127
+        },
+        {
+          "value": "JSON customer feedback analysis citing specific review doc_ids.",
+          "line": 146
+        },
+        {
+          "value": "JSON containing triangulated evidence, verified contradictions, and citation gaps.",
+          "line": 168
+        },
+        {
+          "value": "Structured competitor comparison matrix with citations.",
+          "line": 188
+        },
+        {
+          "value": "Incisive executive research narrative with integrated source citations.",
+          "line": 208
+        },
+        {
+          "value": "Final checked report with fact-check audit summary and verified citations.",
+          "line": 227
+        },
+        {
+          "value": "Develop a structured research plan for this market inquiry:\nInquiry: ",
+          "line": 65
+        },
+        {
+          "value": "\nIdentify key comparison dimensions (architecture, throughput, pricing, SLA, customer sentiment) for competitors: CloudScale AI, DataPulse Systems, NexusOps Technologies, and Veloce Security.",
+          "line": 66
+        },
+        {
+          "value": "Using this corporate profiles dataset:\n",
+          "line": 85
+        },
+        {
+          "value": "\nExtract headquarters, founding year, headcount, funding, and positioning for each competitor. Cite all source document IDs (e.g., DOC-CS-01, DOC-DP-01).",
+          "line": 85
+        },
+        {
+          "value": "Analyze technical capabilities from these source documents:\n",
+          "line": 104
+        },
+        {
+          "value": "\nExtract features, latency/throughput metrics, SDKs, and architectural limitations for each competitor. Cite specific source doc_ids for each claim.",
+          "line": 104
+        },
+        {
+          "value": "Extract commercial pricing and licensing from these documents:\n",
+          "line": 123
+        },
+        {
+          "value": "\nDetail monthly subscription tiers, overage clauses, and contract minimums. Preserve exact currency units and mark unknown values. Cite source doc_ids.",
+          "line": 123
+        },
+        {
+          "value": "Analyze customer reviews and reported field experiences:\n",
+          "line": 142
+        },
+        {
+          "value": "\nSummarize user feedback, reported outages, praise, and usability friction. Separate recorded quotes from subjective conclusions and cite doc_ids.",
+          "line": 142
+        },
+        {
+          "value": "Cross-examine the evidence collected across all 4 domains:\nProfiles: ",
+          "line": 160
+        },
+        {
+          "value": "\nIdentify deliberate conflicts (e.g., uptime SLA vs customer reported outages, flat fees vs hidden overages). Flag any unsupported claims and preserve all source doc_ids.",
+          "line": 164
+        },
+        {
+          "value": "Construct a side-by-side competitor matrix for CloudScale AI, DataPulse Systems, NexusOps Technologies, and Veloce Security across dimensions:\nFocus, Architecture, Key Strengths, Known Weaknesses, Starting Price, and SLA.\nCorrelated Evidence: ",
+          "line": 182
+        },
+        {
+          "value": "\nClearly distinguish factual specs from analytical opinions. Include doc_ids.",
+          "line": 185
+        },
+        {
+          "value": "Author an executive competitive research report synthesized from:\nComparison Matrix: ",
+          "line": 202
+        },
+        {
+          "value": "\nStructure into: Executive Summary, Competitive Landscape, Strategic Trade-Offs, and Key Recommendations. Avoid repetitive prose.",
+          "line": 204
+        },
+        {
+          "value": "Perform an audit on this final synthesis report:\n",
+          "line": 222
+        },
+        {
+          "value": "\nVerify that key claims reference valid doc_ids (DOC-CS-*, DOC-DP-*, DOC-NO-*, DOC-VS-*). Flag any unsupported statements. Confirm the report is marked as synthetic data.",
+          "line": 223
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "file": "runs/market_research/live_20261023_070724_market.json",
+      "filename": "live_20261023_070724_market.json",
+      "suffix": ".json",
+      "workflow_name": "market_research",
+      "run_id": "live_20261023_070724_market",
+      "status": "SUCCESS",
+      "total_duration_seconds": 46.462520300003234,
+      "agent_count": 9,
+      "total_tokens": null,
+      "estimated_cost_usd": 0.025801
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "workflow_name": "expense_reimbursement",
+  "run_id": "live_20261023_070709_expens",
+  "status": "SUCCESS",
+  "execution_order": [
+    "receipt_agent",
+    "normalize_agent",
+    "category_agent",
+    "amount_agent",
+    "policy_agent",
+    "duplicate_agent",
+    "exception_agent",
+    "expense_review_agent"
+  ],
+  "agent_durations": {
+    "receipt_agent": 1.2974571000086144,
+    "normalize_agent": 1.2163901000021724,
+    "category_agent": 1.0396073000010801,
+    "amount_agent": 1.1563152000016998,
+    "policy_agent": 1.3834061000088695,
+    "duplicate_agent": 1.037214199997834,
+    "exception_agent": 2.6117954999936046,
+    "expense_review_agent": 2.020738799998071
+  },
+  "total_duration_seconds": 11.763127799989888,
+  "agent_count": 8,
+  "llm_call_count": 8,
+  "token_usage": {
+    "prompt_tokens": 4080,
+    "completion_tokens": 3048,
+    "total_tokens": 7128,
+    "is_available": true
+  },
+  "estimated_cost_usd": 0.004815,
+  "cost_estimation_label": "Estimated ($0.004815 USD at standard $0.59/$0.79 per 1M tokens)",
+  "output": {
+    "workflow": "expense_reimbursement",
+    "run_id": "live_20261023_070709_expens",
+    "input": {
+      "claim_id": "CLM-2001",
+      "employee_id": "EMP-405",
+      "employee_name": "Carlos Mendez",
+      "department": "Operations",
+      "submission_date": "2026-09-24",
+      "category": "Travel",
+      "merchant": "Delta Air Lines",
+      "currency": "USD",
+      "subtotal": 1191.13,
+      "tax": 89.33,
+      "total": 1280.46,
+      "business_purpose": "Official client engagement and operational workflow meeting at Delta Air Lines.",
+      "receipt_text": "\n==================================================\n                 DELTA AIR LINES\n                 TAX INVOICE / RECEIPT\n==================================================\nDate: 2026-09-24                Time: 19:42:10\nOrder / Trans ID: TXN-283594\nServer / Terminal: REG-04\n--------------------------------------------------\nItem Description                 Qty        Price\n--------------------------------------------------\nCorporate Service Item 1           1       $1191.13\n--------------------------------------------------\nSUBTOTAL:                                  $1191.13\nTAX / VAT (Est):                           $89.33\nTOTAL PAID:                                $1280.46\n--------------------------------------------------\nPayment Method: VISA ending in 4192\nApproval Code: AUTH-99742\nThank you for your business!\n==================================================\n",
+      "scenario_tag": "NORMAL",
+      "synthetic": true
+    },
+    "stages": {
+      "receipt": "```json\n{\n  \"merchant\": \"DELTA AIR LINES\",\n  \"transaction_date\": \"2026-09-24\",\n  \"currency\": \"USD\",\n  \"subtotal\": 1191.13,\n  \"tax\": 89.33,\n  \"total\": 1280.46,\n  \"line_items\": [\n    {\n      \"description\": \"Corporate Service Item 1\",\n      \"quantity\": 1,\n      \"price\": 1191.13\n    }\n  ],\n  \"missing_fields\": []\n}\n```",
+      "normalize": "```json\n{\n  \"employee_id\": \"EMP-405\",\n  \"merchant\": \"DELTA AIR LINES\",\n  \"date\": \"2026-09-24\",\n  \"currency\": \"USD\",\n  \"subtotal\": 1191.13,\n  \"tax\": 89.33,\n  \"total\": 1280.46\n}\n```",
+      "category": "{\n  \"category\": \"Travel\",\n  \"classification_confidence\": 0.99,\n  \"reasoning\": \"The merchant is DELTA AIR LINES, an airline carrier. Expenses incurred for airline tickets are standard travel costs (airfare). The line item shows a subtotal and tax typical of a flight purchase, aligning with the Travel category.\"\n}",
+      "amount": "{\n  \"is_arithmetic_valid\": true,\n  \"discrepancy_usd\": 0.0,\n  \"verification_notes\": \"Subtotal 1191.13 plus tax 89.33 equals 1280.46 exactly. No negative amounts present. No rounding discrepancies detected; the declared total matches the computed total to the cent.\"\n}",
+      "policy": "{\n  \"policy_compliance_status\": \"Non-compliant\",\n  \"cited_policy_ids\": [\"POL-EXP-02\"],\n  \"violation_reasons\": [\n    \"Claim amount $1280.46 exceeds the maximum allowed booking amount of $1200.00 (POL-EXP-02).\",\n    \"Advance approval is required but not indicated as provided (POL-EXP-02).\",\n    \"Cabin class information is missing; cannot verify that the booking is Economy/Coach as required (POL-EXP-02).\"\n  ]\n}",
+      "duplicate": "{\n  \"duplicate_status\": \"Confirmed Duplicate\",\n  \"matching_claim_ids\": [\"HIST-CLM-2001\"],\n  \"duplicate_risk_score\": 0.95\n}",
+      "exceptions": "{\n  \"exceptions_found\": [\n    {\n      \"type\": \"Excessive Amount\",\n      \"detail\": \"Claim total $1280.46 exceeds policy limit of $1200.00.\",\n      \"policy_id\": \"POL-EXP-02\",\n      \"severity\": \"High\"\n    },\n    {\n      \"type\": \"Missing Advance Approval\",\n      \"detail\": \"No evidence of required pre\u2011approval for the booking.\",\n      \"policy_id\": \"POL-EXP-02\",\n      \"severity\": \"High\"\n    },\n    {\n      \"type\": \"Missing Cabin Class Information\",\n      \"detail\": \"Cabin class not documented; cannot verify Economy/Coach compliance as required.\",\n      \"policy_id\": \"POL-EXP-02\",\n      \"severity\": \"Medium\"\n    },\n    {\n      \"type\": \"Duplicate Claim\",\n      \"detail\": \"Identical claim previously submitted (HIST-CLM-2001).\",\n      \"duplicate_risk_score\": 0.95,\n      \"severity\": \"Critical\"\n    },\n    {\n      \"type\": \"Unitemized Receipt\",\n      \"detail\": \"Line\u2011item description is generic ('Corporate Service Item 1') and lacks flight number, route, dates, or class details.\",\n      \"severity\": \"Medium\"\n    }\n  ],\n  \"severity_levels\": {\n    \"Critical\": 1,\n    \"High\": 2,\n    \"Medium\": 2,\n    \"Low\": 0\n  },\n  \"audit_warnings\": [\n    \"Potential policy violation due to amount exceeding the $1200.00 limit; claim should be rejected or adjusted.\",\n    \"Absence of documented advance approval constitutes non\u2011compliance with POL-EXP-02.\",\n    \"Missing cabin class information prevents verification of economy\u2011class restriction.\",\n    \"Duplicate submission indicates possible fraud or clerical error; requires immediate investigation.\",\n    \"Receipt lacks detailed itemization of travel specifics, reducing auditability and increasing risk of misuse.\"\n  ]\n}",
+      "final_review": "{\n  \"claim_id\": null,\n  \"employee_id\": \"EMP-405\",\n  \"merchant\": \"DELTA AIR LINES\",\n  \"date\": \"2026-09-24\",\n  \"currency\": \"USD\",\n  \"total_amount\": 1280.46,\n  \"final_decision\": \"INELIGIBLE\",\n  \"rationale\": [\n    \"Policy violation: Claim amount $1280.46 exceeds the maximum allowed booking amount of $1200.00 (POL-EXP-02).\",\n    \"Policy violation: Advance approval is required for travel bookings but no evidence of such approval is present (POL-EXP-02).\",\n    \"Policy violation: Cabin class information is missing; cannot verify compliance with the required Economy/Coach class (POL-EXP-02).\",\n    \"Duplicate claim: This submission matches a previously submitted claim (HIST-CLM-2001) with a duplicate risk score of 0.95, indicating a likely duplicate reimbursement request.\",\n    \"Receipt quality issue: The line\u2011item description is generic ('Corporate Service Item 1') and lacks essential travel details (flight number, route, dates, cabin class), reducing auditability.\"\n  ],\n  \"cited_stages\": {\n    \"receipt_extraction\": \"Stage 1 \u2013 receipt data shows generic line item and no cabin class.\",\n    \"normalization\": \"Stage 2 \u2013 amounts correctly normalized.\",\n    \"categorization\": \"Stage 3 \u2013 classified as Travel (confidence 0.99).\",\n    \"amount_check\": \"Stage 4 \u2013 arithmetic valid, no discrepancy.\",\n    \"policy_verification\": \"Stage 5 \u2013 non\u2011compliant (POL-EXP-02) for amount, missing approval, missing cabin class.\",\n    \"duplicate_check\": \"Stage 6 \u2013 confirmed duplicate (HIST-CLM-2001) with risk score 0.95.\",\n    \"exception_audit\": \"Stage 7 \u2013 high\u2011severity exceptions for excessive amount, missing approval, missing cabin class, duplicate claim, and unitemized receipt.\"\n  },\n  \"recommendation\": \"Reject the claim in its current form. Notify the employee of the specific policy violations and duplicate detection. Advise the employee to submit a new claim with a valid pre\u2011approval, documented Economy/Coach class, detailed flight information, and ensure it is not a duplicate of a previously submitted claim.\"\n}"
+    },
+    "synthetic": true
+  },
+  "error": null,
+  "timestamp": "2026-10-23T07:07:20.820090+00:00"
+}

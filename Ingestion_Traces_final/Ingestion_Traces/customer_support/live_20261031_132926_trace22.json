@@ -1,0 +1,152 @@
+{
+  "run_id": "live_20261031_132926_trace22",
+  "workflow_name": "customer_support",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 17.27,
+  "agent_execution_count": 6,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.273,
+      "tokens": 704,
+      "prompt_tokens": 429,
+      "completion_tokens": 275,
+      "output": {
+        "category": "account_access",
+        "urgency": "medium",
+        "complexity": "simple",
+        "customer_impact": "moderate - customer cannot access their account, affecting daily operations",
+        "routing_recommendation": "Assign to Account Access team with medium priority. Request verification of identity (e.g., recent invoice or security questions) and confirm updated phone number before resetting access."
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "ticket_classification_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.348,
+      "tokens": 899,
+      "prompt_tokens": 500,
+      "completion_tokens": 399,
+      "output": {
+        "applicable_policy_ids": [],
+        "applicable_guide_ids": [
+          "TSG-201"
+        ],
+        "policy_conditions": {
+          "coverage_note": "No specific governing policy was found for this account access lockout scenario.",
+          "default_sla": {
+            "tier": "Standard",
+            "urgency": "low",
+            "response_time": "Within 2 business days",
+            "resolution_time": "Within 5 business days"
+          },
+          "eligibility": "Applies to all Standard‑tier customers with a simple account access issue.",
+          "restrictions": "Only applicable when the issue is classified as low urgency and simple complexity; escalation may be required for multi‑factor authentication failures or security investigations."
+        },
+        "retrieval_summary": "Policy search returned no matching policies; one synthetic troubleshooting guide (TSG-201) was matched for the account_access category. The guide outlines identity verification, lock status check, password reset link issuance, and browser cache clearing."
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "policy_retrieval_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.45,
+      "tokens": 1123,
+      "prompt_tokens": 665,
+      "completion_tokens": 458,
+      "output": {
+        "investigation_findings": "The customer reports being locked out immediately after updating their phone number. No prior history of similar issues exists for this account. Standard lockout policies for phone-number changes may have been triggered, possibly due to a failed multi‑factor authentication (MFA) verification or a mismatch between the new number and the existing security token. The issue is classified as low urgency and simple, suggesting no broader system outage.",
+        "root_cause_hypothesis": "Lockout caused by the security system rejecting the phone‑number update because the associated MFA token could not be verified (e.g., SMS code not delivered, token still linked to old number, or lockout threshold exceeded).",
+        "confirmed_facts": [
+          "Ticket ID TICK-2026-0022 created on 2026-09-06.",
+          "Customer ID CUST-0022, Standard tier, synthetic record.",
+          "Subject indicates lockout after phone number update.",
+          "Category is account_access, urgency low, complexity simple.",
+          "No prior account‑access incidents in the synthetic history."
+        ],
+        "data_gaps": [
+          "Exact timestamp and log entries of the phone‑number change event.",
+          "Result of the MFA verification attempt (success/failure, error codes).",
+          "Current lockout status and remaining lockout duration.",
+          "Whether the customer also changed password or other security settings.",
+          "Delivery status of the verification SMS to the new phone number."
+        ]
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "issue_investigation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 1.945,
+      "tokens": 1629,
+      "prompt_tokens": 1035,
+      "completion_tokens": 594,
+      "output": {
+        "resolution_type": "requires_user_action",
+        "recommended_action": "1. Contact the customer and request a verification of identity (e.g., a recent invoice, the last four digits of the credit card on file, or answers to pre‑registered security questions). 2. Ask the customer to confirm the new phone number they attempted to register. 3. Using the internal account‑access console, check the lockout status for CUST‑0022 and note any remaining lockout timer. 4. If the account is locked, clear the lockout flag and reset the MFA token to the newly‑provided phone number. 5. Generate a one‑time password reset link and send it to the customer's verified email address. 6. Instruct the customer to use the link to set a new password, then log in and complete the MFA enrollment with the new phone number. 7. Advise the customer to clear browser cache or use an incognito window if they encounter any residual login errors. 8. Confirm with the customer that access is restored and close the ticket.",
+        "policy_justification": "Resolution follows TSG-201 guidance for account_access issues: identity verification, lock status check, MFA token reset, password reset link issuance, and browser cache clearing. It also complies with the default SLA for Standard‑tier, low‑urgency, simple‑complexity cases (response within 2 business days, resolution within 5 business days). No specific policy restrictions apply.",
+        "escalation_required": false
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "resolution_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 2.481,
+      "tokens": 1455,
+      "prompt_tokens": 718,
+      "completion_tokens": 737,
+      "output": {
+        "response_text": "Hello Enterprise Client 22,\n\nThank you for reaching out and letting us know about the difficulty you’re experiencing after updating your phone number. We understand how frustrating it can be to be locked out of your account, and we’re here to help you regain access as quickly as possible.\n\nTo resolve this issue, we’ll need to verify your identity and confirm the new phone number you attempted to register. Please follow the steps below:\n\n1. Provide a recent invoice, the last four digits of the credit card on file, or answers to your pre‑registered security questions for identity verification.\n2. Confirm the new phone number you tried to add to your account.\n3. Once we have verified your information, we will clear any lockout flag on your account and reset the MFA token to the new phone number.\n4. We will then generate a one‑time password‑reset link and send it to your verified email address.\n5. Use the link to set a new password, log in, and complete the MFA enrollment with the updated phone number.\n6. If you encounter any further login issues, please clear your browser cache or try accessing the portal using an incognito/private‑browsing window.\n7. After completing these steps, let us know that you have successfully regained access so we can close the ticket.\n\nIf you have any questions or need additional assistance while completing these steps, please don’t hesitate to reply to this email or contact our support line at 1‑800‑555‑1234.\n\nWe appreciate your patience and look forward to getting you back into your account promptly.\n\nBest regards,\nCustomer Support Team",
+        "tone": "professional, empathetic",
+        "next_steps_for_customer": [
+          "Provide a recent invoice, the last four digits of the credit card on file, or answers to your pre‑registered security questions for identity verification.",
+          "Confirm the new phone number you attempted to register.",
+          "Wait for us to clear the lockout flag and reset the MFA token to the new phone number.",
+          "Use the one‑time password‑reset link we will send to your verified email address to set a new password.",
+          "Log in and complete the MFA enrollment with the updated phone number.",
+          "If login issues persist, clear your browser cache or try an incognito/private‑browsing window.",
+          "Confirm with us that access has been restored so we can close the ticket."
+        ],
+        "ticket_status": "pending_customer_action"
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "response_drafting_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 5.147,
+      "tokens": 2189,
+      "prompt_tokens": 1790,
+      "completion_tokens": 399,
+      "output": {
+        "qa_status": "APPROVED",
+        "final_ticket_status": "ACTION_REQUIRED_BY_USER",
+        "verification_notes": "The response directly addresses the lockout after phone-number update, outlines identity verification, lockout clearance, MFA token reset, and password‑reset link issuance. All steps align with TSG‑201 guidance and the default SLA; no policy violations or unsupported promises are present. The customer is correctly asked to provide verification information before actions are taken.",
+        "support_summary_report": "Classification: account_access, medium urgency, simple complexity. Investigation identified a likely MFA‑related lockout after phone‑number change. Recommended resolution (requires user action) follows TSG‑201: verify identity, confirm new phone number, clear lockout, reset MFA token, send one‑time password reset link, advise cache clearing, and confirm restored access. Drafted email is professional, empathetic, and includes clear next steps and contact details. No escalation needed."
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "resolution_verification_agent"
+    }
+  ],
+  "total_tokens": 7999,
+  "prompt_tokens": 5137,
+  "completion_tokens": 2862,
+  "estimated_cost_usd": 0.005292,
+  "error_message": null,
+  "final_output": "{\n  \"qa_status\": \"APPROVED\",\n  \"final_ticket_status\": \"ACTION_REQUIRED_BY_USER\",\n  \"verification_notes\": \"The response directly addresses the lockout after phone-number update, outlines identity verification, lockout clearance, MFA token reset, and password\\u2011reset link issuance. All steps align with TSG\\u2011201 guidance and the default SLA; no policy violations or unsupported promises are present. The customer is correctly asked to provide verification information before actions are taken.\",\n  \"support_summary_report\": \"Classification: account_access, medium urgency, simple complexity. Investigation identified a likely MFA\\u2011related lockout after phone\\u2011number change. Recommended resolution (requires user action) follows TSG\\u2011201: verify identity, confirm new phone number, clear lockout, reset MFA token, send one\\u2011time password reset link, advise cache clearing, and confirm restored access. Drafted email is professional, empathetic, and includes clear next steps and contact details. No escalation needed.\"\n}",
+  "timestamp": "2026-10-31T13:29:43.980834+00:00"
+}

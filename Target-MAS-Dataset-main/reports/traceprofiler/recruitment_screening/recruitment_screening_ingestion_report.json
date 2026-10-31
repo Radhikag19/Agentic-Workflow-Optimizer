@@ -1,0 +1,3177 @@
+{
+  "workflow_name": "recruitment_screening",
+  "report_type": "traceprofiler_single_workflow_ingestion",
+  "analysis_mode": "static_ast_non_executing",
+  "metrics": {
+    "declared_agents": 8,
+    "implemented_agents": 8,
+    "python_files": 10,
+    "telemetry_runs": 4,
+    "discrepancy_count": 0
+  },
+  "manifest": {
+    "file": "Agents/recruitment_screening/workflow.json",
+    "dir": "Agents/recruitment_screening",
+    "workflow_name": "recruitment_screening",
+    "version": "1.0.0",
+    "description": "Baseline 8-agent recruitment and resume screening workflow for candidate qualification evaluation.",
+    "fixed_model": "openai/gpt-oss-120b",
+    "total_agents": 8,
+    "execution_mode": "sequential",
+    "execution_order": [
+      "resume_intake_agent",
+      "qualification_agent",
+      "job_criteria_agent",
+      "evidence_mapping_agent",
+      "experience_assessment_agent",
+      "missing_evidence_agent",
+      "screening_review_agent",
+      "recruiter_summary_agent"
+    ],
+    "optimization_opportunities": {
+      "parallel_candidates": [
+        "qualification_agent + job_criteria_agent",
+        "experience_assessment_agent + missing_evidence_agent"
+      ],
+      "pruning_candidates": [
+        "screening_review_agent"
+      ],
+      "consolidation_candidates": [
+        "resume_intake_agent + qualification_agent"
+      ]
+    },
+    "agents": [
+      {
+        "id": "resume_intake_agent",
+        "name": "Resume Intake Agent",
+        "role": "Resume Intake Specialist",
+        "declared_file": null,
+        "dependencies": [],
+        "inputs": [
+          "application_id",
+          "candidate_id",
+          "sections",
+          "source_evidence_ids"
+        ],
+        "outputs": [
+          "application_id",
+          "candidate_id",
+          "candidate_name",
+          "sections_identified",
+          "missing_sections",
+          "raw_sections"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "resume_intake_agent",
+          "agent_name": "Resume Intake Agent",
+          "role": "Resume Intake Specialist",
+          "responsibilities": "Normalize input, catalog sections, verify completeness, extract candidate metadata.",
+          "input_fields": [
+            "application_id",
+            "candidate_id",
+            "sections",
+            "source_evidence_ids"
+          ],
+          "output_fields": [
+            "application_id",
+            "candidate_id",
+            "candidate_name",
+            "sections_identified",
+            "missing_sections",
+            "raw_sections"
+          ],
+          "dependencies": []
+        }
+      },
+      {
+        "id": "qualification_agent",
+        "name": "Qualification Extraction Agent",
+        "role": "Candidate Qualification Extractor",
+        "declared_file": null,
+        "dependencies": [
+          "resume_intake_agent"
+        ],
+        "inputs": [
+          "candidate_id",
+          "raw_sections",
+          "source_evidence_ids"
+        ],
+        "outputs": [
+          "technical_skills",
+          "education",
+          "certifications",
+          "experience_records",
+          "projects"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "qualification_agent",
+          "agent_name": "Qualification Extraction Agent",
+          "role": "Candidate Qualification Extractor",
+          "responsibilities": "Extract skills, degrees, certifications, and experience linked to evidence IDs.",
+          "input_fields": [
+            "candidate_id",
+            "raw_sections",
+            "source_evidence_ids"
+          ],
+          "output_fields": [
+            "technical_skills",
+            "education",
+            "certifications",
+            "experience_records",
+            "projects"
+          ],
+          "dependencies": [
+            "resume_intake_agent"
+          ]
+        }
+      },
+      {
+        "id": "job_criteria_agent",
+        "name": "Job Criteria Agent",
+        "role": "Job Criteria Analyst",
+        "declared_file": null,
+        "dependencies": [],
+        "inputs": [
+          "job_id",
+          "title",
+          "mandatory_criteria",
+          "preferred_criteria"
+        ],
+        "outputs": [
+          "job_id",
+          "job_title",
+          "mandatory_criteria",
+          "preferred_criteria",
+          "total_criteria_count"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "job_criteria_agent",
+          "agent_name": "Job Criteria Agent",
+          "role": "Job Criteria Analyst",
+          "responsibilities": "Decompose job descriptions into discrete mandatory and preferred criteria with stable IDs.",
+          "input_fields": [
+            "job_id",
+            "title",
+            "mandatory_criteria",
+            "preferred_criteria"
+          ],
+          "output_fields": [
+            "job_id",
+            "job_title",
+            "mandatory_criteria",
+            "preferred_criteria",
+            "total_criteria_count"
+          ],
+          "dependencies": []
+        }
+      },
+      {
+        "id": "evidence_mapping_agent",
+        "name": "Evidence Mapping Agent",
+        "role": "Candidate Evidence Mapping Specialist",
+        "declared_file": null,
+        "dependencies": [
+          "qualification_agent",
+          "job_criteria_agent"
+        ],
+        "inputs": [
+          "technical_skills",
+          "education",
+          "experience_records",
+          "mandatory_criteria",
+          "preferred_criteria"
+        ],
+        "outputs": [
+          "mappings",
+          "supported_count",
+          "unsupported_count",
+          "partially_supported_count"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "evidence_mapping_agent",
+          "agent_name": "Evidence Mapping Agent",
+          "role": "Candidate Evidence Mapping Specialist",
+          "responsibilities": "Map criteria to qualifications, classify support status, preserve evidence references.",
+          "input_fields": [
+            "technical_skills",
+            "education",
+            "experience_records",
+            "mandatory_criteria",
+            "preferred_criteria"
+          ],
+          "output_fields": [
+            "mappings",
+            "supported_count",
+            "unsupported_count",
+            "partially_supported_count"
+          ],
+          "dependencies": [
+            "qualification_agent",
+            "job_criteria_agent"
+          ]
+        }
+      },
+      {
+        "id": "experience_assessment_agent",
+        "name": "Experience Assessment Agent",
+        "role": "Experience Assessment Evaluator",
+        "declared_file": null,
+        "dependencies": [
+          "qualification_agent",
+          "evidence_mapping_agent"
+        ],
+        "inputs": [
+          "experience_records",
+          "mappings"
+        ],
+        "outputs": [
+          "relevance_summary",
+          "strengths",
+          "experience_gaps",
+          "transferable_skills"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "experience_assessment_agent",
+          "agent_name": "Experience Assessment Agent",
+          "role": "Experience Assessment Evaluator",
+          "responsibilities": "Evaluate career relevance, identify transferable competencies, document strengths and gaps.",
+          "input_fields": [
+            "experience_records",
+            "mappings"
+          ],
+          "output_fields": [
+            "relevance_summary",
+            "strengths",
+            "experience_gaps",
+            "transferable_skills"
+          ],
+          "dependencies": [
+            "qualification_agent",
+            "evidence_mapping_agent"
+          ]
+        }
+      },
+      {
+        "id": "missing_evidence_agent",
+        "name": "Missing Evidence and Consistency Agent",
+        "role": "Recruitment Consistency and Verification Auditor",
+        "declared_file": null,
+        "dependencies": [
+          "resume_intake_agent",
+          "evidence_mapping_agent"
+        ],
+        "inputs": [
+          "raw_sections",
+          "mappings"
+        ],
+        "outputs": [
+          "missing_evidence_items",
+          "unreliable_requirements",
+          "inconsistencies"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "missing_evidence_agent",
+          "agent_name": "Missing Evidence and Consistency Agent",
+          "role": "Recruitment Consistency and Verification Auditor",
+          "responsibilities": "Detect timeline contradictions, unsupported buzzwords, missing evidence, unverified claims.",
+          "input_fields": [
+            "raw_sections",
+            "mappings"
+          ],
+          "output_fields": [
+            "missing_evidence_items",
+            "unreliable_requirements",
+            "inconsistencies"
+          ],
+          "dependencies": [
+            "resume_intake_agent",
+            "evidence_mapping_agent"
+          ]
+        }
+      },
+      {
+        "id": "screening_review_agent",
+        "name": "Screening Review Agent",
+        "role": "Screening Quality and Integrity Reviewer",
+        "declared_file": null,
+        "dependencies": [
+          "evidence_mapping_agent",
+          "experience_assessment_agent",
+          "missing_evidence_agent"
+        ],
+        "inputs": [
+          "mappings",
+          "strengths",
+          "experience_gaps",
+          "inconsistencies"
+        ],
+        "outputs": [
+          "review_passed",
+          "contradictions_detected",
+          "traceability_verified",
+          "mandatory_criteria_met",
+          "issues_requiring_human_review"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "screening_review_agent",
+          "agent_name": "Screening Review Agent",
+          "role": "Screening Quality and Integrity Reviewer",
+          "responsibilities": "Audit upstream findings for contradictions, verify traceability, confirm mandatory criteria.",
+          "input_fields": [
+            "mappings",
+            "strengths",
+            "experience_gaps",
+            "inconsistencies"
+          ],
+          "output_fields": [
+            "review_passed",
+            "contradictions_detected",
+            "traceability_verified",
+            "mandatory_criteria_met",
+            "issues_requiring_human_review"
+          ],
+          "dependencies": [
+            "evidence_mapping_agent",
+            "experience_assessment_agent",
+            "missing_evidence_agent"
+          ]
+        }
+      },
+      {
+        "id": "recruiter_summary_agent",
+        "name": "Recruiter Summary Agent",
+        "role": "Executive Recruiter Summary Synthesizer",
+        "declared_file": null,
+        "dependencies": [
+          "screening_review_agent"
+        ],
+        "inputs": [
+          "candidate_overview",
+          "criteria_matrix",
+          "strengths",
+          "gaps",
+          "inconsistencies",
+          "review_issues"
+        ],
+        "outputs": [
+          "run_id",
+          "application_id",
+          "candidate_name",
+          "job_title",
+          "criteria_matrix",
+          "key_strengths",
+          "evidence_gaps",
+          "deterministic_match_score",
+          "human_review_required"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "recruiter_summary_agent",
+          "agent_name": "Recruiter Summary Agent",
+          "role": "Executive Recruiter Summary Synthesizer",
+          "responsibilities": "Produce final recruiter report, interview questions, deterministic match score, and human review notices.",
+          "input_fields": [
+            "candidate_overview",
+            "criteria_matrix",
+            "strengths",
+            "gaps",
+            "inconsistencies",
+            "review_issues"
+          ],
+          "output_fields": [
+            "run_id",
+            "application_id",
+            "candidate_name",
+            "job_title",
+            "criteria_matrix",
+            "key_strengths",
+            "evidence_gaps",
+            "deterministic_match_score",
+            "human_review_required"
+          ],
+          "dependencies": [
+            "screening_review_agent"
+          ]
+        }
+      }
+    ]
+  },
+  "agent_inventory": [
+    {
+      "id": "resume_intake_agent",
+      "name": "Resume Intake Agent",
+      "role": "Resume Intake Specialist",
+      "workflow": "recruitment_screening",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [],
+      "inputs": [
+        "application_id",
+        "candidate_id",
+        "sections",
+        "source_evidence_ids"
+      ],
+      "outputs": [
+        "application_id",
+        "candidate_id",
+        "candidate_name",
+        "sections_identified",
+        "missing_sections",
+        "raw_sections"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/recruitment_screening/intake_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 31,
+          "end_line": 38,
+          "docstring": "Create the CrewAI Resume Intake Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_intake",
+          "line": 41,
+          "end_line": 88,
+          "docstring": "Execute Resume Intake Agent on raw resume data.",
+          "args": [
+            "resume_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "ResumeIntakeOutput"
+          ],
+          "aliases": {},
+          "line": 15
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 16
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_intake",
+          "line": 41,
+          "classification": "function_candidate",
+          "docstring": "Execute Resume Intake Agent on raw resume data."
+        }
+      ]
+    },
+    {
+      "id": "qualification_agent",
+      "name": "Qualification Extraction Agent",
+      "role": "Candidate Qualification Extractor",
+      "workflow": "recruitment_screening",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [
+        "resume_intake_agent"
+      ],
+      "inputs": [
+        "candidate_id",
+        "raw_sections",
+        "source_evidence_ids"
+      ],
+      "outputs": [
+        "technical_skills",
+        "education",
+        "certifications",
+        "experience_records",
+        "projects"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/recruitment_screening/qualification_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 29,
+          "end_line": 36,
+          "docstring": "Create the CrewAI Qualification Extraction Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_qualification_extraction",
+          "line": 39,
+          "end_line": 108,
+          "docstring": "Execute Qualification Extraction Agent.",
+          "args": [
+            "intake_output",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "QualificationExtractionOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_qualification_extraction",
+          "line": 39,
+          "classification": "function_candidate",
+          "docstring": "Execute Qualification Extraction Agent."
+        }
+      ]
+    },
+    {
+      "id": "job_criteria_agent",
+      "name": "Job Criteria Agent",
+      "role": "Job Criteria Analyst",
+      "workflow": "recruitment_screening",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [],
+      "inputs": [
+        "job_id",
+        "title",
+        "mandatory_criteria",
+        "preferred_criteria"
+      ],
+      "outputs": [
+        "job_id",
+        "job_title",
+        "mandatory_criteria",
+        "preferred_criteria",
+        "total_criteria_count"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/recruitment_screening/job_criteria_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 30,
+          "end_line": 37,
+          "docstring": "Create the CrewAI Job Criteria Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_job_criteria",
+          "line": 40,
+          "end_line": 103,
+          "docstring": "Execute Job Criteria Agent on job description.",
+          "args": [
+            "job_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "JobCriteriaOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_job_criteria",
+          "line": 40,
+          "classification": "function_candidate",
+          "docstring": "Execute Job Criteria Agent on job description."
+        }
+      ]
+    },
+    {
+      "id": "evidence_mapping_agent",
+      "name": "Evidence Mapping Agent",
+      "role": "Candidate Evidence Mapping Specialist",
+      "workflow": "recruitment_screening",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [
+        "qualification_agent",
+        "job_criteria_agent"
+      ],
+      "inputs": [
+        "technical_skills",
+        "education",
+        "experience_records",
+        "mandatory_criteria",
+        "preferred_criteria"
+      ],
+      "outputs": [
+        "mappings",
+        "supported_count",
+        "unsupported_count",
+        "partially_supported_count"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/recruitment_screening/evidence_mapping_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 31,
+          "end_line": 38,
+          "docstring": "Create the CrewAI Evidence Mapping Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_evidence_mapping",
+          "line": 41,
+          "end_line": 111,
+          "docstring": "Execute Evidence Mapping Agent.",
+          "args": [
+            "qualification_data",
+            "job_criteria_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "EvidenceMappingOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_evidence_mapping",
+          "line": 41,
+          "classification": "function_candidate",
+          "docstring": "Execute Evidence Mapping Agent."
+        }
+      ]
+    },
+    {
+      "id": "experience_assessment_agent",
+      "name": "Experience Assessment Agent",
+      "role": "Experience Assessment Evaluator",
+      "workflow": "recruitment_screening",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [
+        "qualification_agent",
+        "evidence_mapping_agent"
+      ],
+      "inputs": [
+        "experience_records",
+        "mappings"
+      ],
+      "outputs": [
+        "relevance_summary",
+        "strengths",
+        "experience_gaps",
+        "transferable_skills"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/recruitment_screening/experience_assessment_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 30,
+          "end_line": 37,
+          "docstring": "Create the CrewAI Experience Assessment Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_experience_assessment",
+          "line": 40,
+          "end_line": 85,
+          "docstring": "Execute Experience and Skills Assessment Agent.",
+          "args": [
+            "qualification_data",
+            "evidence_mapping_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "ExperienceAssessmentOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_experience_assessment",
+          "line": 40,
+          "classification": "function_candidate",
+          "docstring": "Execute Experience and Skills Assessment Agent."
+        }
+      ]
+    },
+    {
+      "id": "missing_evidence_agent",
+      "name": "Missing Evidence and Consistency Agent",
+      "role": "Recruitment Consistency and Verification Auditor",
+      "workflow": "recruitment_screening",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [
+        "resume_intake_agent",
+        "evidence_mapping_agent"
+      ],
+      "inputs": [
+        "raw_sections",
+        "mappings"
+      ],
+      "outputs": [
+        "missing_evidence_items",
+        "unreliable_requirements",
+        "inconsistencies"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/recruitment_screening/missing_evidence_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 30,
+          "end_line": 37,
+          "docstring": "Create the CrewAI Missing Evidence and Consistency Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_missing_evidence",
+          "line": 40,
+          "end_line": 94,
+          "docstring": "Execute Missing Evidence and Consistency Agent.",
+          "args": [
+            "intake_data",
+            "qualification_data",
+            "evidence_mapping_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "MissingEvidenceOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_missing_evidence",
+          "line": 40,
+          "classification": "function_candidate",
+          "docstring": "Execute Missing Evidence and Consistency Agent."
+        }
+      ]
+    },
+    {
+      "id": "screening_review_agent",
+      "name": "Screening Review Agent",
+      "role": "Screening Quality and Integrity Reviewer",
+      "workflow": "recruitment_screening",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [
+        "evidence_mapping_agent",
+        "experience_assessment_agent",
+        "missing_evidence_agent"
+      ],
+      "inputs": [
+        "mappings",
+        "strengths",
+        "experience_gaps",
+        "inconsistencies"
+      ],
+      "outputs": [
+        "review_passed",
+        "contradictions_detected",
+        "traceability_verified",
+        "mandatory_criteria_met",
+        "issues_requiring_human_review"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/recruitment_screening/review_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 30,
+          "end_line": 37,
+          "docstring": "Create the CrewAI Screening Review Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_screening_review",
+          "line": 40,
+          "end_line": 96,
+          "docstring": "Execute Screening Review Agent.",
+          "args": [
+            "candidate_id",
+            "evidence_mapping_data",
+            "assessment_data",
+            "missing_evidence_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "ScreeningReviewOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_screening_review",
+          "line": 40,
+          "classification": "function_candidate",
+          "docstring": "Execute Screening Review Agent."
+        }
+      ]
+    },
+    {
+      "id": "recruiter_summary_agent",
+      "name": "Recruiter Summary Agent",
+      "role": "Executive Recruiter Summary Synthesizer",
+      "workflow": "recruitment_screening",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [
+        "screening_review_agent"
+      ],
+      "inputs": [
+        "candidate_overview",
+        "criteria_matrix",
+        "strengths",
+        "gaps",
+        "inconsistencies",
+        "review_issues"
+      ],
+      "outputs": [
+        "run_id",
+        "application_id",
+        "candidate_name",
+        "job_title",
+        "criteria_matrix",
+        "key_strengths",
+        "evidence_gaps",
+        "deterministic_match_score",
+        "human_review_required"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/recruitment_screening/recruiter_summary_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "calculate_deterministic_match_score",
+          "line": 31,
+          "end_line": 60,
+          "docstring": "Calculate deterministic match score (0.0 to 100.0).\nFormula:\n- Mandatory criteria account for 70% of total score.\n- Preferred criteria account for 30% of total score.\n- Points: supported=1.0, partially_supported=0.5, unclear=0.25, unsupported=0.0.",
+          "args": [
+            "mappings"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 63,
+          "end_line": 70,
+          "docstring": "Create the CrewAI Recruiter Summary Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_recruiter_summary",
+          "line": 73,
+          "end_line": 161,
+          "docstring": "Execute Recruiter Summary Agent.",
+          "args": [
+            "run_id",
+            "intake_data",
+            "job_criteria_data",
+            "evidence_mapping_data",
+            "assessment_data",
+            "missing_evidence_data",
+            "review_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "score_items",
+          "line": 42,
+          "end_line": 54,
+          "docstring": null,
+          "args": [
+            "items"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "RecruiterSummaryOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "calculate_deterministic_match_score",
+          "line": 31,
+          "classification": "function_candidate",
+          "docstring": "Calculate deterministic match score (0.0 to 100.0).\nFormula:\n- Mandatory criteria account for 70% of total score.\n- Preferred criteria account for 30% of total score.\n- Points: supported=1.0, partially_supported=0.5, unclear=0.25, unsupported=0.0."
+        },
+        {
+          "name": "run_recruiter_summary",
+          "line": 73,
+          "classification": "function_candidate",
+          "docstring": "Execute Recruiter Summary Agent."
+        }
+      ]
+    }
+  ],
+  "workflow_analysis": {
+    "file": "Agents/recruitment_screening/workflow.py",
+    "classes": [
+      {
+        "name": "RecruitmentScreeningWorkflow",
+        "line": 61
+      }
+    ],
+    "entry_points": [
+      {
+        "name": "run_recruitment_screening_workflow",
+        "line": 201,
+        "args": [
+          "input_data",
+          "run_id"
+        ],
+        "docstring": "Execute recruitment screening workflow."
+      },
+      {
+        "name": "run",
+        "line": 83,
+        "args": [
+          "self",
+          "input_data",
+          "run_id",
+          "runs_base_dir"
+        ],
+        "docstring": "Execute the 8-agent screening workflow sequentially."
+      }
+    ],
+    "crew_constructions": [],
+    "assignments": [
+      {
+        "line": 34,
+        "targets": [
+          "WORKFLOW_NAME"
+        ],
+        "value_names": [],
+        "expression": "\"recruitment_screening\""
+      },
+      {
+        "line": 35,
+        "targets": [
+          "EXPECTED_AGENT_COUNT"
+        ],
+        "value_names": [],
+        "expression": "8"
+      },
+      {
+        "line": 44,
+        "targets": [
+          "resumes_path"
+        ],
+        "value_names": [
+          "data_dir",
+          "os"
+        ],
+        "expression": "os.path.join(data_dir, \"resumes.json\")"
+      },
+      {
+        "line": 45,
+        "targets": [
+          "jobs_path"
+        ],
+        "value_names": [
+          "data_dir",
+          "os"
+        ],
+        "expression": "os.path.join(data_dir, \"jobs.json\")"
+      },
+      {
+        "line": 52,
+        "targets": [
+          "resume"
+        ],
+        "value_names": [
+          "candidate_index",
+          "len",
+          "resumes"
+        ],
+        "expression": "resumes[candidate_index % len(resumes)]"
+      },
+      {
+        "line": 53,
+        "targets": [
+          "job"
+        ],
+        "value_names": [
+          "job_index",
+          "jobs",
+          "len"
+        ],
+        "expression": "jobs[job_index % len(jobs)]"
+      },
+      {
+        "line": 206,
+        "targets": [
+          "wf"
+        ],
+        "value_names": [
+          "RecruitmentScreeningWorkflow"
+        ],
+        "expression": "RecruitmentScreeningWorkflow(enable_tracing=True)"
+      },
+      {
+        "line": 48,
+        "targets": [
+          "resumes"
+        ],
+        "value_names": [
+          "f",
+          "json"
+        ],
+        "expression": "json.load(f)"
+      },
+      {
+        "line": 50,
+        "targets": [
+          "jobs"
+        ],
+        "value_names": [
+          "f",
+          "json"
+        ],
+        "expression": "json.load(f)"
+      },
+      {
+        "line": 92,
+        "targets": [
+          "active_run_id"
+        ],
+        "value_names": [
+          "run_id",
+          "uuid"
+        ],
+        "expression": "run_id or f\"rec_{uuid.uuid4().hex[:8]}\""
+      },
+      {
+        "line": 93,
+        "targets": [
+          "tracker"
+        ],
+        "value_names": [
+          "MetricsTracker",
+          "WORKFLOW_NAME",
+          "active_run_id"
+        ],
+        "expression": "MetricsTracker(workflow_name=WORKFLOW_NAME, run_id=active_run_id)"
+      },
+      {
+        "line": 98,
+        "targets": [
+          "resume_data"
+        ],
+        "value_names": [
+          "input_data"
+        ],
+        "expression": "input_data.get(\"resume\", {})"
+      },
+      {
+        "line": 99,
+        "targets": [
+          "job_data"
+        ],
+        "value_names": [
+          "input_data"
+        ],
+        "expression": "input_data.get(\"job\", {})"
+      },
+      {
+        "line": 96,
+        "targets": [
+          "input_data"
+        ],
+        "value_names": [
+          "load_sample_recruitment_input"
+        ],
+        "expression": "load_sample_recruitment_input()"
+      },
+      {
+        "line": 103,
+        "targets": [
+          "intake_res"
+        ],
+        "value_names": [
+          "intake_agent",
+          "resume_data",
+          "self",
+          "tracker"
+        ],
+        "expression": "intake_agent.run_intake(\n                resume_data=resume_data,\n                agent=self.agent_1_intake,\n                tracker=tracker,\n            )"
+      },
+      {
+        "line": 110,
+        "targets": [
+          "qual_res"
+        ],
+        "value_names": [
+          "intake_res",
+          "qualification_agent",
+          "self",
+          "tracker"
+        ],
+        "expression": "qualification_agent.run_qualification_extraction(\n                intake_output=intake_res,\n                agent=self.agent_2_qualification,\n                tracker=tracker,\n            )"
+      },
+      {
+        "line": 117,
+        "targets": [
+          "job_crit_res"
+        ],
+        "value_names": [
+          "job_criteria_agent",
+          "job_data",
+          "self",
+          "tracker"
+        ],
+        "expression": "job_criteria_agent.run_job_criteria(\n                job_data=job_data,\n                agent=self.agent_3_job_criteria,\n                tracker=tracker,\n            )"
+      },
+      {
+        "line": 124,
+        "targets": [
+          "ev_map_res"
+        ],
+        "value_names": [
+          "evidence_mapping_agent",
+          "job_crit_res",
+          "qual_res",
+          "self",
+          "tracker"
+        ],
+        "expression": "evidence_mapping_agent.run_evidence_mapping(\n                qualification_data=qual_res,\n                job_criteria_data=job_crit_res,\n                agent=self.agent_4_evidence_mapping,\n                tracker=tracker,\n            )"
+      },
+      {
+        "line": 132,
+        "targets": [
+          "exp_assess_res"
+        ],
+        "value_names": [
+          "ev_map_res",
+          "experience_assessment_agent",
+          "qual_res",
+          "self",
+          "tracker"
+        ],
+        "expression": "experience_assessment_agent.run_experience_assessment(\n                qualification_data=qual_res,\n                evidence_mapping_data=ev_map_res,\n                agent=self.agent_5_experience,\n                tracker=tracker,\n            )"
+      },
+      {
+        "line": 140,
+        "targets": [
+          "missing_ev_res"
+        ],
+        "value_names": [
+          "ev_map_res",
+          "intake_res",
+          "missing_evidence_agent",
+          "qual_res",
+          "self",
+          "tracker"
+        ],
+        "expression": "missing_evidence_agent.run_missing_evidence(\n                intake_data=intake_res,\n                qualification_data=qual_res,\n                evidence_mapping_data=ev_map_res,\n                agent=self.agent_6_missing_evidence,\n                tracker=tracker,\n            )"
+      },
+      {
+        "line": 149,
+        "targets": [
+          "review_res"
+        ],
+        "value_names": [
+          "ev_map_res",
+          "exp_assess_res",
+          "intake_res",
+          "missing_ev_res",
+          "review_agent",
+          "self",
+          "tracker"
+        ],
+        "expression": "review_agent.run_screening_review(\n                candidate_id=intake_res.get(\"candidate_id\", \"\"),\n                evidence_mapping_data=ev_map_res,\n                assessment_data=exp_assess_res,\n                missing_evidence_data=missing_ev_res,\n                agent=self.agent_7_review,\n     "
+      },
+      {
+        "line": 159,
+        "targets": [
+          "final_summary"
+        ],
+        "value_names": [
+          "active_run_id",
+          "ev_map_res",
+          "exp_assess_res",
+          "intake_res",
+          "job_crit_res",
+          "missing_ev_res",
+          "recruiter_summary_agent",
+          "review_res",
+          "self",
+          "tracker"
+        ],
+        "expression": "recruiter_summary_agent.run_recruiter_summary(\n                run_id=active_run_id,\n                intake_data=intake_res,\n                job_criteria_data=job_crit_res,\n                evidence_mapping_data=ev_map_res,\n                assessment_data=exp_assess_res,\n                missing_evide"
+      },
+      {
+        "line": 172,
+        "targets": [
+          "record"
+        ],
+        "value_names": [
+          "final_summary",
+          "runs_base_dir",
+          "tracker"
+        ],
+        "expression": "tracker.finalize(\n                output=final_summary,\n                status=\"success\",\n                runs_base_dir=runs_base_dir,\n            )"
+      },
+      {
+        "line": 177,
+        "targets": [
+          "output_dict"
+        ],
+        "value_names": [
+          "dict",
+          "final_summary",
+          "hasattr",
+          "isinstance"
+        ],
+        "expression": "dict(final_summary) if isinstance(final_summary, dict) else (final_summary.model_dump() if hasattr(final_summary, \"model_dump\") else {})"
+      }
+    ],
+    "task_handoffs": [],
+    "observed_order": [
+      "resume_intake_agent",
+      "qualification_agent",
+      "job_criteria_agent",
+      "evidence_mapping_agent",
+      "experience_assessment_agent",
+      "missing_evidence_agent",
+      "screening_review_agent",
+      "recruiter_summary_agent"
+    ],
+    "sequential_kickoffs": 0
+  },
+  "comparison": {
+    "workflow": "recruitment_screening",
+    "manifest_file": "Agents/recruitment_screening/workflow.json",
+    "workflow_source": "Agents/recruitment_screening/workflow.py",
+    "declared_order": [
+      "resume_intake_agent",
+      "qualification_agent",
+      "job_criteria_agent",
+      "evidence_mapping_agent",
+      "experience_assessment_agent",
+      "missing_evidence_agent",
+      "screening_review_agent",
+      "recruiter_summary_agent"
+    ],
+    "source_observed_order": [
+      "resume_intake_agent",
+      "qualification_agent",
+      "job_criteria_agent",
+      "evidence_mapping_agent",
+      "experience_assessment_agent",
+      "missing_evidence_agent",
+      "screening_review_agent",
+      "recruiter_summary_agent"
+    ],
+    "declared_agent_count": 8,
+    "observed_agent_count": 8,
+    "discrepancy_count": 0,
+    "findings": []
+  },
+  "python_files": [
+    {
+      "file": "Agents/recruitment_screening/__init__.py",
+      "filename": "__init__.py",
+      "stem": "__init__",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "agent_id_constants": [],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": []
+    },
+    {
+      "file": "Agents/recruitment_screening/evidence_mapping_agent.py",
+      "filename": "evidence_mapping_agent.py",
+      "stem": "evidence_mapping_agent",
+      "sha256": "c6a95e7961539d7ca655ad293f7ebb03c14ffde1f008aad3a99ea6ef9a3dbc5d",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "EvidenceMappingOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 31,
+          "end_line": 38,
+          "docstring": "Create the CrewAI Evidence Mapping Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_evidence_mapping",
+          "line": 41,
+          "end_line": 111,
+          "docstring": "Execute Evidence Mapping Agent.",
+          "args": [
+            "qualification_data",
+            "job_criteria_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "evidence_mapping_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_evidence_mapping",
+          "line": 41,
+          "classification": "function_candidate",
+          "docstring": "Execute Evidence Mapping Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 4: Evidence Mapping Agent for Recruitment and Resume Screening.\n\nResponsibilities:\n- Map each job criterion to candidate evidence.\n- Classify each criterion as supported, partially supported, unsupported, or unclear.\n- Preserve supporting resume excerpts or evidence IDs.\n- Distinguish a missing qualification from missing evidence of a qualification.\n",
+          "line": 1
+        },
+        {
+          "value": "Candidate Evidence Mapping Specialist",
+          "line": 18
+        },
+        {
+          "value": "Cross-reference every job criterion against extracted candidate qualifications, classifying fulfillment status and linking evidence IDs while clearly distinguishing a confirmed missing qualification from mere missing documentation.",
+          "line": 20
+        },
+        {
+          "value": "You are an objective evidence auditor. You never guess or assume. For each criterion, you look for direct evidence in the candidate's record. If evidence is lacking, you verify whether the candidate lacks the skill or simply omitted proof in the text.",
+          "line": 25
+        },
+        {
+          "value": "Create the CrewAI Evidence Mapping Agent.",
+          "line": 32
+        },
+        {
+          "value": "Valid JSON matching EvidenceMappingOutput schema.",
+          "line": 101
+        },
+        {
+          "value": "\n\nCandidate Extracted Qualifications:\n- Technical Skills: ",
+          "line": 65
+        },
+        {
+          "value": "\n\nFor each criterion:\n1. Status must be one of: 'supported', 'partially_supported', 'unsupported', 'unclear'.\n2. Provide candidate_evidence excerpt or explanation.\n3. List matching evidence_ids (e.g. EVD-xxx-SKL, EVD-xxx-EDU, EVD-xxx-EXP1).\n4. Set 'is_missing_qualification': true if the candidate explicitly lacks the skill or domain.\n5. Set 'is_missing_evidence_only': true if the candidate mentions the domain but provides insufficient verifiable detail.\n\nReturn structured JSON matching:\n{\n  \"candidate_id\": \"",
+          "line": 70
+        },
+        {
+          "value": "\",\n  \"mappings\": [\n    {\n      \"criterion_id\": \"...\",\n      \"requirement_type\": \"mandatory\",\n      \"status\": \"supported\",\n      \"candidate_evidence\": \"...\",\n      \"evidence_ids\": [\"EVD-xxx-...\"],\n      \"is_missing_qualification\": false,\n      \"is_missing_evidence_only\": false,\n      \"notes\": \"...\"\n    }\n  ],\n  \"supported_count\": 0,\n  \"unsupported_count\": 0,\n  \"partially_supported_count\": 0,\n  \"unclear_count\": 0\n}\n",
+          "line": 82
+        }
+      ]
+    },
+    {
+      "file": "Agents/recruitment_screening/experience_assessment_agent.py",
+      "filename": "experience_assessment_agent.py",
+      "stem": "experience_assessment_agent",
+      "sha256": "d85fbff93fe6a9a6cb20c0880eb22b9cbf2253243378102bc7430d346671ad6a",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "ExperienceAssessmentOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 30,
+          "end_line": 37,
+          "docstring": "Create the CrewAI Experience Assessment Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_experience_assessment",
+          "line": 40,
+          "end_line": 85,
+          "docstring": "Execute Experience and Skills Assessment Agent.",
+          "args": [
+            "qualification_data",
+            "evidence_mapping_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "experience_assessment_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_experience_assessment",
+          "line": 40,
+          "classification": "function_candidate",
+          "docstring": "Execute Experience and Skills Assessment Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 5: Experience and Skills Assessment Agent for Recruitment and Resume Screening.\n\nResponsibilities:\n- Evaluate relevance of experience, projects, skills, and accomplishments to the target role.\n- Identify relevant transferable skills where supported by evidence.\n- Explain strengths and gaps against stated job requirements.\n- Avoid unsupported judgments about candidate competence.\n",
+          "line": 1
+        },
+        {
+          "value": "Evaluate candidate career trajectory, domain depth, and transferable skills relative to the target position, documenting strengths and concrete gaps without bias.",
+          "line": 20
+        },
+        {
+          "value": "You are a seasoned technical hiring evaluator. You examine work history for depth, relevance, and practical complexity. You identify transferable competencies grounded in evidence, avoiding speculative judgments regarding candidate character or unstated capabilities.",
+          "line": 24
+        },
+        {
+          "value": "Create the CrewAI Experience Assessment Agent.",
+          "line": 31
+        },
+        {
+          "value": "Execute Experience and Skills Assessment Agent.",
+          "line": 46
+        },
+        {
+          "value": "Valid JSON matching ExperienceAssessmentOutput schema.",
+          "line": 75
+        },
+        {
+          "value": "\n\nEvaluate candidate experience relevance:\n1. Provide a succinct relevance_summary of candidate career history vs target requirements.\n2. Identify 2-4 key candidate strengths supported by work evidence.\n3. Identify notable experience gaps (e.g., lacking cloud scale, insufficient years in role, or irrelevant industry).\n4. Identify transferable skills supported by evidence.\n5. List evidence reference IDs cited.\n\nReturn structured JSON matching:\n{\n  \"candidate_id\": \"",
+          "line": 56
+        },
+        {
+          "value": "\",\n  \"relevance_summary\": \"...\",\n  \"strengths\": [\"Strong backend Python architecture experience\", ...],\n  \"experience_gaps\": [\"No demonstrated experience with AWS Kubernetes\", ...],\n  \"transferable_skills\": [\"SQL query optimization transferable to PostgreSQL\", ...],\n  \"evidence_references\": [\"EVD-xxx-EXP1\", \"EVD-xxx-SKL\"]\n}\n",
+          "line": 67
+        }
+      ]
+    },
+    {
+      "file": "Agents/recruitment_screening/intake_agent.py",
+      "filename": "intake_agent.py",
+      "stem": "intake_agent",
+      "sha256": "beff5428c462f60e64deb4a51a2969c5f36adb093a0351c67dbee47aa51a3695",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "ResumeIntakeOutput"
+          ],
+          "aliases": {},
+          "line": 15
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 16
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 31,
+          "end_line": 38,
+          "docstring": "Create the CrewAI Resume Intake Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_intake",
+          "line": 41,
+          "end_line": 88,
+          "docstring": "Execute Resume Intake Agent on raw resume data.",
+          "args": [
+            "resume_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "resume_intake_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_intake",
+          "line": 41,
+          "classification": "function_candidate",
+          "docstring": "Execute Resume Intake Agent on raw resume data."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 1: Resume Intake Agent for Recruitment and Resume Screening.\n\nResponsibilities:\n- Accept synthetic resume and job application identifier.\n- Normalize input and identify available resume sections.\n- Extract candidate metadata and detect missing or malformed information.\n- Identify education, experience, projects, skills, and certifications.\n- Never invent qualifications.\n",
+          "line": 1
+        },
+        {
+          "value": "Accurately normalize raw resume text, identify present and missing sections, and catalog candidate metadata without ever inventing qualifications.",
+          "line": 21
+        },
+        {
+          "value": "You are a meticulous recruitment intake specialist. Your role is strictly to catalog the sections and metadata provided in the candidate's resume, noting any formatting gaps or omitted standard sections with high factual fidelity.",
+          "line": 25
+        },
+        {
+          "value": "Create the CrewAI Resume Intake Agent.",
+          "line": 32
+        },
+        {
+          "value": "Execute Resume Intake Agent on raw resume data.",
+          "line": 46
+        },
+        {
+          "value": "Valid JSON matching ResumeIntakeOutput schema.",
+          "line": 78
+        },
+        {
+          "value": "\nAnalyze the candidate application and resume input below:\n- Application ID: ",
+          "line": 55
+        },
+        {
+          "value": "\n\nExtract and normalize the intake metadata.\nReturn a structured JSON object with the following fields:\n{\n  \"application_id\": \"",
+          "line": 62
+        },
+        {
+          "value": "\",\n  \"contact_info_present\": true or false,\n  \"sections_identified\": [\"education\", \"experience\", \"skills\", ...],\n  \"missing_sections\": [\"contact_information\", ...],\n  \"raw_sections\": { \"education\": \"...\", \"experience\": \"...\" },\n  \"source_evidence_ids\": ",
+          "line": 69
+        },
+        {
+          "value": ",\n  \"intake_notes\": [\"Note on any malformed or incomplete sections\"]\n}\n",
+          "line": 74
+        }
+      ]
+    },
+    {
+      "file": "Agents/recruitment_screening/job_criteria_agent.py",
+      "filename": "job_criteria_agent.py",
+      "stem": "job_criteria_agent",
+      "sha256": "283f8c4fbb4425dec8630788467de5197beebc8bf6457a0e0fee5496f936ee55",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "JobCriteriaOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 30,
+          "end_line": 37,
+          "docstring": "Create the CrewAI Job Criteria Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_job_criteria",
+          "line": 40,
+          "end_line": 103,
+          "docstring": "Execute Job Criteria Agent on job description.",
+          "args": [
+            "job_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "job_criteria_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_job_criteria",
+          "line": 40,
+          "classification": "function_candidate",
+          "docstring": "Execute Job Criteria Agent on job description."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 3: Job Criteria Agent for Recruitment and Resume Screening.\n\nResponsibilities:\n- Parse the supplied job description.\n- Separate mandatory and preferred qualifications, responsibilities, and experience requirements.\n- Assign stable criterion IDs.\n- Flag ambiguous requirements without inventing new criteria.\n",
+          "line": 1
+        },
+        {
+          "value": "Parse the job description into discrete mandatory and preferred evaluation criteria, assigning stable criterion IDs and flagging any ambiguous requirements.",
+          "line": 20
+        },
+        {
+          "value": "You are a job specification analyst. You decompose job descriptions into explicit, verifiable criteria, categorizing them cleanly into mandatory requirements and preferred qualifications while never inventing unstated prerequisites.",
+          "line": 24
+        },
+        {
+          "value": "Create the CrewAI Job Criteria Agent.",
+          "line": 31
+        },
+        {
+          "value": "Execute Job Criteria Agent on job description.",
+          "line": 45
+        },
+        {
+          "value": "Valid JSON matching JobCriteriaOutput schema.",
+          "line": 93
+        },
+        {
+          "value": "\n\nParse and structure each requirement into distinct evaluation criteria:\n- Assign stable criterion_id (e.g. ",
+          "line": 57
+        },
+        {
+          "value": "-CRIT-P1).\n- Identify category ('technical_skill', 'education', 'certification', 'experience').\n- Mark requirement_type ('mandatory' or 'preferred').\n- Flag is_ambiguous (true/false) if requirements contain vague terms like 'rockstar' or unspecified scope.\n\nReturn structured JSON matching:\n{\n  \"job_id\": \"",
+          "line": 60
+        },
+        {
+          "value": "\",\n  \"mandatory_criteria\": [\n    {\n      \"criterion_id\": \"",
+          "line": 68
+        },
+        {
+          "value": "-CRIT-M1\",\n      \"category\": \"technical_skill\",\n      \"requirement_type\": \"mandatory\",\n      \"description\": \"...\",\n      \"is_ambiguous\": false,\n      \"ambiguity_notes\": null\n    }\n  ],\n  \"preferred_criteria\": [\n    {\n      \"criterion_id\": \"",
+          "line": 71
+        },
+        {
+          "value": "-CRIT-P1\",\n      \"category\": \"technical_skill\",\n      \"requirement_type\": \"preferred\",\n      \"description\": \"...\",\n      \"is_ambiguous\": false,\n      \"ambiguity_notes\": null\n    }\n  ],\n  \"total_criteria_count\": ",
+          "line": 81
+        }
+      ]
+    },
+    {
+      "file": "Agents/recruitment_screening/missing_evidence_agent.py",
+      "filename": "missing_evidence_agent.py",
+      "stem": "missing_evidence_agent",
+      "sha256": "674e0b10b9bc576b1c6b3217fb1f9e2625ce74820319047199fa04be720764d8",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "MissingEvidenceOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 30,
+          "end_line": 37,
+          "docstring": "Create the CrewAI Missing Evidence and Consistency Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_missing_evidence",
+          "line": 40,
+          "end_line": 94,
+          "docstring": "Execute Missing Evidence and Consistency Agent.",
+          "args": [
+            "intake_data",
+            "qualification_data",
+            "evidence_mapping_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "missing_evidence_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_missing_evidence",
+          "line": 40,
+          "classification": "function_candidate",
+          "docstring": "Execute Missing Evidence and Consistency Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 6: Missing Evidence and Consistency Agent for Recruitment and Resume Screening.\n\nResponsibilities:\n- Identify missing information, ambiguous claims, inconsistent dates, and unsupported proficiency claims.\n- Identify requirements that cannot be evaluated reliably due to incomplete documentation.\n- Distinguish confirmed inconsistencies from questions requiring recruiter clarification.\n- Intentionally overlap with evidence mapping to support future consolidation experiments.\n",
+          "line": 1
+        },
+        {
+          "value": "Recruitment Consistency and Verification Auditor",
+          "line": 18
+        },
+        {
+          "value": "Audit the resume and qualification records for chronological anomalies, unsupported buzzword claims, missing mandatory evidence, and ambiguous statements.",
+          "line": 20
+        },
+        {
+          "value": "You are a forensic resume auditor. You cross-check timeline continuity (such as graduation dates vs employment dates), unbacked keyword stuffing, and unverified leadership claims, clearly categorizing confirmed discrepancies vs questions that need recruiter follow-up.",
+          "line": 24
+        },
+        {
+          "value": "Create the CrewAI Missing Evidence and Consistency Agent.",
+          "line": 31
+        },
+        {
+          "value": "Execute Missing Evidence and Consistency Agent.",
+          "line": 47
+        },
+        {
+          "value": "Valid JSON matching MissingEvidenceOutput schema.",
+          "line": 84
+        },
+        {
+          "value": "\n\nAudit candidate records for evidence gaps and inconsistencies:\n1. Identify missing evidence items (e.g., degree institution omitted, or missing dates).\n2. Identify unreliable requirements (criteria that cannot be evaluated reliably from the resume).\n3. Detect inconsistencies:\n   - Check date continuity: Are employment start dates later than end dates?\n   - Check keyword stuffing: Are skills listed without any supporting project or role?\n   - Set 'is_confirmed_inconsistency': true for definite chronological or factual errors.\n   - Set 'requires_recruiter_clarification': true for ambiguous wording.\n\nReturn structured JSON matching:\n{\n  \"candidate_id\": \"",
+          "line": 57
+        },
+        {
+          "value": "\",\n  \"missing_evidence_items\": [\"Missing employment end date\", ...],\n  \"unreliable_requirements\": [\"Cannot verify high-throughput scale claim\", ...],\n  \"inconsistencies\": [\n    {\n      \"issue_type\": \"inconsistent_dates\",\n      \"description\": \"Start date 2025 is after end date 2021 in work history\",\n      \"is_confirmed_inconsistency\": true,\n      \"requires_recruiter_clarification\": false,\n      \"evidence_ids\": [\"EVD-xxx-EXP1\"]\n    }\n  ]\n}\n",
+          "line": 70
+        }
+      ]
+    },
+    {
+      "file": "Agents/recruitment_screening/qualification_agent.py",
+      "filename": "qualification_agent.py",
+      "stem": "qualification_agent",
+      "sha256": "047cfec07d3f408d23cd68933b4dca78368b9878368a52ea3988853374b27ef7",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "QualificationExtractionOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 29,
+          "end_line": 36,
+          "docstring": "Create the CrewAI Qualification Extraction Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_qualification_extraction",
+          "line": 39,
+          "end_line": 108,
+          "docstring": "Execute Qualification Extraction Agent.",
+          "args": [
+            "intake_output",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "qualification_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_qualification_extraction",
+          "line": 39,
+          "classification": "function_candidate",
+          "docstring": "Execute Qualification Extraction Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 2: Qualification Extraction Agent for Recruitment and Resume Screening.\n\nResponsibilities:\n- Extract technical skills, education, certifications, projects, experience, accomplishments.\n- Preserve supporting resume excerpts and evidence IDs.\n- Record proficiency or duration only when supported by the resume.\n- Avoid repeating normalization completed by the intake agent.\n",
+          "line": 1
+        },
+        {
+          "value": "Extract factual technical skills, degrees, certifications, and work experience from the normalized resume sections, linking each item to exact excerpts and evidence IDs.",
+          "line": 20
+        },
+        {
+          "value": "You are an expert technical resume parser. You extract qualifications with high precision, faithfully recording evidence IDs and verbatim excerpts. You never infer unstated proficiency.",
+          "line": 24
+        },
+        {
+          "value": "Create the CrewAI Qualification Extraction Agent.",
+          "line": 30
+        },
+        {
+          "value": "Execute Qualification Extraction Agent.",
+          "line": 44
+        },
+        {
+          "value": "Valid JSON matching QualificationExtractionOutput schema.",
+          "line": 98
+        },
+        {
+          "value": "\n\nExtract all concrete qualifications. For each item:\n- Identify category: 'technical_skill', 'education', 'certification', 'experience', 'project'.\n- Name of skill/degree/experience.\n- Supporting excerpt from the resume text.\n- Associated evidence ID (e.g., EVD-xxx-EDU, EVD-xxx-EXP1, EVD-xxx-SKL).\n\nReturn a structured JSON object matching:\n{\n  \"candidate_id\": \"",
+          "line": 55
+        },
+        {
+          "value": "\",\n  \"technical_skills\": [\n    {\n      \"category\": \"technical_skill\",\n      \"item_name\": \"Python\",\n      \"proficiency_or_duration\": \"5 years\" or null,\n      \"supporting_excerpt\": \"Designed scalable services in Python...\",\n      \"evidence_id\": \"EVD-xxx-SKL\"\n    }\n  ],\n  \"education\": [\n    {\n      \"category\": \"education\",\n      \"item_name\": \"B.S. in Computer Science\",\n      \"proficiency_or_duration\": \"Graduated 2020\",\n      \"supporting_excerpt\": \"B.S. in Computer Science from State University\",\n      \"evidence_id\": \"EVD-xxx-EDU\"\n    }\n  ],\n  \"certifications\": [],\n  \"experience_records\": [\n    {\n      \"category\": \"experience\",\n      \"item_name\": \"Software Engineer at Apex Dynamics Corp\",\n      \"proficiency_or_duration\": \"2018 - 2024\",\n      \"supporting_excerpt\": \"Designed and deployed scalable services...\",\n      \"evidence_id\": \"EVD-xxx-EXP1\"\n    }\n  ],\n  \"projects\": [],\n  \"extraction_warnings\": []\n}\n",
+          "line": 65
+        }
+      ]
+    },
+    {
+      "file": "Agents/recruitment_screening/recruiter_summary_agent.py",
+      "filename": "recruiter_summary_agent.py",
+      "stem": "recruiter_summary_agent",
+      "sha256": "09462487d61ac5dcec3de4dadccca40aac5da2b11e174155bcbb087417f90b95",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "RecruiterSummaryOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "calculate_deterministic_match_score",
+          "line": 31,
+          "end_line": 60,
+          "docstring": "Calculate deterministic match score (0.0 to 100.0).\nFormula:\n- Mandatory criteria account for 70% of total score.\n- Preferred criteria account for 30% of total score.\n- Points: supported=1.0, partially_supported=0.5, unclear=0.25, unsupported=0.0.",
+          "args": [
+            "mappings"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 63,
+          "end_line": 70,
+          "docstring": "Create the CrewAI Recruiter Summary Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_recruiter_summary",
+          "line": 73,
+          "end_line": 161,
+          "docstring": "Execute Recruiter Summary Agent.",
+          "args": [
+            "run_id",
+            "intake_data",
+            "job_criteria_data",
+            "evidence_mapping_data",
+            "assessment_data",
+            "missing_evidence_data",
+            "review_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "score_items",
+          "line": 42,
+          "end_line": 54,
+          "docstring": null,
+          "args": [
+            "items"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "recruiter_summary_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "calculate_deterministic_match_score",
+          "line": 31,
+          "classification": "function_candidate",
+          "docstring": "Calculate deterministic match score (0.0 to 100.0).\nFormula:\n- Mandatory criteria account for 70% of total score.\n- Preferred criteria account for 30% of total score.\n- Points: supported=1.0, partially_supported=0.5, unclear=0.25, unsupported=0.0."
+        },
+        {
+          "name": "run_recruiter_summary",
+          "line": 73,
+          "classification": "function_candidate",
+          "docstring": "Execute Recruiter Summary Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 8: Recruiter Summary Agent for Recruitment and Resume Screening.\n\nResponsibilities:\n- Produce a structured, recruiter-facing screening report.\n- Synthesize candidate overview, criteria matrix, strengths, evidence gaps, inconsistencies, and follow-up questions.\n- Include a transparent, deterministic match score with documented formula and limitations.\n- Strictly never autonomously reject a candidate or make a final hiring decision.\n",
+          "line": 1
+        },
+        {
+          "value": "Executive Recruiter Summary Synthesizer",
+          "line": 18
+        },
+        {
+          "value": "Synthesize all screening findings into a structured, transparent recruiter report, providing actionable follow-up interview questions and deterministic scoring while explicitly preserving final decision authority for human hiring teams.",
+          "line": 20
+        },
+        {
+          "value": "You are an executive talent partner. You synthesize complex candidate evaluations into clear, balanced screening summaries. You highlight both verified strengths and critical gaps, providing tailored interview questions and transparent scoring without ever making autonomous hire/reject rulings.",
+          "line": 25
+        },
+        {
+          "value": "\n    Calculate deterministic match score (0.0 to 100.0).\n    Formula:\n    - Mandatory criteria account for 70% of total score.\n    - Preferred criteria account for 30% of total score.\n    - Points: supported=1.0, partially_supported=0.5, unclear=0.25, unsupported=0.0.\n    ",
+          "line": 32
+        },
+        {
+          "value": "Create the CrewAI Recruiter Summary Agent.",
+          "line": 64
+        },
+        {
+          "value": "Deterministic weighted ratio: Mandatory criteria (70%), Preferred criteria (30%). Supported=1.0, Partially Supported=0.5, Unclear=0.25, Unsupported=0.0.",
+          "line": 101
+        },
+        {
+          "value": "Numerical score reflects documented resume keyword and experience overlap only. It does not measure soft skills, motivation, or unlisted capabilities.",
+          "line": 102
+        },
+        {
+          "value": "Valid JSON matching RecruiterSummaryOutput schema.",
+          "line": 151
+        },
+        {
+          "value": "\n\nScreening Findings:\n- Criteria Mappings: ",
+          "line": 109
+        },
+        {
+          "value": "\n\nGenerate the final structured Recruiter Summary:\n1. Executive overview of the candidate's background and suitability.\n2. Provide 3-5 concrete recommended follow-up questions for the recruiter's phone screen.\n3. Include the deterministic score (",
+          "line": 117
+        },
+        {
+          "value": ") and its documented limitations.\n4. Set human_review_required: true.\n5. Emphasize that this summary is a screening assistance aid and does NOT make autonomous hiring decisions.\n\nReturn structured JSON matching:\n{\n  \"run_id\": \"",
+          "line": 122
+        },
+        {
+          "value": "\",\n  \"executive_candidate_overview\": \"...\",\n  \"criteria_matrix\": ",
+          "line": 133
+        },
+        {
+          "value": ",\n  \"recommended_follow_up_questions\": [\n    \"Could you elaborate on your experience deploying services with Docker and Kubernetes?\",\n    ...\n  ],\n  \"deterministic_match_score\": ",
+          "line": 138
+        },
+        {
+          "value": "\",\n  \"human_review_required\": true,\n  \"non_autonomous_decision_statement\": \"This is an automated screening assistant summary. It does NOT make autonomous hiring decisions.\",\n  \"validation_warnings\": []\n}\n",
+          "line": 145
+        }
+      ]
+    },
+    {
+      "file": "Agents/recruitment_screening/review_agent.py",
+      "filename": "review_agent.py",
+      "stem": "review_agent",
+      "sha256": "02a725dff2a070d8d8ca454511280d1294141ace37a16c844c58393c10eeaaee",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "ScreeningReviewOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 30,
+          "end_line": 37,
+          "docstring": "Create the CrewAI Screening Review Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_screening_review",
+          "line": 40,
+          "end_line": 96,
+          "docstring": "Execute Screening Review Agent.",
+          "args": [
+            "candidate_id",
+            "evidence_mapping_data",
+            "assessment_data",
+            "missing_evidence_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "screening_review_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_screening_review",
+          "line": 40,
+          "classification": "function_candidate",
+          "docstring": "Execute Screening Review Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 7: Screening Review Agent for Recruitment and Resume Screening.\n\nResponsibilities:\n- Check for contradictory assessments, duplicated findings, and unsupported claims.\n- Verify that mandatory and preferred criteria are strictly segregated.\n- Check evidence traceability (valid evidence IDs for all claims).\n- Identify issues requiring mandatory recruiter review.\n",
+          "line": 1
+        },
+        {
+          "value": "Screening Quality and Integrity Reviewer",
+          "line": 18
+        },
+        {
+          "value": "Conduct an independent quality check across prior agent findings, ensuring evidence traceability, non-contradiction, and distinct treatment of mandatory vs preferred criteria.",
+          "line": 20
+        },
+        {
+          "value": "You are a recruitment quality assurance lead. You verify that every assessment made by upstream screeners is supported by traceable resume evidence, that mandatory criteria have not been conflated with optional preferences, and that no contradictory conclusions exist.",
+          "line": 24
+        },
+        {
+          "value": "Create the CrewAI Screening Review Agent.",
+          "line": 31
+        },
+        {
+          "value": "Valid JSON matching ScreeningReviewOutput schema.",
+          "line": 86
+        },
+        {
+          "value": "\n\nConduct independent quality check:\n1. Verify if any finding contradicts another (e.g., claimed as strength but mapped as unsupported).\n2. Check evidence traceability: Are all mapped criteria linked to valid evidence IDs?\n3. Verify whether all mandatory criteria are met (mandatory_criteria_met: ",
+          "line": 67
+        },
+        {
+          "value": ").\n4. List specific issues requiring human recruiter review.\n5. Set review_passed to true if findings are consistent and traceable.\n\nReturn structured JSON matching:\n{\n  \"candidate_id\": \"",
+          "line": 72
+        },
+        {
+          "value": "\",\n  \"review_passed\": true,\n  \"contradictions_detected\": [],\n  \"traceability_verified\": true,\n  \"mandatory_criteria_met\": ",
+          "line": 78
+        },
+        {
+          "value": ",\n  \"issues_requiring_human_review\": [\"Recruiter review needed for date inconsistency in EXP1\", ...]\n}\n",
+          "line": 82
+        }
+      ]
+    },
+    {
+      "file": "Agents/recruitment_screening/workflow.py",
+      "filename": "workflow.py",
+      "stem": "workflow",
+      "sha256": "5c4edce63cfad85c7727a36d32cc8f3e5bb339d055dc1cd84a83f7529d0e2a02",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 15
+        },
+        {
+          "module": "os",
+          "asname": null,
+          "line": 16
+        },
+        {
+          "module": "uuid",
+          "asname": null,
+          "line": 17
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 18
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 19
+        },
+        {
+          "module": "common.tracing",
+          "level": 0,
+          "names": [
+            "init_tracing"
+          ],
+          "aliases": {},
+          "line": 20
+        },
+        {
+          "module": "Agents.recruitment_screening",
+          "level": 0,
+          "names": [
+            "intake_agent",
+            "qualification_agent",
+            "job_criteria_agent",
+            "evidence_mapping_agent",
+            "experience_assessment_agent",
+            "missing_evidence_agent",
+            "review_agent",
+            "recruiter_summary_agent"
+          ],
+          "aliases": {},
+          "line": 23
+        }
+      ],
+      "classes": [
+        {
+          "name": "RecruitmentScreeningWorkflow",
+          "line": 61
+        }
+      ],
+      "functions": [
+        {
+          "name": "load_sample_recruitment_input",
+          "line": 38,
+          "end_line": 58,
+          "docstring": "Load sample resume and job description from local synthetic datasets.",
+          "args": [
+            "candidate_index",
+            "job_index",
+            "data_dir"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_recruitment_screening_workflow",
+          "line": 201,
+          "end_line": 207,
+          "docstring": "Execute recruitment screening workflow.",
+          "args": [
+            "input_data",
+            "run_id"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "__init__",
+          "line": 64,
+          "end_line": 77,
+          "docstring": null,
+          "args": [
+            "self",
+            "llm",
+            "enable_tracing"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "get_agent_count",
+          "line": 79,
+          "end_line": 81,
+          "docstring": "Return the exact number of agents.",
+          "args": [
+            "self"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run",
+          "line": 83,
+          "end_line": 198,
+          "docstring": "Execute the 8-agent screening workflow sequentially.",
+          "args": [
+            "self",
+            "input_data",
+            "run_id",
+            "runs_base_dir"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "final_summary.model_dump",
+          "line": 177,
+          "arguments": []
+        },
+        {
+          "call": "m.model_dump",
+          "line": 186,
+          "arguments": []
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_recruitment_screening_workflow",
+          "line": 201,
+          "classification": "function_candidate",
+          "docstring": "Execute recruitment screening workflow."
+        }
+      ],
+      "execution_calls": [
+        {
+          "call": "wf.run",
+          "line": 207
+        }
+      ],
+      "string_literals": [
+        {
+          "value": "\nWorkflow Orchestrator: Recruitment and Resume Screening (Workflow 1).\n\nExecutes exactly 8 CrewAI agents in sequential baseline order:\n1. Resume Intake Agent (intake_agent.py)\n2. Qualification Extraction Agent (qualification_agent.py)\n3. Job Criteria Agent (job_criteria_agent.py)\n4. Evidence Mapping Agent (evidence_mapping_agent.py)\n5. Experience and Skills Assessment Agent (experience_assessment_agent.py)\n6. Missing Evidence and Consistency Agent (missing_evidence_agent.py)\n7. Screening Review Agent (review_agent.py)\n8. Recruiter Summary Agent (recruiter_summary_agent.py)\n",
+          "line": 1
+        },
+        {
+          "value": "Load sample resume and job description from local synthetic datasets.",
+          "line": 43
+        },
+        {
+          "value": "Manages baseline execution of the 8-agent recruitment screening workflow.",
+          "line": 62
+        },
+        {
+          "value": "Execute recruitment screening workflow.",
+          "line": 205
+        },
+        {
+          "value": "\n        Execute the 8-agent screening workflow sequentially.\n        ",
+          "line": 89
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "file": "runs/recruitment_screening/live_20261023_070437_recrui.json",
+      "filename": "live_20261023_070437_recrui.json",
+      "suffix": ".json",
+      "workflow_name": "recruitment_screening",
+      "run_id": "live_20261023_070437_recrui",
+      "status": "success",
+      "total_duration_seconds": 53.341,
+      "agent_count": 8,
+      "total_tokens": null,
+      "estimated_cost_usd": 0.010728
+    },
+    {
+      "file": "runs/recruitment_screening/rec_7581eef9.json",
+      "filename": "rec_7581eef9.json",
+      "suffix": ".json",
+      "workflow_name": "recruitment_screening",
+      "run_id": "rec_7581eef9",
+      "status": "success",
+      "total_duration_seconds": 56.399,
+      "agent_count": 8,
+      "total_tokens": null,
+      "estimated_cost_usd": 0.010458
+    },
+    {
+      "file": "runs/recruitment_screening/rec_be76e5c5.json",
+      "filename": "rec_be76e5c5.json",
+      "suffix": ".json",
+      "workflow_name": "recruitment_screening",
+      "run_id": "rec_be76e5c5",
+      "status": "failed",
+      "total_duration_seconds": 32.447,
+      "agent_count": 7,
+      "total_tokens": null,
+      "estimated_cost_usd": 0.007029
+    },
+    {
+      "file": "runs/recruitment_screening/summary.jsonl",
+      "filename": "summary.jsonl",
+      "suffix": ".jsonl",
+      "record_count": 3,
+      "first_record_keys": [
+        "run_id",
+        "workflow_name",
+        "start_time",
+        "end_time",
+        "total_duration_seconds",
+        "agent_count",
+        "status",
+        "llm_call_count",
+        "token_usage",
+        "estimated_cost_usd",
+        "validation_warnings_count",
+        "has_error"
+      ],
+      "workflow_name": "recruitment_screening"
+    }
+  ]
+}

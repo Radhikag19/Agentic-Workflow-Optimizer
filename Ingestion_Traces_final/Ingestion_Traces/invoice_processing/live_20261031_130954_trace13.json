@@ -1,0 +1,266 @@
+{
+  "run_id": "live_20261031_130954_trace13",
+  "workflow_name": "invoice_processing",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 14.213,
+  "agent_execution_count": 8,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.599,
+      "tokens": 1008,
+      "prompt_tokens": 516,
+      "completion_tokens": 492,
+      "output": {
+        "extracted_invoice": {
+          "invoice_number": "INV-2026-0013",
+          "supplier_id": "SUP-103",
+          "supplier_name": "Prime Industrial Machinery",
+          "po_reference": "PO-2026-0013",
+          "invoice_date": "2026-08-30",
+          "due_date": "2026-09-29",
+          "currency": "USD",
+          "line_items": [
+            {
+              "description": "SSD NVMe 2TB Enterprise",
+              "quantity": 7,
+              "unit_price": 220.0,
+              "line_total": 1540.0
+            },
+            {
+              "description": "Annual Security License Seat",
+              "quantity": 13,
+              "unit_price": 180.0,
+              "line_total": 2340.0
+            }
+          ],
+          "subtotal": 3880.0,
+          "tax": 310.4,
+          "discount": 0.0,
+          "total_amount": 4190.4
+        },
+        "extraction_flags": []
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "invoice_extraction_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.202,
+      "tokens": 904,
+      "prompt_tokens": 569,
+      "completion_tokens": 335,
+      "output": {
+        "validation_status": "PASSED",
+        "math_audit": {
+          "is_arithmetic_valid": true,
+          "calculated_subtotal": 3880.0,
+          "calculated_total": 4190.4,
+          "stated_total": 4190.4,
+          "discrepancy_amount": 0.0,
+          "line_discrepancies": []
+        },
+        "validation_errors": []
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "invoice_validation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 0.987,
+      "tokens": 899,
+      "prompt_tokens": 736,
+      "completion_tokens": 163,
+      "output": {
+        "po_match_status": "EXACT_MATCH",
+        "matched_po_id": "PO-2026-0013",
+        "discrepancies": [],
+        "matching_confidence": 1.0
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "po_matching_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 1.271,
+      "tokens": 926,
+      "prompt_tokens": 544,
+      "completion_tokens": 382,
+      "output": {
+        "is_compliant": true,
+        "applied_policy_ids": [
+          "POL-AP-001",
+          "POL-AP-002",
+          "POL-AP-003"
+        ],
+        "violations": [],
+        "compliance_summary": "Invoice INV-2026-0013 was reviewed against policies POL-AP-001 (Purchase Order match), POL-AP-002 (Threshold limits under $5,000), and POL-AP-003 (Vendor eligibility). All line items and the total amount ($4,190.40) are within approved limits, the PO reference matches, and the supplier is an approved vendor. No fatal violations or flags requiring secondary sign‑off were identified."
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "policy_compliance_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 1.358,
+      "tokens": 965,
+      "prompt_tokens": 596,
+      "completion_tokens": 369,
+      "output": {
+        "duplicate_status": "EXACT_DUPLICATE",
+        "matching_records": [
+          {
+            "historical_invoice_id": "INV-HIST-0012",
+            "matched_fields": [
+              "supplier_id",
+              "po_reference",
+              "total_amount",
+              "currency"
+            ],
+            "reason": "Exact invoice number or identical (supplier, PO, amount) duplicate."
+          }
+        ],
+        "risk_assessment": {
+          "risk_level": "HIGH",
+          "recommendation": "Flag for review and reject payment pending verification."
+        }
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "duplicate_detection_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 1.89,
+      "tokens": 1516,
+      "prompt_tokens": 927,
+      "completion_tokens": 589,
+      "output": {
+        "has_exceptions": true,
+        "exception_count": 1,
+        "critical_exceptions": [],
+        "detailed_exceptions": [
+          {
+            "exception_type": "Duplicate Invoice",
+            "description": "Invoice INV-2026-0013 matches historical invoice INV-HIST-0012 on supplier_id, po_reference, total_amount, and currency, indicating an exact duplicate.",
+            "severity": "HIGH",
+            "resolvable": true,
+            "blocker": true,
+            "recommendation": "Flag for review and reject payment pending verification of authenticity.",
+            "source": "duplicate_detection"
+          }
+        ]
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "exception_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 1.748,
+      "tokens": 1606,
+      "prompt_tokens": 1103,
+      "completion_tokens": 503,
+      "output": {
+        "recommendation": "rejected",
+        "justification": "The invoice passes all validation checks (arithmetic correct, PO exact match, policies POL-AP-001, POL-AP-002, POL-AP-003 satisfied). However, duplicate detection identified an exact duplicate of historical invoice INV-HST-0012 with matching supplier_id, PO reference, total amount, and currency. This duplicate is flagged as HIGH risk and is a blocker exception (Duplicate Invoice). Consequently, payment must be rejected pending verification of authenticity.",
+        "conditions": [
+          "validation_status: PASSED",
+          "math_audit.is_arithmetic_valid: true",
+          "po_match_status: EXACT_MATCH",
+          "policy_compliance.is_compliant: true",
+          "duplicate_detection.duplicate_status: EXACT_DUPLICATE",
+          "duplicate_detection.risk_assessment.risk_level: HIGH",
+          "exception_analysis.exception_type: Duplicate Invoice (blocker, severity HIGH)"
+        ]
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "approval_recommendation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_8 (gsk_yt...AwPO)",
+      "duration_seconds": 2.432,
+      "tokens": 2091,
+      "prompt_tokens": 1272,
+      "completion_tokens": 819,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "invoice_id": "INV-2026-0013",
+        "final_recommendation": "rejected",
+        "risk_level": "HIGH",
+        "summary_report": "Invoice INV-2026-0013 passed all arithmetic, PO matching, and policy compliance checks. Duplicate detection identified an exact duplicate of historical invoice INV-HIST-0012 with matching supplier, PO, amount, and currency, assigning a HIGH risk level and a blocker exception. Consequently, the payment is recommended to be rejected pending verification of authenticity.",
+        "audit_findings": {
+          "extraction": {
+            "extracted_invoice_number": "INV-2026-0013",
+            "subtotal_match": true,
+            "total_match": true
+          },
+          "validation": {
+            "status": "PASSED",
+            "arithmetic_valid": true,
+            "discrepancy_amount": 0.0
+          },
+          "po_matching": {
+            "status": "EXACT_MATCH",
+            "matched_po_id": "PO-2026-0013",
+            "confidence": 1.0
+          },
+          "policy_compliance": {
+            "is_compliant": true,
+            "applied_policies": [
+              "POL-AP-001",
+              "POL-AP-002",
+              "POL-AP-003"
+            ]
+          },
+          "duplicate_detection": {
+            "status": "EXACT_DUPLICATE",
+            "historical_match": "INV-HIST-0012",
+            "risk_level": "HIGH",
+            "recommendation": "Flag for review and reject payment pending verification."
+          },
+          "exception_analysis": {
+            "has_exceptions": true,
+            "exception_count": 1,
+            "critical_exceptions": [],
+            "blocker_exceptions": [
+              {
+                "type": "Duplicate Invoice",
+                "severity": "HIGH",
+                "resolvable": true,
+                "recommendation": "Flag for review and reject payment pending verification of authenticity."
+              }
+            ]
+          },
+          "approval_recommendation": {
+            "recommendation": "rejected",
+            "justification": "All validation, PO, and policy checks passed, but a HIGH‑risk exact duplicate was detected, constituting a blocker exception. Payment must be rejected until authenticity is confirmed."
+          }
+        }
+      },
+      "notes": "",
+      "order": 8,
+      "agent_id": "final_review_agent_invoice"
+    }
+  ],
+  "total_tokens": 9915,
+  "prompt_tokens": 6263,
+  "completion_tokens": 3652,
+  "estimated_cost_usd": 0.00658,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"invoice_id\": \"INV-2026-0013\",\n  \"final_recommendation\": \"rejected\",\n  \"risk_level\": \"HIGH\",\n  \"summary_report\": \"Invoice INV-2026-0013 passed all arithmetic, PO matching, and policy compliance checks. Duplicate detection identified an exact duplicate of historical invoice INV-HIST-0012 with matching supplier, PO, amount, and currency, assigning a HIGH risk level and a blocker exception. Consequently, the payment is recommended to be rejected pending verification of authenticity.\",\n  \"audit_findings\": {\n    \"extraction\": {\n      \"extracted_invoice_number\": \"INV-2026-0013\",\n      \"subtotal_match\": true,\n      \"total_match\": true\n    },\n    \"validation\": {\n      \"status\": \"PASSED\",\n      \"arithmetic_valid\": true,\n      \"discrepancy_amount\": 0.0\n    },\n    \"po_matching\": {\n      \"status\": \"EXACT_MATCH\",\n      \"matched_po_id\": \"PO-2026-0013\",\n      \"confidence\": 1.0\n    },\n    \"policy_compliance\": {\n      \"is_compliant\": true,\n      \"applied_policies\": [\n        \"POL-AP-001\",\n        \"POL-AP-002\",\n        \"POL-AP-003\"\n      ]\n    },\n    \"duplicate_detection\": {\n      \"status\": \"EXACT_DUPLICATE\",\n      \"historical_match\": \"INV-HIST-0012\",\n      \"risk_level\": \"HIGH\",\n      \"recommendation\": \"Flag for review and reject payment pending verification.\"\n    },\n    \"exception_analysis\": {\n      \"has_exceptions\": true,\n      \"exception_count\": 1,\n      \"critical_exceptions\": [],\n      \"blocker_exceptions\": [\n        {\n          \"type\": \"Duplicate Invoice\",\n          \"severity\": \"HIGH\",\n          \"resolvable\": true,\n          \"recommendation\": \"Flag for review and reject payment pending verification of authenticity.\"\n        }\n      ]\n    },\n    \"approval_recommendation\": {\n      \"recommendation\": \"rejected\",\n      \"justification\": \"All validation, PO, and policy checks passed, but a HIGH\\u2011risk exact duplicate was detected, constituting a blocker exception. Payment must be rejected until authenticity is confirmed.\"\n    }\n  }\n}",
+  "timestamp": "2026-10-31T13:10:08.258025+00:00"
+}

@@ -1,0 +1,261 @@
+{
+  "run_id": "live_20261031_130828_trace08",
+  "workflow_name": "invoice_processing",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 13.518,
+  "agent_execution_count": 8,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.409,
+      "tokens": 822,
+      "prompt_tokens": 464,
+      "completion_tokens": 358,
+      "output": {
+        "extracted_invoice": {
+          "invoice_number": "INV-2026-0008",
+          "supplier_id": "SUP-108",
+          "supplier_name": "Quantum Facilities Management",
+          "po_reference": "PO-2026-0008",
+          "invoice_date": "2026-08-26",
+          "due_date": "2026-09-25",
+          "currency": "USD",
+          "line_items": [
+            {
+              "description": "Pallet Storage Monthly Rental",
+              "quantity": 5,
+              "unit_price": 650.0,
+              "line_total": 3250.0
+            }
+          ],
+          "subtotal": 3250.0,
+          "tax": 260.0,
+          "discount": 0.0,
+          "total_amount": 3510.0
+        },
+        "extraction_flags": {
+          "missing_fields": [],
+          "ambiguous_fields": [],
+          "inconsistent_fields": []
+        }
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "invoice_extraction_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.0,
+      "tokens": 766,
+      "prompt_tokens": 517,
+      "completion_tokens": 249,
+      "output": {
+        "validation_status": "PASSED",
+        "math_audit": {
+          "is_arithmetic_valid": true,
+          "calculated_subtotal": 3250.0,
+          "calculated_total": 3510.0,
+          "stated_total": 3510.0,
+          "discrepancy_amount": 0.0,
+          "line_discrepancies": []
+        },
+        "validation_errors": []
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "invoice_validation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.092,
+      "tokens": 811,
+      "prompt_tokens": 632,
+      "completion_tokens": 179,
+      "output": {
+        "po_match_status": "EXACT_MATCH",
+        "matched_po_id": "PO-2026-0008",
+        "discrepancies": [],
+        "matching_confidence": 1.0
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "po_matching_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 1.206,
+      "tokens": 709,
+      "prompt_tokens": 492,
+      "completion_tokens": 217,
+      "output": {
+        "is_compliant": true,
+        "applied_policy_ids": [
+          "POL-AP-001",
+          "POL-AP-002",
+          "POL-AP-003"
+        ],
+        "violations": [],
+        "compliance_summary": "The invoice complies with all applied policies (POL-AP-001, POL-AP-002, POL-AP-003). No fatal policy violations or flags requiring secondary sign‑off were detected. All threshold limits and vendor eligibility criteria are satisfied."
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "policy_compliance_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 1.86,
+      "tokens": 1049,
+      "prompt_tokens": 544,
+      "completion_tokens": 505,
+      "output": {
+        "duplicate_status": "EXACT_DUPLICATE",
+        "matching_records": [
+          {
+            "historical_invoice_id": "INV-HIST-0007",
+            "matched_fields": [
+              "supplier_id",
+              "po_reference",
+              "total_amount"
+            ],
+            "supplier_id": "SUP-108",
+            "po_reference": "PO-2026-0008",
+            "total_amount": 3510.0,
+            "reason": "Exact invoice number or identical (supplier, PO, amount) duplicate."
+          }
+        ],
+        "risk_assessment": {
+          "risk_level": "HIGH",
+          "recommendation": "Reject payment pending further investigation; possible duplicate billing."
+        }
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "duplicate_detection_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 1.899,
+      "tokens": 1525,
+      "prompt_tokens": 896,
+      "completion_tokens": 629,
+      "output": {
+        "has_exceptions": true,
+        "exception_count": 1,
+        "critical_exceptions": [],
+        "detailed_exceptions": [
+          {
+            "exception_type": "DuplicateInvoice",
+            "severity": "HIGH",
+            "description": "Exact duplicate invoice detected matching historical invoice INV-HIST-0007 (same supplier, PO, total amount).",
+            "risk_level": "HIGH",
+            "recommendation": "Reject payment pending further investigation; possible duplicate billing.",
+            "resolvable_via_human_review": true,
+            "fatal_blocker": false
+          }
+        ]
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "exception_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 1.411,
+      "tokens": 1511,
+      "prompt_tokens": 1065,
+      "completion_tokens": 446,
+      "output": {
+        "recommendation": "rejected",
+        "justification": "The invoice passes extraction, validation, PO matching (exact match PO-2026-0008) and policy compliance (POL-AP-001, POL-AP-002, POL-AP-003). Arithmetic calculations are correct. However, duplicate detection flagged an exact duplicate (historical invoice INV-HIST-0007) with a high risk level, and exception analysis recorded a high‑severity DuplicateInvoice exception. According to the deterministic decision guidance, an exact duplicate invoice requires rejection pending further investigation.",
+        "conditions": [
+          "Exact PO match confirmed",
+          "Math audit passed",
+          "Policy compliance confirmed",
+          "Duplicate detection: EXACT_DUPLICATE, risk_level HIGH",
+          "Exception: DuplicateInvoice, severity HIGH"
+        ]
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "approval_recommendation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_8 (gsk_yt...AwPO)",
+      "duration_seconds": 1.914,
+      "tokens": 1869,
+      "prompt_tokens": 1204,
+      "completion_tokens": 665,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "invoice_id": "INV-2026-0008",
+        "final_recommendation": "rejected",
+        "risk_level": "HIGH",
+        "summary_report": "The invoice was extracted correctly, all arithmetic calculations are valid, and it matches PO-2026-0008 exactly. Policy compliance checks passed with no violations. Duplicate detection flagged an exact duplicate (historical invoice INV-HIST-0007) with a high risk level, and the exception analysis recorded a high‑severity DuplicateInvoice exception. No critical exceptions remain unaddressed. Consequently, the deterministic decision guidance requires rejection pending further investigation.",
+        "audit_findings": {
+          "extraction": {
+            "status": "SUCCESS",
+            "issues": []
+          },
+          "validation": {
+            "status": "PASSED",
+            "math_audit": {
+              "is_arithmetic_valid": true,
+              "discrepancy_amount": 0.0
+            }
+          },
+          "po_matching": {
+            "status": "EXACT_MATCH",
+            "matched_po_id": "PO-2026-0008"
+          },
+          "policy_compliance": {
+            "status": "COMPLIANT",
+            "applied_policies": [
+              "POL-AP-001",
+              "POL-AP-002",
+              "POL-AP-003"
+            ],
+            "violations": []
+          },
+          "duplicate_detection": {
+            "status": "EXACT_DUPLICATE",
+            "risk_level": "HIGH",
+            "matched_historical_invoice": "INV-HIST-0007"
+          },
+          "exception_analysis": {
+            "has_exceptions": true,
+            "critical_exceptions": [],
+            "high_severity_exceptions": [
+              {
+                "type": "DuplicateInvoice",
+                "description": "Exact duplicate invoice detected matching historical invoice INV-HIST-0007."
+              }
+            ]
+          },
+          "approval_recommendation": {
+            "recommendation": "rejected",
+            "justification": "Exact duplicate detected with high risk; deterministic guidance mandates rejection."
+          }
+        }
+      },
+      "notes": "",
+      "order": 8,
+      "agent_id": "final_review_agent_invoice"
+    }
+  ],
+  "total_tokens": 9062,
+  "prompt_tokens": 5814,
+  "completion_tokens": 3248,
+  "estimated_cost_usd": 0.005996,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"invoice_id\": \"INV-2026-0008\",\n  \"final_recommendation\": \"rejected\",\n  \"risk_level\": \"HIGH\",\n  \"summary_report\": \"The invoice was extracted correctly, all arithmetic calculations are valid, and it matches PO-2026-0008 exactly. Policy compliance checks passed with no violations. Duplicate detection flagged an exact duplicate (historical invoice INV-HIST-0007) with a high risk level, and the exception analysis recorded a high\\u2011severity DuplicateInvoice exception. No critical exceptions remain unaddressed. Consequently, the deterministic decision guidance requires rejection pending further investigation.\",\n  \"audit_findings\": {\n    \"extraction\": {\n      \"status\": \"SUCCESS\",\n      \"issues\": []\n    },\n    \"validation\": {\n      \"status\": \"PASSED\",\n      \"math_audit\": {\n        \"is_arithmetic_valid\": true,\n        \"discrepancy_amount\": 0.0\n      }\n    },\n    \"po_matching\": {\n      \"status\": \"EXACT_MATCH\",\n      \"matched_po_id\": \"PO-2026-0008\"\n    },\n    \"policy_compliance\": {\n      \"status\": \"COMPLIANT\",\n      \"applied_policies\": [\n        \"POL-AP-001\",\n        \"POL-AP-002\",\n        \"POL-AP-003\"\n      ],\n      \"violations\": []\n    },\n    \"duplicate_detection\": {\n      \"status\": \"EXACT_DUPLICATE\",\n      \"risk_level\": \"HIGH\",\n      \"matched_historical_invoice\": \"INV-HIST-0007\"\n    },\n    \"exception_analysis\": {\n      \"has_exceptions\": true,\n      \"critical_exceptions\": [],\n      \"high_severity_exceptions\": [\n        {\n          \"type\": \"DuplicateInvoice\",\n          \"description\": \"Exact duplicate invoice detected matching historical invoice INV-HIST-0007.\"\n        }\n      ]\n    },\n    \"approval_recommendation\": {\n      \"recommendation\": \"rejected\",\n      \"justification\": \"Exact duplicate detected with high risk; deterministic guidance mandates rejection.\"\n    }\n  }\n}",
+  "timestamp": "2026-10-31T13:08:42.006320+00:00"
+}

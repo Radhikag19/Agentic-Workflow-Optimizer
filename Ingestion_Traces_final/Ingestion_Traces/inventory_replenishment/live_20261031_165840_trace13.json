@@ -1,0 +1,214 @@
+{
+  "run_id": "live_20261031_165840_trace13",
+  "workflow_name": "inventory_replenishment",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 31.222,
+  "agent_execution_count": 6,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_17 (gsk_qB...KRNJ)",
+      "duration_seconds": 20.049,
+      "tokens": 4091,
+      "prompt_tokens": 3251,
+      "completion_tokens": 840,
+      "output": {
+        "request_id": "REQ-INV-0013",
+        "sku_id": "SKU-0013",
+        "warehouse_id": "WH-EAST-02",
+        "sku_name": "Electronics Component Model 013",
+        "source_record_ids": [
+          "INV-SKU-0013",
+          "SUP-SUP-13"
+        ],
+        "raw_inventory_record": {
+          "sku_id": "SKU-0013",
+          "sku_name": "Electronics Component Model 013",
+          "category": "Electronics",
+          "warehouse_id": "WH-EAST-02",
+          "supplier_id": "SUP-13",
+          "current_stock": 95,
+          "reserved_stock": 20,
+          "incoming_stock": 0,
+          "unit_cost": 29.23,
+          "reorder_threshold": 157,
+          "safety_stock": 175,
+          "edge_case_type": "normal",
+          "source_record_ids": [
+            "INV-SKU-0013",
+            "SUP-SUP-13"
+          ]
+        },
+        "raw_supplier_record": {
+          "supplier_id": "SUP-13",
+          "supplier_name": "Vendor Supply Partner 13",
+          "lead_time_days": 3,
+          "minimum_order_quantity": 200,
+          "pack_size": 25,
+          "reliability_score": 0.87,
+          "contact_email": "orders@vendor13.example.com"
+        },
+        "raw_policy_record": {
+          "planning_rules": {
+            "default_safety_stock_days": 5,
+            "lead_time_demand_formula": "daily_avg_demand * lead_time_days",
+            "base_replenishment_formula": "max(0, lead_time_demand + safety_stock - (current_stock - reserved_stock + incoming_stock))",
+            "rounding_rule": "round_up_to_nearest_pack_size",
+            "moq_rule": "max(rounded_quantity, supplier_moq) if base_replenishment > 0 else 0"
+          }
+        },
+        "sales_history_days": 90,
+        "data_quality_issues": []
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "inventory_intake_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_18 (gsk_qB...kphs)",
+      "duration_seconds": 1.184,
+      "tokens": 567,
+      "prompt_tokens": 364,
+      "completion_tokens": 203,
+      "output": {
+        "sku_id": "SKU-0013",
+        "warehouse_id": "WH-EAST-02",
+        "current_stock": 95,
+        "reserved_stock": 20,
+        "incoming_stock": 0,
+        "usable_inventory": 75,
+        "reorder_threshold": 157,
+        "safety_stock": 175,
+        "replenishment_needed": true,
+        "policy_notes": [
+          "Usable inventory incorporates incoming purchase orders without double-counting",
+          "Current stock position evaluated against defined reorder threshold"
+        ]
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "stock_policy_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_19 (gsk_99...IlGY)",
+      "duration_seconds": 4.351,
+      "tokens": 2505,
+      "prompt_tokens": 934,
+      "completion_tokens": 1571,
+      "output": {
+        "sku_id": "SKU-0013",
+        "forecast_horizon_days": 14,
+        "historical_avg_daily_demand": 34.3,
+        "forecast_demand_units": 480.2,
+        "volatility_metric": "moderate",
+        "demand_spikes_detected": true,
+        "has_sufficient_history": true,
+        "source_record_ids": [
+          "SALES-SKU-0013"
+        ],
+        "assumptions": [
+          "Baseline forecast computed using arithmetic moving average",
+          "Demand volatility classified as moderate based on coefficient of variation (~28.5%)",
+          "Two isolated high‑volume days (56 and 59 units) identified as demand spikes"
+        ]
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "demand_forecast_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_20 (gsk_1f...ghyb)",
+      "duration_seconds": 1.536,
+      "tokens": 593,
+      "prompt_tokens": 402,
+      "completion_tokens": 191,
+      "output": {
+        "supplier_id": "SUP-13",
+        "lead_time_days": 3,
+        "minimum_order_quantity": 200,
+        "pack_size": 25,
+        "expected_arrival_date": "2026-10-18",
+        "supplier_reliability_notes": [
+          "Supplier reliability rated at 87%",
+          "Expected lead time of 3 days from order placement"
+        ],
+        "source_record_ids": [
+          "SUP-SUP-13"
+        ]
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "supplier_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_11 (gsk_A9...C3BP)",
+      "duration_seconds": 2.149,
+      "tokens": 903,
+      "prompt_tokens": 429,
+      "completion_tokens": 474,
+      "output": {
+        "sku_id": "SKU-0013",
+        "base_replenishment_quantity": 203,
+        "recommended_order_quantity": 225,
+        "calculation_breakdown": "Usable Inv=75 (Cur=95 - Res=20 + Inc=0). LeadTimeDemand=102.9 + Safety=175 = Gross 277.9. Deficit=202.9 -> Base Qty=203.",
+        "adjustment_reasoning": "Base need of 203 units was rounded to pack size 25 and benchmarked against MOQ 200, yielding final order of 225 units.",
+        "stockout_risk": "high",
+        "replenishment_status": "ORDER_RECOMMENDED"
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "replenishment_planning_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_13 (gsk_i9...Ujsn)",
+      "duration_seconds": 1.952,
+      "tokens": 2042,
+      "prompt_tokens": 1500,
+      "completion_tokens": 542,
+      "output": {
+        "run_id": "live_20261031_165840_trace13",
+        "planning_date": "2026-10-15",
+        "warehouse_id": "WH-EAST-02",
+        "sku_id": "SKU-0013",
+        "current_stock": 95,
+        "reserved_stock": 20,
+        "available_stock": 75,
+        "incoming_stock": 0,
+        "forecast_demand": 480.2,
+        "forecast_horizon": 14,
+        "supplier_id": "SUP-13",
+        "lead_time_days": 3,
+        "safety_stock": 175,
+        "reorder_threshold": 157,
+        "base_replenishment_quantity": 203,
+        "recommended_order_quantity": 225,
+        "expected_arrival_date": "2026-10-18",
+        "stockout_risk": "high",
+        "reasoning": "Audit verified: Usable inventory accurately accounts for incoming stock without double-counting. Recommended order of 225 units complies with pack size 25 and supplier MOQ 200.",
+        "source_record_ids": [
+          "INV-SKU-0013",
+          "SUP-SUP-13",
+          "SALES-SKU-0013"
+        ],
+        "validation_warnings": [],
+        "human_review_required": true
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "inventory_review_agent"
+    }
+  ],
+  "total_tokens": 10701,
+  "prompt_tokens": 6880,
+  "completion_tokens": 3821,
+  "estimated_cost_usd": 0.007078,
+  "error_message": null,
+  "final_output": "{\n  \"run_id\": \"live_20261031_165840_trace13\",\n  \"planning_date\": \"2026-10-15\",\n  \"warehouse_id\": \"WH-EAST-02\",\n  \"sku_id\": \"SKU-0013\",\n  \"current_stock\": 95,\n  \"reserved_stock\": 20,\n  \"available_stock\": 75,\n  \"incoming_stock\": 0,\n  \"forecast_demand\": 480.2,\n  \"forecast_horizon\": 14,\n  \"supplier_id\": \"SUP-13\",\n  \"lead_time_days\": 3,\n  \"safety_stock\": 175,\n  \"reorder_threshold\": 157,\n  \"base_replenishment_quantity\": 203,\n  \"recommended_order_quantity\": 225,\n  \"expected_arrival_date\": \"2026-10-18\",\n  \"stockout_risk\": \"high\",\n  \"reasoning\": \"Audit verified: Usable inventory accurately accounts for incoming stock without double-counting. Recommended order of 225 units complies with pack size 25 and supplier MOQ 200.\",\n  \"source_record_ids\": [\n    \"INV-SKU-0013\",\n    \"SUP-SUP-13\",\n    \"SALES-SKU-0013\"\n  ],\n  \"validation_warnings\": [],\n  \"human_review_required\": true\n}",
+  "timestamp": "2026-10-31T16:59:11.306702+00:00"
+}

@@ -1,0 +1,123 @@
+{
+  "ev_invoice_extraction_agent_agent_init": {
+    "evidence_id": "ev_invoice_extraction_agent_agent_init",
+    "entity_type": "agent_init",
+    "entity_id": "invoice_extraction_agent",
+    "file": "invoice_extraction_agent.py",
+    "start_line": 12,
+    "end_line": 21,
+    "status": "EXPLICIT",
+    "snippet": "def create_agent(llm=None) -> Agent:\n    if llm is None:\n        llm, _ = create_groq_llm_for_agent(AGENT_ID)\n    return Agent(\n        role=\"Senior Invoice Extraction Specialist\",\n        goal=\"Accurately extract all structured invoice fields (supplier, PO, line items, dates, totals) without hallucinating missing data.\",\n        backstory=\"An expert document processor specialized in parsing accounts payable documents into structured formats.\",\n        llm=llm,\n        verbose=False\n    )",
+    "description": "Agent initialization and configuration function 'create_agent'"
+  },
+  "ev_invoice_extraction_agent_task_exec_create_task": {
+    "evidence_id": "ev_invoice_extraction_agent_task_exec_create_task",
+    "entity_type": "task_def",
+    "entity_id": "invoice_extraction_agent",
+    "file": "invoice_extraction_agent.py",
+    "start_line": 23,
+    "end_line": 39,
+    "status": "EXPLICIT",
+    "snippet": "def create_task(agent: Agent, invoice_data: dict) -> Task:\n    description = (\n        f\"Analyze the following synthetic invoice and extract its structured fields.\\n\"\n        f\"Raw Invoice Input:\\n{json.dumps(invoice_data, indent=2)}\\n\\n\"\n        f\"Tasks:\\n\"\n        f\"1. Extract: invoice_number, supplier_id, supplier_name, po_reference, invoice_date, due_date, currency.\\n\"\n        f\"2. Extract line_items with description, quantity, unit_price, line_total.\\n\"\n        f\"3. Extract subtotal, tax, discount, and total_amount.\\n\"\n        f\"4. Identify any missing, ambiguous, or inconsistent fields.\\n\"\n        f\"Output strictly valid JSON with keys: 'extracted_invoice' and 'extraction_flags'.\"\n    )\n    expected_output = \"Strictly valid JSON containing extracted_invoice and extraction_flags.\"\n    return Task(\n        description=description,\n        expected_output=expected_output,\n        agent=agent\n    )",
+    "description": "Task construction, prompt instructions and execution function 'create_task'"
+  },
+  "ev_invoice_validation_agent_agent_init": {
+    "evidence_id": "ev_invoice_validation_agent_agent_init",
+    "entity_type": "agent_init",
+    "entity_id": "invoice_validation_agent",
+    "file": "invoice_validation_agent.py",
+    "start_line": 51,
+    "end_line": 60,
+    "status": "EXPLICIT",
+    "snippet": "def create_agent(llm=None) -> Agent:\n    if llm is None:\n        llm, _ = create_groq_llm_for_agent(AGENT_ID)\n    return Agent(\n        role=\"Invoice Validation Auditor\",\n        goal=\"Verify invoice field integrity, validate calculations against deterministic math checks, and document discrepancies.\",\n        backstory=\"A meticulous compliance auditor specializing in accounts payable fraud and mathematical discrepancy detection.\",\n        llm=llm,\n        verbose=False\n    )",
+    "description": "Agent initialization and configuration function 'create_agent'"
+  },
+  "ev_invoice_validation_agent_task_exec_create_task": {
+    "evidence_id": "ev_invoice_validation_agent_task_exec_create_task",
+    "entity_type": "task_def",
+    "entity_id": "invoice_validation_agent",
+    "file": "invoice_validation_agent.py",
+    "start_line": 62,
+    "end_line": 79,
+    "status": "EXPLICIT",
+    "snippet": "def create_task(agent: Agent, invoice_data: dict) -> Task:\n    math_audit = deterministic_arithmetic_check(invoice_data)\n    description = (\n        f\"Perform structured validation of this invoice.\\n\"\n        f\"Invoice Data:\\n{json.dumps(invoice_data, indent=2)}\\n\\n\"\n        f\"Verified Deterministic Math Audit from Python:\\n{json.dumps(math_audit, indent=2)}\\n\\n\"\n        f\"Instructions:\\n\"\n        f\"1. Check if all required fields are present (supplier, dates, line items, totals).\\n\"\n        f\"2. Incorporate the deterministic arithmetic check results.\\n\"\n        f\"3. Note whether the invoice has valid arithmetic or critical math errors.\\n\"\n        f\"Return strictly valid JSON with keys: 'validation_status' ('PASSED' or 'FAILED'), 'math_audit', and 'validation_errors'.\"\n    )\n    expected_output = \"Strictly valid JSON containing validation_status, math_audit, and validation_errors.\"\n    return Task(\n        description=description,\n        expected_output=expected_output,\n        agent=agent\n    )",
+    "description": "Task construction, prompt instructions and execution function 'create_task'"
+  },
+  "ev_invoice_validation_agent_helper_deterministic_arithmetic_check": {
+    "evidence_id": "ev_invoice_validation_agent_helper_deterministic_arithmetic_check",
+    "entity_type": "helper_func",
+    "entity_id": "invoice_validation_agent",
+    "file": "invoice_validation_agent.py",
+    "start_line": 12,
+    "end_line": 49,
+    "status": "STATICALLY_RESOLVED",
+    "snippet": "def deterministic_arithmetic_check(invoice_data: dict) -> dict:\n    \"\"\"Performs deterministic Python arithmetic verification on invoice numbers.\"\"\"\n    lines = invoice_data.get(\"line_items\", [])\n    calc_subtotal = 0.0\n    line_discrepancies = []\n    \n    for idx, item in enumerate(lines, 1):\n        qty = float(item.get(\"quantity\", 0))\n        price = float(item.get(\"unit_price\", 0))\n        stated_tot = float(item.get(\"line_total\", 0))\n        expected_line_tot = round(qty * price, 2)\n        calc_subtotal += expected_line_tot\n        if abs(expected_line_tot - stated_tot) > 0.02:\n            line_discrepancies.append({\n                \"line\": idx,\n                \"description\": item.get(\"description\"),\n                \"expected\": expected_line_tot,\n                \"stated\": stated_tot,\n                \"diff\": round(stated_tot - expected_line_tot, 2)\n            })\n            \n    calc_subtotal = round(calc_subtotal, 2)\n    stated_tax = float(invoice_data.get(\"tax\", 0))\n    stated_discount = float(invoice_data.get(\"discount\", 0))\n    stated_total = float(invoice_data.get(\"total_amount\", 0))\n    calc_total = round(calc_subtotal + stated_tax - stated_discount, 2)\n    \n    total_diff = round(stated_total - calc_total, 2)\n    is_arithmetic_valid = (abs(total_diff) <= 0.05) and len(line_discrepancies) == 0\n\n    return {\n        \"is_arithmetic_valid\": is_arithmetic_valid,\n        \"calculated_subtotal\": calc_subtotal,\n        \"calculated_total\": calc_total,\n        \"stated_total\": stated_total,\n        \"discrepancy_amount\": total_diff,\n        \"line_discrepancies\": line_discrepancies\n    }",
+    "description": "Direct helper function 'deterministic_arithmetic_check' called by agent execution"
+  },
+  "ev_po_matching_agent_agent_init": {
+    "evidence_id": "ev_po_matching_agent_agent_init",
+    "entity_type": "agent_init",
+    "entity_id": "po_matching_agent",
+    "file": "po_matching_agent.py",
+    "start_line": 77,
+    "end_line": 86,
+    "status": "EXPLICIT",
+    "snippet": "def create_agent(llm=None) -> Agent:\n    if llm is None:\n        llm, _ = create_groq_llm_for_agent(AGENT_ID)\n    return Agent(\n        role=\"Purchase Order Reconciliation Specialist\",\n        goal=\"Match invoice line items, pricing, quantities, and terms against authorized purchase orders.\",\n        backstory=\"An accounts payable specialist ensuring invoices only get paid if backed by approved purchase orders.\",\n        llm=llm,\n        verbose=False\n    )",
+    "description": "Agent initialization and configuration function 'create_agent'"
+  },
+  "ev_po_matching_agent_task_exec_create_task": {
+    "evidence_id": "ev_po_matching_agent_task_exec_create_task",
+    "entity_type": "task_def",
+    "entity_id": "po_matching_agent",
+    "file": "po_matching_agent.py",
+    "start_line": 88,
+    "end_line": 104,
+    "status": "EXPLICIT",
+    "snippet": "def create_task(agent: Agent, invoice_data: dict) -> Task:\n    po_match_result = deterministic_po_match(invoice_data)\n    description = (\n        f\"Reconcile this invoice against its corresponding purchase order.\\n\"\n        f\"Invoice Data:\\n{json.dumps(invoice_data, indent=2)}\\n\\n\"\n        f\"Deterministic PO Matching Results:\\n{json.dumps(po_match_result, indent=2)}\\n\\n\"\n        f\"Instructions:\\n\"\n        f\"1. Evaluate whether the invoice accurately matches the PO.\\n\"\n        f\"2. Detail all quantity, price, or supplier discrepancies.\\n\"\n        f\"Return strictly valid JSON with keys: 'po_match_status', 'matched_po_id', 'discrepancies', and 'matching_confidence'.\"\n    )\n    expected_output = \"Strictly valid JSON containing po_match_status, matched_po_id, discrepancies, and matching_confidence.\"\n    return Task(\n        description=description,\n        expected_output=expected_output,\n        agent=agent\n    )",
+    "description": "Task construction, prompt instructions and execution function 'create_task'"
+  },
+  "ev_po_matching_agent_helper_deterministic_po_match": {
+    "evidence_id": "ev_po_matching_agent_helper_deterministic_po_match",
+    "entity_type": "helper_func",
+    "entity_id": "po_matching_agent",
+    "file": "po_matching_agent.py",
+    "start_line": 14,
+    "end_line": 75,
+    "status": "STATICALLY_RESOLVED",
+    "snippet": "def deterministic_po_match(invoice_data: dict) -> dict:\n    \"\"\"Matches invoice against local synthetic purchase orders.\"\"\"\n    po_ref = invoice_data.get(\"po_reference\", \"\").strip()\n    po_file = DATA_DIR / \"invoice_processing\" / \"purchase_orders.json\"\n    \n    if not po_ref:\n        return {\n            \"match_status\": \"MISSING_PO_REFERENCE\",\n            \"matched_po_id\": None,\n            \"discrepancies\": [\"No purchase order reference specified in invoice.\"]\n        }\n        \n    matched_po = None\n    if po_file.exists():\n        with open(po_file, \"r\", encoding=\"utf-8\") as f:\n            pos = json.load(f)\n            for po in pos:\n                if po.get(\"po_id\") == po_ref:\n                    matched_po = po\n                    break\n\n    if not matched_po:\n        return {\n            \"match_status\": \"PO_NOT_FOUND\",\n            \"matched_po_id\": po_ref,\n            \"discrepancies\": [f\"Purchase Order '{po_ref}' not found in registry.\"]\n        }\n\n    # Compare fields deterministically\n    discrepancies = []\n    if matched_po.get(\"supplier_id\") != invoice_data.get(\"supplier_id\"):\n        discrepancies.append(\n            f\"Supplier mismatch: Invoice supplier '{invoice_data.get('supplier_id')}' != PO supplier '{matched_po.get('supplier_id')}'\"\n        )\n    \n    # Check total amount variance\n    po_tot = float(matched_po.get(\"total_amount\", 0))\n    inv_tot = float(invoice_data.get(\"total_amount\", 0))\n    if abs(po_tot - inv_tot) > 1.0:\n        discrepancies.append(\n            f\"Total amount mismatch: Invoice total ${inv_tot:.2f} differs from PO total ${po_tot:.2f}\"\n        )\n\n    # Check line item quantities\n    po_lines = {l.get(\"description\"): l for l in matched_po.get(\"lines\", [])}\n    for inv_line in invoice_data.get(\"line_items\", []):\n        desc = inv_line.get(\"description\")\n        if desc in po_lines:\n            po_qty = po_lines[desc].get(\"quantity\", 0)\n            inv_qty = inv_line.get(\"quantity\", 0)\n            if inv_qty != po_qty:\n                discrepancies.append(\n                    f\"Line quantity mismatch on '{desc}': Invoiced {inv_qty} units vs PO {po_qty} units\"\n                )\n\n    match_status = \"EXACT_MATCH\" if not discrepancies else \"DISCREPANCY_DETECTED\"\n    return {\n        \"match_status\": match_status,\n        \"matched_po_id\": po_ref,\n        \"matched_po_data\": matched_po,\n        \"discrepancies\": discrepancies\n    }",
+    "description": "Direct helper function 'deterministic_po_match' called by agent execution"
+  },
+  "ev_policy_compliance_agent_agent_init": {
+    "evidence_id": "ev_policy_compliance_agent_agent_init",
+    "entity_type": "agent_init",
+    "entity_id": "policy_compliance_agent",
+    "file": "policy_compliance_agent.py",
+    "start_line": 72,
+    "end_line": 81,
+    "status": "EXPLICIT",
+    "snippet": "def create_agent(llm=None) -> Agent:\n    if llm is None:\n        llm, _ = create_groq_llm_for_agent(AGENT_ID)\n    return Agent(\n        role=\"Corporate Accounts Payable Compliance Officer\",\n        goal=\"Audit invoice against corporate purchasing policies, threshold limits, and vendor eligibility.\",\n        backstory=\"An uncompromising governance officer ensuring adherence to internal procurement policies and SOX controls.\",\n        llm=llm,\n        verbose=False\n    )",
+    "description": "Agent initialization and configuration function 'create_agent'"
+  },
+  "ev_policy_compliance_agent_task_exec_create_task": {
+    "evidence_id": "ev_policy_compliance_agent_task_exec_create_task",
+    "entity_type": "task_def",
+    "entity_id": "policy_compliance_agent",
+    "file": "policy_compliance_agent.py",
+    "start_line": 83,
+    "end_line": 100,
+    "status": "EXPLICIT",
+    "snippet": "def create_task(agent: Agent, invoice_data: dict) -> Task:\n    policy_audit = deterministic_policy_check(invoice_data)\n    description = (\n        f\"Perform policy compliance review on this invoice.\\n\"\n        f\"Invoice Data:\\n{json.dumps(invoice_data, indent=2)}\\n\\n\"\n        f\"Deterministic Policy Audit:\\n{json.dumps(policy_audit, indent=2)}\\n\\n\"\n        f\"Instructions:\\n\"\n        f\"1. Evaluate policy violations and threshold conditions.\\n\"\n        f\"2. Explicitly cite each applied policy ID.\\n\"\n        f\"3. Classify whether infractions are fatal policy violations or flags requiring secondary sign-off.\\n\"\n        f\"Return strictly valid JSON with keys: 'is_compliant', 'applied_policy_ids', 'violations', and 'compliance_summary'.\"\n    )\n    expected_output = \"Strictly valid JSON containing is_compliant, applied_policy_ids, violations, and compliance_summary.\"\n    return Task(\n        description=description,\n        expected_output=expected_output,\n        agent=agent\n    )",
+    "description": "Task construction, prompt instructions and execution function 'create_task'"
+  },
+  "ev_policy_compliance_agent_helper_deterministic_policy_check": {
+    "evidence_id": "ev_policy_compliance_agent_helper_deterministic_policy_check",
+    "entity_type": "helper_func",
+    "entity_id": "policy_compliance_agent",
+    "file": "policy_compliance_agent.py",
+    "start_line": 14,
+    "end_line": 70,
+    "status": "STATICALLY_RESOLVED",
+    "snippet": "def deterministic_policy_check(invoice_data: dict) -> dict:\n    \"\"\"Verifies invoice rules against local synthetic AP policies and supplier statuses.\"\"\"\n    policy_file = DATA_DIR / \"invoice_processing\" / \"policies.json\"\n    supplier_file = DATA_DIR / \"invoice_processing\" / \"suppliers.json\"\n\n    policies = []\n    if policy_file.exists():\n        with open(policy_file, \"r\", encoding=\"utf-8\") as f:\n            policies = json.load(f)\n\n    suppliers = {}\n    if supplier_file.exists():\n        with open(supplier_file, \"r\", encoding=\"utf-8\") as f:\n            for s in json.load(f):\n                suppliers[s.get(\"supplier_id\")] = s\n\n    violations = []\n    applied_policy_ids = []\n    total_amt = float(invoice_data.get(\"total_amount\", 0))\n    sup_id = invoice_data.get(\"supplier_id\")\n    sup_info = suppliers.get(sup_id, {})\n\n    # Check POL-AP-001 (Three-way matching for > $1000)\n    applied_policy_ids.append(\"POL-AP-001\")\n    if total_amt >= 1000.0 and not invoice_data.get(\"po_reference\"):\n        violations.append({\n            \"policy_id\": \"POL-AP-001\",\n            \"rule\": \"Every invoice above $1,000 must strictly match a valid Purchase Order.\",\n            \"severity\": \"high\",\n            \"detail\": f\"Invoice amount is ${total_amt:.2f} but PO reference is missing.\"\n        })\n\n    # Check POL-AP-002 (Supplier active and valid tax ID)\n    applied_policy_ids.append(\"POL-AP-002\")\n    if sup_info.get(\"status\") == \"suspended\":\n        violations.append({\n            \"policy_id\": \"POL-AP-002\",\n            \"rule\": \"Invoices from suspended suppliers cannot be approved.\",\n            \"severity\": \"critical\",\n            \"detail\": f\"Supplier {sup_id} ({sup_info.get('name')}) is currently suspended.\"\n        })\n\n    # Check POL-AP-003 (High value approval threshold > $25k)\n    applied_policy_ids.append(\"POL-AP-003\")\n    if total_amt > 25000.0:\n        violations.append({\n            \"policy_id\": \"POL-AP-003\",\n            \"rule\": \"Invoices totaling over $25,000 require executive financial review.\",\n            \"severity\": \"medium\",\n            \"detail\": f\"Total amount ${total_amt:.2f} exceeds high-value threshold ($25,000).\"\n        })\n\n    return {\n        \"applied_policy_ids\": applied_policy_ids,\n        \"violations\": violations,\n        \"is_compliant\": len(violations) == 0\n    }",
+    "description": "Direct helper function 'deterministic_policy_check' called by agent execution"
+  }
+}

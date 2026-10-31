@@ -1,0 +1,2745 @@
+{
+  "workflow_name": "customer_support",
+  "report_type": "traceprofiler_single_workflow_ingestion",
+  "analysis_mode": "static_ast_non_executing",
+  "metrics": {
+    "declared_agents": 6,
+    "implemented_agents": 6,
+    "python_files": 7,
+    "telemetry_runs": 4,
+    "discrepancy_count": 1
+  },
+  "manifest": {
+    "file": "Agents/customer_support/workflow.json",
+    "dir": "Agents/customer_support",
+    "workflow_name": "customer_support",
+    "version": "1.0.0",
+    "description": "Baseline Customer Support Ticket Resolution Multi-Agent Workflow",
+    "fixed_model": "openai/gpt-oss-120b",
+    "total_agents": 6,
+    "execution_mode": "sequential",
+    "execution_order": [
+      "ticket_classification_agent",
+      "policy_retrieval_agent",
+      "issue_investigation_agent",
+      "resolution_agent",
+      "response_drafting_agent",
+      "resolution_verification_agent"
+    ],
+    "optimization_opportunities": [
+      "Dynamic routing: Route simple tickets directly from Policy Retrieval to Response Drafting, bypassing Investigation",
+      "Early stopping: Stop execution when straightforward standard SOP guide matches completely",
+      "Pruning redundant verification stages for low-risk, verified inquiries",
+      "Prompt compression to minimize ticket and policy context re-evaluations"
+    ],
+    "agents": [
+      {
+        "id": "ticket_classification_agent",
+        "name": "Customer Support Triage Specialist",
+        "role": "Customer Support Triage Specialist",
+        "declared_file": null,
+        "dependencies": [],
+        "inputs": [
+          "raw_ticket_record"
+        ],
+        "outputs": [
+          "category",
+          "urgency",
+          "complexity",
+          "customer_impact",
+          "routing_recommendation"
+        ],
+        "assigned_key": "GROQ_API_KEY_2",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "ticket_classification_agent",
+          "role": "Customer Support Triage Specialist",
+          "assigned_key_env": "GROQ_API_KEY_2",
+          "dependencies": [],
+          "inputs": [
+            "raw_ticket_record"
+          ],
+          "outputs": [
+            "category",
+            "urgency",
+            "complexity",
+            "customer_impact",
+            "routing_recommendation"
+          ]
+        }
+      },
+      {
+        "id": "policy_retrieval_agent",
+        "name": "Customer Policy & Knowledge Base Specialist",
+        "role": "Customer Policy & Knowledge Base Specialist",
+        "declared_file": null,
+        "dependencies": [
+          "ticket_classification_agent"
+        ],
+        "inputs": [
+          "ticket_category",
+          "policies.json",
+          "troubleshooting_guides.json"
+        ],
+        "outputs": [
+          "applicable_policy_ids",
+          "applicable_guide_ids",
+          "policy_conditions",
+          "retrieval_summary"
+        ],
+        "assigned_key": "GROQ_API_KEY_2",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "policy_retrieval_agent",
+          "role": "Customer Policy & Knowledge Base Specialist",
+          "assigned_key_env": "GROQ_API_KEY_2",
+          "dependencies": [
+            "ticket_classification_agent"
+          ],
+          "inputs": [
+            "ticket_category",
+            "policies.json",
+            "troubleshooting_guides.json"
+          ],
+          "outputs": [
+            "applicable_policy_ids",
+            "applicable_guide_ids",
+            "policy_conditions",
+            "retrieval_summary"
+          ]
+        }
+      },
+      {
+        "id": "issue_investigation_agent",
+        "name": "Technical Support Investigator",
+        "role": "Technical Support Investigator",
+        "declared_file": null,
+        "dependencies": [
+          "policy_retrieval_agent"
+        ],
+        "inputs": [
+          "ticket_data",
+          "customers.json",
+          "historical_resolutions.json"
+        ],
+        "outputs": [
+          "investigation_findings",
+          "root_cause_hypothesis",
+          "confirmed_facts",
+          "data_gaps"
+        ],
+        "assigned_key": "GROQ_API_KEY_2",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": "Candidate for early stopping/pruning on simple, low-complexity tickets.",
+        "raw": {
+          "agent_id": "issue_investigation_agent",
+          "role": "Technical Support Investigator",
+          "assigned_key_env": "GROQ_API_KEY_2",
+          "dependencies": [
+            "policy_retrieval_agent"
+          ],
+          "inputs": [
+            "ticket_data",
+            "customers.json",
+            "historical_resolutions.json"
+          ],
+          "outputs": [
+            "investigation_findings",
+            "root_cause_hypothesis",
+            "confirmed_facts",
+            "data_gaps"
+          ],
+          "optimization_note": "Candidate for early stopping/pruning on simple, low-complexity tickets."
+        }
+      },
+      {
+        "id": "resolution_agent",
+        "name": "Customer Resolution Strategist",
+        "role": "Customer Resolution Strategist",
+        "declared_file": null,
+        "dependencies": [
+          "issue_investigation_agent",
+          "policy_retrieval_agent"
+        ],
+        "inputs": [
+          "ticket_data",
+          "investigation_findings",
+          "retrieved_policies"
+        ],
+        "outputs": [
+          "resolution_type",
+          "recommended_action",
+          "policy_justification",
+          "escalation_required"
+        ],
+        "assigned_key": "GROQ_API_KEY_2",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "resolution_agent",
+          "role": "Customer Resolution Strategist",
+          "assigned_key_env": "GROQ_API_KEY_2",
+          "dependencies": [
+            "issue_investigation_agent",
+            "policy_retrieval_agent"
+          ],
+          "inputs": [
+            "ticket_data",
+            "investigation_findings",
+            "retrieved_policies"
+          ],
+          "outputs": [
+            "resolution_type",
+            "recommended_action",
+            "policy_justification",
+            "escalation_required"
+          ]
+        }
+      },
+      {
+        "id": "response_drafting_agent",
+        "name": "Customer Communications Specialist",
+        "role": "Customer Communications Specialist",
+        "declared_file": null,
+        "dependencies": [
+          "resolution_agent"
+        ],
+        "inputs": [
+          "ticket_context",
+          "approved_resolution"
+        ],
+        "outputs": [
+          "response_text",
+          "tone",
+          "next_steps_for_customer",
+          "ticket_status"
+        ],
+        "assigned_key": "GROQ_API_KEY_2",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "response_drafting_agent",
+          "role": "Customer Communications Specialist",
+          "assigned_key_env": "GROQ_API_KEY_2",
+          "dependencies": [
+            "resolution_agent"
+          ],
+          "inputs": [
+            "ticket_context",
+            "approved_resolution"
+          ],
+          "outputs": [
+            "response_text",
+            "tone",
+            "next_steps_for_customer",
+            "ticket_status"
+          ]
+        }
+      },
+      {
+        "id": "resolution_verification_agent",
+        "name": "Support QA & Verification Auditor",
+        "role": "Support QA & Verification Auditor",
+        "declared_file": null,
+        "dependencies": [
+          "response_drafting_agent"
+        ],
+        "inputs": [
+          "full_support_audit_trail"
+        ],
+        "outputs": [
+          "qa_status",
+          "final_ticket_status",
+          "verification_notes",
+          "support_summary_report"
+        ],
+        "assigned_key": "GROQ_API_KEY_2",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": "Candidate for conditional pruning on low-risk standard tickets.",
+        "raw": {
+          "agent_id": "resolution_verification_agent",
+          "role": "Support QA & Verification Auditor",
+          "assigned_key_env": "GROQ_API_KEY_2",
+          "dependencies": [
+            "response_drafting_agent"
+          ],
+          "inputs": [
+            "full_support_audit_trail"
+          ],
+          "outputs": [
+            "qa_status",
+            "final_ticket_status",
+            "verification_notes",
+            "support_summary_report"
+          ],
+          "optimization_note": "Candidate for conditional pruning on low-risk standard tickets."
+        }
+      }
+    ]
+  },
+  "agent_inventory": [
+    {
+      "id": "ticket_classification_agent",
+      "name": "Customer Support Triage Specialist",
+      "role": "Customer Support Triage Specialist",
+      "workflow": "customer_support",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_2",
+      "dependencies": [],
+      "inputs": [
+        "raw_ticket_record"
+      ],
+      "outputs": [
+        "category",
+        "urgency",
+        "complexity",
+        "customer_impact",
+        "routing_recommendation"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/customer_support/ticket_classification_agent.py",
+      "agent_constructors": [
+        {
+          "line": 41,
+          "constructor": "Agent",
+          "role": "Customer Support Triage Specialist",
+          "goal": "Classify customer tickets into accurate operational categories, urgency tiers, and complexity levels.",
+          "backstory": "An experienced support dispatcher who routes customer inquiries quickly and accurately.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 63,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "deterministic_classification_hints",
+          "line": 12,
+          "end_line": 36,
+          "docstring": "Extracts deterministic classification signals from ticket fields.",
+          "args": [
+            "ticket_data"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 38,
+          "end_line": 47,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 49,
+          "end_line": 67,
+          "docstring": null,
+          "args": [
+            "agent",
+            "ticket_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_classification_hints",
+          "line": 12,
+          "classification": "function_candidate",
+          "docstring": "Extracts deterministic classification signals from ticket fields."
+        }
+      ]
+    },
+    {
+      "id": "policy_retrieval_agent",
+      "name": "Customer Policy & Knowledge Base Specialist",
+      "role": "Customer Policy & Knowledge Base Specialist",
+      "workflow": "customer_support",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_2",
+      "dependencies": [
+        "ticket_classification_agent"
+      ],
+      "inputs": [
+        "ticket_category",
+        "policies.json",
+        "troubleshooting_guides.json"
+      ],
+      "outputs": [
+        "applicable_policy_ids",
+        "applicable_guide_ids",
+        "policy_conditions",
+        "retrieval_summary"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/customer_support/policy_retrieval_agent.py",
+      "agent_constructors": [
+        {
+          "line": 43,
+          "constructor": "Agent",
+          "role": "Customer Policy & Knowledge Base Specialist",
+          "goal": "Retrieve authoritative support guidelines, SLAs, and troubleshooting procedures for the ticket.",
+          "backstory": "A knowledge manager providing certified procedures to support agents without guessing.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 65,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "deterministic_policy_retrieval",
+          "line": 14,
+          "end_line": 38,
+          "docstring": "Matches ticket category against local synthetic support policies and troubleshooting SOPs.",
+          "args": [
+            "category"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 40,
+          "end_line": 49,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 51,
+          "end_line": 69,
+          "docstring": null,
+          "args": [
+            "agent",
+            "ticket_data",
+            "classification_results"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_policy_retrieval",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Matches ticket category against local synthetic support policies and troubleshooting SOPs."
+        }
+      ]
+    },
+    {
+      "id": "issue_investigation_agent",
+      "name": "Technical Support Investigator",
+      "role": "Technical Support Investigator",
+      "workflow": "customer_support",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_2",
+      "dependencies": [
+        "policy_retrieval_agent"
+      ],
+      "inputs": [
+        "ticket_data",
+        "customers.json",
+        "historical_resolutions.json"
+      ],
+      "outputs": [
+        "investigation_findings",
+        "root_cause_hypothesis",
+        "confirmed_facts",
+        "data_gaps"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": "Candidate for early stopping/pruning on simple, low-complexity tickets.",
+      "implementation_found": true,
+      "implementation_file": "Agents/customer_support/issue_investigation_agent.py",
+      "agent_constructors": [
+        {
+          "line": 41,
+          "constructor": "Agent",
+          "role": "Technical Support Investigator",
+          "goal": "Investigate root causes, correlate customer account history, and separate confirmed facts from hypotheses.",
+          "backstory": "A diagnostic engineer reviewing backend logs, customer history, and issue symptoms.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 63,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "deterministic_customer_lookup",
+          "line": 14,
+          "end_line": 36,
+          "docstring": "Retrieves customer profile and historical records from local synthetic datasets.",
+          "args": [
+            "customer_id"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 38,
+          "end_line": 47,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 49,
+          "end_line": 67,
+          "docstring": null,
+          "args": [
+            "agent",
+            "ticket_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_customer_lookup",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Retrieves customer profile and historical records from local synthetic datasets."
+        }
+      ]
+    },
+    {
+      "id": "resolution_agent",
+      "name": "Customer Resolution Strategist",
+      "role": "Customer Resolution Strategist",
+      "workflow": "customer_support",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_2",
+      "dependencies": [
+        "issue_investigation_agent",
+        "policy_retrieval_agent"
+      ],
+      "inputs": [
+        "ticket_data",
+        "investigation_findings",
+        "retrieved_policies"
+      ],
+      "outputs": [
+        "resolution_type",
+        "recommended_action",
+        "policy_justification",
+        "escalation_required"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/customer_support/resolution_agent.py",
+      "agent_constructors": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Customer Resolution Strategist",
+          "goal": "Synthesize policies and technical investigation into a clear, actionable customer resolution.",
+          "backstory": "A tier-3 senior resolution specialist with authority to recommend credits, troubleshooting, or escalations.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 35,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 39,
+          "docstring": null,
+          "args": [
+            "agent",
+            "ticket_data",
+            "stage_evidence"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    },
+    {
+      "id": "response_drafting_agent",
+      "name": "Customer Communications Specialist",
+      "role": "Customer Communications Specialist",
+      "workflow": "customer_support",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_2",
+      "dependencies": [
+        "resolution_agent"
+      ],
+      "inputs": [
+        "ticket_context",
+        "approved_resolution"
+      ],
+      "outputs": [
+        "response_text",
+        "tone",
+        "next_steps_for_customer",
+        "ticket_status"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/customer_support/response_drafting_agent.py",
+      "agent_constructors": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Customer Communications Specialist",
+          "goal": "Draft clear, empathetic, and professional customer responses explaining the resolution.",
+          "backstory": "An expert in customer experience communication ensuring clear guidance and professional empathy.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 36,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 40,
+          "docstring": null,
+          "args": [
+            "agent",
+            "ticket_data",
+            "resolution_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    },
+    {
+      "id": "resolution_verification_agent",
+      "name": "Support QA & Verification Auditor",
+      "role": "Support QA & Verification Auditor",
+      "workflow": "customer_support",
+      "declared_file": null,
+      "assigned_key": "GROQ_API_KEY_2",
+      "dependencies": [
+        "response_drafting_agent"
+      ],
+      "inputs": [
+        "full_support_audit_trail"
+      ],
+      "outputs": [
+        "qa_status",
+        "final_ticket_status",
+        "verification_notes",
+        "support_summary_report"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": "Candidate for conditional pruning on low-risk standard tickets.",
+      "implementation_found": true,
+      "implementation_file": "Agents/customer_support/resolution_verification_agent.py",
+      "agent_constructors": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Support QA & Verification Auditor",
+          "goal": "Verify that the drafted response fully addresses the ticket within policy boundaries.",
+          "backstory": "A quality assurance lead ensuring high customer satisfaction and strict policy adherence.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_constructors": [
+        {
+          "line": 34,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 38,
+          "docstring": null,
+          "args": [
+            "agent",
+            "full_ticket_audit"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    }
+  ],
+  "workflow_analysis": {
+    "file": "Agents/customer_support/workflow.py",
+    "classes": [],
+    "entry_points": [
+      {
+        "name": "run_customer_support_workflow",
+        "line": 50,
+        "args": [
+          "ticket_data",
+          "run_id"
+        ],
+        "docstring": "Executes the 6-agent sequential Customer Support baseline workflow."
+      }
+    ],
+    "crew_constructions": [
+      {
+        "line": 74,
+        "source": "Crew(agents=[agent1], tasks=[task1], verbose=False)"
+      },
+      {
+        "line": 90,
+        "source": "Crew(agents=[agent2], tasks=[task2], verbose=False)"
+      },
+      {
+        "line": 104,
+        "source": "Crew(agents=[agent3], tasks=[task3], verbose=False)"
+      },
+      {
+        "line": 118,
+        "source": "Crew(agents=[agent4], tasks=[task4], verbose=False)"
+      },
+      {
+        "line": 132,
+        "source": "Crew(agents=[agent5], tasks=[task5], verbose=False)"
+      },
+      {
+        "line": 146,
+        "source": "Crew(agents=[agent6], tasks=[task6], verbose=False)"
+      }
+    ],
+    "assignments": [
+      {
+        "line": 48,
+        "targets": [
+          "WORKFLOW_NAME"
+        ],
+        "value_names": [],
+        "expression": "\"customer_support\""
+      },
+      {
+        "line": 58,
+        "targets": [
+          "tracker"
+        ],
+        "value_names": [
+          "WORKFLOW_NAME",
+          "WorkflowRunTracker",
+          "run_id"
+        ],
+        "expression": "WorkflowRunTracker(WORKFLOW_NAME, run_id).start()"
+      },
+      {
+        "line": 65,
+        "targets": [
+          "stage_evidence"
+        ],
+        "value_names": [],
+        "expression": "{}"
+      },
+      {
+        "line": 69,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 71,
+        "targets": [
+          "hints"
+        ],
+        "value_names": [
+          "deterministic_classification_hints",
+          "ticket_data"
+        ],
+        "expression": "deterministic_classification_hints(ticket_data)"
+      },
+      {
+        "line": 72,
+        "targets": [
+          "agent1"
+        ],
+        "value_names": [
+          "create_classification_agent"
+        ],
+        "expression": "create_classification_agent()"
+      },
+      {
+        "line": 73,
+        "targets": [
+          "task1"
+        ],
+        "value_names": [
+          "agent1",
+          "create_classification_task",
+          "ticket_data"
+        ],
+        "expression": "create_classification_task(agent1, ticket_data)"
+      },
+      {
+        "line": 74,
+        "targets": [
+          "crew1"
+        ],
+        "value_names": [
+          "Crew",
+          "agent1",
+          "task1"
+        ],
+        "expression": "Crew(agents=[agent1], tasks=[task1], verbose=False)"
+      },
+      {
+        "line": 75,
+        "targets": [
+          "res1"
+        ],
+        "value_names": [
+          "crew1"
+        ],
+        "expression": "crew1.kickoff()"
+      },
+      {
+        "line": 76,
+        "targets": [
+          "out1"
+        ],
+        "value_names": [
+          "hasattr",
+          "res1",
+          "str"
+        ],
+        "expression": "res1.raw if hasattr(res1, \"raw\") else str(res1)"
+      },
+      {
+        "line": 78,
+        "targets": [
+          "dur1"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 84,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 86,
+        "targets": [
+          "cat"
+        ],
+        "value_names": [
+          "hints",
+          "ticket_data"
+        ],
+        "expression": "ticket_data.get(\"category\", hints.get(\"suggested_category\", \"general\"))"
+      },
+      {
+        "line": 87,
+        "targets": [
+          "retrieval_data"
+        ],
+        "value_names": [
+          "cat",
+          "deterministic_policy_retrieval"
+        ],
+        "expression": "deterministic_policy_retrieval(cat)"
+      },
+      {
+        "line": 88,
+        "targets": [
+          "agent2"
+        ],
+        "value_names": [
+          "create_retrieval_agent"
+        ],
+        "expression": "create_retrieval_agent()"
+      },
+      {
+        "line": 89,
+        "targets": [
+          "task2"
+        ],
+        "value_names": [
+          "agent2",
+          "cat",
+          "create_retrieval_task",
+          "ticket_data"
+        ],
+        "expression": "create_retrieval_task(agent2, ticket_data, {\"category\": cat})"
+      },
+      {
+        "line": 90,
+        "targets": [
+          "crew2"
+        ],
+        "value_names": [
+          "Crew",
+          "agent2",
+          "task2"
+        ],
+        "expression": "Crew(agents=[agent2], tasks=[task2], verbose=False)"
+      },
+      {
+        "line": 91,
+        "targets": [
+          "res2"
+        ],
+        "value_names": [
+          "crew2"
+        ],
+        "expression": "crew2.kickoff()"
+      },
+      {
+        "line": 92,
+        "targets": [
+          "out2"
+        ],
+        "value_names": [
+          "hasattr",
+          "res2",
+          "str"
+        ],
+        "expression": "res2.raw if hasattr(res2, \"raw\") else str(res2)"
+      },
+      {
+        "line": 94,
+        "targets": [
+          "dur2"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 100,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 102,
+        "targets": [
+          "agent3"
+        ],
+        "value_names": [
+          "create_investigation_agent"
+        ],
+        "expression": "create_investigation_agent()"
+      },
+      {
+        "line": 103,
+        "targets": [
+          "task3"
+        ],
+        "value_names": [
+          "agent3",
+          "create_investigation_task",
+          "ticket_data"
+        ],
+        "expression": "create_investigation_task(agent3, ticket_data)"
+      },
+      {
+        "line": 104,
+        "targets": [
+          "crew3"
+        ],
+        "value_names": [
+          "Crew",
+          "agent3",
+          "task3"
+        ],
+        "expression": "Crew(agents=[agent3], tasks=[task3], verbose=False)"
+      },
+      {
+        "line": 105,
+        "targets": [
+          "res3"
+        ],
+        "value_names": [
+          "crew3"
+        ],
+        "expression": "crew3.kickoff()"
+      },
+      {
+        "line": 106,
+        "targets": [
+          "out3"
+        ],
+        "value_names": [
+          "hasattr",
+          "res3",
+          "str"
+        ],
+        "expression": "res3.raw if hasattr(res3, \"raw\") else str(res3)"
+      },
+      {
+        "line": 108,
+        "targets": [
+          "dur3"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 114,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 116,
+        "targets": [
+          "agent4"
+        ],
+        "value_names": [
+          "create_resolution_agent"
+        ],
+        "expression": "create_resolution_agent()"
+      },
+      {
+        "line": 117,
+        "targets": [
+          "task4"
+        ],
+        "value_names": [
+          "agent4",
+          "create_resolution_task",
+          "stage_evidence",
+          "ticket_data"
+        ],
+        "expression": "create_resolution_task(agent4, ticket_data, stage_evidence)"
+      },
+      {
+        "line": 118,
+        "targets": [
+          "crew4"
+        ],
+        "value_names": [
+          "Crew",
+          "agent4",
+          "task4"
+        ],
+        "expression": "Crew(agents=[agent4], tasks=[task4], verbose=False)"
+      },
+      {
+        "line": 119,
+        "targets": [
+          "res4"
+        ],
+        "value_names": [
+          "crew4"
+        ],
+        "expression": "crew4.kickoff()"
+      },
+      {
+        "line": 120,
+        "targets": [
+          "out4"
+        ],
+        "value_names": [
+          "hasattr",
+          "res4",
+          "str"
+        ],
+        "expression": "res4.raw if hasattr(res4, \"raw\") else str(res4)"
+      },
+      {
+        "line": 122,
+        "targets": [
+          "dur4"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 128,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 130,
+        "targets": [
+          "agent5"
+        ],
+        "value_names": [
+          "create_drafting_agent"
+        ],
+        "expression": "create_drafting_agent()"
+      },
+      {
+        "line": 131,
+        "targets": [
+          "task5"
+        ],
+        "value_names": [
+          "agent5",
+          "create_drafting_task",
+          "out4",
+          "ticket_data"
+        ],
+        "expression": "create_drafting_task(agent5, ticket_data, {\"resolution\": out4})"
+      },
+      {
+        "line": 132,
+        "targets": [
+          "crew5"
+        ],
+        "value_names": [
+          "Crew",
+          "agent5",
+          "task5"
+        ],
+        "expression": "Crew(agents=[agent5], tasks=[task5], verbose=False)"
+      },
+      {
+        "line": 133,
+        "targets": [
+          "res5"
+        ],
+        "value_names": [
+          "crew5"
+        ],
+        "expression": "crew5.kickoff()"
+      },
+      {
+        "line": 134,
+        "targets": [
+          "out5"
+        ],
+        "value_names": [
+          "hasattr",
+          "res5",
+          "str"
+        ],
+        "expression": "res5.raw if hasattr(res5, \"raw\") else str(res5)"
+      },
+      {
+        "line": 136,
+        "targets": [
+          "dur5"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      },
+      {
+        "line": 142,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.time()"
+      },
+      {
+        "line": 144,
+        "targets": [
+          "agent6"
+        ],
+        "value_names": [
+          "create_verification_agent"
+        ],
+        "expression": "create_verification_agent()"
+      },
+      {
+        "line": 145,
+        "targets": [
+          "task6"
+        ],
+        "value_names": [
+          "agent6",
+          "create_verification_task",
+          "stage_evidence"
+        ],
+        "expression": "create_verification_task(agent6, stage_evidence)"
+      },
+      {
+        "line": 146,
+        "targets": [
+          "crew6"
+        ],
+        "value_names": [
+          "Crew",
+          "agent6",
+          "task6"
+        ],
+        "expression": "Crew(agents=[agent6], tasks=[task6], verbose=False)"
+      },
+      {
+        "line": 147,
+        "targets": [
+          "res6"
+        ],
+        "value_names": [
+          "crew6"
+        ],
+        "expression": "crew6.kickoff()"
+      },
+      {
+        "line": 148,
+        "targets": [
+          "final_output"
+        ],
+        "value_names": [
+          "hasattr",
+          "res6",
+          "str"
+        ],
+        "expression": "res6.raw if hasattr(res6, \"raw\") else str(res6)"
+      },
+      {
+        "line": 150,
+        "targets": [
+          "dur6"
+        ],
+        "value_names": [
+          "t0",
+          "time"
+        ],
+        "expression": "time.time() - t0"
+      }
+    ],
+    "task_handoffs": [],
+    "observed_order": [
+      "ticket_classification_agent",
+      "policy_retrieval_agent",
+      "issue_investigation_agent",
+      "resolution_agent",
+      "response_drafting_agent",
+      "resolution_verification_agent"
+    ],
+    "sequential_kickoffs": 6
+  },
+  "comparison": {
+    "workflow": "customer_support",
+    "manifest_file": "Agents/customer_support/workflow.json",
+    "workflow_source": "Agents/customer_support/workflow.py",
+    "declared_order": [
+      "ticket_classification_agent",
+      "policy_retrieval_agent",
+      "issue_investigation_agent",
+      "resolution_agent",
+      "response_drafting_agent",
+      "resolution_verification_agent"
+    ],
+    "source_observed_order": [
+      "ticket_classification_agent",
+      "policy_retrieval_agent",
+      "issue_investigation_agent",
+      "resolution_agent",
+      "response_drafting_agent",
+      "resolution_verification_agent"
+    ],
+    "declared_agent_count": 6,
+    "observed_agent_count": 6,
+    "discrepancy_count": 1,
+    "findings": [
+      {
+        "type": "MULTIPLE_KICKOFF_CALLS",
+        "severity": "WARNING",
+        "count": 6,
+        "note": "Workflow invokes 6 sequential Crew kickoff calls instead of single execution graph."
+      }
+    ]
+  },
+  "python_files": [
+    {
+      "file": "Agents/customer_support/issue_investigation_agent.py",
+      "filename": "issue_investigation_agent.py",
+      "stem": "issue_investigation_agent",
+      "sha256": "a234e45a3425ef6f526d8a44e6c17beb7962828d3f44b2f15ca6ff240e793727",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "deterministic_customer_lookup",
+          "line": 14,
+          "end_line": 36,
+          "docstring": "Retrieves customer profile and historical records from local synthetic datasets.",
+          "args": [
+            "customer_id"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 38,
+          "end_line": 47,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 49,
+          "end_line": 67,
+          "docstring": null,
+          "args": [
+            "agent",
+            "ticket_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "issue_investigation_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 41,
+          "constructor": "Agent",
+          "role": "Technical Support Investigator",
+          "goal": "Investigate root causes, correlate customer account history, and separate confirmed facts from hypotheses.",
+          "backstory": "A diagnostic engineer reviewing backend logs, customer history, and issue symptoms.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 63,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 40,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_customer_lookup",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Retrieves customer profile and historical records from local synthetic datasets."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 3: Issue Investigation Agent (Customer Support)\nInvestigates customer ticket details, customer history, and logs.\n",
+          "line": 1
+        },
+        {
+          "value": "Retrieves customer profile and historical records from local synthetic datasets.",
+          "line": 15
+        },
+        {
+          "value": "Strictly valid JSON containing investigation_findings, root_cause_hypothesis, confirmed_facts, and data_gaps.",
+          "line": 62
+        },
+        {
+          "value": "Investigate the customer's reported problem.\nTicket Data:\n",
+          "line": 53
+        },
+        {
+          "value": "\n\nSynthetic Customer Record & System History:\n",
+          "line": 54
+        },
+        {
+          "value": "\n\nInstructions:\n1. Determine likely root cause based on symptoms and customer tier.\n2. Separate confirmed facts from unconfirmed hypotheses.\n3. State if further diagnostic data or user verification is required.\nReturn strictly valid JSON with keys: 'investigation_findings', 'root_cause_hypothesis', 'confirmed_facts', and 'data_gaps'.",
+          "line": 55
+        },
+        {
+          "value": "Investigate root causes, correlate customer account history, and separate confirmed facts from hypotheses.",
+          "line": 43
+        },
+        {
+          "value": "A diagnostic engineer reviewing backend logs, customer history, and issue symptoms.",
+          "line": 44
+        }
+      ]
+    },
+    {
+      "file": "Agents/customer_support/policy_retrieval_agent.py",
+      "filename": "policy_retrieval_agent.py",
+      "stem": "policy_retrieval_agent",
+      "sha256": "5ff782038ac93d4013effe182835a812a9b936d989a6c601b0cfe2a356eb3c39",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "DATA_DIR"
+          ],
+          "aliases": {},
+          "line": 10
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "deterministic_policy_retrieval",
+          "line": 14,
+          "end_line": 38,
+          "docstring": "Matches ticket category against local synthetic support policies and troubleshooting SOPs.",
+          "args": [
+            "category"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 40,
+          "end_line": 49,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 51,
+          "end_line": 69,
+          "docstring": null,
+          "args": [
+            "agent",
+            "ticket_data",
+            "classification_results"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "policy_retrieval_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 43,
+          "constructor": "Agent",
+          "role": "Customer Policy & Knowledge Base Specialist",
+          "goal": "Retrieve authoritative support guidelines, SLAs, and troubleshooting procedures for the ticket.",
+          "backstory": "A knowledge manager providing certified procedures to support agents without guessing.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 65,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 42,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_policy_retrieval",
+          "line": 14,
+          "classification": "function_candidate",
+          "docstring": "Matches ticket category against local synthetic support policies and troubleshooting SOPs."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 2: Policy Retrieval Agent (Customer Support)\nRetrieves relevant customer service policies, SLAs, and troubleshooting SOPs.\n",
+          "line": 1
+        },
+        {
+          "value": "Matches ticket category against local synthetic support policies and troubleshooting SOPs.",
+          "line": 15
+        },
+        {
+          "value": "Strictly valid JSON containing applicable_policy_ids, applicable_guide_ids, policy_conditions, and retrieval_summary.",
+          "line": 64
+        },
+        {
+          "value": "Retrieve applicable policies and SOPs for this support ticket.\nTicket Data:\n",
+          "line": 55
+        },
+        {
+          "value": "\n\nRetrieved Policy & Knowledge Base Records:\n",
+          "line": 56
+        },
+        {
+          "value": "\n\nInstructions:\n1. Identify the primary governing policy ID and troubleshooting guide ID.\n2. Detail eligibility conditions, SLAs, and restrictions.\n3. Note explicitly if no relevant policy covers this specific issue.\nReturn strictly valid JSON with keys: 'applicable_policy_ids', 'applicable_guide_ids', 'policy_conditions', and 'retrieval_summary'.",
+          "line": 57
+        },
+        {
+          "value": "Customer Policy & Knowledge Base Specialist",
+          "line": 44
+        },
+        {
+          "value": "Retrieve authoritative support guidelines, SLAs, and troubleshooting procedures for the ticket.",
+          "line": 45
+        },
+        {
+          "value": "A knowledge manager providing certified procedures to support agents without guessing.",
+          "line": 46
+        }
+      ]
+    },
+    {
+      "file": "Agents/customer_support/resolution_agent.py",
+      "filename": "resolution_agent.py",
+      "stem": "resolution_agent",
+      "sha256": "2107554c16836be94dad8fd521ef5cd392d0a4ce6a92072a546744193c8bd580",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 39,
+          "docstring": null,
+          "args": [
+            "agent",
+            "ticket_data",
+            "stage_evidence"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "resolution_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Customer Resolution Strategist",
+          "goal": "Synthesize policies and technical investigation into a clear, actionable customer resolution.",
+          "backstory": "A tier-3 senior resolution specialist with authority to recommend credits, troubleshooting, or escalations.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 35,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 14,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 4: Resolution Agent (Customer Support)\nDetermines the structured resolution recommendation and concrete action steps.\n",
+          "line": 1
+        },
+        {
+          "value": "Strictly valid JSON containing resolution_type, recommended_action, policy_justification, and escalation_required.",
+          "line": 34
+        },
+        {
+          "value": "Formulate a concrete resolution recommendation for this ticket.\nTicket Data:\n",
+          "line": 25
+        },
+        {
+          "value": "\n\nInstructions:\n1. Recommend resolution type: 'immediate_resolution', 'requires_user_action', or 'escalate_to_engineering'.\n2. Provide step-by-step resolution actions conforming strictly to retrieved policy rules.\n3. Note: Never execute actual database alterations or financial credits.\nReturn strictly valid JSON with keys: 'resolution_type', 'recommended_action', 'policy_justification', and 'escalation_required'.",
+          "line": 27
+        },
+        {
+          "value": "Synthesize policies and technical investigation into a clear, actionable customer resolution.",
+          "line": 17
+        },
+        {
+          "value": "A tier-3 senior resolution specialist with authority to recommend credits, troubleshooting, or escalations.",
+          "line": 18
+        }
+      ]
+    },
+    {
+      "file": "Agents/customer_support/resolution_verification_agent.py",
+      "filename": "resolution_verification_agent.py",
+      "stem": "resolution_verification_agent",
+      "sha256": "0e78437d1c6f27afdeb16f3c4abcd93c33d40731f727892c043095b2d1c83ee4",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 38,
+          "docstring": null,
+          "args": [
+            "agent",
+            "full_ticket_audit"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "resolution_verification_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Support QA & Verification Auditor",
+          "goal": "Verify that the drafted response fully addresses the ticket within policy boundaries.",
+          "backstory": "A quality assurance lead ensuring high customer satisfaction and strict policy adherence.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 34,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 14,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 6: Resolution Verification Agent (Customer Support)\nVerifies resolution accuracy, policy adherence, and drafts final support report.\n",
+          "line": 1
+        },
+        {
+          "value": "Strictly valid JSON containing qa_status, final_ticket_status, verification_notes, and support_summary_report.",
+          "line": 33
+        },
+        {
+          "value": "Perform quality audit on the proposed ticket resolution and customer draft.\nFull Support Audit Trail:\n",
+          "line": 25
+        },
+        {
+          "value": "\n\nVerification Checks:\n1. Does the drafted response completely solve the customer's stated complaint?\n2. Are there any unsupported commitments, policy contradictions, or missing instructions?\n3. Mark final status: 'RESOLVED', 'ACTION_REQUIRED_BY_USER', or 'ESCALATED'.\nReturn strictly valid JSON with keys: 'qa_status' ('APPROVED' or 'REJECTED'), 'final_ticket_status', 'verification_notes', and 'support_summary_report'.",
+          "line": 26
+        },
+        {
+          "value": "Verify that the drafted response fully addresses the ticket within policy boundaries.",
+          "line": 17
+        },
+        {
+          "value": "A quality assurance lead ensuring high customer satisfaction and strict policy adherence.",
+          "line": 18
+        }
+      ]
+    },
+    {
+      "file": "Agents/customer_support/response_drafting_agent.py",
+      "filename": "response_drafting_agent.py",
+      "stem": "response_drafting_agent",
+      "sha256": "ed3e0e3b49d4563ab7aa5c6835144657023cfa7082001d8adee53b07209b00f5",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 12,
+          "end_line": 21,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 23,
+          "end_line": 40,
+          "docstring": null,
+          "args": [
+            "agent",
+            "ticket_data",
+            "resolution_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "response_drafting_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 15,
+          "constructor": "Agent",
+          "role": "Customer Communications Specialist",
+          "goal": "Draft clear, empathetic, and professional customer responses explaining the resolution.",
+          "backstory": "An expert in customer experience communication ensuring clear guidance and professional empathy.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 36,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 14,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 5: Response Drafting Agent (Customer Support)\nDrafts customer-facing communications and action steps.\n",
+          "line": 1
+        },
+        {
+          "value": "Strictly valid JSON containing response_text, tone, next_steps_for_customer, and ticket_status.",
+          "line": 35
+        },
+        {
+          "value": "Draft a formal, customer-facing response message.\nTicket Context:\n",
+          "line": 25
+        },
+        {
+          "value": "\n\nGuidelines:\n1. Acknowledge the customer's specific issue empathetically.\n2. Explain the resolution or required user action with clear bullet points.\n3. Do not disclose internal reasoning, prompt names, or unverified claims.\n4. Do not promise external actions the system cannot guarantee.\nReturn strictly valid JSON with keys: 'response_text', 'tone', 'next_steps_for_customer', and 'ticket_status'.",
+          "line": 27
+        },
+        {
+          "value": "Draft clear, empathetic, and professional customer responses explaining the resolution.",
+          "line": 17
+        },
+        {
+          "value": "An expert in customer experience communication ensuring clear guidance and professional empathy.",
+          "line": 18
+        }
+      ]
+    },
+    {
+      "file": "Agents/customer_support/ticket_classification_agent.py",
+      "filename": "ticket_classification_agent.py",
+      "stem": "ticket_classification_agent",
+      "sha256": "6500542aaa386f72f671a063e06e023940d7833cdf02ba1c2acfc4ee5ffaf396",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_groq_llm_for_agent"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "deterministic_classification_hints",
+          "line": 12,
+          "end_line": 36,
+          "docstring": "Extracts deterministic classification signals from ticket fields.",
+          "args": [
+            "ticket_data"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_agent",
+          "line": 38,
+          "end_line": 47,
+          "docstring": null,
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_task",
+          "line": 49,
+          "end_line": 67,
+          "docstring": null,
+          "args": [
+            "agent",
+            "ticket_data"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "ticket_classification_agent"
+      ],
+      "agent_definitions": [
+        {
+          "line": 41,
+          "constructor": "Agent",
+          "role": "Customer Support Triage Specialist",
+          "goal": "Classify customer tickets into accurate operational categories, urgency tiers, and complexity levels.",
+          "backstory": "An experienced support dispatcher who routes customer inquiries quickly and accurately.",
+          "llm_expression": "llm",
+          "verbose": false,
+          "allow_delegation": null
+        }
+      ],
+      "task_definitions": [
+        {
+          "line": 63,
+          "description_expression": "description",
+          "description_literals": [],
+          "expected_output": null,
+          "agent_expression": "agent"
+        }
+      ],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_groq_llm_for_agent",
+          "line": 40,
+          "arguments": [
+            "AGENT_ID"
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "deterministic_classification_hints",
+          "line": 12,
+          "classification": "function_candidate",
+          "docstring": "Extracts deterministic classification signals from ticket fields."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 1: Ticket Classification Agent (Customer Support)\nClassifies support ticket category, urgency, complexity, and resolution type.\n",
+          "line": 1
+        },
+        {
+          "value": "Extracts deterministic classification signals from ticket fields.",
+          "line": 13
+        },
+        {
+          "value": "Strictly valid JSON containing category, urgency, complexity, customer_impact, and routing_recommendation.",
+          "line": 62
+        },
+        {
+          "value": "Classify the following customer support ticket.\nTicket Data:\n",
+          "line": 52
+        },
+        {
+          "value": "\n\nInstructions:\n1. Classify category (account_access, billing, payment, delivery, technical_failure, refund_request).\n2. Assess urgency ('low', 'medium', 'high', 'critical') and customer impact.\n3. Classify apparent complexity ('simple', 'moderate', 'complex').\n4. Identify missing customer details or ambiguities.\nReturn strictly valid JSON with keys: 'category', 'urgency', 'complexity', 'customer_impact', and 'routing_recommendation'.",
+          "line": 54
+        },
+        {
+          "value": "Classify customer tickets into accurate operational categories, urgency tiers, and complexity levels.",
+          "line": 43
+        },
+        {
+          "value": "An experienced support dispatcher who routes customer inquiries quickly and accurately.",
+          "line": 44
+        }
+      ]
+    },
+    {
+      "file": "Agents/customer_support/workflow.py",
+      "filename": "workflow.py",
+      "stem": "workflow",
+      "sha256": "559e4ae9dfce1ddb0d69aa3542ab2b7575825c2ca2a77da61ee8b8762b6d0a0f",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "time",
+          "asname": null,
+          "line": 6
+        },
+        {
+          "module": "json",
+          "asname": null,
+          "line": 7
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Dict",
+            "Any",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Crew"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "common.tracing",
+          "level": 0,
+          "names": [
+            "WorkflowRunTracker",
+            "init_phoenix",
+            "extract_token_usage"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "common.api_key_manager",
+          "level": 0,
+          "names": [
+            "get_key_for_agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "Agents.customer_support.ticket_classification_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "deterministic_classification_hints",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_classification_agent",
+            "create_task": "create_classification_task",
+            "AGENT_ID": "AGENT_CLASSIFICATION_ID"
+          },
+          "line": 14
+        },
+        {
+          "module": "Agents.customer_support.policy_retrieval_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "deterministic_policy_retrieval",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_retrieval_agent",
+            "create_task": "create_retrieval_task",
+            "AGENT_ID": "AGENT_RETRIEVAL_ID"
+          },
+          "line": 20
+        },
+        {
+          "module": "Agents.customer_support.issue_investigation_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "deterministic_customer_lookup",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_investigation_agent",
+            "create_task": "create_investigation_task",
+            "AGENT_ID": "AGENT_INVESTIGATION_ID"
+          },
+          "line": 26
+        },
+        {
+          "module": "Agents.customer_support.resolution_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_resolution_agent",
+            "create_task": "create_resolution_task",
+            "AGENT_ID": "AGENT_RESOLUTION_ID"
+          },
+          "line": 32
+        },
+        {
+          "module": "Agents.customer_support.response_drafting_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_drafting_agent",
+            "create_task": "create_drafting_task",
+            "AGENT_ID": "AGENT_DRAFTING_ID"
+          },
+          "line": 37
+        },
+        {
+          "module": "Agents.customer_support.resolution_verification_agent",
+          "level": 0,
+          "names": [
+            "create_agent",
+            "create_task",
+            "AGENT_ID"
+          ],
+          "aliases": {
+            "create_agent": "create_verification_agent",
+            "create_task": "create_verification_task",
+            "AGENT_ID": "AGENT_VERIFICATION_ID"
+          },
+          "line": 42
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "run_customer_support_workflow",
+          "line": 50,
+          "end_line": 171,
+          "docstring": "Executes the 6-agent sequential Customer Support baseline workflow.",
+          "args": [
+            "ticket_data",
+            "run_id"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [
+        {
+          "line": 74,
+          "agents_expression": "[agent1]",
+          "tasks_expression": "[task1]",
+          "process_expression": ""
+        },
+        {
+          "line": 90,
+          "agents_expression": "[agent2]",
+          "tasks_expression": "[task2]",
+          "process_expression": ""
+        },
+        {
+          "line": 104,
+          "agents_expression": "[agent3]",
+          "tasks_expression": "[task3]",
+          "process_expression": ""
+        },
+        {
+          "line": 118,
+          "agents_expression": "[agent4]",
+          "tasks_expression": "[task4]",
+          "process_expression": ""
+        },
+        {
+          "line": 132,
+          "agents_expression": "[agent5]",
+          "tasks_expression": "[task5]",
+          "process_expression": ""
+        },
+        {
+          "line": 146,
+          "agents_expression": "[agent6]",
+          "tasks_expression": "[task6]",
+          "process_expression": ""
+        }
+      ],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_customer_support_workflow",
+          "line": 50,
+          "classification": "function_candidate",
+          "docstring": "Executes the 6-agent sequential Customer Support baseline workflow."
+        }
+      ],
+      "execution_calls": [
+        {
+          "call": "crew1.kickoff",
+          "line": 75
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 79
+        },
+        {
+          "call": "crew2.kickoff",
+          "line": 91
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 95
+        },
+        {
+          "call": "crew3.kickoff",
+          "line": 105
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 109
+        },
+        {
+          "call": "crew4.kickoff",
+          "line": 119
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 123
+        },
+        {
+          "call": "crew5.kickoff",
+          "line": 133
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 137
+        },
+        {
+          "call": "crew6.kickoff",
+          "line": 147
+        },
+        {
+          "call": "tracker.log_agent_execution",
+          "line": 151
+        }
+      ],
+      "string_literals": [
+        {
+          "value": "\nWorkflow 2: Customer Support Ticket Resolution Orchestrator.\nSequential 6-Agent Baseline System.\n",
+          "line": 1
+        },
+        {
+          "value": "\n    Executes the 6-agent sequential Customer Support baseline workflow.\n    ",
+          "line": 54
+        },
+        {
+          "value": "\n========================================================",
+          "line": 60
+        },
+        {
+          "value": "========================================================",
+          "line": 63
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "file": "runs/customer_support/customer_support_20261020_163837_686514.json",
+      "filename": "customer_support_20261020_163837_686514.json",
+      "suffix": ".json",
+      "workflow_name": "customer_support",
+      "run_id": "customer_support_20261020_163837_686514",
+      "status": "SUCCESS",
+      "total_duration_seconds": 13.863,
+      "agent_count": null,
+      "total_tokens": 9326,
+      "estimated_cost_usd": 0.003085
+    },
+    {
+      "file": "runs/customer_support/customer_support_20261023_043655_9aa571.json",
+      "filename": "customer_support_20261023_043655_9aa571.json",
+      "suffix": ".json",
+      "workflow_name": "customer_support",
+      "run_id": "customer_support_20261023_043655_9aa571",
+      "status": "SUCCESS",
+      "total_duration_seconds": 13.914,
+      "agent_count": null,
+      "total_tokens": 9528,
+      "estimated_cost_usd": 0.002945
+    },
+    {
+      "file": "runs/customer_support/live_20261023_070149_custom.json",
+      "filename": "live_20261023_070149_custom.json",
+      "suffix": ".json",
+      "workflow_name": "customer_support",
+      "run_id": "live_20261023_070149_custom",
+      "status": "SUCCESS",
+      "total_duration_seconds": 14.701,
+      "agent_count": null,
+      "total_tokens": 9270,
+      "estimated_cost_usd": 0.00297
+    },
+    {
+      "file": "runs/customer_support/test_cs_run_01.json",
+      "filename": "test_cs_run_01.json",
+      "suffix": ".json",
+      "workflow_name": "customer_support",
+      "run_id": "test_cs_run_01",
+      "status": "SUCCESS",
+      "total_duration_seconds": 0.109,
+      "agent_count": null,
+      "total_tokens": 0,
+      "estimated_cost_usd": 0.0
+    }
+  ]
+}

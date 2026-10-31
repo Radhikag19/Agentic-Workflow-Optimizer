@@ -1,0 +1,186 @@
+{
+  "run_id": "live_20261031_161841_trace27",
+  "workflow_name": "sales_lead_qualification",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 13.913,
+  "agent_execution_count": 7,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_11 (gsk_A9...C3BP)",
+      "duration_seconds": 2.076,
+      "tokens": 1016,
+      "prompt_tokens": 395,
+      "completion_tokens": 621,
+      "output": {
+        "lead_id": "LEAD-2026-0002",
+        "enriched_lead_profile": {
+          "lead_id": "LEAD-2026-0002",
+          "contact_name": "Bob Miller",
+          "contact_email": "bob@cornerbakeryexpress.com",
+          "job_title": "Store Owner",
+          "company_id": "COMP-103",
+          "company_name": "Corner Bakery Express",
+          "industry": "Retail & Food Services",
+          "employee_count": 6,
+          "annual_revenue_usd": 350000,
+          "region": "North America",
+          "stated_budget": 200.0,
+          "purchase_timeline": "Unknown / Someday",
+          "test_case_tag": "clearly_unsuitable_early_disqualification",
+          "is_synthetic": true
+        },
+        "missing_attributes": [
+          "purchase_timeline (value unknown)",
+          "company data flagged as synthetic/unverified"
+        ]
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "lead_enrichment_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_12 (gsk_5G...OStT)",
+      "duration_seconds": 1.493,
+      "tokens": 814,
+      "prompt_tokens": 632,
+      "completion_tokens": 182,
+      "output": {
+        "fit_category": "DISQUALIFIED",
+        "industry_fit_score": 0,
+        "company_size_fit_score": 0,
+        "fit_rationale": "The prospect operates in 'Retail & Food Services', which is listed among disqualified industries. Additionally, the company has only 6 employees (far below the required 200‑100,000 range) and annual revenue of $350,000 (well under the $20M minimum). Both industry and size criteria are unmet, resulting in a DISQUALIFIED status."
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "lead_fit_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_13 (gsk_i9...Ujsn)",
+      "duration_seconds": 1.677,
+      "tokens": 802,
+      "prompt_tokens": 398,
+      "completion_tokens": 404,
+      "output": {
+        "intent_level": "LOW_INTENT",
+        "intent_score": 12,
+        "high_value_signals": [],
+        "behavioral_summary": "Bob Miller, a store owner, signed up for the general newsletter on 2026-09-01. No further engagement such as demo requests, pricing page visits, or content downloads has been recorded. The stated budget ($200) and an undefined purchase timeline indicate limited buying capacity. The lead is marked as synthetic and flagged for early disqualification, suggesting it is not a qualified prospect at this time."
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "intent_analysis_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_14 (gsk_6G...l7b1)",
+      "duration_seconds": 2.095,
+      "tokens": 898,
+      "prompt_tokens": 306,
+      "completion_tokens": 592,
+      "output": {
+        "total_score": 7,
+        "qualification_tier": "DISQUALIFIED",
+        "component_scores": {
+          "industry_fit": 0,
+          "company_size_fit": 0,
+          "role_authority": 2,
+          "intent_signals": 5,
+          "budget_timeline": 0
+        },
+        "scoring_rationale": "The deterministic model awards points for five dimensions: industry_fit, company_size_fit, role_authority, intent_signals, and budget_timeline. Each dimension has a predefined maximum (e.g., intent_signals can contribute up to 5 points). The lead earned 0 points for industry_fit, 0 for company_size_fit, 2 for role_authority, 5 for intent_signals, and 0 for budget_timeline, yielding a total_score of 7. Tier classification thresholds are: \n- SALES_QUALIFIED_LEAD (SQL): total_score >= 10\n- MARKETING_NURTURE (MN): total_score >= 5 and < 10\n- DISQUALIFIED (DQ): total_score < 5\nBecause the lead's total_score of 7 falls below the SQL threshold and does not meet the MN minimum (the model treats scores <5 as disqualified), the lead is labeled DISQUALIFIED. The highest‑scoring dimension is intent_signals (5 points), indicating strong purchase intent. The lowest‑scoring dimensions are industry_fit, company_size_fit, and budget_timeline, each with 0 points, showing poor alignment on market fit, size relevance, and budget/timeline readiness."
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "lead_scoring_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_15 (gsk_3b...vKIi)",
+      "duration_seconds": 2.369,
+      "tokens": 1397,
+      "prompt_tokens": 1053,
+      "completion_tokens": 344,
+      "output": {
+        "opportunity_viability": "LOW",
+        "estimated_deal_size": 200,
+        "pipeline_stage": "Disqualified",
+        "key_risks": [
+          "Industry (Retail & Food Services) is a disqualified segment",
+          "Company size (6 employees) far below required threshold",
+          "Annual revenue ($350k) below minimum $20M",
+          "Stated budget ($200) insufficient for typical contract values",
+          "Purchase timeline is unknown / undefined",
+          "Lead flagged as synthetic/unverified data",
+          "Low intent signals and minimal engagement"
+        ]
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "opportunity_assessment_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_16 (gsk_ID...uEx3)",
+      "duration_seconds": 1.374,
+      "tokens": 1415,
+      "prompt_tokens": 1196,
+      "completion_tokens": 219,
+      "output": {
+        "recommended_action": "Log disqualification reason and archive",
+        "target_team": "Lead Management / Data Quality Team",
+        "priority": "Low",
+        "action_justification": "The lead is classified as DISQUALIFIED due to multiple critical mismatches: industry (Retail & Food Services) is a disallowed segment, company size (6 employees) and annual revenue ($350k) fall far below the required thresholds, stated budget ($200) is insufficient, purchase timeline is undefined, and the data is flagged as synthetic/unverified. Intent signals are low and there is no substantive engagement beyond a newsletter signup. Given these factors, the lead should be recorded with detailed disqualification reasons and removed from active sales pipelines."
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "next_action_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 2.826,
+      "tokens": 2143,
+      "prompt_tokens": 1326,
+      "completion_tokens": 817,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "lead_id": "LEAD-2026-0002",
+        "final_qualification_tier": "DISQUALIFIED",
+        "final_score": 7,
+        "summary_report": "Bob Miller (Corner Bakery Express) fails the core ICP fit criteria: the retail & food services industry is a disallowed segment, the company size (6 employees) and annual revenue ($350k) are far below the required thresholds (200‑1,100 employees, $20M+ revenue). The stated budget ($200) and undefined purchase timeline further invalidate the opportunity. Although the deterministic scoring model awarded 7 points (primarily from intent signals), the scoring rubric is inconsistent – the model description classifies scores >=5 as MARKETING_NURTURE, yet the lead is labeled DISQUALIFIED. Given the hard disqualifying fit attributes, the lead must remain DISQUALIFIED. The recommended action to log the disqualification and archive the record is appropriate, and no alternative routing is present.",
+        "audit_findings": [
+          {
+            "issue": "Scoring rubric inconsistency",
+            "detail": "The scoring rationale states that scores >=5 and <10 map to MARKETING_NURTURE, but the lead with a score of 7 is still labeled DISQUALIFIED. This contradicts the defined tier thresholds."
+          },
+          {
+            "issue": "Fit vs. scoring conflict",
+            "detail": "ICP fit categorizes the lead as DISQUALIFIED due to industry, size, and revenue, while the scoring model suggests a MARKETING_NURTURE tier based on points. The hard‑stop fit rules should override the soft scoring, but the documentation does not clearly articulate this hierarchy."
+          },
+          {
+            "issue": "Routing decision consistency",
+            "detail": "Only a single action (log disqualification and archive) is recommended, and it aligns with the DISQUALIFIED status. No contradictory routing to sales or other teams is present."
+          },
+          {
+            "issue": "Data quality flag",
+            "detail": "Lead is marked as synthetic/unverified, reinforcing the disqualification decision."
+          }
+        ]
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "final_review_agent_sales"
+    }
+  ],
+  "total_tokens": 8485,
+  "prompt_tokens": 5306,
+  "completion_tokens": 3179,
+  "estimated_cost_usd": 0.005642,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"lead_id\": \"LEAD-2026-0002\",\n  \"final_qualification_tier\": \"DISQUALIFIED\",\n  \"final_score\": 7,\n  \"summary_report\": \"Bob Miller (Corner Bakery Express) fails the core ICP fit criteria: the retail & food services industry is a disallowed segment, the company size (6 employees) and annual revenue ($350k) are far below the required thresholds (200\\u20111,100 employees, $20M+ revenue). The stated budget ($200) and undefined purchase timeline further invalidate the opportunity. Although the deterministic scoring model awarded 7 points (primarily from intent signals), the scoring rubric is inconsistent \\u2013 the model description classifies scores >=5 as MARKETING_NURTURE, yet the lead is labeled DISQUALIFIED. Given the hard disqualifying fit attributes, the lead must remain DISQUALIFIED. The recommended action to log the disqualification and archive the record is appropriate, and no alternative routing is present.\",\n  \"audit_findings\": [\n    {\n      \"issue\": \"Scoring rubric inconsistency\",\n      \"detail\": \"The scoring rationale states that scores >=5 and <10 map to MARKETING_NURTURE, but the lead with a score of 7 is still labeled DISQUALIFIED. This contradicts the defined tier thresholds.\"\n    },\n    {\n      \"issue\": \"Fit vs. scoring conflict\",\n      \"detail\": \"ICP fit categorizes the lead as DISQUALIFIED due to industry, size, and revenue, while the scoring model suggests a MARKETING_NURTURE tier based on points. The hard\\u2011stop fit rules should override the soft scoring, but the documentation does not clearly articulate this hierarchy.\"\n    },\n    {\n      \"issue\": \"Routing decision consistency\",\n      \"detail\": \"Only a single action (log disqualification and archive) is recommended, and it aligns with the DISQUALIFIED status. No contradictory routing to sales or other teams is present.\"\n    },\n    {\n      \"issue\": \"Data quality flag\",\n      \"detail\": \"Lead is marked as synthetic/unverified, reinforcing the disqualification decision.\"\n    }\n  ]\n}",
+  "timestamp": "2026-10-31T16:18:54.930540+00:00"
+}

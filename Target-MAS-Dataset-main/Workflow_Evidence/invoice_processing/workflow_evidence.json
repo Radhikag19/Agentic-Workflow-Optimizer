@@ -1,0 +1,2207 @@
+{
+  "metadata": {
+    "workflow_id": "invoice_processing",
+    "workflow_name": "invoice_processing",
+    "evidence_schema_version": "1.0",
+    "generated_at": "2026-10-31T21:20:02.076233+00:00",
+    "traces_discovered": 30,
+    "traces_processed": 30,
+    "traces_failed": 0,
+    "input_files": {
+      "workflow_json": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\invoice_processing\\workflow.json",
+      "workflow_context_json": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\invoice_processing\\workflow_context.json",
+      "traces_directory": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Ingestion_Traces_final\\Ingestion_Traces\\invoice_processing",
+      "trace_files": [
+        "live_20261031_130455_trace01.json",
+        "live_20261031_130649_trace02.json",
+        "live_20261031_130706_trace03.json",
+        "live_20261031_130726_trace04.json",
+        "live_20261031_130743_trace05.json",
+        "live_20261031_130758_trace06.json",
+        "live_20261031_130813_trace07.json",
+        "live_20261031_130828_trace08.json",
+        "live_20261031_130842_trace09.json",
+        "live_20261031_130904_trace10.json",
+        "live_20261031_130921_trace11.json",
+        "live_20261031_130938_trace12.json",
+        "live_20261031_130954_trace13.json",
+        "live_20261031_131008_trace14.json",
+        "live_20261031_131025_trace15.json",
+        "live_20261031_131737_trace16.json",
+        "live_20261031_131752_trace17.json",
+        "live_20261031_131807_trace18.json",
+        "live_20261031_131822_trace19.json",
+        "live_20261031_131838_trace20.json",
+        "live_20261031_131856_trace21.json",
+        "live_20261031_131923_trace22.json",
+        "live_20261031_131938_trace23.json",
+        "live_20261031_131955_trace24.json",
+        "live_20261031_132013_trace25.json",
+        "live_20261031_132031_trace26.json",
+        "live_20261031_132050_trace27.json",
+        "live_20261031_132107_trace28.json",
+        "live_20261031_132125_trace29.json",
+        "live_20261031_132144_trace30.json"
+      ]
+    },
+    "aggregation_status": "complete"
+  },
+  "workflow_definition": {
+    "description": "Baseline Accounts Payable Invoice Processing Multi-Agent Workflow",
+    "version": "1.0.0",
+    "declared_agents": [
+      {
+        "agent_id": "invoice_extraction_agent",
+        "name": null,
+        "role": "Senior Invoice Extraction Specialist",
+        "responsibilities": null,
+        "declared_inputs": [
+          "raw_invoice_record"
+        ],
+        "declared_outputs": [
+          "extracted_invoice",
+          "extraction_flags"
+        ],
+        "declared_dependencies": [],
+        "assigned_key_env": "GROQ_API_KEY_1"
+      },
+      {
+        "agent_id": "invoice_validation_agent",
+        "name": null,
+        "role": "Invoice Validation Auditor",
+        "responsibilities": null,
+        "declared_inputs": [
+          "extracted_invoice"
+        ],
+        "declared_outputs": [
+          "validation_status",
+          "math_audit",
+          "validation_errors"
+        ],
+        "declared_dependencies": [
+          "invoice_extraction_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_1"
+      },
+      {
+        "agent_id": "po_matching_agent",
+        "name": null,
+        "role": "Purchase Order Reconciliation Specialist",
+        "responsibilities": null,
+        "declared_inputs": [
+          "extracted_invoice",
+          "purchase_orders.json"
+        ],
+        "declared_outputs": [
+          "po_match_status",
+          "matched_po_id",
+          "discrepancies",
+          "matching_confidence"
+        ],
+        "declared_dependencies": [
+          "invoice_extraction_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_1"
+      },
+      {
+        "agent_id": "policy_compliance_agent",
+        "name": null,
+        "role": "Corporate Accounts Payable Compliance Officer",
+        "responsibilities": null,
+        "declared_inputs": [
+          "extracted_invoice",
+          "policies.json",
+          "suppliers.json"
+        ],
+        "declared_outputs": [
+          "is_compliant",
+          "applied_policy_ids",
+          "violations",
+          "compliance_summary"
+        ],
+        "declared_dependencies": [
+          "invoice_extraction_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_1"
+      },
+      {
+        "agent_id": "duplicate_detection_agent",
+        "name": null,
+        "role": "Fraud & Duplicate Payment Prevention Analyst",
+        "responsibilities": null,
+        "declared_inputs": [
+          "extracted_invoice",
+          "historical_invoices.json"
+        ],
+        "declared_outputs": [
+          "duplicate_status",
+          "matching_records",
+          "risk_assessment"
+        ],
+        "declared_dependencies": [
+          "invoice_extraction_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_1"
+      },
+      {
+        "agent_id": "exception_analysis_agent",
+        "name": null,
+        "role": "Accounts Payable Exception Specialist",
+        "responsibilities": null,
+        "declared_inputs": [
+          "validation_results",
+          "po_matching_results",
+          "compliance_results",
+          "duplicate_results"
+        ],
+        "declared_outputs": [
+          "has_exceptions",
+          "exception_count",
+          "critical_exceptions",
+          "detailed_exceptions"
+        ],
+        "declared_dependencies": [
+          "invoice_validation_agent",
+          "po_matching_agent",
+          "policy_compliance_agent",
+          "duplicate_detection_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_1"
+      },
+      {
+        "agent_id": "approval_recommendation_agent",
+        "name": null,
+        "role": "Accounts Payable Decision Authority",
+        "responsibilities": null,
+        "declared_inputs": [
+          "consolidated_evidence"
+        ],
+        "declared_outputs": [
+          "recommendation",
+          "justification",
+          "conditions"
+        ],
+        "declared_dependencies": [
+          "exception_analysis_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_1"
+      },
+      {
+        "agent_id": "final_review_agent_invoice",
+        "name": null,
+        "role": "Chief AP Quality & Verification Auditor",
+        "responsibilities": null,
+        "declared_inputs": [
+          "complete_audit_trail"
+        ],
+        "declared_outputs": [
+          "workflow_status",
+          "invoice_id",
+          "final_recommendation",
+          "risk_level",
+          "summary_report",
+          "audit_findings"
+        ],
+        "declared_dependencies": [
+          "approval_recommendation_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_1"
+      }
+    ],
+    "declared_dependencies": [
+      {
+        "source": "invoice_extraction_agent",
+        "target": "invoice_validation_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "invoice_extraction_agent",
+        "target": "po_matching_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "invoice_extraction_agent",
+        "target": "policy_compliance_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "invoice_extraction_agent",
+        "target": "duplicate_detection_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "invoice_validation_agent",
+        "target": "exception_analysis_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "po_matching_agent",
+        "target": "exception_analysis_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "policy_compliance_agent",
+        "target": "exception_analysis_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "duplicate_detection_agent",
+        "target": "exception_analysis_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "exception_analysis_agent",
+        "target": "approval_recommendation_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "approval_recommendation_agent",
+        "target": "final_review_agent_invoice",
+        "relationship_type": "declared_dependency"
+      }
+    ],
+    "declared_execution_order": [
+      "invoice_extraction_agent",
+      "invoice_validation_agent",
+      "po_matching_agent",
+      "policy_compliance_agent",
+      "duplicate_detection_agent",
+      "exception_analysis_agent",
+      "approval_recommendation_agent",
+      "final_review_agent_invoice"
+    ],
+    "declared_model_configuration": {
+      "model": "openai/gpt-oss-120b",
+      "provider": null,
+      "assigned_groq_key_env": "GROQ_API_KEY_1"
+    },
+    "optimizer_annotations": {
+      "optimization_opportunities": [
+        "Prune exception_analysis_agent if validation and compliance provide sufficient evidence",
+        "Consolidate invoice_validation_agent and exception_analysis_agent",
+        "Parallelize invoice_validation, po_matching, policy_compliance, and duplicate_detection after extraction",
+        "Optimize prompts to eliminate repeated context across agents"
+      ],
+      "hypothesis_disclaimer": "Declared candidate hypothesis from workflow specification, not an empirical or validated optimization opportunity."
+    }
+  },
+  "static_implementation_context": {
+    "source_files": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "agents": [
+      {
+        "agent_id": "approval_recommendation_agent",
+        "role": "Accounts Payable Decision Authority",
+        "goal": "Determine final payment recommendation (recommended_for_approval, rejected, or needs_review) based on factual evidence.",
+        "backstory": "An executive accounts payable controller applying strict fiduciary oversight to payment approvals.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Formulate a structured approval recommendation for this invoice.\\nConsolidated Evidence from all preceding stages:\\n{json.dumps(consolidated_evidence, indent=2)}\\n\\nDeterministic Decision Guidance:\\n{json.dumps(rule_guidance, indent=2)}\\n\\nInstructions:\\n1. Select outcome: 'recommended_for_approval', 'rejected', or 'needs_review'.\\n2. Provide explicit justification referencing PO match status, policy IDs, math audit, and duplicate findings.\\n3. Note: NEVER execute real financial transactions.\\nReturn strictly valid JSON with keys: 'recommendation' ('recommended_for_approval', 'rejected', or 'needs_review'), 'justification', and 'conditions'.\"",
+            "expected_output": "Strictly valid JSON containing recommendation, justification, and conditions.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Formulate a structured approval recommendation for this invoice.\\nConsolidated Evidence from all preceding stages:\\n{json.dumps(consolidated_evidence, indent=2)}\\n\\nDeterministic Decision Guidance:\\n{json.dumps(rule_guidance, indent=2)}\\n\\nInstructions:\\n1. Select outcome: 'recommended_for_approval', 'rejected', or 'needs_review'.\\n2. Provide explicit justification referencing PO match status, policy IDs, math audit, and duplicate findings.\\n3. Note: NEVER execute real financial transactions.\\nReturn strictly valid JSON with keys: 'recommendation' ('recommended_for_approval', 'rejected', or 'needs_review'), 'justification', and 'conditions'.\"",
+          "Backstory: An executive accounts payable controller applying strict fiduciary oversight to payment approvals."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task",
+          "deterministic_recommendation_rule"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\invoice_processing\\approval_recommendation_agent.py",
+        "start_line": 50,
+        "end_line": 59,
+        "evidence_refs": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "agent_id": "duplicate_detection_agent",
+        "role": "Fraud & Duplicate Payment Prevention Analyst",
+        "goal": "Screen invoices against historical payments to stop duplicate billing and overpayments.",
+        "backstory": "An AP forensic specialist focused on identifying redundant billing and matching invoice histories.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Perform duplicate screening on this invoice.\\nCurrent Invoice:\\n{json.dumps(invoice_data, indent=2)}\\n\\nDeterministic Historical Match Scan:\\n{json.dumps(dup_audit, indent=2)}\\n\\nInstructions:\\n1. Evaluate whether this invoice is an exact duplicate, potential duplicate, or original billing.\\n2. Cite matching historical invoice IDs and field comparisons.\\nReturn strictly valid JSON with keys: 'duplicate_status' ('NONE', 'POTENTIAL_DUPLICATE', 'EXACT_DUPLICATE'), 'matching_records', and 'risk_assessment'.\"",
+            "expected_output": "Strictly valid JSON containing duplicate_status, matching_records, and risk_assessment.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Perform duplicate screening on this invoice.\\nCurrent Invoice:\\n{json.dumps(invoice_data, indent=2)}\\n\\nDeterministic Historical Match Scan:\\n{json.dumps(dup_audit, indent=2)}\\n\\nInstructions:\\n1. Evaluate whether this invoice is an exact duplicate, potential duplicate, or original billing.\\n2. Cite matching historical invoice IDs and field comparisons.\\nReturn strictly valid JSON with keys: 'duplicate_status' ('NONE', 'POTENTIAL_DUPLICATE', 'EXACT_DUPLICATE'), 'matching_records', and 'risk_assessment'.\"",
+          "Backstory: An AP forensic specialist focused on identifying redundant billing and matching invoice histories."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task",
+          "deterministic_duplicate_check"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\invoice_processing\\duplicate_detection_agent.py",
+        "start_line": 62,
+        "end_line": 71,
+        "evidence_refs": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "agent_id": "exception_analysis_agent",
+        "role": "Accounts Payable Exception Specialist",
+        "goal": "Consolidate discrepancies, classify exception severities, and flag operational risks across all stages.",
+        "backstory": "A senior risk analyst evaluating edge cases, discrepancies, and policy violations in payment workflows.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Analyze all upstream findings for accounts payable exceptions.\\nConsolidated Evidence:\\n{json.dumps(upstream_evidence, indent=2)}\\n\\nTasks:\\n1. Consolidate math discrepancies, PO mismatch findings, policy violations, and duplicate alerts.\\n2. Assign an exception severity to each issue ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL').\\n3. Note whether any exceptions are resolvable with further human review or are fatal blockers.\\nReturn strictly valid JSON with keys: 'has_exceptions', 'exception_count', 'critical_exceptions', and 'detailed_exceptions'.\"",
+            "expected_output": "Strictly valid JSON containing has_exceptions, exception_count, critical_exceptions, and detailed_exceptions.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Analyze all upstream findings for accounts payable exceptions.\\nConsolidated Evidence:\\n{json.dumps(upstream_evidence, indent=2)}\\n\\nTasks:\\n1. Consolidate math discrepancies, PO mismatch findings, policy violations, and duplicate alerts.\\n2. Assign an exception severity to each issue ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL').\\n3. Note whether any exceptions are resolvable with further human review or are fatal blockers.\\nReturn strictly valid JSON with keys: 'has_exceptions', 'exception_count', 'critical_exceptions', and 'detailed_exceptions'.\"",
+          "Backstory: A senior risk analyst evaluating edge cases, discrepancies, and policy violations in payment workflows."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\invoice_processing\\exception_analysis_agent.py",
+        "start_line": 12,
+        "end_line": 21,
+        "evidence_refs": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "agent_id": "final_review_agent_invoice",
+        "role": "Chief AP Quality & Verification Auditor",
+        "goal": "Perform final consistency verification across all stages and produce the authoritative accounts payable report.",
+        "backstory": "The final executive gatekeeper ensuring audit trails are complete, robust, and mathematically sound.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Perform the final comprehensive review of this accounts payable workflow execution.\\nComplete Audit Trail:\\n{json.dumps(all_stage_results, indent=2)}\\n\\nTasks:\\n1. Verify that the recommendation aligns with math validation, PO matching, policy checks, and duplicate findings.\\n2. Confirm there are no unaddressed critical exceptions.\\n3. Generate the final structured AP review report.\\nOutput strictly valid JSON with keys: 'workflow_status' ('COMPLETED'), 'invoice_id', 'final_recommendation', 'risk_level', 'summary_report', and 'audit_findings'.\"",
+            "expected_output": "Strictly valid JSON containing workflow_status, invoice_id, final_recommendation, risk_level, summary_report, and audit_findings.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Perform the final comprehensive review of this accounts payable workflow execution.\\nComplete Audit Trail:\\n{json.dumps(all_stage_results, indent=2)}\\n\\nTasks:\\n1. Verify that the recommendation aligns with math validation, PO matching, policy checks, and duplicate findings.\\n2. Confirm there are no unaddressed critical exceptions.\\n3. Generate the final structured AP review report.\\nOutput strictly valid JSON with keys: 'workflow_status' ('COMPLETED'), 'invoice_id', 'final_recommendation', 'risk_level', 'summary_report', and 'audit_findings'.\"",
+          "Backstory: The final executive gatekeeper ensuring audit trails are complete, robust, and mathematically sound."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\invoice_processing\\final_review_agent.py",
+        "start_line": 12,
+        "end_line": 21,
+        "evidence_refs": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "agent_id": "invoice_extraction_agent",
+        "role": "Senior Invoice Extraction Specialist",
+        "goal": "Accurately extract all structured invoice fields (supplier, PO, line items, dates, totals) without hallucinating missing data.",
+        "backstory": "An expert document processor specialized in parsing accounts payable documents into structured formats.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Analyze the following synthetic invoice and extract its structured fields.\\nRaw Invoice Input:\\n{json.dumps(invoice_data, indent=2)}\\n\\nTasks:\\n1. Extract: invoice_number, supplier_id, supplier_name, po_reference, invoice_date, due_date, currency.\\n2. Extract line_items with description, quantity, unit_price, line_total.\\n3. Extract subtotal, tax, discount, and total_amount.\\n4. Identify any missing, ambiguous, or inconsistent fields.\\nOutput strictly valid JSON with keys: 'extracted_invoice' and 'extraction_flags'.\"",
+            "expected_output": "Strictly valid JSON containing extracted_invoice and extraction_flags.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Analyze the following synthetic invoice and extract its structured fields.\\nRaw Invoice Input:\\n{json.dumps(invoice_data, indent=2)}\\n\\nTasks:\\n1. Extract: invoice_number, supplier_id, supplier_name, po_reference, invoice_date, due_date, currency.\\n2. Extract line_items with description, quantity, unit_price, line_total.\\n3. Extract subtotal, tax, discount, and total_amount.\\n4. Identify any missing, ambiguous, or inconsistent fields.\\nOutput strictly valid JSON with keys: 'extracted_invoice' and 'extraction_flags'.\"",
+          "Backstory: An expert document processor specialized in parsing accounts payable documents into structured formats."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\invoice_processing\\invoice_extraction_agent.py",
+        "start_line": 12,
+        "end_line": 21,
+        "evidence_refs": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "agent_id": "invoice_validation_agent",
+        "role": "Invoice Validation Auditor",
+        "goal": "Verify invoice field integrity, validate calculations against deterministic math checks, and document discrepancies.",
+        "backstory": "A meticulous compliance auditor specializing in accounts payable fraud and mathematical discrepancy detection.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Perform structured validation of this invoice.\\nInvoice Data:\\n{json.dumps(invoice_data, indent=2)}\\n\\nVerified Deterministic Math Audit from Python:\\n{json.dumps(math_audit, indent=2)}\\n\\nInstructions:\\n1. Check if all required fields are present (supplier, dates, line items, totals).\\n2. Incorporate the deterministic arithmetic check results.\\n3. Note whether the invoice has valid arithmetic or critical math errors.\\nReturn strictly valid JSON with keys: 'validation_status' ('PASSED' or 'FAILED'), 'math_audit', and 'validation_errors'.\"",
+            "expected_output": "Strictly valid JSON containing validation_status, math_audit, and validation_errors.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Perform structured validation of this invoice.\\nInvoice Data:\\n{json.dumps(invoice_data, indent=2)}\\n\\nVerified Deterministic Math Audit from Python:\\n{json.dumps(math_audit, indent=2)}\\n\\nInstructions:\\n1. Check if all required fields are present (supplier, dates, line items, totals).\\n2. Incorporate the deterministic arithmetic check results.\\n3. Note whether the invoice has valid arithmetic or critical math errors.\\nReturn strictly valid JSON with keys: 'validation_status' ('PASSED' or 'FAILED'), 'math_audit', and 'validation_errors'.\"",
+          "Backstory: A meticulous compliance auditor specializing in accounts payable fraud and mathematical discrepancy detection."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task",
+          "deterministic_arithmetic_check"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\invoice_processing\\invoice_validation_agent.py",
+        "start_line": 51,
+        "end_line": 60,
+        "evidence_refs": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "agent_id": "po_matching_agent",
+        "role": "Purchase Order Reconciliation Specialist",
+        "goal": "Match invoice line items, pricing, quantities, and terms against authorized purchase orders.",
+        "backstory": "An accounts payable specialist ensuring invoices only get paid if backed by approved purchase orders.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Reconcile this invoice against its corresponding purchase order.\\nInvoice Data:\\n{json.dumps(invoice_data, indent=2)}\\n\\nDeterministic PO Matching Results:\\n{json.dumps(po_match_result, indent=2)}\\n\\nInstructions:\\n1. Evaluate whether the invoice accurately matches the PO.\\n2. Detail all quantity, price, or supplier discrepancies.\\nReturn strictly valid JSON with keys: 'po_match_status', 'matched_po_id', 'discrepancies', and 'matching_confidence'.\"",
+            "expected_output": "Strictly valid JSON containing po_match_status, matched_po_id, discrepancies, and matching_confidence.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Reconcile this invoice against its corresponding purchase order.\\nInvoice Data:\\n{json.dumps(invoice_data, indent=2)}\\n\\nDeterministic PO Matching Results:\\n{json.dumps(po_match_result, indent=2)}\\n\\nInstructions:\\n1. Evaluate whether the invoice accurately matches the PO.\\n2. Detail all quantity, price, or supplier discrepancies.\\nReturn strictly valid JSON with keys: 'po_match_status', 'matched_po_id', 'discrepancies', and 'matching_confidence'.\"",
+          "Backstory: An accounts payable specialist ensuring invoices only get paid if backed by approved purchase orders."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task",
+          "deterministic_po_match"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\invoice_processing\\po_matching_agent.py",
+        "start_line": 77,
+        "end_line": 86,
+        "evidence_refs": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "agent_id": "policy_compliance_agent",
+        "role": "Corporate Accounts Payable Compliance Officer",
+        "goal": "Audit invoice against corporate purchasing policies, threshold limits, and vendor eligibility.",
+        "backstory": "An uncompromising governance officer ensuring adherence to internal procurement policies and SOX controls.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Perform policy compliance review on this invoice.\\nInvoice Data:\\n{json.dumps(invoice_data, indent=2)}\\n\\nDeterministic Policy Audit:\\n{json.dumps(policy_audit, indent=2)}\\n\\nInstructions:\\n1. Evaluate policy violations and threshold conditions.\\n2. Explicitly cite each applied policy ID.\\n3. Classify whether infractions are fatal policy violations or flags requiring secondary sign-off.\\nReturn strictly valid JSON with keys: 'is_compliant', 'applied_policy_ids', 'violations', and 'compliance_summary'.\"",
+            "expected_output": "Strictly valid JSON containing is_compliant, applied_policy_ids, violations, and compliance_summary.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Perform policy compliance review on this invoice.\\nInvoice Data:\\n{json.dumps(invoice_data, indent=2)}\\n\\nDeterministic Policy Audit:\\n{json.dumps(policy_audit, indent=2)}\\n\\nInstructions:\\n1. Evaluate policy violations and threshold conditions.\\n2. Explicitly cite each applied policy ID.\\n3. Classify whether infractions are fatal policy violations or flags requiring secondary sign-off.\\nReturn strictly valid JSON with keys: 'is_compliant', 'applied_policy_ids', 'violations', and 'compliance_summary'.\"",
+          "Backstory: An uncompromising governance officer ensuring adherence to internal procurement policies and SOX controls."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task",
+          "deterministic_policy_check"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\invoice_processing\\policy_compliance_agent.py",
+        "start_line": 72,
+        "end_line": 81,
+        "evidence_refs": [
+          "ev_agent_009"
+        ]
+      }
+    ],
+    "invocation_relationships": [],
+    "data_handoffs": [],
+    "conditional_branches": [],
+    "tools_and_helpers": {
+      "registered_tools": [],
+      "explicit_code_invocations": [],
+      "helper_functions": [
+        "create_task",
+        "deterministic_arithmetic_check",
+        "deterministic_duplicate_check",
+        "deterministic_po_match",
+        "deterministic_policy_check",
+        "deterministic_recommendation_rule",
+        "run_invoice_processing_workflow"
+      ],
+      "runtime_llm_tool_selection": {
+        "observable": false,
+        "reason": "Runtime LLM tool selection is unobservable via static AST analysis"
+      }
+    },
+    "analysis_limitations": {
+      "unresolved_references": [],
+      "dynamic_expressions": [],
+      "unsupported_patterns": [],
+      "static_analysis_limitations": [
+        "Dynamic runtime LLM decisions and tool selection cannot be observed via static AST",
+        "Procedural workflow statement order does not imply internal framework agent scheduling"
+      ]
+    }
+  },
+  "runtime_observations": {
+    "total_runs": 30,
+    "successful_runs": 30,
+    "failed_runs": 0,
+    "observed_models": [
+      "openai/gpt-oss-120b"
+    ],
+    "key_distribution": {
+      "GROQ_API_KEY_1": 30,
+      "GROQ_API_KEY_2": 30,
+      "GROQ_API_KEY_3": 30,
+      "GROQ_API_KEY_4": 30,
+      "GROQ_API_KEY_5": 30,
+      "GROQ_API_KEY_6": 30,
+      "GROQ_API_KEY_7": 30,
+      "GROQ_API_KEY_8": 30
+    },
+    "workflow_latency": {
+      "mean_seconds": 31.1229,
+      "median_seconds": 17.0135,
+      "min_seconds": 13.518,
+      "max_seconds": 431.923,
+      "observation_count": 30
+    },
+    "workflow_tokens": {
+      "total_tokens": 315310,
+      "mean_tokens": 10510.3,
+      "min_tokens": 8716,
+      "max_tokens": 13813,
+      "total_prompt_tokens": 199336,
+      "mean_prompt_tokens": 6644.5,
+      "total_completion_tokens": 115974,
+      "mean_completion_tokens": 3865.8,
+      "observation_count": 30
+    },
+    "workflow_cost": {
+      "total_cost_usd": 0.20922,
+      "mean_cost_usd": 0.006974,
+      "pricing_source": "trace_telemetry_estimates",
+      "observation_count": 30
+    },
+    "agent_metrics": {
+      "invoice_extraction_agent": {
+        "agent_id": "invoice_extraction_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          1
+        ],
+        "latency": {
+          "mean_seconds": 2.1934,
+          "median_seconds": 1.7255,
+          "min_seconds": 1.409,
+          "max_seconds": 12.508,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 32240,
+          "mean_tokens": 1074.7,
+          "min_tokens": 822,
+          "max_tokens": 1425,
+          "total_prompt_tokens": 15596,
+          "mean_prompt_tokens": 519.9,
+          "total_completion_tokens": 16644,
+          "mean_completion_tokens": 554.8,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_1"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "extracted_invoice": {
+            "invoice_number": "INV-2026-0001",
+            "supplier_id": "SUP-101",
+            "supplier_name": "Apex Cloud Systems",
+            "po_reference": "PO-2026-0001",
+            "invoice_date": "2026-08-12",
+            "due_date": "2026-09-11",
+            "currency": "USD",
+            "line_items": [
+              {
+                "description": "High-Performance Server Blade",
+                "quantity": 9,
+                "unit_price": 3500.0,
+                "line_total": 31500.0
+              },
+              {
+                "description": "Cloud Infrastructure Tier A",
+                "quantity": 9,
+                "unit_price": 1200.0,
+                "line_total": 10800.0
+              },
+              {
+                "description": "Industrial Lathe Component",
+                "quantity": 6,
+                "unit_price": 4200.0,
+                "line_total": 25200.0
+              }
+            ],
+            "subtotal": 67500.0,
+            "tax": 5400.0,
+            "discount": 0.0,
+            "total_amount": 72900.0
+          },
+          "extraction_flags": {
+            "missing_fields": [],
+            "ambiguous_fields": [],
+            "inconsistent_fields": []
+          }
+        },
+        "error_count": 0
+      },
+      "invoice_validation_agent": {
+        "agent_id": "invoice_validation_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          2
+        ],
+        "latency": {
+          "mean_seconds": 1.4252,
+          "median_seconds": 1.3255,
+          "min_seconds": 1.0,
+          "max_seconds": 3.608,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 26663,
+          "mean_tokens": 888.8,
+          "min_tokens": 766,
+          "max_tokens": 1182,
+          "total_prompt_tokens": 17181,
+          "mean_prompt_tokens": 572.7,
+          "total_completion_tokens": 9482,
+          "mean_completion_tokens": 316.1,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_2"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "validation_status": "PASSED",
+          "math_audit": {
+            "is_arithmetic_valid": true,
+            "calculated_subtotal": 67500.0,
+            "calculated_total": 72900.0,
+            "stated_total": 72900.0,
+            "discrepancy_amount": 0.0,
+            "line_discrepancies": []
+          },
+          "validation_errors": []
+        },
+        "error_count": 0
+      },
+      "po_matching_agent": {
+        "agent_id": "po_matching_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          3
+        ],
+        "latency": {
+          "mean_seconds": 1.1528,
+          "median_seconds": 1.1235,
+          "min_seconds": 0.829,
+          "max_seconds": 2.544,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 28135,
+          "mean_tokens": 937.8,
+          "min_tokens": 786,
+          "max_tokens": 1662,
+          "total_prompt_tokens": 22141,
+          "mean_prompt_tokens": 738.0,
+          "total_completion_tokens": 5994,
+          "mean_completion_tokens": 199.8,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_3"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "po_match_status": "EXACT_MATCH",
+          "matched_po_id": "PO-2026-0001",
+          "discrepancies": [],
+          "matching_confidence": 1.0
+        },
+        "error_count": 0
+      },
+      "policy_compliance_agent": {
+        "agent_id": "policy_compliance_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          4
+        ],
+        "latency": {
+          "mean_seconds": 1.5978,
+          "median_seconds": 1.5675,
+          "min_seconds": 1.046,
+          "max_seconds": 2.675,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 30520,
+          "mean_tokens": 1017.3,
+          "min_tokens": 685,
+          "max_tokens": 1538,
+          "total_prompt_tokens": 17565,
+          "mean_prompt_tokens": 585.5,
+          "total_completion_tokens": 12955,
+          "mean_completion_tokens": 431.8,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_4"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "is_compliant": false,
+          "applied_policy_ids": [
+            "POL-AP-001",
+            "POL-AP-002",
+            "POL-AP-003"
+          ],
+          "violations": [
+            {
+              "policy_id": "POL-AP-003",
+              "rule": "Invoices totaling over $25,000 require executive financial review.",
+              "severity": "medium",
+              "detail": "Total amount $72,900.00 exceeds high-value threshold ($25,000).",
+              "classification": "secondary_sign_off_required"
+            }
+          ],
+          "compliance_summary": "Invoice exceeds the $25,000 high‑value threshold per POL‑AP‑003, triggering a required executive financial review (secondary sign‑off). No fatal violations are present under POL‑AP‑001 or POL‑AP‑002, but the missing executive review renders the invoice non‑compliant."
+        },
+        "error_count": 0
+      },
+      "duplicate_detection_agent": {
+        "agent_id": "duplicate_detection_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          5
+        ],
+        "latency": {
+          "mean_seconds": 15.2481,
+          "median_seconds": 1.4555,
+          "min_seconds": 0.951,
+          "max_seconds": 415.103,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 28587,
+          "mean_tokens": 952.9,
+          "min_tokens": 714,
+          "max_tokens": 1049,
+          "total_prompt_tokens": 17842,
+          "mean_prompt_tokens": 594.7,
+          "total_completion_tokens": 10745,
+          "mean_completion_tokens": 358.2,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_5"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "duplicate_status": "NONE",
+          "matching_records": [],
+          "risk_assessment": "Low risk – no exact or potential duplicate patterns identified in historical data."
+        },
+        "error_count": 0
+      },
+      "exception_analysis_agent": {
+        "agent_id": "exception_analysis_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          6
+        ],
+        "latency": {
+          "mean_seconds": 2.1826,
+          "median_seconds": 1.937,
+          "min_seconds": 1.553,
+          "max_seconds": 6.423,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 49119,
+          "mean_tokens": 1637.3,
+          "min_tokens": 1265,
+          "max_tokens": 2414,
+          "total_prompt_tokens": 29434,
+          "mean_prompt_tokens": 981.1,
+          "total_completion_tokens": 19685,
+          "mean_completion_tokens": 656.2,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_6"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "has_exceptions": true,
+          "exception_count": 1,
+          "critical_exceptions": [],
+          "detailed_exceptions": [
+            {
+              "type": "policy_violation",
+              "policy_id": "POL-AP-003",
+              "rule": "Invoices totaling over $25,000 require executive financial review.",
+              "severity": "MEDIUM",
+              "detail": "Total amount $72,900.00 exceeds high-value threshold ($25,000).",
+              "resolution": "Requires executive financial review (secondary sign‑off).",
+              "is_fatal": false,
+              "requires_human_review": true
+            }
+          ]
+        },
+        "error_count": 0
+      },
+      "approval_recommendation_agent": {
+        "agent_id": "approval_recommendation_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          7
+        ],
+        "latency": {
+          "mean_seconds": 1.5055,
+          "median_seconds": 1.4915,
+          "min_seconds": 1.194,
+          "max_seconds": 1.895,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 48750,
+          "mean_tokens": 1625.0,
+          "min_tokens": 1340,
+          "max_tokens": 2391,
+          "total_prompt_tokens": 37045,
+          "mean_prompt_tokens": 1234.8,
+          "total_completion_tokens": 11705,
+          "mean_completion_tokens": 390.2,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_7"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "recommendation": "needs_review",
+          "justification": "The invoice (INV-2026-0001) matches PO-2026-0001 exactly (EXACT_MATCH) and passes all arithmetic validations (subtotal and total calculations are correct). Duplicate detection found no risks. However, policy POL-AP-003 flags any invoice exceeding $25,000 for mandatory executive financial review. The total amount of $72,900 exceeds this threshold, creating a medium‑severity policy violation that requires secondary sign‑off. Consequently, the invoice is non‑compliant until the required executive review is completed.",
+          "conditions": {
+            "po_match_status": "EXACT_MATCH",
+            "math_audit": "passed",
+            "duplicate_status": "NONE",
+            "policy_violations": [
+              {
+                "policy_id": "POL-AP-003",
+                "rule": "Invoices totaling over $25,000 require executive financial review.",
+                "severity": "medium",
+                "required_action": "executive financial review (secondary sign‑off)"
+              }
+            ]
+          }
+        },
+        "error_count": 0
+      },
+      "final_review_agent_invoice": {
+        "agent_id": "final_review_agent_invoice",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          8
+        ],
+        "latency": {
+          "mean_seconds": 2.8773,
+          "median_seconds": 2.641,
+          "min_seconds": 1.751,
+          "max_seconds": 8.657,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 71296,
+          "mean_tokens": 2376.5,
+          "min_tokens": 1772,
+          "max_tokens": 3266,
+          "total_prompt_tokens": 42532,
+          "mean_prompt_tokens": 1417.7,
+          "total_completion_tokens": 28764,
+          "mean_completion_tokens": 958.8,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_8"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "workflow_status": "COMPLETED",
+          "invoice_id": "INV-2026-0001",
+          "final_recommendation": "needs_review",
+          "risk_level": "Medium",
+          "summary_report": "The invoice INV-2026-0001 matches PO-2026-0001 exactly and passes all arithmetic checks (subtotal $67,500, total $72,900). No duplicate risk was identified. However, policy POL-AP-003 flags any invoice over $25,000 for mandatory executive financial review. The $72,900 total triggers a medium‑severity violation, requiring secondary sign‑off. No critical exceptions are present. Consequently, the invoice is non‑compliant until the required executive review is completed, and the system recommends a review.",
+          "audit_findings": {
+            "extraction": {
+              "extracted_invoice": {
+                "invoice_number": "INV-2026-0001",
+                "supplier_id": "SUP-101",
+                "supplier_name": "Apex Cloud Systems",
+                "po_reference": "PO-2026-0001",
+                "invoice_date": "2026-08-12",
+                "due_date": "2026-09-11",
+                "currency": "USD",
+                "line_items": [
+                  {
+                    "description": "High-Performance Server Blade",
+                    "quantity": 9,
+                    "unit_price": 3500.0,
+                    "line_total": 31500.0
+                  },
+                  {
+                    "description": "Cloud Infrastructure Tier A",
+                    "quantity": 9,
+                    "unit_price": 1200.0,
+                    "line_total": 10800.0
+                  },
+                  {
+                    "description": "Industrial Lathe Component",
+                    "quantity": 6,
+                    "unit_price": 4200.0,
+                    "line_total": 25200.0
+                  }
+                ],
+                "subtotal": 67500.0,
+                "tax": 5400.0,
+                "discount": 0.0,
+                "total_amount": 72900.0
+              },
+              "extraction_flags": {
+                "missing_fields": [],
+                "ambiguous_fields": [],
+                "inconsistent_fields": []
+              }
+            },
+            "validation": {
+              "validation_status": "PASSED",
+              "math_audit": {
+                "is_arithmetic_valid": true,
+                "calculated_subtotal": 67500.0,
+                "calculated_total": 72900.0,
+                "stated_total": 72900.0,
+                "discrepancy_amount": 0.0,
+                "line_discrepancies": []
+              },
+              "validation_errors": []
+            },
+            "po_matching": {
+              "po_match_status": "EXACT_MATCH",
+              "matched_po_id": "PO-2026-0001",
+              "discrepancies": [],
+              "matching_confidence": 1.0
+            },
+            "policy_compliance": {
+              "is_compliant": false,
+              "applied_policy_ids": [
+                "POL-AP-001",
+                "POL-AP-002",
+                "POL-AP-003"
+              ],
+              "violations": [
+                {
+                  "policy_id": "POL-AP-003",
+                  "rule": "Invoices totaling over $25,000 require executive financial review.",
+                  "severity": "medium",
+                  "detail": "Total amount $72,900.00 exceeds high-value threshold ($25,000).",
+                  "classification": "secondary_sign_off_required"
+                }
+              ],
+              "compliance_summary": "Invoice exceeds the $25,000 high‑value threshold per POL‑AP‑003, triggering a required executive financial review (secondary sign‑off). No fatal violations under POL‑AP‑001 or POL‑AP‑002."
+            },
+            "duplicate_detection": {
+              "duplicate_status": "NONE",
+              "matching_records": [],
+              "risk_assessment": "Low risk – no exact or potential duplicate patterns identified in historical data."
+            },
+            "exception_analysis": {
+              "has_exceptions": true,
+              "exception_count": 1,
+              "critical_exceptions": [],
+              "detailed_exceptions": [
+                {
+                  "type": "policy_violation",
+                  "policy_id": "POL-AP-003",
+                  "rule": "Invoices totaling over $25,000 require executive financial review.",
+                  "severity": "MEDIUM",
+                  "detail": "Total amount $72,900.00 exceeds high-value threshold ($25,000).",
+                  "resolution": "Requires executive financial review (secondary sign‑off).",
+                  "is_fatal": false,
+                  "requires_human_review": true
+                }
+              ]
+            },
+            "approval_recommendation": {
+              "recommendation": "needs_review",
+              "justification": "The invoice matches PO exactly and passes arithmetic validation. Duplicate detection found no risk. Policy POL-AP-003 flags any invoice > $25,000 for mandatory executive financial review. The $72,900 total triggers a medium‑severity violation, requiring secondary sign‑off. Therefore, the invoice is non‑compliant until the executive review is completed.",
+              "conditions": {
+                "po_match_status": "EXACT_MATCH",
+                "math_audit": "passed",
+                "duplicate_status": "NONE",
+                "policy_violations": [
+                  {
+                    "policy_id": "POL-AP-003",
+                    "rule": "Invoices totaling over $25,000 require executive financial review.",
+                    "severity": "medium",
+                    "required_action": "executive financial review (secondary sign‑off)"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "error_count": 0
+      }
+    },
+    "runs_summary": [
+      {
+        "run_id": "live_20261031_130455_trace01",
+        "status": "SUCCESS",
+        "duration_seconds": 20.632,
+        "total_tokens": 11067,
+        "prompt_tokens": 6769,
+        "completion_tokens": 4298,
+        "estimated_cost_usd": 0.007389,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:05:15.949510+00:00",
+        "trace_file": "live_20261031_130455_trace01.json"
+      },
+      {
+        "run_id": "live_20261031_130649_trace02",
+        "status": "SUCCESS",
+        "duration_seconds": 16.864,
+        "total_tokens": 11445,
+        "prompt_tokens": 7226,
+        "completion_tokens": 4219,
+        "estimated_cost_usd": 0.007596,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:07:06.827835+00:00",
+        "trace_file": "live_20261031_130649_trace02.json"
+      },
+      {
+        "run_id": "live_20261031_130706_trace03",
+        "status": "SUCCESS",
+        "duration_seconds": 19.747,
+        "total_tokens": 10029,
+        "prompt_tokens": 6148,
+        "completion_tokens": 3881,
+        "estimated_cost_usd": 0.006693,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:07:26.577685+00:00",
+        "trace_file": "live_20261031_130706_trace03.json"
+      },
+      {
+        "run_id": "live_20261031_130726_trace04",
+        "status": "SUCCESS",
+        "duration_seconds": 17.163,
+        "total_tokens": 9649,
+        "prompt_tokens": 6061,
+        "completion_tokens": 3588,
+        "estimated_cost_usd": 0.006411,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:07:43.744778+00:00",
+        "trace_file": "live_20261031_130726_trace04.json"
+      },
+      {
+        "run_id": "live_20261031_130743_trace05",
+        "status": "SUCCESS",
+        "duration_seconds": 14.361,
+        "total_tokens": 10346,
+        "prompt_tokens": 7022,
+        "completion_tokens": 3324,
+        "estimated_cost_usd": 0.006769,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:07:58.111025+00:00",
+        "trace_file": "live_20261031_130743_trace05.json"
+      },
+      {
+        "run_id": "live_20261031_130758_trace06",
+        "status": "SUCCESS",
+        "duration_seconds": 15.015,
+        "total_tokens": 9609,
+        "prompt_tokens": 6158,
+        "completion_tokens": 3451,
+        "estimated_cost_usd": 0.00636,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:08:13.133131+00:00",
+        "trace_file": "live_20261031_130758_trace06.json"
+      },
+      {
+        "run_id": "live_20261031_130813_trace07",
+        "status": "SUCCESS",
+        "duration_seconds": 15.348,
+        "total_tokens": 10166,
+        "prompt_tokens": 6540,
+        "completion_tokens": 3626,
+        "estimated_cost_usd": 0.006723,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:08:28.484337+00:00",
+        "trace_file": "live_20261031_130813_trace07.json"
+      },
+      {
+        "run_id": "live_20261031_130828_trace08",
+        "status": "SUCCESS",
+        "duration_seconds": 13.518,
+        "total_tokens": 9062,
+        "prompt_tokens": 5814,
+        "completion_tokens": 3248,
+        "estimated_cost_usd": 0.005996,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:08:42.006320+00:00",
+        "trace_file": "live_20261031_130828_trace08.json"
+      },
+      {
+        "run_id": "live_20261031_130842_trace09",
+        "status": "SUCCESS",
+        "duration_seconds": 22.285,
+        "total_tokens": 11929,
+        "prompt_tokens": 7014,
+        "completion_tokens": 4915,
+        "estimated_cost_usd": 0.008021,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:09:04.297300+00:00",
+        "trace_file": "live_20261031_130842_trace09.json"
+      },
+      {
+        "run_id": "live_20261031_130904_trace10",
+        "status": "SUCCESS",
+        "duration_seconds": 17.498,
+        "total_tokens": 11974,
+        "prompt_tokens": 7159,
+        "completion_tokens": 4815,
+        "estimated_cost_usd": 0.008028,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:09:21.801605+00:00",
+        "trace_file": "live_20261031_130904_trace10.json"
+      },
+      {
+        "run_id": "live_20261031_130921_trace11",
+        "status": "SUCCESS",
+        "duration_seconds": 16.723,
+        "total_tokens": 11104,
+        "prompt_tokens": 6991,
+        "completion_tokens": 4113,
+        "estimated_cost_usd": 0.007374,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:09:38.529786+00:00",
+        "trace_file": "live_20261031_130921_trace11.json"
+      },
+      {
+        "run_id": "live_20261031_130938_trace12",
+        "status": "SUCCESS",
+        "duration_seconds": 15.497,
+        "total_tokens": 10396,
+        "prompt_tokens": 6254,
+        "completion_tokens": 4142,
+        "estimated_cost_usd": 0.006962,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:09:54.033584+00:00",
+        "trace_file": "live_20261031_130938_trace12.json"
+      },
+      {
+        "run_id": "live_20261031_130954_trace13",
+        "status": "SUCCESS",
+        "duration_seconds": 14.213,
+        "total_tokens": 9915,
+        "prompt_tokens": 6263,
+        "completion_tokens": 3652,
+        "estimated_cost_usd": 0.00658,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:10:08.258025+00:00",
+        "trace_file": "live_20261031_130954_trace13.json"
+      },
+      {
+        "run_id": "live_20261031_131008_trace14",
+        "status": "SUCCESS",
+        "duration_seconds": 17.435,
+        "total_tokens": 11067,
+        "prompt_tokens": 6903,
+        "completion_tokens": 4164,
+        "estimated_cost_usd": 0.007362,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:10:25.699130+00:00",
+        "trace_file": "live_20261031_131008_trace14.json"
+      },
+      {
+        "run_id": "live_20261031_131025_trace15",
+        "status": "SUCCESS",
+        "duration_seconds": 431.923,
+        "total_tokens": 10491,
+        "prompt_tokens": 6797,
+        "completion_tokens": 3694,
+        "estimated_cost_usd": 0.006928,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:17:37.627239+00:00",
+        "trace_file": "live_20261031_131025_trace15.json"
+      },
+      {
+        "run_id": "live_20261031_131737_trace16",
+        "status": "SUCCESS",
+        "duration_seconds": 15.144,
+        "total_tokens": 9368,
+        "prompt_tokens": 5697,
+        "completion_tokens": 3671,
+        "estimated_cost_usd": 0.006261,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:17:52.774620+00:00",
+        "trace_file": "live_20261031_131737_trace16.json"
+      },
+      {
+        "run_id": "live_20261031_131752_trace17",
+        "status": "SUCCESS",
+        "duration_seconds": 15.129,
+        "total_tokens": 9488,
+        "prompt_tokens": 5876,
+        "completion_tokens": 3612,
+        "estimated_cost_usd": 0.00632,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:18:07.907227+00:00",
+        "trace_file": "live_20261031_131752_trace17.json"
+      },
+      {
+        "run_id": "live_20261031_131807_trace18",
+        "status": "SUCCESS",
+        "duration_seconds": 14.462,
+        "total_tokens": 10400,
+        "prompt_tokens": 6754,
+        "completion_tokens": 3646,
+        "estimated_cost_usd": 0.006865,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:18:22.376948+00:00",
+        "trace_file": "live_20261031_131807_trace18.json"
+      },
+      {
+        "run_id": "live_20261031_131822_trace19",
+        "status": "SUCCESS",
+        "duration_seconds": 15.912,
+        "total_tokens": 11068,
+        "prompt_tokens": 7161,
+        "completion_tokens": 3907,
+        "estimated_cost_usd": 0.007312,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:18:38.302804+00:00",
+        "trace_file": "live_20261031_131822_trace19.json"
+      },
+      {
+        "run_id": "live_20261031_131838_trace20",
+        "status": "SUCCESS",
+        "duration_seconds": 18.448,
+        "total_tokens": 13813,
+        "prompt_tokens": 8690,
+        "completion_tokens": 5123,
+        "estimated_cost_usd": 0.009174,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:18:56.764808+00:00",
+        "trace_file": "live_20261031_131838_trace20.json"
+      },
+      {
+        "run_id": "live_20261031_131856_trace21",
+        "status": "SUCCESS",
+        "duration_seconds": 26.374,
+        "total_tokens": 10796,
+        "prompt_tokens": 6817,
+        "completion_tokens": 3979,
+        "estimated_cost_usd": 0.007165,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:19:23.143348+00:00",
+        "trace_file": "live_20261031_131856_trace21.json"
+      },
+      {
+        "run_id": "live_20261031_131923_trace22",
+        "status": "SUCCESS",
+        "duration_seconds": 15.53,
+        "total_tokens": 9832,
+        "prompt_tokens": 6281,
+        "completion_tokens": 3551,
+        "estimated_cost_usd": 0.006511,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:19:38.675812+00:00",
+        "trace_file": "live_20261031_131923_trace22.json"
+      },
+      {
+        "run_id": "live_20261031_131938_trace23",
+        "status": "SUCCESS",
+        "duration_seconds": 16.737,
+        "total_tokens": 8716,
+        "prompt_tokens": 5700,
+        "completion_tokens": 3016,
+        "estimated_cost_usd": 0.005746,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:19:55.430823+00:00",
+        "trace_file": "live_20261031_131938_trace23.json"
+      },
+      {
+        "run_id": "live_20261031_131955_trace24",
+        "status": "SUCCESS",
+        "duration_seconds": 18.297,
+        "total_tokens": 9620,
+        "prompt_tokens": 5787,
+        "completion_tokens": 3833,
+        "estimated_cost_usd": 0.006442,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:20:13.736862+00:00",
+        "trace_file": "live_20261031_131955_trace24.json"
+      },
+      {
+        "run_id": "live_20261031_132013_trace25",
+        "status": "SUCCESS",
+        "duration_seconds": 17.59,
+        "total_tokens": 10527,
+        "prompt_tokens": 7146,
+        "completion_tokens": 3381,
+        "estimated_cost_usd": 0.006887,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:20:31.334872+00:00",
+        "trace_file": "live_20261031_132013_trace25.json"
+      },
+      {
+        "run_id": "live_20261031_132031_trace26",
+        "status": "SUCCESS",
+        "duration_seconds": 19.511,
+        "total_tokens": 11564,
+        "prompt_tokens": 7192,
+        "completion_tokens": 4372,
+        "estimated_cost_usd": 0.007697,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:20:50.856861+00:00",
+        "trace_file": "live_20261031_132031_trace26.json"
+      },
+      {
+        "run_id": "live_20261031_132050_trace27",
+        "status": "SUCCESS",
+        "duration_seconds": 16.727,
+        "total_tokens": 9394,
+        "prompt_tokens": 6406,
+        "completion_tokens": 2988,
+        "estimated_cost_usd": 0.00614,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:21:07.590742+00:00",
+        "trace_file": "live_20261031_132050_trace27.json"
+      },
+      {
+        "run_id": "live_20261031_132107_trace28",
+        "status": "SUCCESS",
+        "duration_seconds": 18.283,
+        "total_tokens": 11079,
+        "prompt_tokens": 7195,
+        "completion_tokens": 3884,
+        "estimated_cost_usd": 0.007313,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:21:25.873403+00:00",
+        "trace_file": "live_20261031_132107_trace28.json"
+      },
+      {
+        "run_id": "live_20261031_132125_trace29",
+        "status": "SUCCESS",
+        "duration_seconds": 18.973,
+        "total_tokens": 9947,
+        "prompt_tokens": 6292,
+        "completion_tokens": 3655,
+        "estimated_cost_usd": 0.0066,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:21:44.852455+00:00",
+        "trace_file": "live_20261031_132125_trace29.json"
+      },
+      {
+        "run_id": "live_20261031_132144_trace30",
+        "status": "SUCCESS",
+        "duration_seconds": 18.347,
+        "total_tokens": 11449,
+        "prompt_tokens": 7223,
+        "completion_tokens": 4226,
+        "estimated_cost_usd": 0.0076,
+        "agent_count": 8,
+        "timestamp": "2026-10-31T13:22:03.250764+00:00",
+        "trace_file": "live_20261031_132144_trace30.json"
+      }
+    ]
+  },
+  "workflow_graph": {
+    "nodes": [
+      {
+        "id": "workflow:invoice_processing",
+        "type": "workflow",
+        "name": "invoice_processing",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:approval_recommendation_agent",
+        "type": "agent",
+        "name": "approval_recommendation_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:duplicate_detection_agent",
+        "type": "agent",
+        "name": "duplicate_detection_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:exception_analysis_agent",
+        "type": "agent",
+        "name": "exception_analysis_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:final_review_agent_invoice",
+        "type": "agent",
+        "name": "final_review_agent_invoice",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:invoice_extraction_agent",
+        "type": "agent",
+        "name": "invoice_extraction_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:invoice_validation_agent",
+        "type": "agent",
+        "name": "invoice_validation_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:po_matching_agent",
+        "type": "agent",
+        "name": "po_matching_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:policy_compliance_agent",
+        "type": "agent",
+        "name": "policy_compliance_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "task:approval_recommendation_agent_task",
+        "type": "task",
+        "name": "approval_recommendation_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:duplicate_detection_agent_task",
+        "type": "task",
+        "name": "duplicate_detection_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:exception_analysis_agent_task",
+        "type": "task",
+        "name": "exception_analysis_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:final_review_agent_invoice_task",
+        "type": "task",
+        "name": "final_review_agent_invoice_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:invoice_extraction_agent_task",
+        "type": "task",
+        "name": "invoice_extraction_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:invoice_validation_agent_task",
+        "type": "task",
+        "name": "invoice_validation_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:po_matching_agent_task",
+        "type": "task",
+        "name": "po_matching_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:policy_compliance_agent_task",
+        "type": "task",
+        "name": "policy_compliance_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:create_task",
+        "type": "function",
+        "name": "create_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:deterministic_recommendation_rule",
+        "type": "function",
+        "name": "deterministic_recommendation_rule",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:deterministic_duplicate_check",
+        "type": "function",
+        "name": "deterministic_duplicate_check",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:deterministic_arithmetic_check",
+        "type": "function",
+        "name": "deterministic_arithmetic_check",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:deterministic_po_match",
+        "type": "function",
+        "name": "deterministic_po_match",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:deterministic_policy_check",
+        "type": "function",
+        "name": "deterministic_policy_check",
+        "source": "statically_observed"
+      }
+    ],
+    "edges": [
+      {
+        "source": "agent:approval_recommendation_agent",
+        "target": "task:approval_recommendation_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "source": "agent:duplicate_detection_agent",
+        "target": "task:duplicate_detection_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "source": "agent:exception_analysis_agent",
+        "target": "task:exception_analysis_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "source": "agent:final_review_agent_invoice",
+        "target": "task:final_review_agent_invoice_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "source": "agent:invoice_extraction_agent",
+        "target": "task:invoice_extraction_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "source": "agent:invoice_validation_agent",
+        "target": "task:invoice_validation_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "source": "agent:po_matching_agent",
+        "target": "task:po_matching_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "source": "agent:policy_compliance_agent",
+        "target": "task:policy_compliance_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_009"
+        ]
+      },
+      {
+        "source": "agent:approval_recommendation_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "source": "agent:approval_recommendation_agent",
+        "target": "function:deterministic_recommendation_rule",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "source": "agent:duplicate_detection_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "source": "agent:duplicate_detection_agent",
+        "target": "function:deterministic_duplicate_check",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "source": "agent:exception_analysis_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "source": "agent:final_review_agent_invoice",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "source": "agent:invoice_extraction_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "source": "agent:invoice_validation_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "source": "agent:invoice_validation_agent",
+        "target": "function:deterministic_arithmetic_check",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "source": "agent:po_matching_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "source": "agent:po_matching_agent",
+        "target": "function:deterministic_po_match",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "source": "agent:policy_compliance_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_009"
+        ]
+      },
+      {
+        "source": "agent:policy_compliance_agent",
+        "target": "function:deterministic_policy_check",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_009"
+        ]
+      },
+      {
+        "source": "workflow:invoice_processing",
+        "target": "agent:approval_recommendation_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:invoice_processing",
+        "target": "agent:exception_analysis_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:invoice_processing",
+        "target": "agent:final_review_agent_invoice",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:invoice_processing",
+        "target": "agent:duplicate_detection_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:invoice_processing",
+        "target": "agent:policy_compliance_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:invoice_processing",
+        "target": "agent:invoice_extraction_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:invoice_processing",
+        "target": "agent:po_matching_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:invoice_processing",
+        "target": "agent:invoice_validation_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "agent:invoice_extraction_agent",
+        "target": "agent:invoice_validation_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:invoice_extraction_agent",
+        "target": "agent:po_matching_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:invoice_extraction_agent",
+        "target": "agent:policy_compliance_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:invoice_extraction_agent",
+        "target": "agent:duplicate_detection_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:invoice_validation_agent",
+        "target": "agent:exception_analysis_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:po_matching_agent",
+        "target": "agent:exception_analysis_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:policy_compliance_agent",
+        "target": "agent:exception_analysis_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:duplicate_detection_agent",
+        "target": "agent:exception_analysis_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:exception_analysis_agent",
+        "target": "agent:approval_recommendation_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:approval_recommendation_agent",
+        "target": "agent:final_review_agent_invoice",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:invoice_extraction_agent",
+        "target": "agent:invoice_validation_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:invoice_validation_agent",
+        "target": "agent:po_matching_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:po_matching_agent",
+        "target": "agent:policy_compliance_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:policy_compliance_agent",
+        "target": "agent:duplicate_detection_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:duplicate_detection_agent",
+        "target": "agent:exception_analysis_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:exception_analysis_agent",
+        "target": "agent:approval_recommendation_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:approval_recommendation_agent",
+        "target": "agent:final_review_agent_invoice",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      }
+    ]
+  },
+  "reconciliation_and_limitations": {
+    "agent_reconciliation": [
+      {
+        "agent_id": "approval_recommendation_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "duplicate_detection_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "exception_analysis_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "final_review_agent_invoice",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "invoice_extraction_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "invoice_validation_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "po_matching_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "policy_compliance_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      }
+    ],
+    "dependency_reconciliation": [
+      {
+        "source": "invoice_extraction_agent",
+        "target": "invoice_validation_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "invoice_extraction_agent",
+        "target": "po_matching_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "invoice_extraction_agent",
+        "target": "policy_compliance_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "invoice_extraction_agent",
+        "target": "duplicate_detection_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "invoice_validation_agent",
+        "target": "exception_analysis_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "po_matching_agent",
+        "target": "exception_analysis_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "policy_compliance_agent",
+        "target": "exception_analysis_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "duplicate_detection_agent",
+        "target": "exception_analysis_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "exception_analysis_agent",
+        "target": "approval_recommendation_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "approval_recommendation_agent",
+        "target": "final_review_agent_invoice",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      }
+    ],
+    "model_reconciliation": {
+      "declared_model": "openai/gpt-oss-120b",
+      "statically_extracted_model": null,
+      "runtime_observed_model": "openai/gpt-oss-120b",
+      "status": "matching",
+      "notes": "Declared model 'openai/gpt-oss-120b' matches runtime enforced model 'openai/gpt-oss-120b'."
+    },
+    "limitations": [
+      "Per-agent cost in traces is not tracked individually; only workflow-level cost is recorded.",
+      "Dynamic runtime branch outcomes and retry loops are recorded as sequential executions.",
+      "Static prompt text reflects task description parameters; dynamic LLM runtime prompt interpolations are reflected in trace prompt tokens.",
+      "Static AST dependency graph was a flat star topology; inter-agent dependencies are reconciled from workflow.json and runtime trace sequences."
+    ]
+  }
+}

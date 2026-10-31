@@ -1,0 +1,112 @@
+{
+  "workflow_name": "procurement_supplier_selection",
+  "version": "1.0.0",
+  "description": "Baseline Procurement and Supplier Selection Multi-Agent Workflow",
+  "fixed_model": "openai/gpt-oss-120b",
+  "assigned_groq_key_env": "GROQ_API_KEY_3",
+  "total_agents": 9,
+  "execution_mode": "sequential",
+  "execution_order": [
+    "quotation_analysis_agent",
+    "supplier_profile_agent",
+    "delivery_analysis_agent",
+    "supplier_risk_agent",
+    "contract_analysis_agent",
+    "cost_comparison_agent",
+    "weighted_evaluation_agent",
+    "selection_recommendation_agent",
+    "final_review_agent_procurement"
+  ],
+  "agents": [
+    {
+      "agent_id": "quotation_analysis_agent",
+      "role": "Senior Quotation Analyst",
+      "assigned_key_env": "GROQ_API_KEY_3",
+      "dependencies": [],
+      "inputs": ["procurement_request", "quotations"],
+      "outputs": ["request_id", "normalized_quotations", "extraction_flags"],
+      "optimization_note": "Candidate for parallel execution."
+    },
+    {
+      "agent_id": "supplier_profile_agent",
+      "role": "Supplier Intelligence Officer",
+      "assigned_key_env": "GROQ_API_KEY_3",
+      "dependencies": [],
+      "inputs": ["supplier_ids", "supplier_profiles.json"],
+      "outputs": ["evaluated_profiles", "profile_strengths", "operational_concerns"],
+      "optimization_note": "Candidate for parallel execution with quotation, delivery, risk, and contract analyses."
+    },
+    {
+      "agent_id": "delivery_analysis_agent",
+      "role": "Supply Chain Fulfillment Analyst",
+      "assigned_key_env": "GROQ_API_KEY_3",
+      "dependencies": [],
+      "inputs": ["target_delivery_date", "delivery_schedules.json"],
+      "outputs": ["delivery_evaluation", "on_time_suppliers", "late_risk_suppliers", "logistics_summary"],
+      "optimization_note": "Candidate for parallel execution."
+    },
+    {
+      "agent_id": "supplier_risk_agent",
+      "role": "Procurement Risk & Compliance Auditor",
+      "assigned_key_env": "GROQ_API_KEY_3",
+      "dependencies": [],
+      "inputs": ["supplier_ids", "risk_records.json"],
+      "outputs": ["supplier_risk_scores", "flagged_suppliers", "risk_mitigation_notes"],
+      "optimization_note": "Candidate for parallel execution."
+    },
+    {
+      "agent_id": "contract_analysis_agent",
+      "role": "Commercial Contracts Specialist",
+      "assigned_key_env": "GROQ_API_KEY_3",
+      "dependencies": [],
+      "inputs": ["supplier_ids", "contracts.json"],
+      "outputs": ["contract_comparison", "best_terms_supplier", "contract_risks"],
+      "optimization_note": "Candidate for parallel execution."
+    },
+    {
+      "agent_id": "cost_comparison_agent",
+      "role": "Cost & Financial Analyst",
+      "assigned_key_env": "GROQ_API_KEY_3",
+      "dependencies": ["quotation_analysis_agent"],
+      "inputs": ["normalized_quotations"],
+      "outputs": ["cost_ranking", "lowest_cost_bidder", "cost_spread_percentage", "commercial_summary"],
+      "optimization_note": "Candidate for consolidation into weighted_evaluation_agent."
+    },
+    {
+      "agent_id": "weighted_evaluation_agent",
+      "role": "Multi-Criteria Decision Analysis Specialist",
+      "assigned_key_env": "GROQ_API_KEY_3",
+      "dependencies": [
+        "cost_comparison_agent",
+        "delivery_analysis_agent",
+        "supplier_risk_agent",
+        "supplier_profile_agent",
+        "contract_analysis_agent"
+      ],
+      "inputs": ["cost_ranking", "delivery_eval", "risk_eval", "profile_eval", "contract_eval", "evaluation_criteria.json"],
+      "outputs": ["weighted_scores", "top_ranked_supplier", "score_spread", "evaluation_rationale"]
+    },
+    {
+      "agent_id": "selection_recommendation_agent",
+      "role": "Strategic Sourcing Committee Chair",
+      "assigned_key_env": "GROQ_API_KEY_3",
+      "dependencies": ["weighted_evaluation_agent"],
+      "inputs": ["consolidated_procurement_evidence"],
+      "outputs": ["recommended_supplier_id", "commercial_rationale", "risk_acceptance", "next_steps"]
+    },
+    {
+      "agent_id": "final_review_agent_procurement",
+      "role": "Chief Procurement Officer & Audit Lead",
+      "assigned_key_env": "GROQ_API_KEY_3",
+      "dependencies": ["selection_recommendation_agent"],
+      "inputs": ["complete_procurement_audit"],
+      "outputs": ["workflow_status", "selected_supplier", "compliance_verification", "summary_report", "award_justification"]
+    }
+  ],
+  "optimization_opportunities": [
+    "Parallelize the 5 independent stages: quotation_analysis, supplier_profile, delivery_analysis, supplier_risk, and contract_analysis",
+    "Consolidate cost_comparison_agent directly into weighted_evaluation_agent",
+    "Prompt compression: Aggregate structured numeric evidence rather than re-sending raw bid documents to downstream agents",
+    "Prune contract analysis when standard pre-approved supplier contracts are in place"
+  ]
+}

@@ -1,0 +1,3748 @@
+{
+  "workflow_name": "contract_review",
+  "report_type": "traceprofiler_single_workflow_ingestion",
+  "analysis_mode": "static_ast_non_executing",
+  "metrics": {
+    "declared_agents": 10,
+    "implemented_agents": 10,
+    "python_files": 12,
+    "telemetry_runs": 3,
+    "discrepancy_count": 0
+  },
+  "manifest": {
+    "file": "Agents/contract_review/workflow.json",
+    "dir": "Agents/contract_review",
+    "workflow_name": "contract_review",
+    "version": "1.0.0",
+    "description": "Baseline 10-agent contract review and compliance workflow with evidence linking.",
+    "fixed_model": "openai/gpt-oss-120b",
+    "total_agents": 10,
+    "execution_mode": "sequential",
+    "execution_order": [
+      "contract_intake_agent",
+      "clause_extraction_agent",
+      "policy_interpretation_agent",
+      "clause_mapping_agent",
+      "compliance_deviation_agent",
+      "risk_ambiguity_agent",
+      "cross_clause_consistency_agent",
+      "evidence_validation_agent",
+      "contract_independent_review_agent",
+      "final_compliance_report_agent"
+    ],
+    "optimization_opportunities": {
+      "potential_parallel_branches": [
+        [
+          "compliance_deviation_agent",
+          "risk_ambiguity_agent",
+          "cross_clause_consistency_agent"
+        ]
+      ],
+      "consolidation_candidates": [
+        [
+          "clause_mapping_agent",
+          "compliance_deviation_agent"
+        ],
+        [
+          "risk_ambiguity_agent",
+          "cross_clause_consistency_agent"
+        ],
+        [
+          "evidence_validation_agent",
+          "contract_independent_review_agent"
+        ]
+      ],
+      "pruning_candidates": [
+        "evidence_validation_agent",
+        "contract_independent_review_agent"
+      ]
+    },
+    "agents": [
+      {
+        "id": "contract_intake_agent",
+        "name": "Contract Intake Agent",
+        "role": "Contract Intake and Ingestion Specialist",
+        "declared_file": null,
+        "dependencies": [],
+        "inputs": [
+          "contract_id",
+          "title",
+          "contract_type",
+          "version",
+          "clauses",
+          "policy_id"
+        ],
+        "outputs": [
+          "document_id",
+          "contract_id",
+          "contract_type",
+          "document_complete",
+          "section_count"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "contract_intake_agent",
+          "agent_name": "Contract Intake Agent",
+          "role": "Contract Intake and Ingestion Specialist",
+          "responsibilities": "Validate document completeness, catalog contract metadata, versioning, and parties.",
+          "input_fields": [
+            "contract_id",
+            "title",
+            "contract_type",
+            "version",
+            "clauses",
+            "policy_id"
+          ],
+          "output_fields": [
+            "document_id",
+            "contract_id",
+            "contract_type",
+            "document_complete",
+            "section_count"
+          ],
+          "dependencies": []
+        }
+      },
+      {
+        "id": "clause_extraction_agent",
+        "name": "Clause Extraction Agent",
+        "role": "Contract Clause Extraction Specialist",
+        "declared_file": null,
+        "dependencies": [
+          "contract_intake_agent"
+        ],
+        "inputs": [
+          "clauses",
+          "contract_id"
+        ],
+        "outputs": [
+          "clauses",
+          "absent_clause_types",
+          "extraction_notes"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "clause_extraction_agent",
+          "agent_name": "Clause Extraction Agent",
+          "role": "Contract Clause Extraction Specialist",
+          "responsibilities": "Extract discrete legal clauses with stable clause IDs and section references once.",
+          "input_fields": [
+            "clauses",
+            "contract_id"
+          ],
+          "output_fields": [
+            "clauses",
+            "absent_clause_types",
+            "extraction_notes"
+          ],
+          "dependencies": [
+            "contract_intake_agent"
+          ]
+        }
+      },
+      {
+        "id": "policy_interpretation_agent",
+        "name": "Policy Interpretation Agent",
+        "role": "Policy Interpretation Specialist",
+        "declared_file": null,
+        "dependencies": [
+          "contract_intake_agent"
+        ],
+        "inputs": [
+          "policy_id",
+          "policy_name",
+          "requirements"
+        ],
+        "outputs": [
+          "policy_id",
+          "policy_version",
+          "mandatory_requirements",
+          "recommended_requirements"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "policy_interpretation_agent",
+          "agent_name": "Policy Interpretation Agent",
+          "role": "Policy Interpretation Specialist",
+          "responsibilities": "Deconstruct compliance policy into discrete mandatory and recommended requirements with thresholds.",
+          "input_fields": [
+            "policy_id",
+            "policy_name",
+            "requirements"
+          ],
+          "output_fields": [
+            "policy_id",
+            "policy_version",
+            "mandatory_requirements",
+            "recommended_requirements"
+          ],
+          "dependencies": [
+            "contract_intake_agent"
+          ]
+        }
+      },
+      {
+        "id": "clause_mapping_agent",
+        "name": "Clause-to-Policy Mapping Agent",
+        "role": "Clause-to-Policy Mapping Specialist",
+        "declared_file": null,
+        "dependencies": [
+          "clause_extraction_agent",
+          "policy_interpretation_agent"
+        ],
+        "inputs": [
+          "clauses",
+          "mandatory_requirements",
+          "recommended_requirements"
+        ],
+        "outputs": [
+          "mappings",
+          "coverage_percentage"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "clause_mapping_agent",
+          "agent_name": "Clause-to-Policy Mapping Agent",
+          "role": "Clause-to-Policy Mapping Specialist",
+          "responsibilities": "Align extracted clauses to applicable policy requirements and classify status.",
+          "input_fields": [
+            "clauses",
+            "mandatory_requirements",
+            "recommended_requirements"
+          ],
+          "output_fields": [
+            "mappings",
+            "coverage_percentage"
+          ],
+          "dependencies": [
+            "clause_extraction_agent",
+            "policy_interpretation_agent"
+          ]
+        }
+      },
+      {
+        "id": "compliance_deviation_agent",
+        "name": "Compliance Deviation Agent",
+        "role": "Contract Compliance Deviation Evaluator",
+        "declared_file": null,
+        "dependencies": [
+          "clause_mapping_agent"
+        ],
+        "inputs": [
+          "mappings",
+          "mandatory_requirements"
+        ],
+        "outputs": [
+          "deviations",
+          "has_critical_deviations"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "compliance_deviation_agent",
+          "agent_name": "Compliance Deviation Agent",
+          "role": "Contract Compliance Deviation Evaluator",
+          "responsibilities": "Identify deviations, missing protections, incompatible terms, and assign severity.",
+          "input_fields": [
+            "mappings",
+            "mandatory_requirements"
+          ],
+          "output_fields": [
+            "deviations",
+            "has_critical_deviations"
+          ],
+          "dependencies": [
+            "clause_mapping_agent"
+          ]
+        }
+      },
+      {
+        "id": "risk_ambiguity_agent",
+        "name": "Risk and Ambiguity Agent",
+        "role": "Contract Risk and Ambiguity Analyst",
+        "declared_file": null,
+        "dependencies": [
+          "clause_extraction_agent"
+        ],
+        "inputs": [
+          "clauses"
+        ],
+        "outputs": [
+          "risk_findings"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "risk_ambiguity_agent",
+          "agent_name": "Risk and Ambiguity Agent",
+          "role": "Contract Risk and Ambiguity Analyst",
+          "responsibilities": "Detect vague phrasing, undefined timelines, and latent operational risks.",
+          "input_fields": [
+            "clauses"
+          ],
+          "output_fields": [
+            "risk_findings"
+          ],
+          "dependencies": [
+            "clause_extraction_agent"
+          ]
+        }
+      },
+      {
+        "id": "cross_clause_consistency_agent",
+        "name": "Cross-Clause Consistency Agent",
+        "role": "Contract Inter-Clause Consistency Auditor",
+        "declared_file": null,
+        "dependencies": [
+          "clause_extraction_agent"
+        ],
+        "inputs": [
+          "clauses",
+          "effective_date",
+          "expiration_date"
+        ],
+        "outputs": [
+          "inconsistencies"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "cross_clause_consistency_agent",
+          "agent_name": "Cross-Clause Consistency Agent",
+          "role": "Contract Inter-Clause Consistency Auditor",
+          "responsibilities": "Detect internal contradictions across clauses such as termination vs auto-renewal lock-in.",
+          "input_fields": [
+            "clauses",
+            "effective_date",
+            "expiration_date"
+          ],
+          "output_fields": [
+            "inconsistencies"
+          ],
+          "dependencies": [
+            "clause_extraction_agent"
+          ]
+        }
+      },
+      {
+        "id": "evidence_validation_agent",
+        "name": "Evidence and Citation Validation Agent",
+        "role": "Legal Evidence and Citation Validator",
+        "declared_file": null,
+        "dependencies": [
+          "compliance_deviation_agent",
+          "risk_ambiguity_agent",
+          "cross_clause_consistency_agent"
+        ],
+        "inputs": [
+          "deviations",
+          "risk_findings",
+          "inconsistencies",
+          "clauses",
+          "requirements"
+        ],
+        "outputs": [
+          "all_citations_valid",
+          "verified_finding_ids",
+          "invalid_or_unsupported_findings"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "evidence_validation_agent",
+          "agent_name": "Evidence and Citation Validation Agent",
+          "role": "Legal Evidence and Citation Validator",
+          "responsibilities": "Verify all findings reference real clause IDs and that quoted excerpts support claims.",
+          "input_fields": [
+            "deviations",
+            "risk_findings",
+            "inconsistencies",
+            "clauses",
+            "requirements"
+          ],
+          "output_fields": [
+            "all_citations_valid",
+            "verified_finding_ids",
+            "invalid_or_unsupported_findings"
+          ],
+          "dependencies": [
+            "compliance_deviation_agent",
+            "risk_ambiguity_agent",
+            "cross_clause_consistency_agent"
+          ]
+        }
+      },
+      {
+        "id": "contract_independent_review_agent",
+        "name": "Independent Review Agent",
+        "role": "Senior Contract Compliance Reviewer",
+        "declared_file": null,
+        "dependencies": [
+          "evidence_validation_agent"
+        ],
+        "inputs": [
+          "deviations",
+          "risk_findings",
+          "inconsistencies",
+          "all_citations_valid"
+        ],
+        "outputs": [
+          "review_status",
+          "duplicate_findings_merged",
+          "severity_adjustments",
+          "unresolved_matters"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "contract_independent_review_agent",
+          "agent_name": "Independent Review Agent",
+          "role": "Senior Contract Compliance Reviewer",
+          "responsibilities": "Deduplicate findings, calibrate severity ratings, and highlight issues needing legal counsel.",
+          "input_fields": [
+            "deviations",
+            "risk_findings",
+            "inconsistencies",
+            "all_citations_valid"
+          ],
+          "output_fields": [
+            "review_status",
+            "duplicate_findings_merged",
+            "severity_adjustments",
+            "unresolved_matters"
+          ],
+          "dependencies": [
+            "evidence_validation_agent"
+          ]
+        }
+      },
+      {
+        "id": "final_compliance_report_agent",
+        "name": "Final Compliance Report Agent",
+        "role": "Lead Contract Compliance Report Author",
+        "declared_file": null,
+        "dependencies": [
+          "contract_independent_review_agent"
+        ],
+        "inputs": [
+          "deviations",
+          "risk_findings",
+          "inconsistencies",
+          "coverage",
+          "unresolved_matters"
+        ],
+        "outputs": [
+          "run_id",
+          "contract_id",
+          "contract_version",
+          "policy_id",
+          "policy_version",
+          "contract_type",
+          "executive_summary",
+          "policy_coverage",
+          "clause_inventory",
+          "compliance_findings",
+          "risk_findings",
+          "cross_clause_inconsistencies",
+          "evidence_validation",
+          "unresolved_questions",
+          "recommended_actions",
+          "human_review_required",
+          "validation_warnings"
+        ],
+        "assigned_key": null,
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "agent_id": "final_compliance_report_agent",
+          "agent_name": "Final Compliance Report Agent",
+          "role": "Lead Contract Compliance Report Author",
+          "responsibilities": "Produce executive summary, policy coverage, clause inventory, findings, and disclaimers.",
+          "input_fields": [
+            "deviations",
+            "risk_findings",
+            "inconsistencies",
+            "coverage",
+            "unresolved_matters"
+          ],
+          "output_fields": [
+            "run_id",
+            "contract_id",
+            "contract_version",
+            "policy_id",
+            "policy_version",
+            "contract_type",
+            "executive_summary",
+            "policy_coverage",
+            "clause_inventory",
+            "compliance_findings",
+            "risk_findings",
+            "cross_clause_inconsistencies",
+            "evidence_validation",
+            "unresolved_questions",
+            "recommended_actions",
+            "human_review_required",
+            "validation_warnings"
+          ],
+          "dependencies": [
+            "contract_independent_review_agent"
+          ]
+        }
+      }
+    ]
+  },
+  "agent_inventory": [
+    {
+      "id": "contract_intake_agent",
+      "name": "Contract Intake Agent",
+      "role": "Contract Intake and Ingestion Specialist",
+      "workflow": "contract_review",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [],
+      "inputs": [
+        "contract_id",
+        "title",
+        "contract_type",
+        "version",
+        "clauses",
+        "policy_id"
+      ],
+      "outputs": [
+        "document_id",
+        "contract_id",
+        "contract_type",
+        "document_complete",
+        "section_count"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/contract_review/intake_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 30,
+          "end_line": 37,
+          "docstring": "Create the CrewAI Contract Intake Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_contract_intake",
+          "line": 40,
+          "end_line": 106,
+          "docstring": "Execute Contract Intake Agent.",
+          "args": [
+            "contract_data",
+            "policy_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "ContractIntakeOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_contract_intake",
+          "line": 40,
+          "classification": "function_candidate",
+          "docstring": "Execute Contract Intake Agent."
+        }
+      ]
+    },
+    {
+      "id": "clause_extraction_agent",
+      "name": "Clause Extraction Agent",
+      "role": "Contract Clause Extraction Specialist",
+      "workflow": "contract_review",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [
+        "contract_intake_agent"
+      ],
+      "inputs": [
+        "clauses",
+        "contract_id"
+      ],
+      "outputs": [
+        "clauses",
+        "absent_clause_types",
+        "extraction_notes"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/contract_review/clause_extraction_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 30,
+          "end_line": 37,
+          "docstring": "Create the CrewAI Clause Extraction Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_clause_extraction",
+          "line": 40,
+          "end_line": 89,
+          "docstring": "Execute Clause Extraction Agent.",
+          "args": [
+            "contract_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "ClauseExtractionOutput"
+          ],
+          "aliases": {},
+          "line": 15
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 16
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_clause_extraction",
+          "line": 40,
+          "classification": "function_candidate",
+          "docstring": "Execute Clause Extraction Agent."
+        }
+      ]
+    },
+    {
+      "id": "policy_interpretation_agent",
+      "name": "Policy Interpretation Agent",
+      "role": "Policy Interpretation Specialist",
+      "workflow": "contract_review",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [
+        "contract_intake_agent"
+      ],
+      "inputs": [
+        "policy_id",
+        "policy_name",
+        "requirements"
+      ],
+      "outputs": [
+        "policy_id",
+        "policy_version",
+        "mandatory_requirements",
+        "recommended_requirements"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/contract_review/policy_interpretation_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 30,
+          "end_line": 37,
+          "docstring": "Create the CrewAI Policy Interpretation Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_policy_interpretation",
+          "line": 40,
+          "end_line": 95,
+          "docstring": "Execute Policy Interpretation Agent.",
+          "args": [
+            "policy_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "PolicyInterpretationOutput"
+          ],
+          "aliases": {},
+          "line": 15
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 16
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_policy_interpretation",
+          "line": 40,
+          "classification": "function_candidate",
+          "docstring": "Execute Policy Interpretation Agent."
+        }
+      ]
+    },
+    {
+      "id": "clause_mapping_agent",
+      "name": "Clause-to-Policy Mapping Agent",
+      "role": "Clause-to-Policy Mapping Specialist",
+      "workflow": "contract_review",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [
+        "clause_extraction_agent",
+        "policy_interpretation_agent"
+      ],
+      "inputs": [
+        "clauses",
+        "mandatory_requirements",
+        "recommended_requirements"
+      ],
+      "outputs": [
+        "mappings",
+        "coverage_percentage"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/contract_review/clause_mapping_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 29,
+          "end_line": 36,
+          "docstring": "Create the CrewAI Clause-to-Policy Mapping Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_clause_mapping",
+          "line": 39,
+          "end_line": 98,
+          "docstring": "Execute Clause-to-Policy Mapping Agent.",
+          "args": [
+            "contract_id",
+            "clause_extraction_data",
+            "policy_interpretation_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "ClauseMappingOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_clause_mapping",
+          "line": 39,
+          "classification": "function_candidate",
+          "docstring": "Execute Clause-to-Policy Mapping Agent."
+        }
+      ]
+    },
+    {
+      "id": "compliance_deviation_agent",
+      "name": "Compliance Deviation Agent",
+      "role": "Contract Compliance Deviation Evaluator",
+      "workflow": "contract_review",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [
+        "clause_mapping_agent"
+      ],
+      "inputs": [
+        "mappings",
+        "mandatory_requirements"
+      ],
+      "outputs": [
+        "deviations",
+        "has_critical_deviations"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/contract_review/deviation_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 29,
+          "end_line": 36,
+          "docstring": "Create the CrewAI Compliance Deviation Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_compliance_deviation",
+          "line": 39,
+          "end_line": 89,
+          "docstring": "Execute Compliance Deviation Agent.",
+          "args": [
+            "contract_id",
+            "clause_mapping_data",
+            "policy_interpretation_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "ComplianceDeviationOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_compliance_deviation",
+          "line": 39,
+          "classification": "function_candidate",
+          "docstring": "Execute Compliance Deviation Agent."
+        }
+      ]
+    },
+    {
+      "id": "risk_ambiguity_agent",
+      "name": "Risk and Ambiguity Agent",
+      "role": "Contract Risk and Ambiguity Analyst",
+      "workflow": "contract_review",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [
+        "clause_extraction_agent"
+      ],
+      "inputs": [
+        "clauses"
+      ],
+      "outputs": [
+        "risk_findings"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/contract_review/risk_ambiguity_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 29,
+          "end_line": 36,
+          "docstring": "Create the CrewAI Risk and Ambiguity Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_risk_ambiguity",
+          "line": 39,
+          "end_line": 86,
+          "docstring": "Execute Risk and Ambiguity Agent.",
+          "args": [
+            "contract_id",
+            "clause_extraction_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "RiskAmbiguityOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_risk_ambiguity",
+          "line": 39,
+          "classification": "function_candidate",
+          "docstring": "Execute Risk and Ambiguity Agent."
+        }
+      ]
+    },
+    {
+      "id": "cross_clause_consistency_agent",
+      "name": "Cross-Clause Consistency Agent",
+      "role": "Contract Inter-Clause Consistency Auditor",
+      "workflow": "contract_review",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [
+        "clause_extraction_agent"
+      ],
+      "inputs": [
+        "clauses",
+        "effective_date",
+        "expiration_date"
+      ],
+      "outputs": [
+        "inconsistencies"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/contract_review/consistency_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 30,
+          "end_line": 37,
+          "docstring": "Create the CrewAI Cross-Clause Consistency Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_cross_clause_consistency",
+          "line": 40,
+          "end_line": 92,
+          "docstring": "Execute Cross-Clause Consistency Agent.",
+          "args": [
+            "contract_id",
+            "clause_extraction_data",
+            "contract_metadata",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "CrossClauseConsistencyOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_cross_clause_consistency",
+          "line": 40,
+          "classification": "function_candidate",
+          "docstring": "Execute Cross-Clause Consistency Agent."
+        }
+      ]
+    },
+    {
+      "id": "evidence_validation_agent",
+      "name": "Evidence and Citation Validation Agent",
+      "role": "Legal Evidence and Citation Validator",
+      "workflow": "contract_review",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [
+        "compliance_deviation_agent",
+        "risk_ambiguity_agent",
+        "cross_clause_consistency_agent"
+      ],
+      "inputs": [
+        "deviations",
+        "risk_findings",
+        "inconsistencies",
+        "clauses",
+        "requirements"
+      ],
+      "outputs": [
+        "all_citations_valid",
+        "verified_finding_ids",
+        "invalid_or_unsupported_findings"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/contract_review/evidence_validation_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 29,
+          "end_line": 36,
+          "docstring": "Create the CrewAI Evidence and Citation Validation Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_evidence_validation",
+          "line": 39,
+          "end_line": 98,
+          "docstring": "Execute Evidence and Citation Validation Agent.",
+          "args": [
+            "contract_id",
+            "clause_extraction_data",
+            "policy_interpretation_data",
+            "deviation_data",
+            "risk_data",
+            "consistency_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "EvidenceValidationOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_evidence_validation",
+          "line": 39,
+          "classification": "function_candidate",
+          "docstring": "Execute Evidence and Citation Validation Agent."
+        }
+      ]
+    },
+    {
+      "id": "contract_independent_review_agent",
+      "name": "Independent Review Agent",
+      "role": "Senior Contract Compliance Reviewer",
+      "workflow": "contract_review",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [
+        "evidence_validation_agent"
+      ],
+      "inputs": [
+        "deviations",
+        "risk_findings",
+        "inconsistencies",
+        "all_citations_valid"
+      ],
+      "outputs": [
+        "review_status",
+        "duplicate_findings_merged",
+        "severity_adjustments",
+        "unresolved_matters"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/contract_review/review_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 30,
+          "end_line": 37,
+          "docstring": "Create the CrewAI Independent Review Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_independent_review",
+          "line": 40,
+          "end_line": 91,
+          "docstring": "Execute Independent Review Agent.",
+          "args": [
+            "contract_id",
+            "deviation_data",
+            "risk_data",
+            "consistency_data",
+            "evidence_validation_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "IndependentReviewOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_independent_review",
+          "line": 40,
+          "classification": "function_candidate",
+          "docstring": "Execute Independent Review Agent."
+        }
+      ]
+    },
+    {
+      "id": "final_compliance_report_agent",
+      "name": "Final Compliance Report Agent",
+      "role": "Lead Contract Compliance Report Author",
+      "workflow": "contract_review",
+      "declared_file": null,
+      "assigned_key": null,
+      "dependencies": [
+        "contract_independent_review_agent"
+      ],
+      "inputs": [
+        "deviations",
+        "risk_findings",
+        "inconsistencies",
+        "coverage",
+        "unresolved_matters"
+      ],
+      "outputs": [
+        "run_id",
+        "contract_id",
+        "contract_version",
+        "policy_id",
+        "policy_version",
+        "contract_type",
+        "executive_summary",
+        "policy_coverage",
+        "clause_inventory",
+        "compliance_findings",
+        "risk_findings",
+        "cross_clause_inconsistencies",
+        "evidence_validation",
+        "unresolved_questions",
+        "recommended_actions",
+        "human_review_required",
+        "validation_warnings"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/contract_review/final_report_agent.py",
+      "agent_constructors": [],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 32,
+          "end_line": 39,
+          "docstring": "Create the CrewAI Final Compliance Report Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_final_report",
+          "line": 42,
+          "end_line": 134,
+          "docstring": "Execute Final Compliance Report Agent.",
+          "args": [
+            "run_id",
+            "intake_data",
+            "clause_extraction_data",
+            "policy_interpretation_data",
+            "clause_mapping_data",
+            "deviation_data",
+            "risk_data",
+            "consistency_data",
+            "evidence_validation_data",
+            "independent_review_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "ContractFinalReportOutput"
+          ],
+          "aliases": {},
+          "line": 15
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 16
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_final_report",
+          "line": 42,
+          "classification": "function_candidate",
+          "docstring": "Execute Final Compliance Report Agent."
+        }
+      ]
+    }
+  ],
+  "workflow_analysis": {
+    "file": "Agents/contract_review/workflow.py",
+    "classes": [
+      {
+        "name": "ContractReviewWorkflow",
+        "line": 65
+      }
+    ],
+    "entry_points": [
+      {
+        "name": "run_contract_review_workflow",
+        "line": 234,
+        "args": [
+          "input_data",
+          "run_id"
+        ],
+        "docstring": "Execute contract review and compliance workflow."
+      },
+      {
+        "name": "run",
+        "line": 89,
+        "args": [
+          "self",
+          "input_data",
+          "run_id",
+          "runs_base_dir"
+        ],
+        "docstring": "Execute the 10-agent contract review workflow sequentially."
+      }
+    ],
+    "crew_constructions": [],
+    "assignments": [
+      {
+        "line": 38,
+        "targets": [
+          "WORKFLOW_NAME"
+        ],
+        "value_names": [],
+        "expression": "\"contract_review\""
+      },
+      {
+        "line": 39,
+        "targets": [
+          "EXPECTED_AGENT_COUNT"
+        ],
+        "value_names": [],
+        "expression": "10"
+      },
+      {
+        "line": 48,
+        "targets": [
+          "contracts_path"
+        ],
+        "value_names": [
+          "data_dir",
+          "os"
+        ],
+        "expression": "os.path.join(data_dir, \"contracts.json\")"
+      },
+      {
+        "line": 49,
+        "targets": [
+          "policies_path"
+        ],
+        "value_names": [
+          "data_dir",
+          "os"
+        ],
+        "expression": "os.path.join(data_dir, \"policies.json\")"
+      },
+      {
+        "line": 56,
+        "targets": [
+          "contract"
+        ],
+        "value_names": [
+          "contract_index",
+          "contracts",
+          "len"
+        ],
+        "expression": "contracts[contract_index % len(contracts)]"
+      },
+      {
+        "line": 57,
+        "targets": [
+          "policy"
+        ],
+        "value_names": [
+          "len",
+          "policies",
+          "policy_index"
+        ],
+        "expression": "policies[policy_index % len(policies)]"
+      },
+      {
+        "line": 239,
+        "targets": [
+          "wf"
+        ],
+        "value_names": [
+          "ContractReviewWorkflow"
+        ],
+        "expression": "ContractReviewWorkflow(enable_tracing=True)"
+      },
+      {
+        "line": 52,
+        "targets": [
+          "contracts"
+        ],
+        "value_names": [
+          "f",
+          "json"
+        ],
+        "expression": "json.load(f)"
+      },
+      {
+        "line": 54,
+        "targets": [
+          "policies"
+        ],
+        "value_names": [
+          "f",
+          "json"
+        ],
+        "expression": "json.load(f)"
+      },
+      {
+        "line": 98,
+        "targets": [
+          "active_run_id"
+        ],
+        "value_names": [
+          "run_id",
+          "uuid"
+        ],
+        "expression": "run_id or f\"ctr_{uuid.uuid4().hex[:8]}\""
+      },
+      {
+        "line": 99,
+        "targets": [
+          "tracker"
+        ],
+        "value_names": [
+          "MetricsTracker",
+          "WORKFLOW_NAME",
+          "active_run_id"
+        ],
+        "expression": "MetricsTracker(workflow_name=WORKFLOW_NAME, run_id=active_run_id)"
+      },
+      {
+        "line": 104,
+        "targets": [
+          "contract_data"
+        ],
+        "value_names": [
+          "input_data"
+        ],
+        "expression": "input_data.get(\"contract\", {})"
+      },
+      {
+        "line": 105,
+        "targets": [
+          "policy_data"
+        ],
+        "value_names": [
+          "input_data"
+        ],
+        "expression": "input_data.get(\"policy\", {})"
+      },
+      {
+        "line": 102,
+        "targets": [
+          "input_data"
+        ],
+        "value_names": [
+          "load_sample_contract_input"
+        ],
+        "expression": "load_sample_contract_input()"
+      },
+      {
+        "line": 109,
+        "targets": [
+          "intake_res"
+        ],
+        "value_names": [
+          "contract_data",
+          "intake_agent",
+          "policy_data",
+          "self",
+          "tracker"
+        ],
+        "expression": "intake_agent.run_contract_intake(\n                contract_data=contract_data,\n                policy_data=policy_data,\n                agent=self.agent_1_intake,\n                tracker=tracker,\n            )"
+      },
+      {
+        "line": 117,
+        "targets": [
+          "clause_extraction_res"
+        ],
+        "value_names": [
+          "clause_extraction_agent",
+          "contract_data",
+          "self",
+          "tracker"
+        ],
+        "expression": "clause_extraction_agent.run_clause_extraction(\n                contract_data=contract_data,\n                agent=self.agent_2_clause_extraction,\n                tracker=tracker,\n            )"
+      },
+      {
+        "line": 124,
+        "targets": [
+          "policy_interp_res"
+        ],
+        "value_names": [
+          "policy_data",
+          "policy_interpretation_agent",
+          "self",
+          "tracker"
+        ],
+        "expression": "policy_interpretation_agent.run_policy_interpretation(\n                policy_data=policy_data,\n                agent=self.agent_3_policy_interpretation,\n                tracker=tracker,\n            )"
+      },
+      {
+        "line": 131,
+        "targets": [
+          "clause_mapping_res"
+        ],
+        "value_names": [
+          "clause_extraction_res",
+          "clause_mapping_agent",
+          "intake_res",
+          "policy_interp_res",
+          "self",
+          "tracker"
+        ],
+        "expression": "clause_mapping_agent.run_clause_mapping(\n                contract_id=intake_res.get(\"contract_id\", \"\"),\n                clause_extraction_data=clause_extraction_res,\n                policy_interpretation_data=policy_interp_res,\n                agent=self.agent_4_clause_mapping,\n                track"
+      },
+      {
+        "line": 140,
+        "targets": [
+          "deviation_res"
+        ],
+        "value_names": [
+          "clause_mapping_res",
+          "deviation_agent",
+          "intake_res",
+          "policy_interp_res",
+          "self",
+          "tracker"
+        ],
+        "expression": "deviation_agent.run_compliance_deviation(\n                contract_id=intake_res.get(\"contract_id\", \"\"),\n                clause_mapping_data=clause_mapping_res,\n                policy_interpretation_data=policy_interp_res,\n                agent=self.agent_5_deviation,\n                tracker=tracker"
+      },
+      {
+        "line": 149,
+        "targets": [
+          "risk_res"
+        ],
+        "value_names": [
+          "clause_extraction_res",
+          "intake_res",
+          "risk_ambiguity_agent",
+          "self",
+          "tracker"
+        ],
+        "expression": "risk_ambiguity_agent.run_risk_ambiguity(\n                contract_id=intake_res.get(\"contract_id\", \"\"),\n                clause_extraction_data=clause_extraction_res,\n                agent=self.agent_6_risk_ambiguity,\n                tracker=tracker,\n            )"
+      },
+      {
+        "line": 157,
+        "targets": [
+          "consistency_res"
+        ],
+        "value_names": [
+          "clause_extraction_res",
+          "consistency_agent",
+          "contract_data",
+          "intake_res",
+          "self",
+          "tracker"
+        ],
+        "expression": "consistency_agent.run_cross_clause_consistency(\n                contract_id=intake_res.get(\"contract_id\", \"\"),\n                clause_extraction_data=clause_extraction_res,\n                contract_metadata=contract_data,\n                agent=self.agent_7_consistency,\n                tracker=tracke"
+      },
+      {
+        "line": 166,
+        "targets": [
+          "evidence_val_res"
+        ],
+        "value_names": [
+          "clause_extraction_res",
+          "consistency_res",
+          "deviation_res",
+          "evidence_validation_agent",
+          "intake_res",
+          "policy_interp_res",
+          "risk_res",
+          "self",
+          "tracker"
+        ],
+        "expression": "evidence_validation_agent.run_evidence_validation(\n                contract_id=intake_res.get(\"contract_id\", \"\"),\n                clause_extraction_data=clause_extraction_res,\n                policy_interpretation_data=policy_interp_res,\n                deviation_data=deviation_res,\n                "
+      },
+      {
+        "line": 178,
+        "targets": [
+          "review_res"
+        ],
+        "value_names": [
+          "consistency_res",
+          "deviation_res",
+          "evidence_val_res",
+          "intake_res",
+          "review_agent",
+          "risk_res",
+          "self",
+          "tracker"
+        ],
+        "expression": "review_agent.run_independent_review(\n                contract_id=intake_res.get(\"contract_id\", \"\"),\n                deviation_data=deviation_res,\n                risk_data=risk_res,\n                consistency_data=consistency_res,\n                evidence_validation_data=evidence_val_res,\n         "
+      },
+      {
+        "line": 189,
+        "targets": [
+          "final_report"
+        ],
+        "value_names": [
+          "active_run_id",
+          "clause_extraction_res",
+          "clause_mapping_res",
+          "consistency_res",
+          "deviation_res",
+          "evidence_val_res",
+          "final_report_agent",
+          "intake_res",
+          "policy_interp_res",
+          "review_res",
+          "risk_res",
+          "self",
+          "tracker"
+        ],
+        "expression": "final_report_agent.run_final_report(\n                run_id=active_run_id,\n                intake_data=intake_res,\n                clause_extraction_data=clause_extraction_res,\n                policy_interpretation_data=policy_interp_res,\n                clause_mapping_data=clause_mapping_res,\n     "
+      },
+      {
+        "line": 205,
+        "targets": [
+          "record"
+        ],
+        "value_names": [
+          "final_report",
+          "runs_base_dir",
+          "tracker"
+        ],
+        "expression": "tracker.finalize(\n                output=final_report,\n                status=\"success\",\n                runs_base_dir=runs_base_dir,\n            )"
+      },
+      {
+        "line": 210,
+        "targets": [
+          "output_dict"
+        ],
+        "value_names": [
+          "dict",
+          "final_report",
+          "hasattr",
+          "isinstance"
+        ],
+        "expression": "dict(final_report) if isinstance(final_report, dict) else (final_report.model_dump() if hasattr(final_report, \"model_dump\") else {})"
+      }
+    ],
+    "task_handoffs": [],
+    "observed_order": [
+      "contract_intake_agent",
+      "clause_extraction_agent",
+      "policy_interpretation_agent",
+      "clause_mapping_agent",
+      "compliance_deviation_agent",
+      "risk_ambiguity_agent",
+      "cross_clause_consistency_agent",
+      "evidence_validation_agent",
+      "contract_independent_review_agent",
+      "final_compliance_report_agent"
+    ],
+    "sequential_kickoffs": 0
+  },
+  "comparison": {
+    "workflow": "contract_review",
+    "manifest_file": "Agents/contract_review/workflow.json",
+    "workflow_source": "Agents/contract_review/workflow.py",
+    "declared_order": [
+      "contract_intake_agent",
+      "clause_extraction_agent",
+      "policy_interpretation_agent",
+      "clause_mapping_agent",
+      "compliance_deviation_agent",
+      "risk_ambiguity_agent",
+      "cross_clause_consistency_agent",
+      "evidence_validation_agent",
+      "contract_independent_review_agent",
+      "final_compliance_report_agent"
+    ],
+    "source_observed_order": [
+      "contract_intake_agent",
+      "clause_extraction_agent",
+      "policy_interpretation_agent",
+      "clause_mapping_agent",
+      "compliance_deviation_agent",
+      "risk_ambiguity_agent",
+      "cross_clause_consistency_agent",
+      "evidence_validation_agent",
+      "contract_independent_review_agent",
+      "final_compliance_report_agent"
+    ],
+    "declared_agent_count": 10,
+    "observed_agent_count": 10,
+    "discrepancy_count": 0,
+    "findings": []
+  },
+  "python_files": [
+    {
+      "file": "Agents/contract_review/__init__.py",
+      "filename": "__init__.py",
+      "stem": "__init__",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "agent_id_constants": [],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": []
+    },
+    {
+      "file": "Agents/contract_review/clause_extraction_agent.py",
+      "filename": "clause_extraction_agent.py",
+      "stem": "clause_extraction_agent",
+      "sha256": "81e5de01a6732eb5aea44dc08c6cd94ac3f6f9d58494206f3c5df5fbeef6608d",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "ClauseExtractionOutput"
+          ],
+          "aliases": {},
+          "line": 15
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 16
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 30,
+          "end_line": 37,
+          "docstring": "Create the CrewAI Clause Extraction Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_clause_extraction",
+          "line": 40,
+          "end_line": 89,
+          "docstring": "Execute Clause Extraction Agent.",
+          "args": [
+            "contract_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "clause_extraction_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_clause_extraction",
+          "line": 40,
+          "classification": "function_candidate",
+          "docstring": "Execute Clause Extraction Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 2: Clause Extraction Agent for Contract Review and Compliance.\n\nResponsibilities:\n- Extract relevant contract clauses (payment, termination, renewal, liability, data protection).\n- Assign stable clause IDs and section references.\n- Preserve verbatim clause text excerpts.\n- Distinguish absent clauses from extraction failures.\n- Extract document once to provide reusable structured outputs.\n",
+          "line": 1
+        },
+        {
+          "value": "Contract Clause Extraction Specialist",
+          "line": 19
+        },
+        {
+          "value": "Extract discrete legal clauses from contract text, tagging them with standardized clause types and stable clause identifiers while preserving source excerpts.",
+          "line": 21
+        },
+        {
+          "value": "You are a legal operations clause specialist. You systematically inventory contractual provisions, assigning unique IDs and recording precise section citations without modifying the legal text.",
+          "line": 25
+        },
+        {
+          "value": "Create the CrewAI Clause Extraction Agent.",
+          "line": 31
+        },
+        {
+          "value": "Valid JSON matching ClauseExtractionOutput schema.",
+          "line": 79
+        },
+        {
+          "value": "\n\nExtract each discrete clause:\n- Assign stable clause_id (e.g. CLS-xxxx-PAY, CLS-xxxx-TERM).\n- Clause type ('payment_terms', 'data_protection', 'liability_cap', 'termination', 'renewal').\n- Section title and section reference.\n- Full verbatim clause_text excerpt.\n- Identify absent standard clause types if any.\n\nReturn structured JSON matching:\n{\n  \"contract_id\": \"",
+          "line": 54
+        },
+        {
+          "value": "\",\n  \"clauses\": [\n    {\n      \"clause_id\": \"CLS-xxxx-PAY\",\n      \"clause_type\": \"payment_terms\",\n      \"clause_title\": \"Section 3: Invoicing and Payment Terms\",\n      \"clause_text\": \"...\",\n      \"section_reference\": \"Section 3.1\"\n    }\n  ],\n  \"absent_clause_types\": [],\n  \"extraction_notes\": [\"Document extracted once for downstream policy comparison\"]\n}\n",
+          "line": 65
+        }
+      ]
+    },
+    {
+      "file": "Agents/contract_review/clause_mapping_agent.py",
+      "filename": "clause_mapping_agent.py",
+      "stem": "clause_mapping_agent",
+      "sha256": "4e483fc6d2924d4a224d82f300defd6da56f08149e5b7d8497515e9993925695",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "ClauseMappingOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 29,
+          "end_line": 36,
+          "docstring": "Create the CrewAI Clause-to-Policy Mapping Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_clause_mapping",
+          "line": 39,
+          "end_line": 98,
+          "docstring": "Execute Clause-to-Policy Mapping Agent.",
+          "args": [
+            "contract_id",
+            "clause_extraction_data",
+            "policy_interpretation_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "clause_mapping_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_clause_mapping",
+          "line": 39,
+          "classification": "function_candidate",
+          "docstring": "Execute Clause-to-Policy Mapping Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 4: Clause-to-Policy Mapping Agent for Contract Review and Compliance.\n\nResponsibilities:\n- Map extracted contract clauses to applicable policy requirements.\n- Classify fulfillment status as satisfied, partially_satisfied, conflicting, or unaddressed.\n- Preserve clause IDs, policy requirement IDs, and supporting clause text excerpts.\n- Distinguish missing clauses from clauses that fail a requirement.\n",
+          "line": 1
+        },
+        {
+          "value": "Clause-to-Policy Mapping Specialist",
+          "line": 18
+        },
+        {
+          "value": "Align extracted contract clauses against structured corporate policy requirements, classifying compliance alignment status while preserving bidirectional citation IDs.",
+          "line": 20
+        },
+        {
+          "value": "You are a legal compliance auditor. You map contract provisions to policy mandates, determining whether each requirement is satisfied, partially satisfied, unaddressed, or in conflict.",
+          "line": 24
+        },
+        {
+          "value": "Create the CrewAI Clause-to-Policy Mapping Agent.",
+          "line": 30
+        },
+        {
+          "value": "Execute Clause-to-Policy Mapping Agent.",
+          "line": 46
+        },
+        {
+          "value": "Valid JSON matching ClauseMappingOutput schema.",
+          "line": 88
+        },
+        {
+          "value": "\n\nMap each requirement to matching contract clause(s):\n- Set mapping_status to one of: 'satisfied', 'partially_satisfied', 'conflicting', 'unaddressed'.\n- Link clause_id (or null if unaddressed/missing).\n- Provide supporting_clause_text excerpt.\n- Note any specific threshold comparisons (e.g. Net 90 vs policy Net 45).\n\nReturn structured JSON matching:\n{\n  \"contract_id\": \"",
+          "line": 63
+        },
+        {
+          "value": "\",\n  \"mappings\": [\n    {\n      \"mapping_id\": \"MAP-01\",\n      \"clause_id\": \"CLS-xxxx-PAY\",\n      \"requirement_id\": \"REQ-FIN-01\",\n      \"mapping_status\": \"conflicting\",\n      \"supporting_clause_text\": \"Invoices shall be payable within ninety (90) days...\",\n      \"notes\": \"Contract specifies Net 90 which conflicts with Net 45 policy limit.\"\n    }\n  ],\n  \"coverage_percentage\": 100.0\n}\n",
+          "line": 74
+        }
+      ]
+    },
+    {
+      "file": "Agents/contract_review/consistency_agent.py",
+      "filename": "consistency_agent.py",
+      "stem": "consistency_agent",
+      "sha256": "7d8f11ea83ccc260021958322243b9306ef4c18ef9b8c59c0767f6534c3b728a",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "CrossClauseConsistencyOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 30,
+          "end_line": 37,
+          "docstring": "Create the CrewAI Cross-Clause Consistency Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_cross_clause_consistency",
+          "line": 40,
+          "end_line": 92,
+          "docstring": "Execute Cross-Clause Consistency Agent.",
+          "args": [
+            "contract_id",
+            "clause_extraction_data",
+            "contract_metadata",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "cross_clause_consistency_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_cross_clause_consistency",
+          "line": 40,
+          "classification": "function_candidate",
+          "docstring": "Execute Cross-Clause Consistency Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 7: Cross-Clause Consistency Agent for Contract Review and Compliance.\n\nResponsibilities:\n- Compare related clauses for internal contradictions and incompatibilities.\n- Examine interactions (termination vs auto-renewal, liability caps vs indemnity exclusions).\n- Detect conflicting dates, definitions, or procedural exceptions.\n- Anchor all inconsistency findings in concrete clause excerpts.\n",
+          "line": 1
+        },
+        {
+          "value": "Contract Inter-Clause Consistency Auditor",
+          "line": 18
+        },
+        {
+          "value": "Identify mutual incompatibilities, conflicting terms, and chronological contradictions across separate clauses within the same contract.",
+          "line": 20
+        },
+        {
+          "value": "You are a contract harmony specialist. You scrutinize the interplay between disparate sections\u2014such as an unrestricted termination right in Section 12 vs an unconditional 2-year lock-in in Section 14\u2014to uncover conflicting provisions.",
+          "line": 24
+        },
+        {
+          "value": "Create the CrewAI Cross-Clause Consistency Agent.",
+          "line": 31
+        },
+        {
+          "value": "Execute Cross-Clause Consistency Agent.",
+          "line": 47
+        },
+        {
+          "value": "Valid JSON matching CrossClauseConsistencyOutput schema.",
+          "line": 82
+        },
+        {
+          "value": "\n\nAudit for internal contradictions:\n1. Check date consistency: Does expiration date precede effective date?\n2. Check termination vs renewal: Does one clause grant 30-day convenience termination while another states contract CANNOT be terminated prior to term?\n3. Check liability vs indemnification: Are liability caps nullified or contradicted by broad indemnity clauses?\n\nReturn structured JSON matching:\n{\n  \"contract_id\": \"",
+          "line": 59
+        },
+        {
+          "value": "\",\n  \"inconsistencies\": [\n    {\n      \"issue_id\": \"INC-01\",\n      \"clause_id_a\": \"CLS-xxxx-TERM\",\n      \"clause_id_b\": \"CLS-xxxx-REN\",\n      \"description\": \"Termination clause allows 30-day convenience exit but renewal clause states contract cannot be terminated prior to full term expiration.\",\n      \"interaction_type\": \"termination_vs_renewal\",\n      \"evidence_a\": \"Either party may terminate for convenience...\",\n      \"evidence_b\": \"Agreement automatically renews and CANNOT be terminated...\"\n    }\n  ]\n}\n",
+          "line": 68
+        }
+      ]
+    },
+    {
+      "file": "Agents/contract_review/deviation_agent.py",
+      "filename": "deviation_agent.py",
+      "stem": "deviation_agent",
+      "sha256": "d14d0204709e43cf5ada5872ec09dc9e282e22c3811207ff1c04952a4c8fa728",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "ComplianceDeviationOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 29,
+          "end_line": 36,
+          "docstring": "Create the CrewAI Compliance Deviation Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_compliance_deviation",
+          "line": 39,
+          "end_line": 89,
+          "docstring": "Execute Compliance Deviation Agent.",
+          "args": [
+            "contract_id",
+            "clause_mapping_data",
+            "policy_interpretation_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "compliance_deviation_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_compliance_deviation",
+          "line": 39,
+          "classification": "function_candidate",
+          "docstring": "Execute Compliance Deviation Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 5: Compliance Deviation Agent for Contract Review and Compliance.\n\nResponsibilities:\n- Evaluate mapped clauses against supplied policy requirements.\n- Identify deviations, omitted protections, incompatible terms, and conditional conflicts.\n- Assign severity (low, medium, high, critical) using documented risk criteria.\n- Explain concrete evidence supporting each finding.\n",
+          "line": 1
+        },
+        {
+          "value": "Contract Compliance Deviation Evaluator",
+          "line": 18
+        },
+        {
+          "value": "Identify and grade specific deviations where contractual terms fall short of or contradict corporate policy requirements, detailing factual evidence and severity.",
+          "line": 20
+        },
+        {
+          "value": "You are a regulatory and corporate compliance reviewer. You inspect clause alignments, pinpointing precise contractual shortfalls and assigning structured severity levels without legal speculation.",
+          "line": 24
+        },
+        {
+          "value": "Create the CrewAI Compliance Deviation Agent.",
+          "line": 30
+        },
+        {
+          "value": "Execute Compliance Deviation Agent.",
+          "line": 46
+        },
+        {
+          "value": "Valid JSON matching ComplianceDeviationOutput schema.",
+          "line": 79
+        },
+        {
+          "value": "\n\nIdentify all compliance deviations:\n- For any mapping with status 'conflicting' or 'unaddressed' (on a mandatory requirement):\n  - Assign severity: 'critical' (for mandatory breach notification or unlimited liability), 'high' (for payment term violations > 30 days deviation), 'medium', or 'low'.\n  - Provide deviation_summary.\n  - Quote supporting_evidence.\n  - Recommend clear remediation language.\n\nReturn structured JSON matching:\n{\n  \"contract_id\": \"",
+          "line": 53
+        },
+        {
+          "value": "\",\n  \"deviations\": [\n    {\n      \"deviation_id\": \"DEV-01\",\n      \"requirement_id\": \"REQ-FIN-01\",\n      \"clause_id\": \"CLS-xxxx-PAY\",\n      \"severity\": \"high\",\n      \"deviation_summary\": \"Payment term of Net 90 exceeds policy ceiling of Net 45.\",\n      \"supporting_evidence\": \"Invoices shall be payable within ninety (90) days...\",\n      \"recommended_remediation\": \"Amend payment terms to Net 45 or shorter.\"\n    }\n  ],\n  \"has_critical_deviations\": false\n}\n",
+          "line": 64
+        }
+      ]
+    },
+    {
+      "file": "Agents/contract_review/evidence_validation_agent.py",
+      "filename": "evidence_validation_agent.py",
+      "stem": "evidence_validation_agent",
+      "sha256": "37b7cd0c087313e8be7b8175e73bca364cd462b801e2e6807f679893cf8abc4c",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "EvidenceValidationOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 29,
+          "end_line": 36,
+          "docstring": "Create the CrewAI Evidence and Citation Validation Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_evidence_validation",
+          "line": 39,
+          "end_line": 98,
+          "docstring": "Execute Evidence and Citation Validation Agent.",
+          "args": [
+            "contract_id",
+            "clause_extraction_data",
+            "policy_interpretation_data",
+            "deviation_data",
+            "risk_data",
+            "consistency_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "evidence_validation_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_evidence_validation",
+          "line": 39,
+          "classification": "function_candidate",
+          "docstring": "Execute Evidence and Citation Validation Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 8: Evidence and Citation Validation Agent for Contract Review and Compliance.\n\nResponsibilities:\n- Verify that each finding references existing clauses and valid policy requirement IDs.\n- Check that cited excerpts genuinely support downstream conclusions.\n- Identify unsupported assertions, invalid IDs, or contradictory evidence.\n- Return validated findings and unresolved evidence issues.\n",
+          "line": 1
+        },
+        {
+          "value": "Legal Evidence and Citation Validator",
+          "line": 18
+        },
+        {
+          "value": "Audit all generated deviations, risks, and contradictions to confirm every finding cites a real, verified clause ID and that quoted excerpts directly support the claim.",
+          "line": 20
+        },
+        {
+          "value": "You are a forensic legal proofreader. You verify that cited sections and IDs exist in the source contract and policy, catching any hallucinated clause numbers or unsupported conclusions.",
+          "line": 24
+        },
+        {
+          "value": "Create the CrewAI Evidence and Citation Validation Agent.",
+          "line": 30
+        },
+        {
+          "value": "Execute Evidence and Citation Validation Agent.",
+          "line": 49
+        },
+        {
+          "value": "Valid JSON matching EvidenceValidationOutput schema.",
+          "line": 88
+        },
+        {
+          "value": "\n\nFindings to Validate:\n- Deviations: ",
+          "line": 66
+        },
+        {
+          "value": "\n\nVerify evidence integrity:\n1. Check that clause_id in each finding is among Valid Clause IDs (or null if missing clause).\n2. Check that requirement_id is among Valid Policy Requirement IDs.\n3. Confirm whether all citations are valid.\n4. Return verified finding IDs and note any invalid or unsupported references.\n\nReturn structured JSON matching:\n{\n  \"contract_id\": \"",
+          "line": 71
+        },
+        {
+          "value": "\",\n  \"all_citations_valid\": true,\n  \"verified_finding_ids\": [\"DEV-01\", \"RSK-01\", \"INC-01\"],\n  \"invalid_or_unsupported_findings\": [],\n  \"evidence_notes\": [\"All cited clauses verified against primary document inventory.\"]\n}\n",
+          "line": 81
+        }
+      ]
+    },
+    {
+      "file": "Agents/contract_review/final_report_agent.py",
+      "filename": "final_report_agent.py",
+      "stem": "final_report_agent",
+      "sha256": "603e72a5e8c362ef6a4c95c7d40785c9dc7f626ac598aff61a5e591b136e6de9",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "ContractFinalReportOutput"
+          ],
+          "aliases": {},
+          "line": 15
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 16
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 32,
+          "end_line": 39,
+          "docstring": "Create the CrewAI Final Compliance Report Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_final_report",
+          "line": 42,
+          "end_line": 134,
+          "docstring": "Execute Final Compliance Report Agent.",
+          "args": [
+            "run_id",
+            "intake_data",
+            "clause_extraction_data",
+            "policy_interpretation_data",
+            "clause_mapping_data",
+            "deviation_data",
+            "risk_data",
+            "consistency_data",
+            "evidence_validation_data",
+            "independent_review_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "final_compliance_report_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_final_report",
+          "line": 42,
+          "classification": "function_candidate",
+          "docstring": "Execute Final Compliance Report Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 10: Final Compliance Report Agent for Contract Review and Compliance.\n\nResponsibilities:\n- Synthesize all findings into the final comprehensive structured compliance report.\n- Deliver executive summary, policy coverage, clause inventory, deviations, risks, and cross-clause contradictions.\n- Separate explicit policy mismatches from ambiguous concerns.\n- Include unresolved questions, recommended actions, and clear legal disclaimers.\n- Produce output matching Section 7 ContractFinalReportOutput schema.\n",
+          "line": 1
+        },
+        {
+          "value": "Lead Contract Compliance Report Author",
+          "line": 19
+        },
+        {
+          "value": "Assemble and author the definitive, evidence-backed contract compliance report, structuring deviations, risks, and recommended actions with explicit disclaimers stating that AI review does not replace licensed legal counsel.",
+          "line": 21
+        },
+        {
+          "value": "You are an executive legal operations director. You synthesize multi-agent review findings into polished, structured governance reports that enable corporate risk and legal teams to make informed contracting decisions.",
+          "line": 26
+        },
+        {
+          "value": "Create the CrewAI Final Compliance Report Agent.",
+          "line": 33
+        },
+        {
+          "value": "Execute Final Compliance Report Agent.",
+          "line": 56
+        },
+        {
+          "value": "Valid JSON matching ContractFinalReportOutput schema.",
+          "line": 124
+        },
+        {
+          "value": "\nAssemble the definitive final contract review report:\n- Run ID: ",
+          "line": 82
+        },
+        {
+          "value": "\n\nRequirements:\n1. Executive summary synthesizing contract compliance posture.\n2. Distinct sections for explicit policy deviations vs ambiguous concerns.\n3. Recommended follow-up actions for counsel/procurement.\n4. Set human_review_required: true if deviations or risks exist.\n5. Emphasize that zero detected issues does NOT constitute a warranty of legal validity.\n\nReturn structured JSON matching:\n{\n  \"run_id\": \"",
+          "line": 93
+        },
+        {
+          "value": "\",\n  \"executive_summary\": \"...\",\n  \"policy_coverage\": ",
+          "line": 109
+        },
+        {
+          "value": ",\n  \"cross_clause_inconsistencies\": ",
+          "line": 114
+        },
+        {
+          "value": ",\n  \"unresolved_questions\": [\"Requires confirmation of whether payment terms can be adjusted to Net 45\"],\n  \"recommended_actions\": [\"Request amendment to align payment terms with corporate policy\"],\n  \"human_review_required\": ",
+          "line": 116
+        },
+        {
+          "value": ",\n  \"validation_warnings\": [],\n  \"legal_disclaimer\": \"This AI-assisted review is for preliminary compliance screening only and is NOT a substitute for qualified legal or compliance counsel. No detected issues does NOT imply complete legal validity.\"\n}\n",
+          "line": 119
+        }
+      ]
+    },
+    {
+      "file": "Agents/contract_review/intake_agent.py",
+      "filename": "intake_agent.py",
+      "stem": "intake_agent",
+      "sha256": "1375ca399ba83f42fb1617fbcb67e03486e19ceef2c14a670351bc8bfd14a983",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "ContractIntakeOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 30,
+          "end_line": 37,
+          "docstring": "Create the CrewAI Contract Intake Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_contract_intake",
+          "line": 40,
+          "end_line": 106,
+          "docstring": "Execute Contract Intake Agent.",
+          "args": [
+            "contract_data",
+            "policy_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "contract_intake_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_contract_intake",
+          "line": 40,
+          "classification": "function_candidate",
+          "docstring": "Execute Contract Intake Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 1: Contract Intake Agent for Contract Review and Compliance.\n\nResponsibilities:\n- Accept synthetic contract and supplied synthetic policy.\n- Normalize inputs and identify contract type, document ID, version, and metadata.\n- Validate document completeness and identify malformed or missing sections.\n- Strictly never invent contract terms or policy requirements.\n",
+          "line": 1
+        },
+        {
+          "value": "Contract Intake and Ingestion Specialist",
+          "line": 18
+        },
+        {
+          "value": "Ingest and validate the structure, metadata, versioning, and completeness of the target contract and associated compliance policy.",
+          "line": 20
+        },
+        {
+          "value": "You are a contract operations analyst. You catalogue legal documents, verifying effective dates, executing parties, clause inventory count, and document completeness without ever assuming or injecting unstated terms.",
+          "line": 24
+        },
+        {
+          "value": "Create the CrewAI Contract Intake Agent.",
+          "line": 31
+        },
+        {
+          "value": "Valid JSON matching ContractIntakeOutput schema.",
+          "line": 96
+        },
+        {
+          "value": "\n\nValidate document structure and completeness.\nReturn structured JSON matching:\n{\n  \"document_id\": \"DOC-",
+          "line": 73
+        },
+        {
+          "value": ",\n  \"source_metadata\": {\n    \"party_a\": \"",
+          "line": 86
+        }
+      ]
+    },
+    {
+      "file": "Agents/contract_review/policy_interpretation_agent.py",
+      "filename": "policy_interpretation_agent.py",
+      "stem": "policy_interpretation_agent",
+      "sha256": "bc8ba3dce43255cbd8986df89cfa2b9467f8bd916d93ca357e62f7d2be353bd9",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "PolicyInterpretationOutput"
+          ],
+          "aliases": {},
+          "line": 15
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 16
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 30,
+          "end_line": 37,
+          "docstring": "Create the CrewAI Policy Interpretation Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_policy_interpretation",
+          "line": 40,
+          "end_line": 95,
+          "docstring": "Execute Policy Interpretation Agent.",
+          "args": [
+            "policy_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "policy_interpretation_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_policy_interpretation",
+          "line": 40,
+          "classification": "function_candidate",
+          "docstring": "Execute Policy Interpretation Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 3: Policy Interpretation Agent for Contract Review and Compliance.\n\nResponsibilities:\n- Parse the supplied compliance policy into structured requirements.\n- Assign stable policy requirement IDs.\n- Distinguish mandatory rules from recommendations.\n- Capture thresholds, conditions, and required evidence.\n- Strictly do not introduce external legal rules that were not supplied in the policy.\n",
+          "line": 1
+        },
+        {
+          "value": "Deconstruct internal organizational compliance policies into structured, discrete requirements with explicit thresholds, strictly avoiding external legal assumptions.",
+          "line": 21
+        },
+        {
+          "value": "You are a compliance standards officer. You translate corporate governance policies into machine-actionable benchmarks, separating mandatory constraints from guidance recommendations.",
+          "line": 25
+        },
+        {
+          "value": "Create the CrewAI Policy Interpretation Agent.",
+          "line": 31
+        },
+        {
+          "value": "Execute Policy Interpretation Agent.",
+          "line": 45
+        },
+        {
+          "value": "Valid JSON matching PolicyInterpretationOutput schema.",
+          "line": 85
+        },
+        {
+          "value": "\n\nParse each policy rule:\n- Assign stable requirement_id (e.g. REQ-SEC-01, REQ-FIN-01).\n- Identify target clause_type ('data_protection', 'payment_terms', 'liability_cap', 'termination').\n- Mark is_mandatory: true or false.\n- Extract concrete requirement_text and measurable threshold_or_condition.\n\nReturn structured JSON matching:\n{\n  \"policy_id\": \"",
+          "line": 58
+        },
+        {
+          "value": "\",\n  \"mandatory_requirements\": [\n    {\n      \"requirement_id\": \"REQ-SEC-01\",\n      \"clause_type\": \"data_protection\",\n      \"is_mandatory\": true,\n      \"requirement_text\": \"...\",\n      \"threshold_or_condition\": \"48 hours notification\",\n      \"exception_rules\": []\n    }\n  ],\n  \"recommended_requirements\": [],\n  \"ambiguities_in_policy\": []\n}\n",
+          "line": 70
+        }
+      ]
+    },
+    {
+      "file": "Agents/contract_review/review_agent.py",
+      "filename": "review_agent.py",
+      "stem": "review_agent",
+      "sha256": "f3ba6fc607a3cb27aa97ceedcee6b5a15c468536af444320d24eae6b4580d533",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "IndependentReviewOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 30,
+          "end_line": 37,
+          "docstring": "Create the CrewAI Independent Review Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_independent_review",
+          "line": 40,
+          "end_line": 91,
+          "docstring": "Execute Independent Review Agent.",
+          "args": [
+            "contract_id",
+            "deviation_data",
+            "risk_data",
+            "consistency_data",
+            "evidence_validation_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "contract_independent_review_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_independent_review",
+          "line": 40,
+          "classification": "function_candidate",
+          "docstring": "Execute Independent Review Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 9: Independent Review Agent for Contract Review and Compliance.\n\nResponsibilities:\n- Check findings for duplication, inconsistent severity, and missing requirements.\n- Resolve duplicate findings while preserving distinct legal/operational issues.\n- Identify disagreements among preceding agents.\n- Flag matters requiring qualified human legal counsel.\n",
+          "line": 1
+        },
+        {
+          "value": "Senior Contract Compliance Reviewer",
+          "line": 18
+        },
+        {
+          "value": "Perform a critical second-pass quality review across all extracted issues, deduplicating redundant findings, calibrating severity ratings, and highlighting human review items.",
+          "line": 20
+        },
+        {
+          "value": "You are a managing corporate legal auditor. You sanity check the work of junior reviewers, ensuring findings are succinct, severity levels are proportional, and genuine legal ambiguities are escalated to human attorneys.",
+          "line": 24
+        },
+        {
+          "value": "Create the CrewAI Independent Review Agent.",
+          "line": 31
+        },
+        {
+          "value": "Valid JSON matching IndependentReviewOutput schema.",
+          "line": 81
+        },
+        {
+          "value": "\n\nConduct comprehensive QA review:\n1. Merge any duplicate or overlapping findings.\n2. Verify severity consistency (e.g., critical breaches vs minor payment delays).\n3. Identify unresolved matters requiring human legal review.\n4. Set review_status to 'approved_for_report' if findings are sound.\n\nReturn structured JSON matching:\n{\n  \"contract_id\": \"",
+          "line": 64
+        },
+        {
+          "value": "\",\n  \"review_status\": \"approved_for_report\",\n  \"duplicate_findings_merged\": 0,\n  \"severity_adjustments\": [],\n  \"unresolved_matters\": [\"Formal legal review required for identified deviations and risk clauses\"]\n}\n",
+          "line": 74
+        }
+      ]
+    },
+    {
+      "file": "Agents/contract_review/risk_ambiguity_agent.py",
+      "filename": "risk_ambiguity_agent.py",
+      "stem": "risk_ambiguity_agent",
+      "sha256": "6770235e2f97a68ca3d1e8ca1e13580b8164c17b907e6a318bd24ce1aac56829",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 11
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 12
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "create_crew_agent",
+            "run_agent_task"
+          ],
+          "aliases": {},
+          "line": 13
+        },
+        {
+          "module": "common.validation",
+          "level": 0,
+          "names": [
+            "RiskAmbiguityOutput"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 15
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_agent",
+          "line": 29,
+          "end_line": 36,
+          "docstring": "Create the CrewAI Risk and Ambiguity Agent.",
+          "args": [
+            "llm"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_risk_ambiguity",
+          "line": 39,
+          "end_line": 86,
+          "docstring": "Execute Risk and Ambiguity Agent.",
+          "args": [
+            "contract_id",
+            "clause_extraction_data",
+            "agent",
+            "tracker"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [
+        "risk_ambiguity_agent"
+      ],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_risk_ambiguity",
+          "line": 39,
+          "classification": "function_candidate",
+          "docstring": "Execute Risk and Ambiguity Agent."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "\nAgent 6: Risk and Ambiguity Agent for Contract Review and Compliance.\n\nResponsibilities:\n- Identify ambiguous wording, unclear obligations, and operational risks under the supplied policy.\n- Distinguish explicit policy deviations from vague terms requiring human interpretation.\n- Preserve source clause citations.\n- Avoid unsupported legal conclusions.\n",
+          "line": 1
+        },
+        {
+          "value": "Contract Risk and Ambiguity Analyst",
+          "line": 18
+        },
+        {
+          "value": "Detect vague wording, undefined timelines, one-sided covenants, and latent operational risks within contractual text, highlighting issues requiring human legal counsel.",
+          "line": 20
+        },
+        {
+          "value": "You are an operational risk analyst. You flag loose phrasing such as 'best commercial efforts', 'reasonable timeframe', or vague indemnity scopes that expose the organization to unexpected liabilities.",
+          "line": 24
+        },
+        {
+          "value": "Create the CrewAI Risk and Ambiguity Agent.",
+          "line": 30
+        },
+        {
+          "value": "Valid JSON matching RiskAmbiguityOutput schema.",
+          "line": 76
+        },
+        {
+          "value": "\nContract Clauses to Inspect for Ambiguity:\n",
+          "line": 51
+        },
+        {
+          "value": "\n\nIdentify ambiguous phrases, vague timelines, or open-ended liabilities:\n- Look for non-committal language (e.g. 'endeavor to report in reasonable timeframe').\n- Flag unquantified risk categories ('operational', 'legal_exposure', 'vague_terms', 'renewal_trap').\n- Assign severity ('low', 'medium', 'high').\n- Set human_interpretation_needed: true.\n\nReturn structured JSON matching:\n{\n  \"contract_id\": \"",
+          "line": 53
+        },
+        {
+          "value": "\",\n  \"risk_findings\": [\n    {\n      \"finding_id\": \"RSK-01\",\n      \"clause_id\": \"CLS-xxxx-DATA\",\n      \"risk_category\": \"vague_terms\",\n      \"ambiguity_description\": \"Phrase 'reasonable timeframe' lacks defined hours/days threshold for security incidents.\",\n      \"severity\": \"medium\",\n      \"human_interpretation_needed\": true\n    }\n  ]\n}\n",
+          "line": 63
+        }
+      ]
+    },
+    {
+      "file": "Agents/contract_review/workflow.py",
+      "filename": "workflow.py",
+      "stem": "workflow",
+      "sha256": "b0e1eecc0676d39f036947e61bbdc6540f09fd19884bacd10c1a33f146efedb6",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 17
+        },
+        {
+          "module": "os",
+          "asname": null,
+          "line": 18
+        },
+        {
+          "module": "uuid",
+          "asname": null,
+          "line": 19
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 20
+        },
+        {
+          "module": "common.metrics",
+          "level": 0,
+          "names": [
+            "MetricsTracker"
+          ],
+          "aliases": {},
+          "line": 21
+        },
+        {
+          "module": "common.tracing",
+          "level": 0,
+          "names": [
+            "init_tracing"
+          ],
+          "aliases": {},
+          "line": 22
+        },
+        {
+          "module": "Agents.contract_review",
+          "level": 0,
+          "names": [
+            "intake_agent",
+            "clause_extraction_agent",
+            "policy_interpretation_agent",
+            "clause_mapping_agent",
+            "deviation_agent",
+            "risk_ambiguity_agent",
+            "consistency_agent",
+            "evidence_validation_agent",
+            "review_agent",
+            "final_report_agent"
+          ],
+          "aliases": {},
+          "line": 25
+        }
+      ],
+      "classes": [
+        {
+          "name": "ContractReviewWorkflow",
+          "line": 65
+        }
+      ],
+      "functions": [
+        {
+          "name": "load_sample_contract_input",
+          "line": 42,
+          "end_line": 62,
+          "docstring": "Load sample contract and compliance policy from local datasets.",
+          "args": [
+            "contract_index",
+            "policy_index",
+            "data_dir"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run_contract_review_workflow",
+          "line": 234,
+          "end_line": 240,
+          "docstring": "Execute contract review and compliance workflow.",
+          "args": [
+            "input_data",
+            "run_id"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "__init__",
+          "line": 68,
+          "end_line": 83,
+          "docstring": null,
+          "args": [
+            "self",
+            "llm",
+            "enable_tracing"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "get_agent_count",
+          "line": 85,
+          "end_line": 87,
+          "docstring": "Return the exact number of agents.",
+          "args": [
+            "self"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "run",
+          "line": 89,
+          "end_line": 231,
+          "docstring": "Execute the 10-agent contract review workflow sequentially.",
+          "args": [
+            "self",
+            "input_data",
+            "run_id",
+            "runs_base_dir"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "final_report.model_dump",
+          "line": 210,
+          "arguments": []
+        },
+        {
+          "call": "m.model_dump",
+          "line": 219,
+          "arguments": []
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "run_contract_review_workflow",
+          "line": 234,
+          "classification": "function_candidate",
+          "docstring": "Execute contract review and compliance workflow."
+        }
+      ],
+      "execution_calls": [
+        {
+          "call": "wf.run",
+          "line": 240
+        }
+      ],
+      "string_literals": [
+        {
+          "value": "\nWorkflow Orchestrator: Contract Review and Compliance (Workflow 3).\n\nExecutes exactly 10 CrewAI agents in sequential baseline order:\n1. Contract Intake Agent (intake_agent.py)\n2. Clause Extraction Agent (clause_extraction_agent.py)\n3. Policy Interpretation Agent (policy_interpretation_agent.py)\n4. Clause-to-Policy Mapping Agent (clause_mapping_agent.py)\n5. Compliance Deviation Agent (deviation_agent.py)\n6. Risk and Ambiguity Agent (risk_ambiguity_agent.py)\n7. Cross-Clause Consistency Agent (consistency_agent.py)\n8. Evidence and Citation Validation Agent (evidence_validation_agent.py)\n9. Independent Review Agent (review_agent.py)\n10. Final Compliance Report Agent (final_report_agent.py)\n",
+          "line": 1
+        },
+        {
+          "value": "Load sample contract and compliance policy from local datasets.",
+          "line": 47
+        },
+        {
+          "value": "Manages baseline execution of the 10-agent contract review workflow.",
+          "line": 66
+        },
+        {
+          "value": "Execute contract review and compliance workflow.",
+          "line": 238
+        },
+        {
+          "value": "\n        Execute the 10-agent contract review workflow sequentially.\n        ",
+          "line": 95
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "file": "runs/contract_review/ctr_97b38060.json",
+      "filename": "ctr_97b38060.json",
+      "suffix": ".json",
+      "workflow_name": "contract_review",
+      "run_id": "ctr_97b38060",
+      "status": "success",
+      "total_duration_seconds": 53.708,
+      "agent_count": 10,
+      "total_tokens": null,
+      "estimated_cost_usd": 0.010174
+    },
+    {
+      "file": "runs/contract_review/live_20261023_070547_contra.json",
+      "filename": "live_20261023_070547_contra.json",
+      "suffix": ".json",
+      "workflow_name": "contract_review",
+      "run_id": "live_20261023_070547_contra",
+      "status": "success",
+      "total_duration_seconds": 50.4,
+      "agent_count": 10,
+      "total_tokens": null,
+      "estimated_cost_usd": 0.010252
+    },
+    {
+      "file": "runs/contract_review/summary.jsonl",
+      "filename": "summary.jsonl",
+      "suffix": ".jsonl",
+      "record_count": 2,
+      "first_record_keys": [
+        "run_id",
+        "workflow_name",
+        "start_time",
+        "end_time",
+        "total_duration_seconds",
+        "agent_count",
+        "status",
+        "llm_call_count",
+        "token_usage",
+        "estimated_cost_usd",
+        "validation_warnings_count",
+        "has_error"
+      ],
+      "workflow_name": "contract_review"
+    }
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "workflow_name": "contract_review",
+  "version": "1.0.0",
+  "description": "Baseline 10-agent contract review and compliance workflow with evidence linking.",
+  "fixed_model": "openai/gpt-oss-120b",
+  "baseline_model": "openai/gpt-oss-120b",
+  "assigned_groq_key_env": "GROQ_API_KEY_7",
+  "llm_provider": "Groq",
+  "total_agents": 10,
+  "agent_count": 10,
+  "execution_pattern": "sequential",
+  "execution_order": [
+    "contract_intake_agent",
+    "clause_extraction_agent",
+    "policy_interpretation_agent",
+    "clause_mapping_agent",
+    "compliance_deviation_agent",
+    "risk_ambiguity_agent",
+    "cross_clause_consistency_agent",
+    "evidence_validation_agent",
+    "contract_independent_review_agent",
+    "final_compliance_report_agent"
+  ],
+  "agents": [
+    {
+      "agent_id": "contract_intake_agent",
+      "agent_name": "Contract Intake Agent",
+      "role": "Contract Intake and Ingestion Specialist",
+      "responsibilities": "Validate document completeness, catalog contract metadata, versioning, and parties.",
+      "input_fields": ["contract_id", "title", "contract_type", "version", "clauses", "policy_id"],
+      "output_fields": ["document_id", "contract_id", "contract_type", "document_complete", "section_count"],
+      "dependencies": []
+    },
+    {
+      "agent_id": "clause_extraction_agent",
+      "agent_name": "Clause Extraction Agent",
+      "role": "Contract Clause Extraction Specialist",
+      "responsibilities": "Extract discrete legal clauses with stable clause IDs and section references once.",
+      "input_fields": ["clauses", "contract_id"],
+      "output_fields": ["clauses", "absent_clause_types", "extraction_notes"],
+      "dependencies": ["contract_intake_agent"]
+    },
+    {
+      "agent_id": "policy_interpretation_agent",
+      "agent_name": "Policy Interpretation Agent",
+      "role": "Policy Interpretation Specialist",
+      "responsibilities": "Deconstruct compliance policy into discrete mandatory and recommended requirements with thresholds.",
+      "input_fields": ["policy_id", "policy_name", "requirements"],
+      "output_fields": ["policy_id", "policy_version", "mandatory_requirements", "recommended_requirements"],
+      "dependencies": ["contract_intake_agent"]
+    },
+    {
+      "agent_id": "clause_mapping_agent",
+      "agent_name": "Clause-to-Policy Mapping Agent",
+      "role": "Clause-to-Policy Mapping Specialist",
+      "responsibilities": "Align extracted clauses to applicable policy requirements and classify status.",
+      "input_fields": ["clauses", "mandatory_requirements", "recommended_requirements"],
+      "output_fields": ["mappings", "coverage_percentage"],
+      "dependencies": ["clause_extraction_agent", "policy_interpretation_agent"]
+    },
+    {
+      "agent_id": "compliance_deviation_agent",
+      "agent_name": "Compliance Deviation Agent",
+      "role": "Contract Compliance Deviation Evaluator",
+      "responsibilities": "Identify deviations, missing protections, incompatible terms, and assign severity.",
+      "input_fields": ["mappings", "mandatory_requirements"],
+      "output_fields": ["deviations", "has_critical_deviations"],
+      "dependencies": ["clause_mapping_agent"]
+    },
+    {
+      "agent_id": "risk_ambiguity_agent",
+      "agent_name": "Risk and Ambiguity Agent",
+      "role": "Contract Risk and Ambiguity Analyst",
+      "responsibilities": "Detect vague phrasing, undefined timelines, and latent operational risks.",
+      "input_fields": ["clauses"],
+      "output_fields": ["risk_findings"],
+      "dependencies": ["clause_extraction_agent"]
+    },
+    {
+      "agent_id": "cross_clause_consistency_agent",
+      "agent_name": "Cross-Clause Consistency Agent",
+      "role": "Contract Inter-Clause Consistency Auditor",
+      "responsibilities": "Detect internal contradictions across clauses such as termination vs auto-renewal lock-in.",
+      "input_fields": ["clauses", "effective_date", "expiration_date"],
+      "output_fields": ["inconsistencies"],
+      "dependencies": ["clause_extraction_agent"]
+    },
+    {
+      "agent_id": "evidence_validation_agent",
+      "agent_name": "Evidence and Citation Validation Agent",
+      "role": "Legal Evidence and Citation Validator",
+      "responsibilities": "Verify all findings reference real clause IDs and that quoted excerpts support claims.",
+      "input_fields": ["deviations", "risk_findings", "inconsistencies", "clauses", "requirements"],
+      "output_fields": ["all_citations_valid", "verified_finding_ids", "invalid_or_unsupported_findings"],
+      "dependencies": ["compliance_deviation_agent", "risk_ambiguity_agent", "cross_clause_consistency_agent"]
+    },
+    {
+      "agent_id": "contract_independent_review_agent",
+      "agent_name": "Independent Review Agent",
+      "role": "Senior Contract Compliance Reviewer",
+      "responsibilities": "Deduplicate findings, calibrate severity ratings, and highlight issues needing legal counsel.",
+      "input_fields": ["deviations", "risk_findings", "inconsistencies", "all_citations_valid"],
+      "output_fields": ["review_status", "duplicate_findings_merged", "severity_adjustments", "unresolved_matters"],
+      "dependencies": ["evidence_validation_agent"]
+    },
+    {
+      "agent_id": "final_compliance_report_agent",
+      "agent_name": "Final Compliance Report Agent",
+      "role": "Lead Contract Compliance Report Author",
+      "responsibilities": "Produce executive summary, policy coverage, clause inventory, findings, and disclaimers.",
+      "input_fields": ["deviations", "risk_findings", "inconsistencies", "coverage", "unresolved_matters"],
+      "output_fields": ["run_id", "contract_id", "contract_version", "policy_id", "policy_version", "contract_type", "executive_summary", "policy_coverage", "clause_inventory", "compliance_findings", "risk_findings", "cross_clause_inconsistencies", "evidence_validation", "unresolved_questions", "recommended_actions", "human_review_required", "validation_warnings"],
+      "dependencies": ["contract_independent_review_agent"]
+    }
+  ],
+  "baseline_execution_order": [
+    "contract_intake_agent",
+    "clause_extraction_agent",
+    "policy_interpretation_agent",
+    "clause_mapping_agent",
+    "compliance_deviation_agent",
+    "risk_ambiguity_agent",
+    "cross_clause_consistency_agent",
+    "evidence_validation_agent",
+    "contract_independent_review_agent",
+    "final_compliance_report_agent"
+  ],
+  "optimizer_annotations": {
+    "potential_parallel_branches": [
+      ["compliance_deviation_agent", "risk_ambiguity_agent", "cross_clause_consistency_agent"]
+    ],
+    "consolidation_candidates": [
+      ["clause_mapping_agent", "compliance_deviation_agent"],
+      ["risk_ambiguity_agent", "cross_clause_consistency_agent"],
+      ["evidence_validation_agent", "contract_independent_review_agent"]
+    ],
+    "pruning_candidates": [
+      "evidence_validation_agent",
+      "contract_independent_review_agent"
+    ],
+    "routing_conditions": {
+      "standard_nda_bypass": "For short standard bilateral NDAs without custom IP terms, skip cross-clause deep audit and route directly to summary."
+    }
+  },
+  "optimization_opportunities": {
+    "potential_parallel_branches": [
+      ["compliance_deviation_agent", "risk_ambiguity_agent", "cross_clause_consistency_agent"]
+    ],
+    "consolidation_candidates": [
+      ["clause_mapping_agent", "compliance_deviation_agent"],
+      ["risk_ambiguity_agent", "cross_clause_consistency_agent"],
+      ["evidence_validation_agent", "contract_independent_review_agent"]
+    ],
+    "pruning_candidates": [
+      "evidence_validation_agent",
+      "contract_independent_review_agent"
+    ]
+  },
+  "validation_requirements": {
+    "output_schema": "ContractFinalReportOutput",
+    "mandatory_legal_disclaimer": true,
+    "evidence_reference_integrity": true
+  }
+}

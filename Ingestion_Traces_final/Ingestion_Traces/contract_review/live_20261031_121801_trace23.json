@@ -1,0 +1,596 @@
+{
+  "run_id": "live_20261031_121801_trace23",
+  "workflow_name": "contract_review",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 30.506,
+  "agent_execution_count": 10,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.927,
+      "tokens": 887,
+      "prompt_tokens": 307,
+      "completion_tokens": 580,
+      "output": {
+        "document_id": "DOC-20261031-0001",
+        "contract_id": "CTR-2026-0023",
+        "contract_title": "Master Services Agreement (MSA) with Enterprise Partner 023 LLC",
+        "contract_type": "Master Services Agreement (MSA)",
+        "contract_version": "1.0",
+        "policy_id": "POL-CORP-FIN-02",
+        "policy_version": "3.1",
+        "document_complete": true,
+        "section_count": 5,
+        "source_metadata": {
+          "effective_date": "2026-01-01",
+          "expiration_date": "2027-01-01",
+          "parties": [
+            "AWO Enterprise Corp",
+            "Enterprise Partner 023 LLC"
+          ]
+        },
+        "intake_warnings": []
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "contract_intake_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.638,
+      "tokens": 1279,
+      "prompt_tokens": 741,
+      "completion_tokens": 538,
+      "output": {
+        "contract_id": "CTR-2026-0023",
+        "clauses": [
+          {
+            "clause_id": "CLS-0023-PAY",
+            "clause_type": "payment_terms",
+            "clause_title": "Section 3: Invoicing and Payment Terms",
+            "clause_text": "Customer shall pay all undisputed invoice amounts within thirty (30) days of invoice date.",
+            "section_reference": "Section 3.1"
+          },
+          {
+            "clause_id": "CLS-0023-DATA",
+            "clause_type": "data_protection",
+            "clause_title": "Section 8: Security & Breach Notification",
+            "clause_text": "Vendor shall notify Customer in writing within twenty-four (24) hours of becoming aware of any confirmed Data Breach.",
+            "section_reference": "Section 8.2"
+          },
+          {
+            "clause_id": "CLS-0023-LIAB",
+            "clause_type": "liability_cap",
+            "clause_title": "Section 10: Limitation of Liability",
+            "clause_text": "Each party's maximum aggregate liability shall be strictly limited to the total fees paid under this Agreement in the preceding twelve (12) months.",
+            "section_reference": "Section 10.1"
+          },
+          {
+            "clause_id": "CLS-0023-TERM",
+            "clause_type": "termination",
+            "clause_title": "Section 12: Term and Termination",
+            "clause_text": "Either party may terminate this Agreement for convenience upon providing thirty (30) days prior written notice.",
+            "section_reference": "Section 12.1"
+          },
+          {
+            "clause_id": "CLS-0023-REN",
+            "clause_type": "renewal",
+            "clause_title": "Section 12: Renewal Provisions",
+            "clause_text": "This Agreement renews on an annual basis unless either party gives notice of non-renewal at least 30 days prior.",
+            "section_reference": "Section 12.4"
+          }
+        ],
+        "absent_clause_types": [],
+        "extraction_notes": [
+          "Document extracted once for downstream policy comparison"
+        ]
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "clause_extraction_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.987,
+      "tokens": 931,
+      "prompt_tokens": 349,
+      "completion_tokens": 582,
+      "output": {
+        "policy_id": "POL-CORP-FIN-02",
+        "policy_version": "3.1",
+        "policy_name": "Commercial Payment Terms & Billing Policy",
+        "mandatory_requirements": [
+          {
+            "requirement_id": "REQ-FIN-01",
+            "clause_type": "payment_terms",
+            "threshold": "Net 45 maximum",
+            "description": "Payment terms shall not exceed Net 45 days from receipt of undisputed invoice."
+          }
+        ],
+        "recommended_requirements": [
+          {
+            "requirement_id": "REQ-FIN-02",
+            "clause_type": "payment_terms",
+            "threshold": "1.5% monthly cap",
+            "description": "Late payment penalties should not exceed 1.5% per month."
+          }
+        ],
+        "ambiguities_in_policy": [
+          {
+            "requirement_id": "REQ-FIN-01",
+            "issue": "Definition of \"undisputed invoice\" is not specified, which may affect the start date for the Net 45 calculation."
+          },
+          {
+            "requirement_id": "REQ-FIN-01",
+            "issue": "It is unclear whether the Net 45 period includes weekends/holidays or is based on business days."
+          },
+          {
+            "requirement_id": "REQ-FIN-02",
+            "issue": "The policy does not clarify if the 1.5% penalty is simple interest, compounded monthly, or applied as a flat fee."
+          },
+          {
+            "requirement_id": "REQ-FIN-02",
+            "issue": "No guidance on how penalties are communicated to the payer or whether there is a grace period before penalties apply."
+          }
+        ]
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "policy_interpretation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 2.038,
+      "tokens": 1393,
+      "prompt_tokens": 694,
+      "completion_tokens": 699,
+      "output": {
+        "contract_id": "CTR-2026-0023",
+        "policy_id": "REQ-FIN-01",
+        "mappings": [
+          {
+            "clause_id": "CLS-0023-PAY",
+            "requirement_id": "REQ-FIN-01",
+            "mapping_status": "satisfied"
+          },
+          {
+            "clause_id": "CLS-0023-DATA",
+            "requirement_id": "REQ-FIN-01",
+            "mapping_status": "unaddressed"
+          },
+          {
+            "clause_id": "CLS-0023-LIAB",
+            "requirement_id": "REQ-FIN-01",
+            "mapping_status": "unaddressed"
+          },
+          {
+            "clause_id": "CLS-0023-TERM",
+            "requirement_id": "REQ-FIN-01",
+            "mapping_status": "unaddressed"
+          },
+          {
+            "clause_id": "CLS-0023-REN",
+            "requirement_id": "REQ-FIN-01",
+            "mapping_status": "unaddressed"
+          }
+        ],
+        "coverage_percentage": 100
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "clause_mapping_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 2.655,
+      "tokens": 1420,
+      "prompt_tokens": 466,
+      "completion_tokens": 954,
+      "output": {
+        "contract_id": "CTR-2026-0023",
+        "deviations": [
+          {
+            "clause_id": "CLS-0023-DATA",
+            "requirement_id": "REQ-FIN-01",
+            "issue": "Clause is marked as 'unaddressed' for the payment terms requirement; the clause type (data) does not pertain to payment terms and provides no compliance language.",
+            "severity": "low",
+            "supporting_evidence": "Mapping entry shows mapping_status = 'unaddressed' for CLS-0023-DATA against REQ-FIN-01.",
+            "recommended_remediation": "Remove the erroneous mapping of this data clause to the payment terms requirement or add a separate payment terms clause that satisfies REQ-FIN-01."
+          },
+          {
+            "clause_id": "CLS-0023-LIAB",
+            "requirement_id": "REQ-FIN-01",
+            "issue": "Liability clause is unaddressed for the payment terms requirement; it does not contain any payment term language.",
+            "severity": "low",
+            "supporting_evidence": "Mapping entry shows mapping_status = 'unaddressed' for CLS-0023-LIAB against REQ-FIN-01.",
+            "recommended_remediation": "Correct the mapping to associate liability clauses with appropriate liability requirements, or ensure a proper payment terms clause is present."
+          },
+          {
+            "clause_id": "CLS-0023-TERM",
+            "requirement_id": "REQ-FIN-01",
+            "issue": "Term clause is unaddressed for the payment terms requirement; no payment term provisions are included.",
+            "severity": "low",
+            "supporting_evidence": "Mapping entry shows mapping_status = 'unaddressed' for CLS-0023-TERM against REQ-FIN-01.",
+            "recommended_remediation": "Either map this clause to a term-related requirement or incorporate the required Net 45 payment language within the appropriate payment clause."
+          },
+          {
+            "clause_id": "CLS-0023-REN",
+            "requirement_id": "REQ-FIN-01",
+            "issue": "Renewal clause is unaddressed for the payment terms requirement; it does not address payment timing.",
+            "severity": "low",
+            "supporting_evidence": "Mapping entry shows mapping_status = 'unaddressed' for CLS-0023-REN against REQ-FIN-01.",
+            "recommended_remediation": "Reassign this clause to a renewal-specific requirement or ensure the payment terms clause (CLS-0023-PAY) fully satisfies REQ-FIN-01."
+          }
+        ],
+        "has_critical_deviations": false
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "compliance_deviation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 3.469,
+      "tokens": 1992,
+      "prompt_tokens": 638,
+      "completion_tokens": 1354,
+      "output": {
+        "contract_id": "CTR-2026-0023",
+        "risk_findings": [
+          {
+            "finding_id": "RF-001",
+            "clause_id": "CLS-0023-PAY",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "The phrase \"undisputed invoice amounts\" is not defined, leaving uncertainty about what constitutes a dispute and how disputes are to be resolved before payment is required.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-002",
+            "clause_id": "CLS-0023-PAY",
+            "risk_category": "one_sided_covenant",
+            "ambiguity_description": "Payment terms impose a strict 30‑day deadline on the Customer with no provision for interest, penalties, or remedies for late payment, creating a commercial advantage for the Vendor.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-003",
+            "clause_id": "CLS-0023-DATA",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "\"Becoming aware\" of a breach and the term \"confirmed Data Breach\" are not defined, making it unclear when the Vendor's notification obligation is triggered.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-004",
+            "clause_id": "CLS-0023-DATA",
+            "risk_category": "latent_operational_risk",
+            "ambiguity_description": "The clause does not specify the acceptable method (e.g., email, certified mail, secure portal) for the written notification, potentially causing delays or disputes over whether proper notice was given.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-005",
+            "clause_id": "CLS-0023-LIAB",
+            "risk_category": "one_sided_covenant",
+            "ambiguity_description": "Limiting aggregate liability to the total fees paid in the preceding 12 months may be insufficient to cover consequential or indirect damages, exposing the Customer to uncovered risk.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-006",
+            "clause_id": "CLS-0023-REN",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "The phrase \"annual basis\" is not defined; it is unclear whether renewal periods are calendar years, 12‑month intervals from the effective date, or tied to the original term end date.",
+            "severity": "low",
+            "human_interpretation_needed": true
+          }
+        ]
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "risk_ambiguity_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 1.491,
+      "tokens": 1589,
+      "prompt_tokens": 1196,
+      "completion_tokens": 393,
+      "output": {
+        "contract_id": "CTR-2026-0023",
+        "inconsistencies": []
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "cross_clause_consistency_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_8 (gsk_yt...AwPO)",
+      "duration_seconds": 2.385,
+      "tokens": 2557,
+      "prompt_tokens": 1774,
+      "completion_tokens": 783,
+      "output": {
+        "contract_id": "CTR-2026-0023",
+        "all_citations_valid": true,
+        "verified_finding_ids": [
+          "DEV-CLS-0023-DATA",
+          "DEV-CLS-0023-LIAB",
+          "DEV-CLS-0023-TERM",
+          "DEV-CLS-0023-REN",
+          "RF-001",
+          "RF-002",
+          "RF-003",
+          "RF-004",
+          "RF-005",
+          "RF-006"
+        ],
+        "invalid_or_unsupported_findings": [],
+        "evidence_notes": "All findings reference clause IDs that exist in the contract's clause list. No missing or mismatched citations were detected."
+      },
+      "notes": "",
+      "order": 8,
+      "agent_id": "evidence_validation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_9 (gsk_Oz...k7Gf)",
+      "duration_seconds": 5.081,
+      "tokens": 3601,
+      "prompt_tokens": 1492,
+      "completion_tokens": 2109,
+      "output": {
+        "contract_id": "CTR-2026-0023",
+        "calibrated_deviations": [
+          {
+            "clause_ids": [
+              "CLS-0023-DATA",
+              "CLS-0023-LIAB",
+              "CLS-0023-TERM",
+              "CLS-0023-REN"
+            ],
+            "requirement_id": "REQ-FIN-01",
+            "issue": "Multiple non‑payment clauses are incorrectly mapped to the payment‑terms requirement, resulting in 'unaddressed' status and no compliance language.",
+            "severity": "low",
+            "supporting_evidence": "Mapping entries show mapping_status = 'unaddressed' for each clause against REQ-FIN-01.",
+            "recommended_remediation": "Remove erroneous mappings and ensure a dedicated payment‑terms clause (e.g., CLS-0023-PAY) satisfies REQ-FIN-01; re‑map other clauses to appropriate requirement categories."
+          }
+        ],
+        "calibrated_risks": [
+          {
+            "finding_id": "RF-001",
+            "clause_id": "CLS-0023-PAY",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "The phrase \"undisputed invoice amounts\" is not defined, leaving uncertainty about what constitutes a dispute and how disputes are to be resolved before payment is required.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-002",
+            "clause_id": "CLS-0023-PAY",
+            "risk_category": "one_sided_covenant",
+            "ambiguity_description": "Payment terms impose a strict 30‑day deadline on the Customer with no provision for interest, penalties, or remedies for late payment, creating a commercial advantage for the Vendor.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-003",
+            "clause_id": "CLS-0023-DATA",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "\"Becoming aware\" of a breach and the term \"confirmed Data Breach\" are not defined, making it unclear when the Vendor's notification obligation is triggered.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-004",
+            "clause_id": "CLS-0023-DATA",
+            "risk_category": "latent_operational_risk",
+            "ambiguity_description": "The clause does not specify the acceptable method (e.g., email, certified mail, secure portal) for the written notification, potentially causing delays or disputes over whether proper notice was given.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-005",
+            "clause_id": "CLS-0023-LIAB",
+            "risk_category": "one_sided_covenant",
+            "ambiguity_description": "Limiting aggregate liability to the total fees paid in the preceding 12 months may be insufficient to cover consequential or indirect damages, exposing the Customer to uncovered risk.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-006",
+            "clause_id": "CLS-0023-REN",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "The phrase \"annual basis\" is not defined; it is unclear whether renewal periods are calendar years, 12‑month intervals from the effective date, or tied to the original term end date.",
+            "severity": "low",
+            "human_interpretation_needed": true
+          }
+        ],
+        "review_notes": "Consolidated four low‑severity mapping deviations into a single actionable item. Elevated severity for payment‑term ambiguities (RF-001, RF-002) to high due to potential financial exposure. All risk findings retain human‑interpretation flag; prioritize review of payment clause wording and data‑breach notification mechanisms. No citation issues detected."
+      },
+      "notes": "",
+      "order": 9,
+      "agent_id": "contract_independent_review_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_10 (gsk_jW...DBpq)",
+      "duration_seconds": 5.667,
+      "tokens": 4429,
+      "prompt_tokens": 2032,
+      "completion_tokens": 2397,
+      "output": {
+        "run_id": "RUN-20261031-001",
+        "contract_id": "CTR-2026-0023",
+        "contract_version": "1.0",
+        "policy_id": "POL-CORP-FIN-02",
+        "policy_version": "3.1",
+        "contract_type": "Master Services Agreement (MSA)",
+        "executive_summary": "The Master Services Agreement (CTR-2026-0023) was evaluated against corporate financial policy POL-CORP-FIN-02. While the contract contains all five required clause types, the current mapping to requirement REQ-FIN-01 is inaccurate: only the payment‑terms clause (CLS-0023-PAY) correctly satisfies the requirement, whereas data‑protection, liability, termination, and renewal clauses are incorrectly mapped and marked as 'unaddressed'. High‑severity ambiguities exist in the payment clause and data‑breach notification clause, posing significant financial and operational risk. Overall policy coverage is reported as 100%, but the quality of mapping and clause wording reduces practical compliance. Immediate remediation and human legal review are recommended.",
+        "policy_coverage": {
+          "coverage_percentage": 100,
+          "coverage_note": "All required policy elements are present in the contract, however mapping inaccuracies and clause ambiguities diminish effective compliance."
+        },
+        "clause_inventory": [
+          {
+            "clause_id": "CLS-0023-PAY",
+            "clause_type": "payment_terms",
+            "clause_title": "Section 3: Invoicing and Payment Terms",
+            "section_reference": "Section 3.1"
+          },
+          {
+            "clause_id": "CLS-0023-DATA",
+            "clause_type": "data_protection",
+            "clause_title": "Section 8: Security & Breach Notification",
+            "section_reference": "Section 8.2"
+          },
+          {
+            "clause_id": "CLS-0023-LIAB",
+            "clause_type": "liability_cap",
+            "clause_title": "Section 10: Limitation of Liability",
+            "section_reference": "Section 10.1"
+          },
+          {
+            "clause_id": "CLS-0023-TERM",
+            "clause_type": "termination",
+            "clause_title": "Section 12: Term and Termination",
+            "section_reference": "Section 12.1"
+          },
+          {
+            "clause_id": "CLS-0023-REN",
+            "clause_type": "renewal",
+            "clause_title": "Section 12: Renewal Provisions",
+            "section_reference": "Section 12.4"
+          }
+        ],
+        "compliance_findings": [
+          {
+            "finding_id": "CF-001",
+            "affected_clauses": [
+              "CLS-0023-DATA",
+              "CLS-0023-LIAB",
+              "CLS-0023-TERM",
+              "CLS-0023-REN"
+            ],
+            "requirement_id": "REQ-FIN-01",
+            "issue": "Multiple non‑payment clauses are incorrectly mapped to the payment‑terms requirement, resulting in 'unaddressed' status and no compliance language.",
+            "severity": "low",
+            "supporting_evidence": "Mapping entries show mapping_status = 'unaddressed' for each clause against REQ-FIN-01.",
+            "recommended_remediation": "Remove erroneous mappings. Map CLS-0023-PAY exclusively to REQ-FIN-01. Create or reference appropriate requirement IDs for data protection, liability, termination, and renewal clauses."
+          }
+        ],
+        "risk_findings": [
+          {
+            "finding_id": "RF-001",
+            "clause_id": "CLS-0023-PAY",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "The phrase \"undisputed invoice amounts\" is not defined, leaving uncertainty about what constitutes a dispute and how disputes are to be resolved before payment is required.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-002",
+            "clause_id": "CLS-0023-PAY",
+            "risk_category": "one_sided_covenant",
+            "ambiguity_description": "Payment terms impose a strict 30‑day deadline on the Customer with no provision for interest, penalties, or remedies for late payment, creating a commercial advantage for the Vendor.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-003",
+            "clause_id": "CLS-0023-DATA",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "\"Becoming aware\" of a breach and the term \"confirmed Data Breach\" are not defined, making it unclear when the Vendor's notification obligation is triggered.",
+            "severity": "high",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-004",
+            "clause_id": "CLS-0023-DATA",
+            "risk_category": "latent_operational_risk",
+            "ambiguity_description": "The clause does not specify the acceptable method (e.g., email, certified mail, secure portal) for the written notification, potentially causing delays or disputes over whether proper notice was given.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-005",
+            "clause_id": "CLS-0023-LIAB",
+            "risk_category": "one_sided_covenant",
+            "ambiguity_description": "Limiting aggregate liability to the total fees paid in the preceding 12 months may be insufficient to cover consequential or indirect damages, exposing the Customer to uncovered risk.",
+            "severity": "medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-006",
+            "clause_id": "CLS-0023-REN",
+            "risk_category": "vague_wording",
+            "ambiguity_description": "The phrase \"annual basis\" is not defined; it is unclear whether renewal periods are calendar years, 12‑month intervals from the effective date, or tied to the original term end date.",
+            "severity": "low",
+            "human_interpretation_needed": true
+          }
+        ],
+        "cross_clause_inconsistencies": [
+          {
+            "inconsistency_id": "CI-001",
+            "description": "Termination (CLS-0023-TERM) and Renewal (CLS-0023-REN) provisions are both located in Section 12, potentially causing interpretive overlap between termination for convenience and automatic renewal triggers.",
+            "severity": "medium"
+          },
+          {
+            "inconsistency_id": "CI-002",
+            "description": "Mapping misalignment: non‑payment clauses are linked to the payment‑terms requirement, leading to false 'unaddressed' status.",
+            "severity": "low"
+          }
+        ],
+        "evidence_validation": {
+          "sources": [
+            "Intake metadata (document_id, contract_id, effective/expiration dates)",
+            "Clause texts provided in the intake",
+            "Mapping table entries (mapping_status values)",
+            "Review Findings section (calibrated_deviations, calibrated_risks, review_notes)"
+          ],
+          "validation_status": "All evidence referenced is internally consistent; no external citation conflicts detected."
+        },
+        "unresolved_questions": [
+          "What definition, if any, should be applied to \"undisputed invoice amounts\" and the dispute resolution process?",
+          "Should interest or penalty provisions be added for late payments to balance the covenant?",
+          "How should \"becoming aware\" and \"confirmed Data Breach\" be operationally defined?",
+          "What specific notification channel(s) are acceptable for breach notice?",
+          "Is the liability cap acceptable to the Customer, or should an exception for consequential damages be introduced?",
+          "What exact renewal interval does \"annual basis\" refer to?"
+        ],
+        "recommended_actions": [
+          "Correct mapping entries: assign each clause to its appropriate requirement category; retain CLS-0023-PAY as the sole mapping to REQ-FIN-01.",
+          "Amend CLS-0023-PAY to define \"undisputed invoice amounts\" and incorporate interest/penalty language for late payments.",
+          "Clarify data‑breach notification triggers and prescribe acceptable written notice methods (e.g., email with read receipt, certified mail).",
+          "Consider revising CLS-0023-LIAB to include a carve‑out for consequential or indirect damages, or to raise the liability cap.",
+          "Define \"annual basis\" in the renewal clause (e.g., 12‑month periods from effective date).",
+          "Separate termination and renewal provisions into distinct sections to avoid interpretive overlap.",
+          "Schedule a legal‑subject matter expert review to resolve the high‑severity ambiguities identified."
+        ],
+        "human_review_required": true,
+        "validation_warnings": [],
+        "legal_disclaimer": "This compliance report is generated based on the information supplied in the intake package and automated analysis of clause text and mapping data. It does not constitute legal advice. Final determination of compliance, risk exposure, and contractual obligations should be performed by qualified legal counsel. The author and the organization assume no liability for any decisions made solely on the basis of this report."
+      },
+      "notes": "",
+      "order": 10,
+      "agent_id": "final_compliance_report_agent"
+    }
+  ],
+  "total_tokens": 20078,
+  "prompt_tokens": 9689,
+  "completion_tokens": 10389,
+  "estimated_cost_usd": 0.013924,
+  "error_message": null,
+  "final_output": "{\n  \"run_id\": \"RUN-20261031-001\",\n  \"contract_id\": \"CTR-2026-0023\",\n  \"contract_version\": \"1.0\",\n  \"policy_id\": \"POL-CORP-FIN-02\",\n  \"policy_version\": \"3.1\",\n  \"contract_type\": \"Master Services Agreement (MSA)\",\n  \"executive_summary\": \"The Master Services Agreement (CTR-2026-0023) was evaluated against corporate financial policy POL-CORP-FIN-02. While the contract contains all five required clause types, the current mapping to requirement REQ-FIN-01 is inaccurate: only the payment\\u2011terms clause (CLS-0023-PAY) correctly satisfies the requirement, whereas data\\u2011protection, liability, termination, and renewal clauses are incorrectly mapped and marked as 'unaddressed'. High\\u2011severity ambiguities exist in the payment clause and data\\u2011breach notification clause, posing significant financial and operational risk. Overall policy coverage is reported as 100%, but the quality of mapping and clause wording reduces practical compliance. Immediate remediation and human legal review are recommended.\",\n  \"policy_coverage\": {\n    \"coverage_percentage\": 100,\n    \"coverage_note\": \"All required policy elements are present in the contract, however mapping inaccuracies and clause ambiguities diminish effective compliance.\"\n  },\n  \"clause_inventory\": [\n    {\n      \"clause_id\": \"CLS-0023-PAY\",\n      \"clause_type\": \"payment_terms\",\n      \"clause_title\": \"Section 3: Invoicing and Payment Terms\",\n      \"section_reference\": \"Section 3.1\"\n    },\n    {\n      \"clause_id\": \"CLS-0023-DATA\",\n      \"clause_type\": \"data_protection\",\n      \"clause_title\": \"Section 8: Security & Breach Notification\",\n      \"section_reference\": \"Section 8.2\"\n    },\n    {\n      \"clause_id\": \"CLS-0023-LIAB\",\n      \"clause_type\": \"liability_cap\",\n      \"clause_title\": \"Section 10: Limitation of Liability\",\n      \"section_reference\": \"Section 10.1\"\n    },\n    {\n      \"clause_id\": \"CLS-0023-TERM\",\n      \"clause_type\": \"termination\",\n      \"clause_title\": \"Section 12: Term and Termination\",\n      \"section_reference\": \"Section 12.1\"\n    },\n    {\n      \"clause_id\": \"CLS-0023-REN\",\n      \"clause_type\": \"renewal\",\n      \"clause_title\": \"Section 12: Renewal Provisions\",\n      \"section_reference\": \"Section 12.4\"\n    }\n  ],\n  \"compliance_findings\": [\n    {\n      \"finding_id\": \"CF-001\",\n      \"affected_clauses\": [\n        \"CLS-0023-DATA\",\n        \"CLS-0023-LIAB\",\n        \"CLS-0023-TERM\",\n        \"CLS-0023-REN\"\n      ],\n      \"requirement_id\": \"REQ-FIN-01\",\n      \"issue\": \"Multiple non\\u2011payment clauses are incorrectly mapped to the payment\\u2011terms requirement, resulting in 'unaddressed' status and no compliance language.\",\n      \"severity\": \"low\",\n      \"supporting_evidence\": \"Mapping entries show mapping_status = 'unaddressed' for each clause against REQ-FIN-01.\",\n      \"recommended_remediation\": \"Remove erroneous mappings. Map CLS-0023-PAY exclusively to REQ-FIN-01. Create or reference appropriate requirement IDs for data protection, liability, termination, and renewal clauses.\"\n    }\n  ],\n  \"risk_findings\": [\n    {\n      \"finding_id\": \"RF-001\",\n      \"clause_id\": \"CLS-0023-PAY\",\n      \"risk_category\": \"vague_wording\",\n      \"ambiguity_description\": \"The phrase \\\"undisputed invoice amounts\\\" is not defined, leaving uncertainty about what constitutes a dispute and how disputes are to be resolved before payment is required.\",\n      \"severity\": \"high\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"finding_id\": \"RF-002\",\n      \"clause_id\": \"CLS-0023-PAY\",\n      \"risk_category\": \"one_sided_covenant\",\n      \"ambiguity_description\": \"Payment terms impose a strict 30\\u2011day deadline on the Customer with no provision for interest, penalties, or remedies for late payment, creating a commercial advantage for the Vendor.\",\n      \"severity\": \"high\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"finding_id\": \"RF-003\",\n      \"clause_id\": \"CLS-0023-DATA\",\n      \"risk_category\": \"vague_wording\",\n      \"ambiguity_description\": \"\\\"Becoming aware\\\" of a breach and the term \\\"confirmed Data Breach\\\" are not defined, making it unclear when the Vendor's notification obligation is triggered.\",\n      \"severity\": \"high\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"finding_id\": \"RF-004\",\n      \"clause_id\": \"CLS-0023-DATA\",\n      \"risk_category\": \"latent_operational_risk\",\n      \"ambiguity_description\": \"The clause does not specify the acceptable method (e.g., email, certified mail, secure portal) for the written notification, potentially causing delays or disputes over whether proper notice was given.\",\n      \"severity\": \"medium\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"finding_id\": \"RF-005\",\n      \"clause_id\": \"CLS-0023-LIAB\",\n      \"risk_category\": \"one_sided_covenant\",\n      \"ambiguity_description\": \"Limiting aggregate liability to the total fees paid in the preceding 12 months may be insufficient to cover consequential or indirect damages, exposing the Customer to uncovered risk.\",\n      \"severity\": \"medium\",\n      \"human_interpretation_needed\": true\n    },\n    {\n      \"finding_id\": \"RF-006\",\n      \"clause_id\": \"CLS-0023-REN\",\n      \"risk_category\": \"vague_wording\",\n      \"ambiguity_description\": \"The phrase \\\"annual basis\\\" is not defined; it is unclear whether renewal periods are calendar years, 12\\u2011month intervals from the effective date, or tied to the original term end date.\",\n      \"severity\": \"low\",\n      \"human_interpretation_needed\": true\n    }\n  ],\n  \"cross_clause_inconsistencies\": [\n    {\n      \"inconsistency_id\": \"CI-001\",\n      \"description\": \"Termination (CLS-0023-TERM) and Renewal (CLS-0023-REN) provisions are both located in Section 12, potentially causing interpretive overlap between termination for convenience and automatic renewal triggers.\",\n      \"severity\": \"medium\"\n    },\n    {\n      \"inconsistency_id\": \"CI-002\",\n      \"description\": \"Mapping misalignment: non\\u2011payment clauses are linked to the payment\\u2011terms requirement, leading to false 'unaddressed' status.\",\n      \"severity\": \"low\"\n    }\n  ],\n  \"evidence_validation\": {\n    \"sources\": [\n      \"Intake metadata (document_id, contract_id, effective/expiration dates)\",\n      \"Clause texts provided in the intake\",\n      \"Mapping table entries (mapping_status values)\",\n      \"Review Findings section (calibrated_deviations, calibrated_risks, review_notes)\"\n    ],\n    \"validation_status\": \"All evidence referenced is internally consistent; no external citation conflicts detected.\"\n  },\n  \"unresolved_questions\": [\n    \"What definition, if any, should be applied to \\\"undisputed invoice amounts\\\" and the dispute resolution process?\",\n    \"Should interest or penalty provisions be added for late payments to balance the covenant?\",\n    \"How should \\\"becoming aware\\\" and \\\"confirmed Data Breach\\\" be operationally defined?\",\n    \"What specific notification channel(s) are acceptable for breach notice?\",\n    \"Is the liability cap acceptable to the Customer, or should an exception for consequential damages be introduced?\",\n    \"What exact renewal interval does \\\"annual basis\\\" refer to?\"\n  ],\n  \"recommended_actions\": [\n    \"Correct mapping entries: assign each clause to its appropriate requirement category; retain CLS-0023-PAY as the sole mapping to REQ-FIN-01.\",\n    \"Amend CLS-0023-PAY to define \\\"undisputed invoice amounts\\\" and incorporate interest/penalty language for late payments.\",\n    \"Clarify data\\u2011breach notification triggers and prescribe acceptable written notice methods (e.g., email with read receipt, certified mail).\",\n    \"Consider revising CLS-0023-LIAB to include a carve\\u2011out for consequential or indirect damages, or to raise the liability cap.\",\n    \"Define \\\"annual basis\\\" in the renewal clause (e.g., 12\\u2011month periods from effective date).\",\n    \"Separate termination and renewal provisions into distinct sections to avoid interpretive overlap.\",\n    \"Schedule a legal\\u2011subject matter expert review to resolve the high\\u2011severity ambiguities identified.\"\n  ],\n  \"human_review_required\": true,\n  \"validation_warnings\": [],\n  \"legal_disclaimer\": \"This compliance report is generated based on the information supplied in the intake package and automated analysis of clause text and mapping data. It does not constitute legal advice. Final determination of compliance, risk exposure, and contractual obligations should be performed by qualified legal counsel. The author and the organization assume no liability for any decisions made solely on the basis of this report.\"\n}",
+  "timestamp": "2026-10-31T12:18:32.287050+00:00"
+}

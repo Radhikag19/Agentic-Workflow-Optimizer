@@ -1,0 +1,299 @@
+{
+  "run_id": "live_20261023_070056_invoic",
+  "workflow_name": "invoice_processing",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 39.74,
+  "agent_execution_count": 8,
+  "agent_executions": [
+    {
+      "order": 1,
+      "agent_id": "invoice_extraction_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_...BPdW)",
+      "duration_seconds": 2.515,
+      "status": "SUCCESS",
+      "tokens": 1149,
+      "prompt_tokens": 589,
+      "completion_tokens": 560,
+      "output": {
+        "extracted_invoice": {
+          "invoice_number": "INV-2026-0001",
+          "supplier_id": "SUP-101",
+          "supplier_name": "Apex Cloud Systems",
+          "po_reference": "PO-2026-0001",
+          "invoice_date": "2026-08-12",
+          "due_date": "2026-09-11",
+          "currency": "USD",
+          "line_items": [
+            {
+              "description": "High-Performance Server Blade",
+              "quantity": 9,
+              "unit_price": 3500.0,
+              "line_total": 31500.0
+            },
+            {
+              "description": "Cloud Infrastructure Tier A",
+              "quantity": 9,
+              "unit_price": 1200.0,
+              "line_total": 10800.0
+            },
+            {
+              "description": "Industrial Lathe Component",
+              "quantity": 6,
+              "unit_price": 4200.0,
+              "line_total": 25200.0
+            }
+          ],
+          "subtotal": 67500.0,
+          "tax": 5400.0,
+          "discount": 0.0,
+          "total_amount": 72900.0
+        },
+        "extraction_flags": []
+      },
+      "notes": ""
+    },
+    {
+      "order": 2,
+      "agent_id": "invoice_validation_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_...BPdW)",
+      "duration_seconds": 1.314,
+      "status": "SUCCESS",
+      "tokens": 974,
+      "prompt_tokens": 646,
+      "completion_tokens": 328,
+      "output": {
+        "validation_status": "PASSED",
+        "math_audit": {
+          "is_arithmetic_valid": true,
+          "calculated_subtotal": 67500.0,
+          "calculated_total": 72900.0,
+          "stated_total": 72900.0,
+          "discrepancy_amount": 0.0,
+          "line_discrepancies": []
+        },
+        "validation_errors": []
+      },
+      "notes": ""
+    },
+    {
+      "order": 3,
+      "agent_id": "po_matching_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_...BPdW)",
+      "duration_seconds": 1.054,
+      "status": "SUCCESS",
+      "tokens": 1017,
+      "prompt_tokens": 870,
+      "completion_tokens": 147,
+      "output": {
+        "po_match_status": "EXACT_MATCH",
+        "matched_po_id": "PO-2026-0001",
+        "discrepancies": [],
+        "matching_confidence": 1.0
+      },
+      "notes": ""
+    },
+    {
+      "order": 4,
+      "agent_id": "policy_compliance_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_...BPdW)",
+      "duration_seconds": 1.971,
+      "status": "SUCCESS",
+      "tokens": 1368,
+      "prompt_tokens": 688,
+      "completion_tokens": 680,
+      "output": {
+        "is_compliant": false,
+        "applied_policy_ids": [
+          "POL-AP-001",
+          "POL-AP-002",
+          "POL-AP-003"
+        ],
+        "violations": [
+          {
+            "policy_id": "POL-AP-003",
+            "rule": "Invoices totaling over $25,000 require executive financial review.",
+            "severity": "medium",
+            "detail": "Total amount $72900.00 exceeds high-value threshold ($25,000).",
+            "classification": "secondary_signoff_required"
+          }
+        ],
+        "compliance_summary": "The invoice total of $72,900 exceeds the $25,000 high\u2011value threshold defined in POL\u2011AP\u2011003. This triggers a mandatory executive financial review before payment. As the required secondary sign\u2011off has not been obtained, the invoice is currently non\u2011compliant. No fatal policy violations are present; compliance can be achieved after the required executive approval."
+      },
+      "notes": ""
+    },
+    {
+      "order": 5,
+      "agent_id": "duplicate_detection_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_...BPdW)",
+      "duration_seconds": 0.972,
+      "status": "SUCCESS",
+      "tokens": 749,
+      "prompt_tokens": 600,
+      "completion_tokens": 149,
+      "output": {
+        "duplicate_status": "NONE",
+        "matching_records": [],
+        "risk_assessment": "No duplicate or potential duplicate found in historical data. Invoice appears original. Low fraud risk."
+      },
+      "notes": ""
+    },
+    {
+      "order": 6,
+      "agent_id": "exception_analysis_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_...BPdW)",
+      "duration_seconds": 2.415,
+      "status": "SUCCESS",
+      "tokens": 2094,
+      "prompt_tokens": 1663,
+      "completion_tokens": 431,
+      "output": {
+        "has_exceptions": true,
+        "exception_count": 1,
+        "critical_exceptions": [],
+        "detailed_exceptions": [
+          {
+            "exception_type": "policy_violation",
+            "policy_id": "POL-AP-003",
+            "rule": "Invoices totaling over $25,000 require executive financial review.",
+            "severity": "MEDIUM",
+            "detail": "Invoice total $72,900 exceeds the high\u2011value threshold of $25,000, triggering a mandatory executive financial review that has not been obtained.",
+            "resolvable_via_human_review": true,
+            "is_fatal_blocker": false,
+            "recommended_action": "Obtain executive financial sign\u2011off before proceeding with payment."
+          }
+        ]
+      },
+      "notes": ""
+    },
+    {
+      "order": 7,
+      "agent_id": "approval_recommendation_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_...BPdW)",
+      "duration_seconds": 7.432,
+      "status": "SUCCESS",
+      "tokens": 2552,
+      "prompt_tokens": 1894,
+      "completion_tokens": 658,
+      "output": {
+        "recommendation": "needs_review",
+        "justification": "The invoice passes all technical validations: arithmetic is correct (subtotal $67,500, tax $5,400, total $72,900), 3\u2011way PO matching is an EXACT_MATCH to PO\u20112026\u20110001, and duplicate detection found no prior or potential duplicates. However, policy compliance flagged a violation of POL\u2011AP\u2011003: invoices exceeding $25,000 require an executive financial review, which has not been obtained. This medium\u2011severity, non\u2011fatal violation makes the invoice non\u2011compliant until the required secondary sign\u2011off is secured.",
+        "conditions": {
+          "validation": "PASSED",
+          "po_match": "EXACT_MATCH (PO\u20112026\u20110001)",
+          "duplicate_status": "NONE",
+          "policy_violations": [
+            {
+              "policy_id": "POL-AP-003",
+              "rule": "Invoices totaling over $25,000 require executive financial review.",
+              "severity": "medium",
+              "required_action": "Obtain executive financial sign\u2011off before payment"
+            }
+          ]
+        }
+      },
+      "notes": ""
+    },
+    {
+      "order": 8,
+      "agent_id": "final_review_agent_invoice",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_...BPdW)",
+      "duration_seconds": 22.067,
+      "status": "SUCCESS",
+      "tokens": 3555,
+      "prompt_tokens": 2153,
+      "completion_tokens": 1402,
+      "output": {
+        "workflow_status": "COMPLETED",
+        "invoice_id": "INV-2026-0001",
+        "final_recommendation": "needs_review",
+        "risk_level": "Medium",
+        "summary_report": "The invoice INV-2026-0001 was successfully extracted and passes all technical validations: arithmetic is correct (subtotal $67,500, tax $5,400, total $72,900), 3\u2011way PO matching is an EXACT_MATCH to PO\u20112026\u20110001, and duplicate detection found no prior or potential duplicates. Policy compliance flagged a medium\u2011severity violation of POL\u2011AP\u2011003 because the total exceeds the $25,000 high\u2011value threshold and an executive financial review has not been obtained. No critical exceptions are present. The invoice is therefore non\u2011compliant until the required executive sign\u2011off is secured, and the system recommends a review to obtain that approval before payment.",
+        "audit_findings": {
+          "extraction": {
+            "status": "SUCCESS",
+            "details": "Invoice data extracted with fields: invoice_number, supplier_id, supplier_name, po_reference, invoice_date, due_date, currency, line_items, subtotal, tax, discount, total_amount."
+          },
+          "validation": {
+            "status": "PASSED",
+            "calculated_subtotal": 67500.0,
+            "calculated_tax": 5400.0,
+            "calculated_total": 72900.0,
+            "stated_total": 72900.0,
+            "discrepancy_amount": 0.0,
+            "line_discrepancies": []
+          },
+          "po_matching": {
+            "status": "EXACT_MATCH",
+            "matched_po_id": "PO-2026-0001",
+            "matched_po_data_summary": "Supplier ID SUP-101, three line items matching quantity, unit price, and line totals; subtotal $67,500, tax $5,400, total $72,900; PO status approved; PO is synthetic."
+          },
+          "policy_compliance": {
+            "is_compliant": false,
+            "applied_policy_ids": [
+              "POL-AP-001",
+              "POL-AP-002",
+              "POL-AP-003"
+            ],
+            "violations": [
+              {
+                "policy_id": "POL-AP-003",
+                "rule": "Invoices totaling over $25,000 require executive financial review.",
+                "severity": "medium",
+                "detail": "Total amount $72,900.00 exceeds high\u2011value threshold ($25,000)."
+              }
+            ],
+            "compliance_summary": "Invoice exceeds high\u2011value threshold and lacks required executive sign\u2011off; therefore non\u2011compliant pending secondary approval."
+          },
+          "duplicate_detection": {
+            "is_duplicate": false,
+            "is_potential_duplicate": false,
+            "risk_assessment": "Low fraud risk \u2013 no duplicate or potential duplicate found in historical data."
+          },
+          "exception_analysis": {
+            "has_exceptions": true,
+            "exception_count": 1,
+            "critical_exceptions": 0,
+            "detailed_exceptions": [
+              {
+                "exception_type": "policy_violation",
+                "policy_id": "POL-AP-003",
+                "rule": "Invoices totaling over $25,000 require executive financial review.",
+                "severity": "MEDIUM",
+                "detail": "Invoice total $72,900 exceeds the high\u2011value threshold of $25,000, triggering a mandatory executive financial review that has not been obtained.",
+                "resolvable_via_human_review": true,
+                "is_fatal_blocker": false,
+                "recommended_action": "Obtain executive financial sign\u2011off before proceeding with payment."
+              }
+            ]
+          },
+          "approval_recommendation": {
+            "recommendation": "needs_review",
+            "justification": "The invoice passes all technical validations (arithmetic, PO match, duplicate check) but violates POL\u2011AP\u2011003 requiring executive financial review for totals over $25,000. The violation is medium severity and non\u2011fatal, so the invoice is non\u2011compliant until the required secondary sign\u2011off is secured.",
+            "conditions": {
+              "validation": "PASSED",
+              "po_match": "EXACT_MATCH (PO\u20112026\u20110001)",
+              "duplicate_status": "NONE",
+              "policy_violations": [
+                {
+                  "policy_id": "POL-AP-003",
+                  "rule": "Invoices totaling over $25,000 require executive financial review.",
+                  "severity": "medium",
+                  "required_action": "Obtain executive financial sign\u2011off before payment"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "notes": ""
+    }
+  ],
+  "total_tokens": 13458,
+  "prompt_tokens": 9103,
+  "completion_tokens": 4355,
+  "estimated_cost_usd": 0.003978,
+  "error_message": null,
+  "final_output": "{\n  \"workflow_status\": \"COMPLETED\",\n  \"invoice_id\": \"INV-2026-0001\",\n  \"final_recommendation\": \"needs_review\",\n  \"risk_level\": \"Medium\",\n  \"summary_report\": \"The invoice INV-2026-0001 was successfully extracted and passes all technical validations: arithmetic is correct (subtotal $67,500, tax $5,400, total $72,900), 3\u2011way PO matching is an EXACT_MATCH to PO\u20112026\u20110001, and duplicate detection found no prior or potential duplicates. Policy compliance flagged a medium\u2011severity violation of POL\u2011AP\u2011003 because the total exceeds the $25,000 high\u2011value threshold and an executive financial review has not been obtained. No critical exceptions are present. The invoice is therefore non\u2011compliant until the required executive sign\u2011off is secured, and the system recommends a review to obtain that approval before payment.\",\n  \"audit_findings\": {\n    \"extraction\": {\n      \"status\": \"SUCCESS\",\n      \"details\": \"Invoice data extracted with fields: invoice_number, supplier_id, supplier_name, po_reference, invoice_date, due_date, currency, line_items, subtotal, tax, discount, total_amount.\"\n    },\n    \"validation\": {\n      \"status\": \"PASSED\",\n      \"calculated_subtotal\": 67500.0,\n      \"calculated_tax\": 5400.0,\n      \"calculated_total\": 72900.0,\n      \"stated_total\": 72900.0,\n      \"discrepancy_amount\": 0.0,\n      \"line_discrepancies\": []\n    },\n    \"po_matching\": {\n      \"status\": \"EXACT_MATCH\",\n      \"matched_po_id\": \"PO-2026-0001\",\n      \"matched_po_data_summary\": \"Supplier ID SUP-101, three line items matching quantity, unit price, and line totals; subtotal $67,500, tax $5,400, total $72,900; PO status approved; PO is synthetic.\"\n    },\n    \"policy_compliance\": {\n      \"is_compliant\": false,\n      \"applied_policy_ids\": [\n        \"POL-AP-001\",\n        \"POL-AP-002\",\n        \"POL-AP-003\"\n      ],\n      \"violations\": [\n        {\n          \"policy_id\": \"POL-AP-003\",\n          \"rule\": \"Invoices totaling over $25,000 require executive financial review.\",\n          \"severity\": \"medium\",\n          \"detail\": \"Total amount $72,900.00 exceeds high\u2011value threshold ($25,000).\"\n        }\n      ],\n      \"compliance_summary\": \"Invoice exceeds high\u2011value threshold and lacks required executive sign\u2011off; therefore non\u2011compliant pending secondary approval.\"\n    },\n    \"duplicate_detection\": {\n      \"is_duplicate\": false,\n      \"is_potential_duplicate\": false,\n      \"risk_assessment\": \"Low fraud risk \u2013 no duplicate or potential duplicate found in historical data.\"\n    },\n    \"exception_analysis\": {\n      \"has_exceptions\": true,\n      \"exception_count\": 1,\n      \"critical_exceptions\": 0,\n      \"detailed_exceptions\": [\n        {\n          \"exception_type\": \"policy_violation\",\n          \"policy_id\": \"POL-AP-003\",\n          \"rule\": \"Invoices totaling over $25,000 require executive financial review.\",\n          \"severity\": \"MEDIUM\",\n          \"detail\": \"Invoice total $72,900 exceeds the high\u2011value threshold of $25,000, triggering a mandatory executive financial review that has not been obtained.\",\n          \"resolvable_via_human_review\": true,\n          \"is_fatal_blocker\": false,\n          \"recommended_action\": \"Obtain executive financial sign\u2011off before proceeding with payment.\"\n        }\n      ]\n    },\n    \"approval_recommendation\": {\n      \"recommendation\": \"needs_review\",\n      \"justification\": \"The invoice passes all technical validations (arithmetic, PO match, duplicate check) but violates POL\u2011AP\u2011003 requiring executive financial review for totals over $25,000. The violation is medium severity and non\u2011fatal, so the invoice is non\u2011compliant until the required secondary sign\u2011off is secured.\",\n      \"conditions\": {\n        \"validation\": \"PASSED\",\n        \"po_match\": \"EXACT_MATCH (PO\u20112026\u20110001)\",\n        \"duplicate_status\": \"NONE\",\n        \"policy_violations\": [\n          {\n            \"policy_id\": \"POL-AP-003\",\n            \"rule\": \"Invoices totaling over $25,000 require executive financial review.\",\n            \"severity\": \"medium\",\n            \"required_action\": \"Obtain executive financial sign\u2011off before payment\"\n          }\n        ]\n      }\n    }\n  }\n}",
+  "timestamp": "2026-10-23T07:01:45.590414+00:00"
+}

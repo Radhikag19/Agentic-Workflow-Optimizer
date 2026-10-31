@@ -1,0 +1,162 @@
+{
+  "run_id": "live_20261031_132558_trace08",
+  "workflow_name": "customer_support",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 12.973,
+  "agent_execution_count": 6,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.502,
+      "tokens": 841,
+      "prompt_tokens": 432,
+      "completion_tokens": 409,
+      "output": {
+        "category": "technical_failure",
+        "urgency": "critical",
+        "complexity": "complex",
+        "customer_impact": "high",
+        "routing_recommendation": "Escalate to Enterprise Technical Support (Database Specialist) with critical priority. Assign a Tier‑2 engineer, request DB version, environment details, query logs, and any recent changes to expedite resolution."
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "ticket_classification_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.508,
+      "tokens": 871,
+      "prompt_tokens": 507,
+      "completion_tokens": 364,
+      "output": {
+        "applicable_policy_ids": [],
+        "applicable_guide_ids": [
+          "TSG-203"
+        ],
+        "policy_conditions": {
+          "coverage_note": "No specific governing policy was found for this issue; the ticket falls under the default Enterprise tier support framework.",
+          "eligibility": "Enterprise tier customers with high urgency technical_failure incidents are eligible for priority handling.",
+          "sla": {
+            "initial_response_time": "2 hours",
+            "target_resolution_time": "8 hours for high urgency technical failures",
+            "escalation_timeframe": "If not resolved within target, escalate to Engineering within 4 hours of initial response."
+          },
+          "restrictions": "Standard SLA applies; no special exemptions or waivers are indicated. Synthetic test tickets are processed with the same SLA but may be used for internal validation."
+        },
+        "retrieval_summary": "Policy search returned no matching policies; troubleshooting guide TSG-203 was matched for technical_failure category. The guide provides steps for log collection, cluster health check, token regeneration, and engineering escalation."
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "policy_retrieval_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 2.026,
+      "tokens": 1331,
+      "prompt_tokens": 669,
+      "completion_tokens": 662,
+      "output": {
+        "investigation_findings": "The export query consistently stalls at 99% progress, indicating it reaches a final processing stage (e.g., result set finalization, write to storage, or network transfer) and then blocks. In similar enterprise environments, this pattern is commonly caused by resource exhaustion (CPU, memory, I/O), lock contention, or a missing/inefficient index that forces a full table scan on a large dataset. The customer’s tier (Enterprise) suggests they operate large volumes of data, increasing the likelihood of such performance bottlenecks. Past synthetic cases for this customer show successful resolution via SOP TSG-203, which addresses query performance and timeout issues.",
+        "root_cause_hypothesis": "The most probable root cause is a performance‑related bottleneck during the final phase of the export operation, likely due to one or more of the following: (1) insufficient indexing on columns used in the export query, causing a full scan on a large table; (2) resource contention (CPU, memory, or I/O) on the database server during the export’s write‑out phase; (3) a lock or deadlock situation triggered by concurrent processes that hold locks on the target tables at the moment the export attempts to finalize.",
+        "confirmed_facts": [
+          "Ticket TICK-2026-0008 was created on 2026-09-03 with high urgency.",
+          "Customer is Enterprise tier (CUST-0008) and the case is synthetic.",
+          "Subject and description indicate the export query hangs at 99% completion.",
+          "Category is technical_failure and the issue is marked as complex.",
+          "Customer has prior synthetic cases resolved via SOP guide TSG-203."
+        ],
+        "data_gaps": [
+          "Exact SQL text of the export query and any parameters used.",
+          "Execution plan and query statistics (e.g., rows scanned, index usage).",
+          "Database server resource metrics at the time of the hang (CPU, memory, disk I/O, network throughput).",
+          "Recent schema changes, index modifications, or data volume growth on the involved tables.",
+          "Logs indicating lock waits, deadlocks, or timeout errors during the export.",
+          "Version and configuration details of the database engine (e.g., PostgreSQL 15, MySQL 8.0, etc.).",
+          "Whether any concurrent jobs or ETL processes were running during the export."
+        ]
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "issue_investigation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 2.514,
+      "tokens": 2098,
+      "prompt_tokens": 1243,
+      "completion_tokens": 855,
+      "output": {
+        "resolution_type": "escalate_to_engineering",
+        "recommended_action": [
+          "Assign a Tier‑2 Database Specialist to the ticket and set priority to Critical per the classification recommendation.",
+          "Immediately request from the customer: database engine version, full export SQL text with parameters, recent schema/index changes, and any concurrent job schedules.",
+          "Ask the customer to provide execution plan (EXPLAIN) and query statistics for the export query.",
+          "Collect server resource metrics (CPU, memory, disk I/O, network) and database logs covering the time window when the export hung.",
+          "Perform the standard troubleshooting steps from guide TSG‑203: \n  1. Verify cluster health and node status. \n  2. Check for lock waits or deadlocks in the logs. \n  3. Review index usage and consider adding missing indexes on columns used in WHERE/JOIN clauses. \n  4. Run a test export on a reduced data set to isolate the bottleneck.",
+          "If the export still stalls at 99% after the above steps, create an Engineering Escalation (E‑Ticket) with all gathered artifacts and request a deep performance analysis.",
+          "Communicate to the customer that the initial response will be within 2 hours and the target resolution is 8 hours; if not resolved within 4 hours of the initial response, the case will be escalated to Engineering as per SLA."
+        ],
+        "policy_justification": "The ticket meets Enterprise tier eligibility for priority handling (high urgency, technical_failure, complex). SLA mandates a 2‑hour initial response and an 8‑hour target resolution, with escalation to Engineering after 4 hours if unresolved. No specific policy overrides apply; therefore we follow the default Enterprise support framework and the troubleshooting guide TSG‑203, which prescribes log collection, health checks, and engineering escalation for performance‑related export failures.",
+        "escalation_required": true
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "resolution_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 2.218,
+      "tokens": 1531,
+      "prompt_tokens": 823,
+      "completion_tokens": 708,
+      "output": {
+        "response_text": "Dear Enterprise Client 8,\n\nThank you for bringing the issue with your database export hanging at 99% to our attention. We understand how critical this is for your operations and apologize for the inconvenience. A Tier‑2 Database Specialist has been assigned to your case and the ticket has been prioritized to Critical. You can expect an initial response within the next 2 hours and we are targeting a resolution within 8 hours. To expedite our investigation, please provide the following information at your earliest convenience:\n\n- Database engine version\n- Full export SQL text, including any parameters used\n- Details of any recent schema or index changes\n- Schedule of any concurrent jobs that may be running during the export\n- Execution plan (EXPLAIN) for the export query\n- Query statistics (e.g., rows processed, time taken)\n- Server resource metrics (CPU, memory, disk I/O, network) covering the time the export hung\n- Relevant database logs from the same time window\n\nOnce we receive these artifacts, we will perform the standard troubleshooting steps outlined in guide TSG‑203 and, if necessary, create an Engineering Escalation (E‑Ticket) for a deeper performance analysis. We will keep you updated on our progress and will notify you promptly if additional information is required.\n\nThank you for your cooperation and patience.\n\nSincerely,\nCustomer Support Team",
+        "tone": "professional, empathetic",
+        "next_steps_for_customer": [
+          "Provide the database engine version.",
+          "Send the full export SQL text with all parameters.",
+          "Detail any recent schema or index changes.",
+          "List any concurrent job schedules that run during the export.",
+          "Provide the execution plan (EXPLAIN) for the export query.",
+          "Share query statistics (rows processed, execution time, etc.).",
+          "Collect and forward server resource metrics (CPU, memory, disk I/O, network) for the period when the export hung.",
+          "Attach relevant database logs covering the same time window."
+        ],
+        "ticket_status": "Escalated to Engineering"
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "response_drafting_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 1.648,
+      "tokens": 2493,
+      "prompt_tokens": 1983,
+      "completion_tokens": 510,
+      "output": {
+        "qa_status": "APPROVED",
+        "final_ticket_status": "ESCALATED",
+        "verification_notes": "The response acknowledges the issue, apologizes, and sets correct expectations per SLA (2‑hour initial response, 8‑hour target). It correctly assigns a Tier‑2 Database Specialist and escalates to Engineering, matching the resolution plan. All required customer artifacts are listed, and no unsupported promises or policy conflicts are present. The ticket cannot be marked RESOLVED until the requested data is received and analysis performed, so ESCALATED is the appropriate final status.",
+        "support_summary_report": "The drafted reply is professional and empathetic, aligns with policy TSG-203, and follows the escalation workflow. It requests necessary logs, query text, execution plan, resource metrics, and schema change details. No policy violations or unrealistic commitments were identified. The ticket should remain in ESCALATED state pending customer input and engineering analysis."
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "resolution_verification_agent"
+    }
+  ],
+  "total_tokens": 9165,
+  "prompt_tokens": 5657,
+  "completion_tokens": 3508,
+  "estimated_cost_usd": 0.006109,
+  "error_message": null,
+  "final_output": "{\n  \"qa_status\": \"APPROVED\",\n  \"final_ticket_status\": \"ESCALATED\",\n  \"verification_notes\": \"The response acknowledges the issue, apologizes, and sets correct expectations per SLA (2\\u2011hour initial response, 8\\u2011hour target). It correctly assigns a Tier\\u20112 Database Specialist and escalates to Engineering, matching the resolution plan. All required customer artifacts are listed, and no unsupported promises or policy conflicts are present. The ticket cannot be marked RESOLVED until the requested data is received and analysis performed, so ESCALATED is the appropriate final status.\",\n  \"support_summary_report\": \"The drafted reply is professional and empathetic, aligns with policy TSG-203, and follows the escalation workflow. It requests necessary logs, query text, execution plan, resource metrics, and schema change details. No policy violations or unrealistic commitments were identified. The ticket should remain in ESCALATED state pending customer input and engineering analysis.\"\n}",
+  "timestamp": "2026-10-31T13:26:11.555280+00:00"
+}

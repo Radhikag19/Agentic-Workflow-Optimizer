@@ -1,0 +1,1904 @@
+{
+  "metadata": {
+    "workflow_id": "sales_lead_qualification",
+    "workflow_name": "sales_lead_qualification",
+    "evidence_schema_version": "1.0",
+    "generated_at": "2026-10-31T19:56:52.282130+00:00",
+    "traces_discovered": 30,
+    "traces_processed": 30,
+    "traces_failed": 0,
+    "input_files": {
+      "workflow_json": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\sales_lead_qualification\\workflow.json",
+      "workflow_context_json": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\sales_lead_qualification\\workflow_context.json",
+      "traces_directory": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Ingestion_Traces_final\\Ingestion_Traces\\sales_lead_qualification",
+      "trace_files": [
+        "live_20261031_161037_trace01.json",
+        "live_20261031_161249_trace02.json",
+        "live_20261031_161304_trace03.json",
+        "live_20261031_161316_trace04.json",
+        "live_20261031_161329_trace05.json",
+        "live_20261031_161341_trace06.json",
+        "live_20261031_161356_trace07.json",
+        "live_20261031_161407_trace08.json",
+        "live_20261031_161420_trace09.json",
+        "live_20261031_161442_trace10.json",
+        "live_20261031_161455_trace11.json",
+        "live_20261031_161509_trace12.json",
+        "live_20261031_161520_trace13.json",
+        "live_20261031_161532_trace14.json",
+        "live_20261031_161545_trace15.json",
+        "live_20261031_161558_trace16.json",
+        "live_20261031_161611_trace17.json",
+        "live_20261031_161624_trace18.json",
+        "live_20261031_161640_trace19.json",
+        "live_20261031_161653_trace20.json",
+        "live_20261031_161707_trace21.json",
+        "live_20261031_161723_trace22.json",
+        "live_20261031_161735_trace23.json",
+        "live_20261031_161748_trace24.json",
+        "live_20261031_161801_trace25.json",
+        "live_20261031_161818_trace26.json",
+        "live_20261031_161841_trace27.json",
+        "live_20261031_161854_trace28.json",
+        "live_20261031_161908_trace29.json",
+        "live_20261031_161920_trace30.json"
+      ]
+    },
+    "aggregation_status": "complete"
+  },
+  "workflow_definition": {
+    "description": "Baseline Sales Lead Qualification Multi-Agent Workflow",
+    "version": "1.0.0",
+    "declared_agents": [
+      {
+        "agent_id": "lead_enrichment_agent",
+        "name": null,
+        "role": "Lead Enrichment & Intelligence Specialist",
+        "responsibilities": null,
+        "declared_inputs": [
+          "raw_lead_record",
+          "company_profiles.json"
+        ],
+        "declared_outputs": [
+          "lead_id",
+          "enriched_lead_profile",
+          "missing_attributes"
+        ],
+        "declared_dependencies": [],
+        "assigned_key_env": "GROQ_API_KEY_4"
+      },
+      {
+        "agent_id": "lead_fit_agent",
+        "name": null,
+        "role": "Ideal Customer Profile (ICP) Fit Evaluator",
+        "responsibilities": null,
+        "declared_inputs": [
+          "enriched_lead_profile",
+          "ideal_customer_profiles.json"
+        ],
+        "declared_outputs": [
+          "fit_category",
+          "industry_fit_score",
+          "company_size_fit_score",
+          "fit_rationale"
+        ],
+        "declared_dependencies": [
+          "lead_enrichment_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_4"
+      },
+      {
+        "agent_id": "intent_analysis_agent",
+        "name": null,
+        "role": "Buyer Intent & Behavioral Analyst",
+        "responsibilities": null,
+        "declared_inputs": [
+          "lead_data",
+          "engagement_histories.json"
+        ],
+        "declared_outputs": [
+          "intent_level",
+          "intent_score",
+          "high_value_signals",
+          "behavioral_summary"
+        ],
+        "declared_dependencies": [
+          "lead_enrichment_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_4"
+      },
+      {
+        "agent_id": "lead_scoring_agent",
+        "name": null,
+        "role": "Lead Qualification Scoring Specialist",
+        "responsibilities": null,
+        "declared_inputs": [
+          "lead_data",
+          "fit_evaluation",
+          "intent_evaluation",
+          "qualification_rules.json"
+        ],
+        "declared_outputs": [
+          "total_score",
+          "qualification_tier",
+          "component_scores",
+          "scoring_rationale"
+        ],
+        "declared_dependencies": [
+          "lead_fit_agent",
+          "intent_analysis_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_4"
+      },
+      {
+        "agent_id": "opportunity_assessment_agent",
+        "name": null,
+        "role": "Commercial Opportunity Assessor",
+        "responsibilities": null,
+        "declared_inputs": [
+          "lead_scoring_results",
+          "lead_fit_results",
+          "intent_results"
+        ],
+        "declared_outputs": [
+          "opportunity_viability",
+          "estimated_deal_size",
+          "pipeline_stage",
+          "key_risks"
+        ],
+        "declared_dependencies": [
+          "lead_scoring_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_4"
+      },
+      {
+        "agent_id": "next_action_agent",
+        "name": null,
+        "role": "Sales Engagement Strategy Lead",
+        "responsibilities": null,
+        "declared_inputs": [
+          "opportunity_assessment",
+          "qualification_tier"
+        ],
+        "declared_outputs": [
+          "recommended_action",
+          "target_team",
+          "priority",
+          "action_justification"
+        ],
+        "declared_dependencies": [
+          "opportunity_assessment_agent",
+          "lead_scoring_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_4"
+      },
+      {
+        "agent_id": "final_review_agent_sales",
+        "name": null,
+        "role": "Revenue Operations QA Lead",
+        "responsibilities": null,
+        "declared_inputs": [
+          "complete_lead_audit"
+        ],
+        "declared_outputs": [
+          "workflow_status",
+          "lead_id",
+          "final_qualification_tier",
+          "final_score",
+          "summary_report",
+          "audit_findings"
+        ],
+        "declared_dependencies": [
+          "next_action_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_4"
+      }
+    ],
+    "declared_dependencies": [
+      {
+        "source": "lead_enrichment_agent",
+        "target": "lead_fit_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "lead_enrichment_agent",
+        "target": "intent_analysis_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "lead_fit_agent",
+        "target": "lead_scoring_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "intent_analysis_agent",
+        "target": "lead_scoring_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "lead_scoring_agent",
+        "target": "opportunity_assessment_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "opportunity_assessment_agent",
+        "target": "next_action_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "lead_scoring_agent",
+        "target": "next_action_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "next_action_agent",
+        "target": "final_review_agent_sales",
+        "relationship_type": "declared_dependency"
+      }
+    ],
+    "declared_execution_order": [
+      "lead_enrichment_agent",
+      "lead_fit_agent",
+      "intent_analysis_agent",
+      "lead_scoring_agent",
+      "opportunity_assessment_agent",
+      "next_action_agent",
+      "final_review_agent_sales"
+    ],
+    "declared_model_configuration": {
+      "model": "openai/gpt-oss-120b",
+      "provider": null,
+      "assigned_groq_key_env": "GROQ_API_KEY_4"
+    },
+    "optimizer_annotations": {
+      "optimization_opportunities": [
+        "Dynamic routing: Early-stop and disqualify immediately after lead_fit_agent if the company is in disqualified industries",
+        "Pruning opportunity_assessment_agent when qualification score is under 45 points",
+        "Parallelize lead_fit_agent and intent_analysis_agent immediately after enrichment",
+        "Prompt compression: Pass only structured numeric feature vectors to lead_scoring_agent"
+      ],
+      "hypothesis_disclaimer": "Declared candidate hypothesis from workflow specification, not an empirical or validated optimization opportunity."
+    }
+  },
+  "static_implementation_context": {
+    "source_files": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "agents": [
+      {
+        "agent_id": "final_review_agent_sales",
+        "role": "Revenue Operations QA Lead",
+        "goal": "Verify lead qualification accuracy, scoring consistency, and handoff validity.",
+        "backstory": "An executive operations leader maintaining high pipeline hygiene and conversion accuracy.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Perform the final quality review on this sales lead qualification.\\nComplete Lead Qualification Audit:\\n{json.dumps(complete_lead_audit, indent=2)}\\n\\nTasks:\\n1. Verify that the next action strictly aligns with the qualification score tier.\\n2. Ensure obviously unsuitable leads are not marked as high priority.\\n3. Generate the final structured qualification report.\\nOutput strictly valid JSON with keys: 'workflow_status' ('COMPLETED'), 'lead_id', 'final_qualification_tier', 'final_score', 'summary_report', and 'audit_findings'.\"",
+            "expected_output": "Strictly valid JSON containing workflow_status, lead_id, final_qualification_tier, final_score, summary_report, and audit_findings.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Perform the final quality review on this sales lead qualification.\\nComplete Lead Qualification Audit:\\n{json.dumps(complete_lead_audit, indent=2)}\\n\\nTasks:\\n1. Verify that the next action strictly aligns with the qualification score tier.\\n2. Ensure obviously unsuitable leads are not marked as high priority.\\n3. Generate the final structured qualification report.\\nOutput strictly valid JSON with keys: 'workflow_status' ('COMPLETED'), 'lead_id', 'final_qualification_tier', 'final_score', 'summary_report', and 'audit_findings'.\"",
+          "Backstory: An executive operations leader maintaining high pipeline hygiene and conversion accuracy."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\sales_lead_qualification\\final_review_agent.py",
+        "start_line": 12,
+        "end_line": 21,
+        "evidence_refs": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "agent_id": "intent_analysis_agent",
+        "role": "Buyer Intent & Behavioral Analyst",
+        "goal": "Quantify purchase intent based on interaction history, content consumption, and stated timeline.",
+        "backstory": "A growth marketing analyst interpreting digital engagement signals and buyer readiness.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Analyze buyer intent for this lead.\\nLead Details (Timeline & Stated Budget):\\n{json.dumps(lead_data, indent=2)}\\n\\nRecorded Engagement Events:\\n{json.dumps(events, indent=2)}\\n\\nTasks:\\n1. Classify buyer intent: 'HIGH_INTENT', 'MEDIUM_INTENT', or 'LOW_INTENT'.\\n2. Cite high-value signals (e.g. demo request, pricing page views) vs. weak signals (newsletter signup).\\nReturn strictly valid JSON with keys: 'intent_level', 'intent_score', 'high_value_signals', and 'behavioral_summary'.\"",
+            "expected_output": "Strictly valid JSON containing intent_level, intent_score, high_value_signals, and behavioral_summary.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Analyze buyer intent for this lead.\\nLead Details (Timeline & Stated Budget):\\n{json.dumps(lead_data, indent=2)}\\n\\nRecorded Engagement Events:\\n{json.dumps(events, indent=2)}\\n\\nTasks:\\n1. Classify buyer intent: 'HIGH_INTENT', 'MEDIUM_INTENT', or 'LOW_INTENT'.\\n2. Cite high-value signals (e.g. demo request, pricing page views) vs. weak signals (newsletter signup).\\nReturn strictly valid JSON with keys: 'intent_level', 'intent_score', 'high_value_signals', and 'behavioral_summary'.\"",
+          "Backstory: A growth marketing analyst interpreting digital engagement signals and buyer readiness."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task",
+          "deterministic_intent_lookup"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\sales_lead_qualification\\intent_analysis_agent.py",
+        "start_line": 24,
+        "end_line": 33,
+        "evidence_refs": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "agent_id": "lead_enrichment_agent",
+        "role": "Lead Enrichment & Intelligence Specialist",
+        "goal": "Normalize contact and company fields using verified internal registry records.",
+        "backstory": "A CRM operations specialist normalizing inbound sales records against known company databases.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Enrich this inbound sales lead record.\\nInbound Lead Data:\\n{json.dumps(lead_data, indent=2)}\\n\\nSynthetic Company Profile from Internal Database:\\n{json.dumps(company_info, indent=2)}\\n\\nInstructions:\\n1. Normalize lead contact name, title, company industry, employee count, and annual revenue.\\n2. Retain company_id and lead_id references.\\n3. Note: Do not make external web searches or invent missing attributes.\\nReturn strictly valid JSON with keys: 'lead_id', 'enriched_lead_profile', and 'missing_attributes'.\"",
+            "expected_output": "Strictly valid JSON containing lead_id, enriched_lead_profile, and missing_attributes.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Enrich this inbound sales lead record.\\nInbound Lead Data:\\n{json.dumps(lead_data, indent=2)}\\n\\nSynthetic Company Profile from Internal Database:\\n{json.dumps(company_info, indent=2)}\\n\\nInstructions:\\n1. Normalize lead contact name, title, company industry, employee count, and annual revenue.\\n2. Retain company_id and lead_id references.\\n3. Note: Do not make external web searches or invent missing attributes.\\nReturn strictly valid JSON with keys: 'lead_id', 'enriched_lead_profile', and 'missing_attributes'.\"",
+          "Backstory: A CRM operations specialist normalizing inbound sales records against known company databases."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task",
+          "deterministic_enrichment"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\sales_lead_qualification\\lead_enrichment_agent.py",
+        "start_line": 24,
+        "end_line": 33,
+        "evidence_refs": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "agent_id": "lead_fit_agent",
+        "role": "Ideal Customer Profile (ICP) Fit Evaluator",
+        "goal": "Audit lead firmographics against ICP criteria to identify ideal buyers and flag unsuitable prospects.",
+        "backstory": "A revenue operations specialist assessing inbound lead market segment fit.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Evaluate the ICP fit for this sales lead.\\nLead Profile:\\n{json.dumps(lead_data, indent=2)}\\n\\nCompany Details:\\n{json.dumps(company_data, indent=2)}\\n\\nDeterministic ICP Rule Evaluation from Python:\\n{json.dumps(icp_eval, indent=2)}\\n\\nInstructions:\\n1. Evaluate industry fit, employee size, and decision-maker seniority.\\n2. Categorize fit: 'STRONG_FIT', 'MODERATE_FIT', or 'DISQUALIFIED'.\\n3. Highlight specific reasons supporting the fit classification.\\nReturn strictly valid JSON with keys: 'fit_category', 'industry_fit_score', 'company_size_fit_score', and 'fit_rationale'.\"",
+            "expected_output": "Strictly valid JSON containing fit_category, industry_fit_score, company_size_fit_score, and fit_rationale.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Evaluate the ICP fit for this sales lead.\\nLead Profile:\\n{json.dumps(lead_data, indent=2)}\\n\\nCompany Details:\\n{json.dumps(company_data, indent=2)}\\n\\nDeterministic ICP Rule Evaluation from Python:\\n{json.dumps(icp_eval, indent=2)}\\n\\nInstructions:\\n1. Evaluate industry fit, employee size, and decision-maker seniority.\\n2. Categorize fit: 'STRONG_FIT', 'MODERATE_FIT', or 'DISQUALIFIED'.\\n3. Highlight specific reasons supporting the fit classification.\\nReturn strictly valid JSON with keys: 'fit_category', 'industry_fit_score', 'company_size_fit_score', and 'fit_rationale'.\"",
+          "Backstory: A revenue operations specialist assessing inbound lead market segment fit."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task",
+          "deterministic_icp_check"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\sales_lead_qualification\\lead_fit_agent.py",
+        "start_line": 51,
+        "end_line": 60,
+        "evidence_refs": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "agent_id": "lead_scoring_agent",
+        "role": "Lead Qualification Scoring Specialist",
+        "goal": "Apply mathematical scoring models to evaluate and grade inbound prospect readiness.",
+        "backstory": "A RevOps scoring architect quantifying inbound lead potential using rigorous rubrics.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Review and formalize the lead scoring breakdown.\\nDeterministic Scoring Model Results from Python:\\n{json.dumps(scoring_result, indent=2)}\\n\\nInstructions:\\n1. Explain the score calculation and tier classification ('SALES_QUALIFIED_LEAD', 'MARKETING_NURTURE', 'DISQUALIFIED').\\n2. Identify the highest-scoring and lowest-scoring dimensions.\\nReturn strictly valid JSON with keys: 'total_score', 'qualification_tier', 'component_scores', and 'scoring_rationale'.\"",
+            "expected_output": "Strictly valid JSON containing total_score, qualification_tier, component_scores, and scoring_rationale.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Review and formalize the lead scoring breakdown.\\nDeterministic Scoring Model Results from Python:\\n{json.dumps(scoring_result, indent=2)}\\n\\nInstructions:\\n1. Explain the score calculation and tier classification ('SALES_QUALIFIED_LEAD', 'MARKETING_NURTURE', 'DISQUALIFIED').\\n2. Identify the highest-scoring and lowest-scoring dimensions.\\nReturn strictly valid JSON with keys: 'total_score', 'qualification_tier', 'component_scores', and 'scoring_rationale'.\"",
+          "Backstory: A RevOps scoring architect quantifying inbound lead potential using rigorous rubrics."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task",
+          "deterministic_lead_score"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\sales_lead_qualification\\lead_scoring_agent.py",
+        "start_line": 95,
+        "end_line": 104,
+        "evidence_refs": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "agent_id": "next_action_agent",
+        "role": "Sales Engagement Strategy Lead",
+        "goal": "Prescribe the highest-ROI next action without wasting expensive sales rep bandwidth on unfit leads.",
+        "backstory": "An inside sales director orchestrating outbound sequences and qualification handoffs.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Recommend the specific next commercial action for this sales lead.\\nUpstream Evidence:\\n{json.dumps(upstream_evidence, indent=2)}\\n\\nRule-Based Routing Action:\\n{json.dumps(rule_guidance, indent=2)}\\n\\nInstructions:\\n1. Choose action: 'schedule_executive_demo', 'request_missing_info', 'marketing_nurture', or 'disqualify_lead'.\\n2. Explain why this action is optimal given budget, timeline, and fit.\\n3. Note: Never send real emails or update live external CRMs.\\nReturn strictly valid JSON with keys: 'recommended_action', 'target_team', 'priority', and 'action_justification'.\"",
+            "expected_output": "Strictly valid JSON containing recommended_action, target_team, priority, and action_justification.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Recommend the specific next commercial action for this sales lead.\\nUpstream Evidence:\\n{json.dumps(upstream_evidence, indent=2)}\\n\\nRule-Based Routing Action:\\n{json.dumps(rule_guidance, indent=2)}\\n\\nInstructions:\\n1. Choose action: 'schedule_executive_demo', 'request_missing_info', 'marketing_nurture', or 'disqualify_lead'.\\n2. Explain why this action is optimal given budget, timeline, and fit.\\n3. Note: Never send real emails or update live external CRMs.\\nReturn strictly valid JSON with keys: 'recommended_action', 'target_team', 'priority', and 'action_justification'.\"",
+          "Backstory: An inside sales director orchestrating outbound sequences and qualification handoffs."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task",
+          "deterministic_action_rule"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\sales_lead_qualification\\next_action_agent.py",
+        "start_line": 33,
+        "end_line": 42,
+        "evidence_refs": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "agent_id": "opportunity_assessment_agent",
+        "role": "Commercial Opportunity Assessor",
+        "goal": "Synthesize fit, intent, and scoring into a commercial deal viability assessment.",
+        "backstory": "A strategic account director evaluating enterprise deal feasibility and sales viability.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Evaluate the commercial opportunity viability for this lead.\\nConsolidated Lead Evidence:\\n{json.dumps(upstream_evidence, indent=2)}\\n\\nInstructions:\\n1. Evaluate whether this opportunity is high-potential, nurture-track, or fundamentally unviable.\\n2. Note whether any missing information blocks advancing the deal.\\nReturn strictly valid JSON with keys: 'opportunity_viability' ('HIGH', 'MEDIUM', 'UNVIABLE'), 'estimated_deal_size', 'pipeline_stage', and 'key_risks'.\"",
+            "expected_output": "Strictly valid JSON containing opportunity_viability, estimated_deal_size, pipeline_stage, and key_risks.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Evaluate the commercial opportunity viability for this lead.\\nConsolidated Lead Evidence:\\n{json.dumps(upstream_evidence, indent=2)}\\n\\nInstructions:\\n1. Evaluate whether this opportunity is high-potential, nurture-track, or fundamentally unviable.\\n2. Note whether any missing information blocks advancing the deal.\\nReturn strictly valid JSON with keys: 'opportunity_viability' ('HIGH', 'MEDIUM', 'UNVIABLE'), 'estimated_deal_size', 'pipeline_stage', and 'key_risks'.\"",
+          "Backstory: A strategic account director evaluating enterprise deal feasibility and sales viability."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\sales_lead_qualification\\opportunity_assessment_agent.py",
+        "start_line": 12,
+        "end_line": 21,
+        "evidence_refs": [
+          "ev_agent_008"
+        ]
+      }
+    ],
+    "invocation_relationships": [],
+    "data_handoffs": [],
+    "conditional_branches": [],
+    "tools_and_helpers": {
+      "registered_tools": [],
+      "explicit_code_invocations": [],
+      "helper_functions": [
+        "create_task",
+        "deterministic_action_rule",
+        "deterministic_enrichment",
+        "deterministic_icp_check",
+        "deterministic_intent_lookup",
+        "deterministic_lead_score",
+        "run_sales_lead_workflow"
+      ],
+      "runtime_llm_tool_selection": {
+        "observable": false,
+        "reason": "Runtime LLM tool selection is unobservable via static AST analysis"
+      }
+    },
+    "analysis_limitations": {
+      "unresolved_references": [],
+      "dynamic_expressions": [],
+      "unsupported_patterns": [],
+      "static_analysis_limitations": [
+        "Dynamic runtime LLM decisions and tool selection cannot be observed via static AST",
+        "Procedural workflow statement order does not imply internal framework agent scheduling"
+      ]
+    }
+  },
+  "runtime_observations": {
+    "total_runs": 30,
+    "successful_runs": 30,
+    "failed_runs": 0,
+    "observed_models": [
+      "openai/gpt-oss-120b"
+    ],
+    "key_distribution": {
+      "GROQ_API_KEY_11": 30,
+      "GROQ_API_KEY_12": 30,
+      "GROQ_API_KEY_13": 30,
+      "GROQ_API_KEY_14": 30,
+      "GROQ_API_KEY_15": 30,
+      "GROQ_API_KEY_16": 30,
+      "GROQ_API_KEY_3": 30
+    },
+    "workflow_latency": {
+      "mean_seconds": 14.054,
+      "median_seconds": 13.1035,
+      "min_seconds": 11.358,
+      "max_seconds": 22.633,
+      "observation_count": 30
+    },
+    "workflow_tokens": {
+      "total_tokens": 248311,
+      "mean_tokens": 8277.0,
+      "min_tokens": 7282,
+      "max_tokens": 9376,
+      "total_prompt_tokens": 160271,
+      "mean_prompt_tokens": 5342.4,
+      "total_completion_tokens": 88040,
+      "mean_completion_tokens": 2934.7,
+      "observation_count": 30
+    },
+    "workflow_cost": {
+      "total_cost_usd": 0.16411,
+      "mean_cost_usd": 0.00547,
+      "pricing_source": "trace_telemetry_estimates",
+      "observation_count": 30
+    },
+    "agent_metrics": {
+      "lead_enrichment_agent": {
+        "agent_id": "lead_enrichment_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          1
+        ],
+        "latency": {
+          "mean_seconds": 2.5939,
+          "median_seconds": 2.449,
+          "min_seconds": 1.518,
+          "max_seconds": 4.696,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 32572,
+          "mean_tokens": 1085.7,
+          "min_tokens": 736,
+          "max_tokens": 1493,
+          "total_prompt_tokens": 11880,
+          "mean_prompt_tokens": 396.0,
+          "total_completion_tokens": 20692,
+          "mean_completion_tokens": 689.7,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_11"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "lead_id": "LEAD-2026-0001",
+          "enriched_lead_profile": {
+            "contact_name": "Sarah Jenkins",
+            "contact_email": "sjenkins@fintechhorizon.com",
+            "job_title": "VP of Engineering",
+            "stated_budget": 85000.0,
+            "purchase_timeline": "Within 3 months",
+            "test_case_tag": "high_fit_high_intent",
+            "company": {
+              "company_id": "COMP-101",
+              "name": "Fintech Horizon Global",
+              "industry": "Financial Services",
+              "employee_count": 4500,
+              "annual_revenue_usd": 650000000,
+              "region": "North America"
+            }
+          },
+          "missing_attributes": [
+            "contact_name (synthetic/unverified)",
+            "contact_email (synthetic/unverified)",
+            "job_title (synthetic/unverified)",
+            "company.name (synthetic/unverified)",
+            "company.industry (synthetic/unverified)",
+            "company.employee_count (synthetic/unverified)",
+            "company.annual_revenue_usd (synthetic/unverified)",
+            "company.region (synthetic/unverified)"
+          ]
+        },
+        "error_count": 0
+      },
+      "lead_fit_agent": {
+        "agent_id": "lead_fit_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          2
+        ],
+        "latency": {
+          "mean_seconds": 1.5776,
+          "median_seconds": 1.4515,
+          "min_seconds": 1.07,
+          "max_seconds": 3.483,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 24922,
+          "mean_tokens": 830.7,
+          "min_tokens": 757,
+          "max_tokens": 1059,
+          "total_prompt_tokens": 18398,
+          "mean_prompt_tokens": 613.3,
+          "total_completion_tokens": 6524,
+          "mean_completion_tokens": 217.5,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_12"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "fit_category": "STRONG_FIT",
+          "industry_fit_score": 10,
+          "company_size_fit_score": 10,
+          "fit_rationale": "The company operates in 'Financial Services', a target industry, and its employee count (4,500) comfortably falls within the ICP range of 200‑100,000. Additionally, the contact holds a target role (VP of Engineering). All criteria align, resulting in a strong fit."
+        },
+        "error_count": 0
+      },
+      "intent_analysis_agent": {
+        "agent_id": "intent_analysis_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          3
+        ],
+        "latency": {
+          "mean_seconds": 1.7593,
+          "median_seconds": 1.648,
+          "min_seconds": 1.107,
+          "max_seconds": 3.364,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 22465,
+          "mean_tokens": 748.8,
+          "min_tokens": 538,
+          "max_tokens": 1066,
+          "total_prompt_tokens": 12456,
+          "mean_prompt_tokens": 415.2,
+          "total_completion_tokens": 10009,
+          "mean_completion_tokens": 333.6,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_13"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "intent_level": "HIGH_INTENT",
+          "intent_score": 88,
+          "high_value_signals": [
+            {
+              "type": "demo_request",
+              "date": "2026-09-10",
+              "details": "Requested live demo for 50-person engineering org"
+            },
+            {
+              "type": "pricing_page_visit",
+              "date": "2026-09-12",
+              "details": "Viewed Enterprise Tier pricing 4 times"
+            },
+            {
+              "type": "whitepaper_download",
+              "date": "2026-09-08",
+              "details": "Downloaded 'Autonomous AI Agent Architecture'"
+            }
+          ],
+          "behavioral_summary": "Sarah Jenkins, VP of Engineering at FinTech Horizon, has shown strong purchase intent. Over a short period she downloaded a technical whitepaper, requested a live demo tailored to a 50‑person engineering team, and repeatedly visited the Enterprise Tier pricing page (four visits). Combined with a stated budget of $85,000 and a purchase timeline of within three months, these signals indicate a high likelihood of moving forward in the sales cycle."
+        },
+        "error_count": 0
+      },
+      "lead_scoring_agent": {
+        "agent_id": "lead_scoring_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          4
+        ],
+        "latency": {
+          "mean_seconds": 2.4024,
+          "median_seconds": 2.079,
+          "min_seconds": 1.541,
+          "max_seconds": 8.668,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 24790,
+          "mean_tokens": 826.3,
+          "min_tokens": 707,
+          "max_tokens": 953,
+          "total_prompt_tokens": 9252,
+          "mean_prompt_tokens": 308.4,
+          "total_completion_tokens": 15538,
+          "mean_completion_tokens": 517.9,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_14"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "total_score": 100,
+          "qualification_tier": "SALES_QUALIFIED_LEAD",
+          "component_scores": {
+            "industry_fit": 25,
+            "company_size_fit": 25,
+            "role_authority": 20,
+            "intent_signals": 20,
+            "budget_timeline": 10
+          },
+          "scoring_rationale": "The deterministic model assigns fixed point values to five key dimensions that together sum to a maximum of 100 points. Each dimension reflects a strategic pillar of lead readiness: \n- Industry Fit (25 pts) – alignment with target verticals.\n- Company Size Fit (25 pts) – meets the ideal employee/revenue range.\n- Role Authority (20 pts) – decision‑maker or strong influencer.\n- Intent Signals (20 pts) – recent activity indicating purchase intent.\n- Budget & Timeline (10 pts) – disclosed budget and realistic purchase window.\nThe total score is the simple arithmetic sum of the component scores. Tier classification uses score thresholds: \n- >= 80: SALES_QUALIFIED_LEAD (ready for direct sales engagement). \n- 40–79: MARKETING_NURTURE (requires further education and lead nurturing). \n- < 40: DISQUALIFIED (does not meet minimum criteria). \nWith a total of 100, the prospect falls into the SALES_QUALIFIED_LEAD tier. The highest‑scoring dimensions are Industry Fit and Company Size Fit (both 25 points), indicating strong alignment with target market and ideal company size. The lowest‑scoring dimension is Budget & Timeline at 10 points, suggesting limited disclosed budget or a longer purchase horizon relative to other criteria."
+        },
+        "error_count": 0
+      },
+      "opportunity_assessment_agent": {
+        "agent_id": "opportunity_assessment_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          5
+        ],
+        "latency": {
+          "mean_seconds": 1.8954,
+          "median_seconds": 1.59,
+          "min_seconds": 1.225,
+          "max_seconds": 9.426,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 41085,
+          "mean_tokens": 1369.5,
+          "min_tokens": 1150,
+          "max_tokens": 1698,
+          "total_prompt_tokens": 31946,
+          "mean_prompt_tokens": 1064.9,
+          "total_completion_tokens": 9139,
+          "mean_completion_tokens": 304.6,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_15"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "opportunity_viability": "HIGH",
+          "estimated_deal_size": 85000,
+          "pipeline_stage": "Proposal/Price Quote",
+          "key_risks": [
+            "Budget may be insufficient for full enterprise tier licensing; may require negotiation or scope reduction.",
+            "Contact information flagged as synthetic/unverified, raising risk of misidentification or gatekeeper involvement.",
+            "Potential competition from established fintech platform providers offering similar AI agent solutions.",
+            "Internal procurement and legal review timelines could extend beyond the stated 3‑month window."
+          ]
+        },
+        "error_count": 0
+      },
+      "next_action_agent": {
+        "agent_id": "next_action_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          6
+        ],
+        "latency": {
+          "mean_seconds": 1.6541,
+          "median_seconds": 1.483,
+          "min_seconds": 1.217,
+          "max_seconds": 3.318,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 44535,
+          "mean_tokens": 1484.5,
+          "min_tokens": 1257,
+          "max_tokens": 1795,
+          "total_prompt_tokens": 36165,
+          "mean_prompt_tokens": 1205.5,
+          "total_completion_tokens": 8370,
+          "mean_completion_tokens": 279.0,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_16"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "recommended_action": "Immediate SDR outreach followed by AE booking within 2 hours",
+          "target_team": "Enterprise Sales Team (SDR + Account Executive)",
+          "priority": "High",
+          "action_justification": "The lead is a SALES_QUALIFIED_LEAD with a perfect total score of 100, indicating STRONG_FIT and HIGH_INTENT. The prospect is a VP of Engineering at a $650M revenue, 4,500‑employee fintech firm—core ICP. Signals include a demo request for a 50‑person engineering org, multiple Enterprise Tier pricing page visits, and a whitepaper download, all within the last week, confirming purchase intent. Stated budget ($85,000) aligns with the estimated deal size and the purchase timeline is within 3 months, making the opportunity ready for proposal. Immediate engagement maximizes conversion probability while addressing risks (synthetic contact data, budget constraints, competition) through rapid qualification and tailored solution scoping."
+        },
+        "error_count": 0
+      },
+      "final_review_agent_sales": {
+        "agent_id": "final_review_agent_sales",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          7
+        ],
+        "latency": {
+          "mean_seconds": 2.1638,
+          "median_seconds": 2.142,
+          "min_seconds": 1.656,
+          "max_seconds": 2.826,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 57942,
+          "mean_tokens": 1931.4,
+          "min_tokens": 1594,
+          "max_tokens": 2209,
+          "total_prompt_tokens": 40174,
+          "mean_prompt_tokens": 1339.1,
+          "total_completion_tokens": 17768,
+          "mean_completion_tokens": 592.3,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_3"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "workflow_status": "COMPLETED",
+          "lead_id": "LEAD-2026-0001",
+          "final_qualification_tier": "SALES_QUALIFIED_LEAD",
+          "final_score": 100,
+          "summary_report": "The lead meets all ICP criteria (Financial Services industry, 4,500 employees, VP of Engineering role) and scores the maximum 100 points across the defined rubric (industry fit 25, company size fit 25, role authority 20, intent signals 20, budget/timeline 10). The high intent signals (demo request, pricing page visits, whitepaper download) align with the stated budget of $85,000 and a purchase timeline of within 3 months, justifying placement in the Proposal/Price Quote stage. The recommended action—immediate SDR outreach and AE booking within 2 hours—matches the SALES_QUALIFIED_LEAD tier and the high‑priority flag. No contradictory routing decisions are present; the lead is correctly routed to the Enterprise Sales Team. The only noted risk is the synthetic/unverified contact data, which is already highlighted in the opportunity risks and should be mitigated during the rapid qualification call.",
+          "audit_findings": [
+            {
+              "finding": "ICP fit aligns with scoring rubric components.",
+              "status": "PASS"
+            },
+            {
+              "finding": "Total score (100) correctly maps to SALES_QUALIFIED_LEAD tier per rubric thresholds.",
+              "status": "PASS"
+            },
+            {
+              "finding": "Recommended action (immediate SDR + AE engagement) is consistent with high priority and qualification tier.",
+              "status": "PASS"
+            },
+            {
+              "finding": "No contradictory routing decisions detected; routing to Enterprise Sales Team is appropriate.",
+              "status": "PASS"
+            },
+            {
+              "finding": "Synthetic/unverified contact data flagged as risk; acknowledged in opportunity risks and action justification.",
+              "status": "WARN"
+            }
+          ]
+        },
+        "error_count": 0
+      }
+    },
+    "runs_summary": [
+      {
+        "run_id": "live_20261031_161037_trace01",
+        "status": "SUCCESS",
+        "duration_seconds": 18.257,
+        "total_tokens": 9345,
+        "prompt_tokens": 6043,
+        "completion_tokens": 3302,
+        "estimated_cost_usd": 0.006174,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:10:55.432251+00:00",
+        "trace_file": "live_20261031_161037_trace01.json"
+      },
+      {
+        "run_id": "live_20261031_161249_trace02",
+        "status": "SUCCESS",
+        "duration_seconds": 15.02,
+        "total_tokens": 7788,
+        "prompt_tokens": 5094,
+        "completion_tokens": 2694,
+        "estimated_cost_usd": 0.005134,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:13:04.199335+00:00",
+        "trace_file": "live_20261031_161249_trace02.json"
+      },
+      {
+        "run_id": "live_20261031_161304_trace03",
+        "status": "SUCCESS",
+        "duration_seconds": 12.261,
+        "total_tokens": 8320,
+        "prompt_tokens": 5327,
+        "completion_tokens": 2993,
+        "estimated_cost_usd": 0.005507,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:13:16.490033+00:00",
+        "trace_file": "live_20261031_161304_trace03.json"
+      },
+      {
+        "run_id": "live_20261031_161316_trace04",
+        "status": "SUCCESS",
+        "duration_seconds": 13.184,
+        "total_tokens": 8863,
+        "prompt_tokens": 5639,
+        "completion_tokens": 3224,
+        "estimated_cost_usd": 0.005874,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:13:29.698531+00:00",
+        "trace_file": "live_20261031_161316_trace04.json"
+      },
+      {
+        "run_id": "live_20261031_161329_trace05",
+        "status": "SUCCESS",
+        "duration_seconds": 11.358,
+        "total_tokens": 7393,
+        "prompt_tokens": 4947,
+        "completion_tokens": 2446,
+        "estimated_cost_usd": 0.004851,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:13:41.064009+00:00",
+        "trace_file": "live_20261031_161329_trace05.json"
+      },
+      {
+        "run_id": "live_20261031_161341_trace06",
+        "status": "SUCCESS",
+        "duration_seconds": 15.137,
+        "total_tokens": 8564,
+        "prompt_tokens": 5301,
+        "completion_tokens": 3263,
+        "estimated_cost_usd": 0.005705,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:13:56.207326+00:00",
+        "trace_file": "live_20261031_161341_trace06.json"
+      },
+      {
+        "run_id": "live_20261031_161356_trace07",
+        "status": "SUCCESS",
+        "duration_seconds": 11.706,
+        "total_tokens": 7573,
+        "prompt_tokens": 5187,
+        "completion_tokens": 2386,
+        "estimated_cost_usd": 0.004945,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:14:07.921843+00:00",
+        "trace_file": "live_20261031_161356_trace07.json"
+      },
+      {
+        "run_id": "live_20261031_161407_trace08",
+        "status": "SUCCESS",
+        "duration_seconds": 13.041,
+        "total_tokens": 8556,
+        "prompt_tokens": 5465,
+        "completion_tokens": 3091,
+        "estimated_cost_usd": 0.005666,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:14:20.970958+00:00",
+        "trace_file": "live_20261031_161407_trace08.json"
+      },
+      {
+        "run_id": "live_20261031_161420_trace09",
+        "status": "SUCCESS",
+        "duration_seconds": 21.579,
+        "total_tokens": 8551,
+        "prompt_tokens": 5720,
+        "completion_tokens": 2831,
+        "estimated_cost_usd": 0.005611,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:14:42.555898+00:00",
+        "trace_file": "live_20261031_161420_trace09.json"
+      },
+      {
+        "run_id": "live_20261031_161442_trace10",
+        "status": "SUCCESS",
+        "duration_seconds": 12.644,
+        "total_tokens": 7294,
+        "prompt_tokens": 4782,
+        "completion_tokens": 2512,
+        "estimated_cost_usd": 0.004806,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:14:55.204910+00:00",
+        "trace_file": "live_20261031_161442_trace10.json"
+      },
+      {
+        "run_id": "live_20261031_161455_trace11",
+        "status": "SUCCESS",
+        "duration_seconds": 13.816,
+        "total_tokens": 9376,
+        "prompt_tokens": 5802,
+        "completion_tokens": 3574,
+        "estimated_cost_usd": 0.006247,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:15:09.026160+00:00",
+        "trace_file": "live_20261031_161455_trace11.json"
+      },
+      {
+        "run_id": "live_20261031_161509_trace12",
+        "status": "SUCCESS",
+        "duration_seconds": 11.654,
+        "total_tokens": 7361,
+        "prompt_tokens": 4875,
+        "completion_tokens": 2486,
+        "estimated_cost_usd": 0.00484,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:15:20.690141+00:00",
+        "trace_file": "live_20261031_161509_trace12.json"
+      },
+      {
+        "run_id": "live_20261031_161520_trace13",
+        "status": "SUCCESS",
+        "duration_seconds": 12.096,
+        "total_tokens": 7964,
+        "prompt_tokens": 5211,
+        "completion_tokens": 2753,
+        "estimated_cost_usd": 0.005249,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:15:32.790711+00:00",
+        "trace_file": "live_20261031_161520_trace13.json"
+      },
+      {
+        "run_id": "live_20261031_161532_trace14",
+        "status": "SUCCESS",
+        "duration_seconds": 12.905,
+        "total_tokens": 8425,
+        "prompt_tokens": 5361,
+        "completion_tokens": 3064,
+        "estimated_cost_usd": 0.005584,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:15:45.701115+00:00",
+        "trace_file": "live_20261031_161532_trace14.json"
+      },
+      {
+        "run_id": "live_20261031_161545_trace15",
+        "status": "SUCCESS",
+        "duration_seconds": 12.254,
+        "total_tokens": 7282,
+        "prompt_tokens": 4763,
+        "completion_tokens": 2519,
+        "estimated_cost_usd": 0.0048,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:15:57.996318+00:00",
+        "trace_file": "live_20261031_161545_trace15.json"
+      },
+      {
+        "run_id": "live_20261031_161558_trace16",
+        "status": "SUCCESS",
+        "duration_seconds": 13.291,
+        "total_tokens": 9281,
+        "prompt_tokens": 5927,
+        "completion_tokens": 3354,
+        "estimated_cost_usd": 0.006147,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:16:11.291212+00:00",
+        "trace_file": "live_20261031_161558_trace16.json"
+      },
+      {
+        "run_id": "live_20261031_161611_trace17",
+        "status": "SUCCESS",
+        "duration_seconds": 13.166,
+        "total_tokens": 8692,
+        "prompt_tokens": 5509,
+        "completion_tokens": 3183,
+        "estimated_cost_usd": 0.005765,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:16:24.490697+00:00",
+        "trace_file": "live_20261031_161611_trace17.json"
+      },
+      {
+        "run_id": "live_20261031_161624_trace18",
+        "status": "SUCCESS",
+        "duration_seconds": 15.797,
+        "total_tokens": 8112,
+        "prompt_tokens": 5184,
+        "completion_tokens": 2928,
+        "estimated_cost_usd": 0.005372,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:16:40.305893+00:00",
+        "trace_file": "live_20261031_161624_trace18.json"
+      },
+      {
+        "run_id": "live_20261031_161640_trace19",
+        "status": "SUCCESS",
+        "duration_seconds": 12.962,
+        "total_tokens": 8864,
+        "prompt_tokens": 5662,
+        "completion_tokens": 3202,
+        "estimated_cost_usd": 0.00587,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:16:53.282645+00:00",
+        "trace_file": "live_20261031_161640_trace19.json"
+      },
+      {
+        "run_id": "live_20261031_161653_trace20",
+        "status": "SUCCESS",
+        "duration_seconds": 14.091,
+        "total_tokens": 7778,
+        "prompt_tokens": 5123,
+        "completion_tokens": 2655,
+        "estimated_cost_usd": 0.00512,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:17:07.384140+00:00",
+        "trace_file": "live_20261031_161653_trace20.json"
+      },
+      {
+        "run_id": "live_20261031_161707_trace21",
+        "status": "SUCCESS",
+        "duration_seconds": 15.652,
+        "total_tokens": 8634,
+        "prompt_tokens": 5708,
+        "completion_tokens": 2926,
+        "estimated_cost_usd": 0.005679,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:17:23.046342+00:00",
+        "trace_file": "live_20261031_161707_trace21.json"
+      },
+      {
+        "run_id": "live_20261031_161723_trace22",
+        "status": "SUCCESS",
+        "duration_seconds": 12.466,
+        "total_tokens": 7694,
+        "prompt_tokens": 5000,
+        "completion_tokens": 2694,
+        "estimated_cost_usd": 0.005078,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:17:35.533692+00:00",
+        "trace_file": "live_20261031_161723_trace22.json"
+      },
+      {
+        "run_id": "live_20261031_161735_trace23",
+        "status": "SUCCESS",
+        "duration_seconds": 12.854,
+        "total_tokens": 8296,
+        "prompt_tokens": 5345,
+        "completion_tokens": 2951,
+        "estimated_cost_usd": 0.005485,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:17:48.397156+00:00",
+        "trace_file": "live_20261031_161735_trace23.json"
+      },
+      {
+        "run_id": "live_20261031_161748_trace24",
+        "status": "SUCCESS",
+        "duration_seconds": 12.768,
+        "total_tokens": 8927,
+        "prompt_tokens": 5616,
+        "completion_tokens": 3311,
+        "estimated_cost_usd": 0.005929,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:18:01.172034+00:00",
+        "trace_file": "live_20261031_161748_trace24.json"
+      },
+      {
+        "run_id": "live_20261031_161801_trace25",
+        "status": "SUCCESS",
+        "duration_seconds": 17.196,
+        "total_tokens": 7615,
+        "prompt_tokens": 4836,
+        "completion_tokens": 2779,
+        "estimated_cost_usd": 0.005049,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:18:18.370540+00:00",
+        "trace_file": "live_20261031_161801_trace25.json"
+      },
+      {
+        "run_id": "live_20261031_161818_trace26",
+        "status": "SUCCESS",
+        "duration_seconds": 22.633,
+        "total_tokens": 8885,
+        "prompt_tokens": 5561,
+        "completion_tokens": 3324,
+        "estimated_cost_usd": 0.005907,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:18:41.013644+00:00",
+        "trace_file": "live_20261031_161818_trace26.json"
+      },
+      {
+        "run_id": "live_20261031_161841_trace27",
+        "status": "SUCCESS",
+        "duration_seconds": 13.913,
+        "total_tokens": 8485,
+        "prompt_tokens": 5306,
+        "completion_tokens": 3179,
+        "estimated_cost_usd": 0.005642,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:18:54.930540+00:00",
+        "trace_file": "live_20261031_161841_trace27.json"
+      },
+      {
+        "run_id": "live_20261031_161854_trace28",
+        "status": "SUCCESS",
+        "duration_seconds": 13.308,
+        "total_tokens": 8476,
+        "prompt_tokens": 5512,
+        "completion_tokens": 2964,
+        "estimated_cost_usd": 0.005594,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:19:08.252384+00:00",
+        "trace_file": "live_20261031_161854_trace28.json"
+      },
+      {
+        "run_id": "live_20261031_161908_trace29",
+        "status": "SUCCESS",
+        "duration_seconds": 12.466,
+        "total_tokens": 8428,
+        "prompt_tokens": 5585,
+        "completion_tokens": 2843,
+        "estimated_cost_usd": 0.005541,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:19:20.723225+00:00",
+        "trace_file": "live_20261031_161908_trace29.json"
+      },
+      {
+        "run_id": "live_20261031_161920_trace30",
+        "status": "SUCCESS",
+        "duration_seconds": 12.145,
+        "total_tokens": 7489,
+        "prompt_tokens": 4880,
+        "completion_tokens": 2609,
+        "estimated_cost_usd": 0.00494,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T16:19:32.876270+00:00",
+        "trace_file": "live_20261031_161920_trace30.json"
+      }
+    ]
+  },
+  "workflow_graph": {
+    "nodes": [
+      {
+        "id": "workflow:sales_lead_qualification",
+        "type": "workflow",
+        "name": "sales_lead_qualification",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:final_review_agent_sales",
+        "type": "agent",
+        "name": "final_review_agent_sales",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:intent_analysis_agent",
+        "type": "agent",
+        "name": "intent_analysis_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:lead_enrichment_agent",
+        "type": "agent",
+        "name": "lead_enrichment_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:lead_fit_agent",
+        "type": "agent",
+        "name": "lead_fit_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:lead_scoring_agent",
+        "type": "agent",
+        "name": "lead_scoring_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:next_action_agent",
+        "type": "agent",
+        "name": "next_action_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:opportunity_assessment_agent",
+        "type": "agent",
+        "name": "opportunity_assessment_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "task:final_review_agent_sales_task",
+        "type": "task",
+        "name": "final_review_agent_sales_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:intent_analysis_agent_task",
+        "type": "task",
+        "name": "intent_analysis_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:lead_enrichment_agent_task",
+        "type": "task",
+        "name": "lead_enrichment_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:lead_fit_agent_task",
+        "type": "task",
+        "name": "lead_fit_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:lead_scoring_agent_task",
+        "type": "task",
+        "name": "lead_scoring_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:next_action_agent_task",
+        "type": "task",
+        "name": "next_action_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:opportunity_assessment_agent_task",
+        "type": "task",
+        "name": "opportunity_assessment_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:create_task",
+        "type": "function",
+        "name": "create_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:deterministic_intent_lookup",
+        "type": "function",
+        "name": "deterministic_intent_lookup",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:deterministic_enrichment",
+        "type": "function",
+        "name": "deterministic_enrichment",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:deterministic_icp_check",
+        "type": "function",
+        "name": "deterministic_icp_check",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:deterministic_lead_score",
+        "type": "function",
+        "name": "deterministic_lead_score",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:deterministic_action_rule",
+        "type": "function",
+        "name": "deterministic_action_rule",
+        "source": "statically_observed"
+      }
+    ],
+    "edges": [
+      {
+        "source": "agent:final_review_agent_sales",
+        "target": "task:final_review_agent_sales_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "source": "agent:intent_analysis_agent",
+        "target": "task:intent_analysis_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "source": "agent:lead_enrichment_agent",
+        "target": "task:lead_enrichment_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "source": "agent:lead_fit_agent",
+        "target": "task:lead_fit_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "source": "agent:lead_scoring_agent",
+        "target": "task:lead_scoring_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "source": "agent:next_action_agent",
+        "target": "task:next_action_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "source": "agent:opportunity_assessment_agent",
+        "target": "task:opportunity_assessment_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "source": "agent:final_review_agent_sales",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "source": "agent:intent_analysis_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "source": "agent:intent_analysis_agent",
+        "target": "function:deterministic_intent_lookup",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "source": "agent:lead_enrichment_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "source": "agent:lead_enrichment_agent",
+        "target": "function:deterministic_enrichment",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "source": "agent:lead_fit_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "source": "agent:lead_fit_agent",
+        "target": "function:deterministic_icp_check",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "source": "agent:lead_scoring_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "source": "agent:lead_scoring_agent",
+        "target": "function:deterministic_lead_score",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "source": "agent:next_action_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "source": "agent:next_action_agent",
+        "target": "function:deterministic_action_rule",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "source": "agent:opportunity_assessment_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "source": "workflow:sales_lead_qualification",
+        "target": "agent:lead_enrichment_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:sales_lead_qualification",
+        "target": "agent:lead_scoring_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:sales_lead_qualification",
+        "target": "agent:opportunity_assessment_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:sales_lead_qualification",
+        "target": "agent:lead_fit_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:sales_lead_qualification",
+        "target": "agent:next_action_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:sales_lead_qualification",
+        "target": "agent:intent_analysis_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:sales_lead_qualification",
+        "target": "agent:final_review_agent_sales",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "agent:lead_enrichment_agent",
+        "target": "agent:lead_fit_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:lead_enrichment_agent",
+        "target": "agent:intent_analysis_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:lead_fit_agent",
+        "target": "agent:lead_scoring_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:intent_analysis_agent",
+        "target": "agent:lead_scoring_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:lead_scoring_agent",
+        "target": "agent:opportunity_assessment_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:opportunity_assessment_agent",
+        "target": "agent:next_action_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:lead_scoring_agent",
+        "target": "agent:next_action_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:next_action_agent",
+        "target": "agent:final_review_agent_sales",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:lead_enrichment_agent",
+        "target": "agent:lead_fit_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:lead_fit_agent",
+        "target": "agent:intent_analysis_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:intent_analysis_agent",
+        "target": "agent:lead_scoring_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:lead_scoring_agent",
+        "target": "agent:opportunity_assessment_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:opportunity_assessment_agent",
+        "target": "agent:next_action_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:next_action_agent",
+        "target": "agent:final_review_agent_sales",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      }
+    ]
+  },
+  "reconciliation_and_limitations": {
+    "agent_reconciliation": [
+      {
+        "agent_id": "final_review_agent_sales",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "intent_analysis_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "lead_enrichment_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "lead_fit_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "lead_scoring_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "next_action_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "opportunity_assessment_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      }
+    ],
+    "dependency_reconciliation": [
+      {
+        "source": "lead_enrichment_agent",
+        "target": "lead_fit_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "lead_enrichment_agent",
+        "target": "intent_analysis_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "lead_fit_agent",
+        "target": "lead_scoring_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "intent_analysis_agent",
+        "target": "lead_scoring_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "lead_scoring_agent",
+        "target": "opportunity_assessment_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "opportunity_assessment_agent",
+        "target": "next_action_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "lead_scoring_agent",
+        "target": "next_action_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "next_action_agent",
+        "target": "final_review_agent_sales",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      }
+    ],
+    "model_reconciliation": {
+      "declared_model": "openai/gpt-oss-120b",
+      "statically_extracted_model": null,
+      "runtime_observed_model": "openai/gpt-oss-120b",
+      "status": "matching",
+      "notes": "Declared model 'openai/gpt-oss-120b' matches runtime enforced model 'openai/gpt-oss-120b'."
+    },
+    "limitations": [
+      "Per-agent cost in traces is not tracked individually; only workflow-level cost is recorded.",
+      "Dynamic runtime branch outcomes and retry loops are recorded as sequential executions.",
+      "Static prompt text reflects task description parameters; dynamic LLM runtime prompt interpolations are reflected in trace prompt tokens.",
+      "Static AST dependency graph was a flat star topology; inter-agent dependencies are reconciled from workflow.json and runtime trace sequences."
+    ]
+  }
+}

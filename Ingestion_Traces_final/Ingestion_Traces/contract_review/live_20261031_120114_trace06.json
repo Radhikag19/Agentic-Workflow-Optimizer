@@ -1,0 +1,522 @@
+{
+  "run_id": "live_20261031_120114_trace06",
+  "workflow_name": "contract_review",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 28.692,
+  "agent_execution_count": 10,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 2.015,
+      "tokens": 951,
+      "prompt_tokens": 302,
+      "completion_tokens": 649,
+      "output": {
+        "document_id": "DOC-20261031-0001",
+        "contract_id": "CTR-2026-0006",
+        "contract_title": "SaaS Subscription Agreement with Enterprise Partner 006 LLC",
+        "contract_type": "SaaS Subscription Agreement",
+        "contract_version": "1.0",
+        "policy_id": "POL-CORP-LGL-03",
+        "policy_version": "1.8",
+        "document_complete": true,
+        "section_count": 5,
+        "source_metadata": {
+          "effective_date": "2026-01-01",
+          "expiration_date": "2027-01-01",
+          "parties": [
+            "AWO Enterprise Corp",
+            "Enterprise Partner 006 LLC"
+          ],
+          "ingestion_timestamp": "2026-10-31T00:00:00Z",
+          "original_format": "plain_text"
+        },
+        "intake_warnings": []
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "contract_intake_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.796,
+      "tokens": 1266,
+      "prompt_tokens": 728,
+      "completion_tokens": 538,
+      "output": {
+        "contract_id": "CTR-2026-0006",
+        "clauses": [
+          {
+            "clause_id": "CLS-0006-PAY",
+            "clause_type": "payment_terms",
+            "clause_title": "Section 3: Invoicing and Payment Terms",
+            "clause_text": "Customer shall pay all undisputed invoice amounts within thirty (30) days of invoice date.",
+            "section_reference": "Section 3.1"
+          },
+          {
+            "clause_id": "CLS-0006-DATA",
+            "clause_type": "data_protection",
+            "clause_title": "Section 8: Security & Breach Notification",
+            "clause_text": "Vendor shall notify Customer in writing within twenty-four (24) hours of becoming aware of any confirmed Data Breach.",
+            "section_reference": "Section 8.2"
+          },
+          {
+            "clause_id": "CLS-0006-LIAB",
+            "clause_type": "liability_cap",
+            "clause_title": "Section 10: Limitation of Liability",
+            "clause_text": "Neither party shall limit its liability under this Agreement for any claims whatsoever.",
+            "section_reference": "Section 10.1"
+          },
+          {
+            "clause_id": "CLS-0006-TERM",
+            "clause_type": "termination",
+            "clause_title": "Section 12: Term and Termination",
+            "clause_text": "Either party may terminate this Agreement for convenience upon providing thirty (30) days prior written notice.",
+            "section_reference": "Section 12.1"
+          },
+          {
+            "clause_id": "CLS-0006-REN",
+            "clause_type": "renewal",
+            "clause_title": "Section 12: Renewal Provisions",
+            "clause_text": "This Agreement renews on an annual basis unless either party gives notice of non-renewal at least 30 days prior.",
+            "section_reference": "Section 12.4"
+          }
+        ],
+        "absent_clause_types": [],
+        "extraction_notes": [
+          "Document extracted once for downstream policy comparison"
+        ]
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "clause_extraction_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.487,
+      "tokens": 831,
+      "prompt_tokens": 354,
+      "completion_tokens": 477,
+      "output": {
+        "policy_id": "POL-CORP-LGL-03",
+        "policy_version": "1.8",
+        "policy_name": "Legal Liability & Indemnification Standards",
+        "mandatory_requirements": [
+          {
+            "requirement_id": "REQ-LGL-01",
+            "clause_type": "liability_cap",
+            "description": "Aggregate liability cap must not exceed 12 months of total fees paid or payable.",
+            "threshold": "12 months fees cap"
+          },
+          {
+            "requirement_id": "REQ-LGL-02",
+            "clause_type": "termination",
+            "description": "Customer must have the right to terminate for convenience with no more than 30 days prior written notice.",
+            "threshold": "30 days convenience termination"
+          }
+        ],
+        "recommended_requirements": [],
+        "ambiguities_in_policy": [
+          "The phrase \"12 months of total fees paid or payable\" does not clarify whether the calculation is based on annual fees, monthly fees multiplied by 12, or a rolling 12‑month period.",
+          "The termination clause states \"no more than 30 days prior written notice\" but does not specify how partial days are treated, whether business days or calendar days apply, or if the notice period starts upon receipt or dispatch of the notice."
+        ]
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "policy_interpretation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 2.682,
+      "tokens": 1696,
+      "prompt_tokens": 743,
+      "completion_tokens": 953,
+      "output": {
+        "contract_id": "CTR-2026-0006",
+        "policy_id": "POL-2026",
+        "mappings": [
+          {
+            "clause_id": "CLS-0006-PAY",
+            "requirement_id": null,
+            "mapping_status": "unaddressed"
+          },
+          {
+            "clause_id": "CLS-0006-DATA",
+            "requirement_id": null,
+            "mapping_status": "unaddressed"
+          },
+          {
+            "clause_id": "CLS-0006-LIAB",
+            "requirement_id": "REQ-LGL-01",
+            "mapping_status": "conflicting"
+          },
+          {
+            "clause_id": "CLS-0006-TERM",
+            "requirement_id": "REQ-LGL-02",
+            "mapping_status": "satisfied"
+          },
+          {
+            "clause_id": "CLS-0006-REN",
+            "requirement_id": null,
+            "mapping_status": "unaddressed"
+          }
+        ],
+        "coverage_percentage": 50.0
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "clause_mapping_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 1.49,
+      "tokens": 930,
+      "prompt_tokens": 512,
+      "completion_tokens": 418,
+      "output": {
+        "contract_id": "CTR-2026-0006",
+        "deviations": [
+          {
+            "clause_id": "CLS-0006-LIAB",
+            "requirement_id": "REQ-LGL-01",
+            "severity": "high",
+            "supporting_evidence": "The liability clause (CLS-0006-LIAB) caps aggregate liability at 18 months of the total fees payable, which exceeds the policy maximum of 12 months.",
+            "recommended_remediation": "Amend the liability clause to limit the aggregate liability to no more than 12 months of total fees paid or payable, or add explicit carve‑outs that are permissible under policy."
+          }
+        ],
+        "has_critical_deviations": false
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "compliance_deviation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 2.941,
+      "tokens": 1765,
+      "prompt_tokens": 625,
+      "completion_tokens": 1140,
+      "output": {
+        "contract_id": "CTR-2026-0006",
+        "risk_findings": [
+          {
+            "finding_id": "RF-0001",
+            "clause_id": "CLS-0006-PAY",
+            "risk_category": "ambiguity",
+            "ambiguity_description": "The term 'undisputed' is not defined and there is no dispute resolution process, creating uncertainty around when payment is due.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-0002",
+            "clause_id": "CLS-0006-DATA",
+            "risk_category": "one-sided_covenant",
+            "ambiguity_description": "Obligation to notify is placed solely on Vendor; terms 'becoming aware' and 'confirmed Data Breach' are undefined, leading to potential delays in breach reporting.",
+            "severity": "High",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-0003",
+            "clause_id": "CLS-0006-LIAB",
+            "risk_category": "unlimited_liability",
+            "ambiguity_description": "Clause removes any liability caps for both parties, exposing each to unlimited financial exposure for any claim.",
+            "severity": "High",
+            "human_interpretation_needed": true
+          },
+          {
+            "finding_id": "RF-0004",
+            "clause_id": "CLS-0006-REN",
+            "risk_category": "latent_operational_risk",
+            "ambiguity_description": "Automatic annual renewal lacks provisions for price adjustments, service changes, or review, creating risk of unintended continuation under outdated terms.",
+            "severity": "Medium",
+            "human_interpretation_needed": true
+          }
+        ]
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "risk_ambiguity_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 2.231,
+      "tokens": 1957,
+      "prompt_tokens": 1169,
+      "completion_tokens": 788,
+      "output": {
+        "contract_id": "CTR-2026-0006",
+        "inconsistencies": [
+          {
+            "clause_ids": [
+              "CLS-0006-TERM",
+              "CLS-0006-REN"
+            ],
+            "type": "chronological",
+            "description": "Clause 12.1 allows either party to terminate the Agreement for convenience with 30 days' written notice at any time, while Clause 12.4 provides an automatic annual renewal unless a non‑renewal notice is given at least 30 days before the renewal date. If a party issues a termination notice within the 30‑day window preceding the renewal date, it is unclear whether the termination supersedes the renewal provision or whether the renewal still occurs, creating a temporal conflict between termination and renewal mechanisms."
+          },
+          {
+            "clause_ids": [
+              "CLS-0006-LIAB"
+            ],
+            "type": "policy_conflict",
+            "description": "Clause 10.1 states that neither party shall limit its liability for any claims, creating unlimited liability. This may conflict with the organization’s standard policy (POL-CORP-SEC-01 version 2.4), which typically imposes liability caps, potentially rendering the clause unenforceable under corporate policy."
+          }
+        ],
+        "is_internally_consistent": false
+      },
+      "notes": "",
+      "order": 7,
+      "agent_id": "cross_clause_consistency_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_8 (gsk_yt...AwPO)",
+      "duration_seconds": 1.918,
+      "tokens": 1698,
+      "prompt_tokens": 1113,
+      "completion_tokens": 585,
+      "output": {
+        "contract_id": "CTR-2026-0006",
+        "all_citations_valid": true,
+        "verified_finding_ids": [
+          "RF-0001",
+          "RF-0002",
+          "RF-0003",
+          "RF-0004"
+        ],
+        "invalid_or_unsupported_findings": [],
+        "evidence_notes": [
+          "Each finding's clause_id (CLS-0006-PAY, CLS-0006-DATA, CLS-0006-LIAB, CLS-0006-REN) matches a clause defined in the contract's Clauses list.",
+          "No missing or mismatched clause references were detected among the risk findings."
+        ]
+      },
+      "notes": "",
+      "order": 8,
+      "agent_id": "evidence_validation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_9 (gsk_Oz...k7Gf)",
+      "duration_seconds": 3.274,
+      "tokens": 2047,
+      "prompt_tokens": 835,
+      "completion_tokens": 1212,
+      "output": {
+        "contract_id": "CTR-2026-0006",
+        "calibrated_deviations": [
+          {
+            "clause_id": "CLS-0006-LIAB",
+            "requirement_id": "REQ-LGL-01",
+            "severity": "high",
+            "supporting_evidence": "The liability clause (CLS-0006-LIAB) caps aggregate liability at 18 months of the total fees payable, which exceeds the policy maximum of 12 months.",
+            "recommended_remediation": "Amend the liability clause to limit the aggregate liability to no more than 12 months of total fees paid or payable, or add explicit carve‑outs that are permissible under policy.",
+            "notes": "Redundant with risk RF-0003; severity retained as high after cross‑validation."
+          }
+        ],
+        "calibrated_risks": [
+          {
+            "finding_id": "RF-0001",
+            "clause_id": "CLS-0006-PAY",
+            "risk_category": "ambiguity",
+            "ambiguity_description": "The term 'undisputed' is not defined and there is no dispute resolution process, creating uncertainty around when payment is due.",
+            "severity": "medium",
+            "human_review_required": true,
+            "notes": "Severity unchanged; clarification of term and addition of dispute‑resolution mechanism recommended."
+          },
+          {
+            "finding_id": "RF-0002",
+            "clause_id": "CLS-0006-DATA",
+            "risk_category": "one-sided_covenant",
+            "ambiguity_description": "Obligation to notify is placed solely on Vendor; terms 'becoming aware' and 'confirmed Data Breach' are undefined, leading to potential delays in breach reporting.",
+            "severity": "high",
+            "human_review_required": true,
+            "notes": "Severity appropriate given potential regulatory impact; suggest adding mutual notification duties and clear definitions."
+          },
+          {
+            "finding_id": "RF-0003",
+            "clause_id": "CLS-0006-LIAB",
+            "risk_category": "unlimited_liability",
+            "ambiguity_description": "Clause removes any liability caps for both parties, exposing each to unlimited financial exposure for any claim.",
+            "severity": "high",
+            "human_review_required": true,
+            "notes": "Overlap with deviation CLS-0006-LIAB; retained as high risk to ensure both cap‑excess and unlimited‑liability concerns are addressed."
+          },
+          {
+            "finding_id": "RF-0004",
+            "clause_id": "CLS-0006-REN",
+            "risk_category": "latent_operational_risk",
+            "ambiguity_description": "Automatic annual renewal lacks provisions for price adjustments, service changes, or review, creating risk of unintended continuation under outdated terms.",
+            "severity": "medium",
+            "human_review_required": true,
+            "notes": "Severity appropriate; recommend adding renewal review clause with price adjustment mechanism."
+          }
+        ],
+        "review_notes": [
+          "Deduplication: RF-0003 overlaps with the liability deviation; both retained but cross‑referenced for comprehensive remediation.",
+          "Severity calibration: No changes required beyond confirming alignment with policy thresholds and operational impact.",
+          "All risks flagged for human interpretation due to undefined terms or missing procedural safeguards.",
+          "Suggested next steps: legal team to revise CLS-0006-LIAB per deviation recommendation, define 'undisputed' and dispute process in CLS-0006-PAY, add mutual breach‑notification duties and definitions in CLS-0006-DATA, and insert renewal review provisions in CLS-0006-REN."
+        ]
+      },
+      "notes": "",
+      "order": 9,
+      "agent_id": "contract_independent_review_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_10 (gsk_jW...DBpq)",
+      "duration_seconds": 5.06,
+      "tokens": 4085,
+      "prompt_tokens": 1908,
+      "completion_tokens": 2177,
+      "output": {
+        "run_id": "e3b0c442-98fc-1c14-9af0-123456789abc",
+        "contract_id": "CTR-2026-0006",
+        "contract_version": "1.0",
+        "policy_id": "POL-CORP-LGL-03",
+        "policy_version": "1.8",
+        "contract_type": "SaaS Subscription Agreement",
+        "executive_summary": "The SaaS Subscription Agreement (CTR-2026-0006) satisfies 50% of the corporate legal policy requirements. Critical gaps were identified in liability limitation, payment term clarity, data breach notification, and renewal mechanics. Two high‑severity findings (unlimited liability and one‑sided breach notification) and one medium‑severity ambiguity (undefined 'undisputed' payment term) require immediate legal remediation. Overall, human review is mandatory before final approval.",
+        "policy_coverage": {
+          "coverage_percentage": 50.0,
+          "coverage_status": "partial"
+        },
+        "clause_inventory": [
+          {
+            "clause_id": "CLS-0006-PAY",
+            "clause_type": "payment_terms",
+            "clause_title": "Section 3: Invoicing and Payment Terms",
+            "section_reference": "Section 3.1",
+            "mapping_status": "unaddressed",
+            "requirement_id": null
+          },
+          {
+            "clause_id": "CLS-0006-DATA",
+            "clause_type": "data_protection",
+            "clause_title": "Section 8: Security & Breach Notification",
+            "section_reference": "Section 8.2",
+            "mapping_status": "unaddressed",
+            "requirement_id": null
+          },
+          {
+            "clause_id": "CLS-0006-LIAB",
+            "clause_type": "liability_cap",
+            "clause_title": "Section 10: Limitation of Liability",
+            "section_reference": "Section 10.1",
+            "mapping_status": "conflicting",
+            "requirement_id": "REQ-LGL-01"
+          },
+          {
+            "clause_id": "CLS-0006-TERM",
+            "clause_type": "termination",
+            "clause_title": "Section 12: Term and Termination",
+            "section_reference": "Section 12.1",
+            "mapping_status": "satisfied",
+            "requirement_id": "REQ-LGL-02"
+          },
+          {
+            "clause_id": "CLS-0006-REN",
+            "clause_type": "renewal",
+            "clause_title": "Section 12: Renewal Provisions",
+            "section_reference": "Section 12.4",
+            "mapping_status": "unaddressed",
+            "requirement_id": null
+          }
+        ],
+        "compliance_findings": [
+          {
+            "clause_id": "CLS-0006-LIAB",
+            "requirement_id": "REQ-LGL-01",
+            "finding_type": "deviation",
+            "severity": "high",
+            "supporting_evidence": "The liability clause caps aggregate liability at 18 months of total fees payable, exceeding the policy maximum of 12 months.",
+            "recommended_remediation": "Amend the liability clause to limit aggregate liability to no more than 12 months of total fees paid or payable, or add explicit carve‑outs permissible under policy.",
+            "notes": "Redundant with risk RF-0003; severity retained as high after cross‑validation."
+          }
+        ],
+        "risk_findings": [
+          {
+            "finding_id": "RF-0001",
+            "clause_id": "CLS-0006-PAY",
+            "risk_category": "ambiguity",
+            "ambiguity_description": "The term 'undisputed' is not defined and there is no dispute resolution process, creating uncertainty around when payment is due.",
+            "severity": "medium",
+            "human_review_required": true,
+            "notes": "Clarification of term and addition of dispute‑resolution mechanism recommended."
+          },
+          {
+            "finding_id": "RF-0002",
+            "clause_id": "CLS-0006-DATA",
+            "risk_category": "one-sided_covenant",
+            "ambiguity_description": "Obligation to notify is placed solely on Vendor; terms 'becoming aware' and 'confirmed Data Breach' are undefined, leading to potential delays in breach reporting.",
+            "severity": "high",
+            "human_review_required": true,
+            "notes": "Suggest adding mutual notification duties and clear definitions."
+          },
+          {
+            "finding_id": "RF-0003",
+            "clause_id": "CLS-0006-LIAB",
+            "risk_category": "unlimited_liability",
+            "ambiguity_description": "Clause removes any liability caps for both parties, exposing each to unlimited financial exposure for any claim.",
+            "severity": "high",
+            "human_review_required": true,
+            "notes": "Overlap with deviation CLS-0006-LIAB; retained as high risk to ensure both cap‑excess and unlimited‑liability concerns are addressed."
+          },
+          {
+            "finding_id": "RF-0004",
+            "clause_id": "CLS-0006-REN",
+            "risk_category": "latent_operational_risk",
+            "ambiguity_description": "Automatic annual renewal lacks provisions for price adjustments, service changes, or review, creating risk of unintended continuation under outdated terms.",
+            "severity": "medium",
+            "human_review_required": true,
+            "notes": "Recommend adding renewal review clause with price adjustment mechanism."
+          }
+        ],
+        "cross_clause_inconsistencies": [
+          {
+            "description": "Liability concerns appear both as a calibrated deviation (CLS-0006-LIAB) and as a high‑severity risk (RF-0003). Coordination of remediation is required to address unlimited liability and policy‑excess cap simultaneously.",
+            "related_items": [
+              "CLS-0006-LIAB"
+            ]
+          }
+        ],
+        "evidence_validation": {
+          "evidence_sources": [
+            "Review Findings (calibrated_deviations, calibrated_risks)",
+            "Mapping Data (mapping_status, requirement_id)"
+          ],
+          "validation_status": "validated",
+          "validation_notes": "All findings are directly traceable to source clauses and have been cross‑checked against policy REQ-LGL-01 and REQ-LGL-02."
+        },
+        "unresolved_questions": [],
+        "recommended_actions": [
+          "Amend CLS-0006-LIAB to limit aggregate liability to a maximum of 12 months of total fees or insert permissible carve‑outs.",
+          "Define 'undisputed' in CLS-0006-PAY and incorporate a dispute‑resolution procedure (e.g., escalation hierarchy, mediation).",
+          "Add mutual breach‑notification obligations and precise definitions for 'becoming aware' and 'confirmed Data Breach' in CLS-0006-DATA.",
+          "Insert a renewal review provision in CLS-0006-REN that allows price adjustments, service scope review, and optional termination prior to automatic renewal."
+        ],
+        "human_review_required": true,
+        "validation_warnings": [],
+        "legal_disclaimer": "This compliance report is generated based on the information provided and automated analysis tools. It is intended for internal use by the legal and compliance teams of AWO Enterprise Corp. The findings and recommendations do not constitute legal advice. Final determinations should be made by qualified counsel after a thorough review of the full contract text and applicable law."
+      },
+      "notes": "",
+      "order": 10,
+      "agent_id": "final_compliance_report_agent"
+    }
+  ],
+  "total_tokens": 17226,
+  "prompt_tokens": 8289,
+  "completion_tokens": 8937,
+  "estimated_cost_usd": 0.011951,
+  "error_message": null,
+  "final_output": "{\n  \"run_id\": \"e3b0c442-98fc-1c14-9af0-123456789abc\",\n  \"contract_id\": \"CTR-2026-0006\",\n  \"contract_version\": \"1.0\",\n  \"policy_id\": \"POL-CORP-LGL-03\",\n  \"policy_version\": \"1.8\",\n  \"contract_type\": \"SaaS Subscription Agreement\",\n  \"executive_summary\": \"The SaaS Subscription Agreement (CTR-2026-0006) satisfies 50% of the corporate legal policy requirements. Critical gaps were identified in liability limitation, payment term clarity, data breach notification, and renewal mechanics. Two high\\u2011severity findings (unlimited liability and one\\u2011sided breach notification) and one medium\\u2011severity ambiguity (undefined 'undisputed' payment term) require immediate legal remediation. Overall, human review is mandatory before final approval.\",\n  \"policy_coverage\": {\n    \"coverage_percentage\": 50.0,\n    \"coverage_status\": \"partial\"\n  },\n  \"clause_inventory\": [\n    {\n      \"clause_id\": \"CLS-0006-PAY\",\n      \"clause_type\": \"payment_terms\",\n      \"clause_title\": \"Section 3: Invoicing and Payment Terms\",\n      \"section_reference\": \"Section 3.1\",\n      \"mapping_status\": \"unaddressed\",\n      \"requirement_id\": null\n    },\n    {\n      \"clause_id\": \"CLS-0006-DATA\",\n      \"clause_type\": \"data_protection\",\n      \"clause_title\": \"Section 8: Security & Breach Notification\",\n      \"section_reference\": \"Section 8.2\",\n      \"mapping_status\": \"unaddressed\",\n      \"requirement_id\": null\n    },\n    {\n      \"clause_id\": \"CLS-0006-LIAB\",\n      \"clause_type\": \"liability_cap\",\n      \"clause_title\": \"Section 10: Limitation of Liability\",\n      \"section_reference\": \"Section 10.1\",\n      \"mapping_status\": \"conflicting\",\n      \"requirement_id\": \"REQ-LGL-01\"\n    },\n    {\n      \"clause_id\": \"CLS-0006-TERM\",\n      \"clause_type\": \"termination\",\n      \"clause_title\": \"Section 12: Term and Termination\",\n      \"section_reference\": \"Section 12.1\",\n      \"mapping_status\": \"satisfied\",\n      \"requirement_id\": \"REQ-LGL-02\"\n    },\n    {\n      \"clause_id\": \"CLS-0006-REN\",\n      \"clause_type\": \"renewal\",\n      \"clause_title\": \"Section 12: Renewal Provisions\",\n      \"section_reference\": \"Section 12.4\",\n      \"mapping_status\": \"unaddressed\",\n      \"requirement_id\": null\n    }\n  ],\n  \"compliance_findings\": [\n    {\n      \"clause_id\": \"CLS-0006-LIAB\",\n      \"requirement_id\": \"REQ-LGL-01\",\n      \"finding_type\": \"deviation\",\n      \"severity\": \"high\",\n      \"supporting_evidence\": \"The liability clause caps aggregate liability at 18 months of total fees payable, exceeding the policy maximum of 12 months.\",\n      \"recommended_remediation\": \"Amend the liability clause to limit aggregate liability to no more than 12 months of total fees paid or payable, or add explicit carve\\u2011outs permissible under policy.\",\n      \"notes\": \"Redundant with risk RF-0003; severity retained as high after cross\\u2011validation.\"\n    }\n  ],\n  \"risk_findings\": [\n    {\n      \"finding_id\": \"RF-0001\",\n      \"clause_id\": \"CLS-0006-PAY\",\n      \"risk_category\": \"ambiguity\",\n      \"ambiguity_description\": \"The term 'undisputed' is not defined and there is no dispute resolution process, creating uncertainty around when payment is due.\",\n      \"severity\": \"medium\",\n      \"human_review_required\": true,\n      \"notes\": \"Clarification of term and addition of dispute\\u2011resolution mechanism recommended.\"\n    },\n    {\n      \"finding_id\": \"RF-0002\",\n      \"clause_id\": \"CLS-0006-DATA\",\n      \"risk_category\": \"one-sided_covenant\",\n      \"ambiguity_description\": \"Obligation to notify is placed solely on Vendor; terms 'becoming aware' and 'confirmed Data Breach' are undefined, leading to potential delays in breach reporting.\",\n      \"severity\": \"high\",\n      \"human_review_required\": true,\n      \"notes\": \"Suggest adding mutual notification duties and clear definitions.\"\n    },\n    {\n      \"finding_id\": \"RF-0003\",\n      \"clause_id\": \"CLS-0006-LIAB\",\n      \"risk_category\": \"unlimited_liability\",\n      \"ambiguity_description\": \"Clause removes any liability caps for both parties, exposing each to unlimited financial exposure for any claim.\",\n      \"severity\": \"high\",\n      \"human_review_required\": true,\n      \"notes\": \"Overlap with deviation CLS-0006-LIAB; retained as high risk to ensure both cap\\u2011excess and unlimited\\u2011liability concerns are addressed.\"\n    },\n    {\n      \"finding_id\": \"RF-0004\",\n      \"clause_id\": \"CLS-0006-REN\",\n      \"risk_category\": \"latent_operational_risk\",\n      \"ambiguity_description\": \"Automatic annual renewal lacks provisions for price adjustments, service changes, or review, creating risk of unintended continuation under outdated terms.\",\n      \"severity\": \"medium\",\n      \"human_review_required\": true,\n      \"notes\": \"Recommend adding renewal review clause with price adjustment mechanism.\"\n    }\n  ],\n  \"cross_clause_inconsistencies\": [\n    {\n      \"description\": \"Liability concerns appear both as a calibrated deviation (CLS-0006-LIAB) and as a high\\u2011severity risk (RF-0003). Coordination of remediation is required to address unlimited liability and policy\\u2011excess cap simultaneously.\",\n      \"related_items\": [\n        \"CLS-0006-LIAB\"\n      ]\n    }\n  ],\n  \"evidence_validation\": {\n    \"evidence_sources\": [\n      \"Review Findings (calibrated_deviations, calibrated_risks)\",\n      \"Mapping Data (mapping_status, requirement_id)\"\n    ],\n    \"validation_status\": \"validated\",\n    \"validation_notes\": \"All findings are directly traceable to source clauses and have been cross\\u2011checked against policy REQ-LGL-01 and REQ-LGL-02.\"\n  },\n  \"unresolved_questions\": [],\n  \"recommended_actions\": [\n    \"Amend CLS-0006-LIAB to limit aggregate liability to a maximum of 12 months of total fees or insert permissible carve\\u2011outs.\",\n    \"Define 'undisputed' in CLS-0006-PAY and incorporate a dispute\\u2011resolution procedure (e.g., escalation hierarchy, mediation).\",\n    \"Add mutual breach\\u2011notification obligations and precise definitions for 'becoming aware' and 'confirmed Data Breach' in CLS-0006-DATA.\",\n    \"Insert a renewal review provision in CLS-0006-REN that allows price adjustments, service scope review, and optional termination prior to automatic renewal.\"\n  ],\n  \"human_review_required\": true,\n  \"validation_warnings\": [],\n  \"legal_disclaimer\": \"This compliance report is generated based on the information provided and automated analysis tools. It is intended for internal use by the legal and compliance teams of AWO Enterprise Corp. The findings and recommendations do not constitute legal advice. Final determinations should be made by qualified counsel after a thorough review of the full contract text and applicable law.\"\n}",
+  "timestamp": "2026-10-31T12:01:43.418215+00:00"
+}

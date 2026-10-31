@@ -1,0 +1,108 @@
+{
+  "workflow_name": "inventory_replenishment",
+  "version": "1.0.0",
+  "description": "Baseline 6-agent inventory replenishment planning workflow with deterministic arithmetic.",
+  "fixed_model": "openai/gpt-oss-120b",
+  "baseline_model": "openai/gpt-oss-120b",
+  "assigned_groq_key_env": "GROQ_API_KEY_6",
+  "llm_provider": "Groq",
+  "total_agents": 6,
+  "agent_count": 6,
+  "execution_pattern": "sequential",
+  "execution_order": [
+    "inventory_intake_agent",
+    "stock_policy_agent",
+    "demand_forecast_agent",
+    "supplier_agent",
+    "replenishment_planning_agent",
+    "inventory_review_agent"
+  ],
+  "optimization_opportunities": {
+    "parallel_candidates": ["stock_policy_agent + demand_forecast_agent + supplier_agent"],
+    "pruning_candidates": ["inventory_review_agent"],
+    "consolidation_candidates": ["stock_policy_agent + replenishment_planning_agent"]
+  },
+  "agents": [
+    {
+      "agent_id": "inventory_intake_agent",
+      "agent_name": "Inventory Intake Agent",
+      "role": "Inventory Intake Coordinator",
+      "responsibilities": "Normalize identifiers, assemble inventory snapshots, sales history, and vendor terms.",
+      "input_fields": ["sku_record", "supplier_record", "policy_record", "sales_record"],
+      "output_fields": ["sku_id", "warehouse_id", "source_record_ids", "raw_inventory_record", "raw_supplier_record"],
+      "dependencies": []
+    },
+    {
+      "agent_id": "stock_policy_agent",
+      "agent_name": "Stock and Reorder Policy Agent",
+      "role": "Stock Policy and Inventory Level Specialist",
+      "responsibilities": "Evaluate usable inventory (current - reserved + incoming) and reorder triggers.",
+      "input_fields": ["raw_inventory_record", "warehouse_id"],
+      "output_fields": ["current_stock", "reserved_stock", "incoming_stock", "usable_inventory", "reorder_threshold", "safety_stock", "replenishment_needed"],
+      "dependencies": ["inventory_intake_agent"]
+    },
+    {
+      "agent_id": "demand_forecast_agent",
+      "agent_name": "Sales History and Demand Forecast Agent",
+      "role": "Demand Forecasting and Sales History Specialist",
+      "responsibilities": "Calculate moving average demand projections and characterize demand volatility.",
+      "input_fields": ["sales_record", "forecast_horizon_days"],
+      "output_fields": ["historical_avg_daily_demand", "forecast_demand_units", "volatility_metric", "demand_spikes_detected"],
+      "dependencies": ["inventory_intake_agent"]
+    },
+    {
+      "agent_id": "supplier_agent",
+      "agent_name": "Supplier and Lead-Time Agent",
+      "role": "Supplier Lead-Time and Constraints Specialist",
+      "responsibilities": "Verify vendor lead times, minimum order quantities (MOQ), and pack size increments.",
+      "input_fields": ["raw_supplier_record", "planning_date"],
+      "output_fields": ["lead_time_days", "minimum_order_quantity", "pack_size", "expected_arrival_date"],
+      "dependencies": ["inventory_intake_agent"]
+    },
+    {
+      "agent_id": "replenishment_planning_agent",
+      "agent_name": "Replenishment Planning Agent",
+      "role": "Replenishment Optimization Planner",
+      "responsibilities": "Calculate base replenishment quantity and adjust for pack size and supplier MOQ.",
+      "input_fields": ["usable_inventory", "historical_avg_daily_demand", "lead_time_days", "safety_stock", "pack_size", "minimum_order_quantity"],
+      "output_fields": ["base_replenishment_quantity", "recommended_order_quantity", "calculation_breakdown", "stockout_risk"],
+      "dependencies": ["stock_policy_agent", "demand_forecast_agent", "supplier_agent"]
+    },
+    {
+      "agent_id": "inventory_review_agent",
+      "agent_name": "Validation and Final Review Agent",
+      "role": "Replenishment Integrity and Compliance Auditor",
+      "responsibilities": "Audit calculations against double-counting and assemble final verified plan.",
+      "input_fields": ["base_replenishment_quantity", "recommended_order_quantity", "stockout_risk", "stock_policy_data"],
+      "output_fields": ["run_id", "planning_date", "warehouse_id", "sku_id", "current_stock", "reserved_stock", "available_stock", "incoming_stock", "forecast_demand", "forecast_horizon", "supplier_id", "lead_time_days", "safety_stock", "reorder_threshold", "base_replenishment_quantity", "recommended_order_quantity", "expected_arrival_date", "stockout_risk", "reasoning", "source_record_ids", "validation_warnings", "human_review_required"],
+      "dependencies": ["replenishment_planning_agent"]
+    }
+  ],
+  "baseline_execution_order": [
+    "inventory_intake_agent",
+    "stock_policy_agent",
+    "demand_forecast_agent",
+    "supplier_agent",
+    "replenishment_planning_agent",
+    "inventory_review_agent"
+  ],
+  "optimizer_annotations": {
+    "potential_parallel_branches": [
+      ["stock_policy_agent", "demand_forecast_agent", "supplier_agent"]
+    ],
+    "consolidation_candidates": [
+      ["stock_policy_agent", "replenishment_planning_agent"]
+    ],
+    "pruning_candidates": [
+      "inventory_review_agent"
+    ],
+    "routing_conditions": {
+      "routine_replenishment_bypass": "If SKU is normal volatility with zero stockout risk, skip intensive multi-agent audit and execute direct planning."
+    }
+  },
+  "validation_requirements": {
+    "output_schema": "InventoryFinalPlanOutput",
+    "disallow_real_purchases": true,
+    "prevent_incoming_double_counting": true
+  }
+}

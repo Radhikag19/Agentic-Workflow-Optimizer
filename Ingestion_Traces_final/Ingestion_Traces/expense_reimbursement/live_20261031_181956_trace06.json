@@ -1,0 +1,251 @@
+{
+  "run_id": "live_20261031_181956_trace06",
+  "workflow_name": "expense_reimbursement",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 14.25,
+  "agent_execution_count": 8,
+  "agent_executions": [
+    {
+      "order": 1,
+      "agent_id": "receipt_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_20 (gsk_1f...ghyb)",
+      "duration_seconds": 1.511,
+      "status": "SUCCESS",
+      "tokens": 761,
+      "prompt_tokens": 458,
+      "completion_tokens": 303,
+      "output": {
+        "merchant": "HILTON GARDEN INN",
+        "transaction_date": "2026-10-03",
+        "currency": "USD",
+        "subtotal": 268.16,
+        "tax": 37.54,
+        "total": 330.7,
+        "line_items": [
+          {
+            "description": "Corporate Service Item 1",
+            "quantity": 1,
+            "price": 268.16
+          }
+        ],
+        "missing_fields": []
+      },
+      "notes": ""
+    },
+    {
+      "order": 2,
+      "agent_id": "normalize_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_18 (gsk_qB...kphs)",
+      "duration_seconds": 1.609,
+      "status": "SUCCESS",
+      "tokens": 1038,
+      "prompt_tokens": 688,
+      "completion_tokens": 350,
+      "output": {
+        "employee_id": "EMP-406",
+        "merchant": "Hilton Garden Inn",
+        "date": "2026-10-03",
+        "currency": "USD",
+        "subtotal": 268.16,
+        "tax": 37.54,
+        "total": 330.7
+      },
+      "notes": ""
+    },
+    {
+      "order": 3,
+      "agent_id": "category_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_17 (gsk_qB...KRNJ)",
+      "duration_seconds": 1.152,
+      "status": "SUCCESS",
+      "tokens": 622,
+      "prompt_tokens": 447,
+      "completion_tokens": 175,
+      "output": {
+        "category": "Accommodation",
+        "classification_confidence": 0.98,
+        "reasoning": "The merchant is Hilton Garden Inn, a hotel chain, and the expense includes room charges (subtotal) plus tax, which aligns with lodging costs. This matches the 'Accommodation' category used for hotel stays during business travel."
+      },
+      "notes": ""
+    },
+    {
+      "order": 4,
+      "agent_id": "amount_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_14 (gsk_6G...l7b1)",
+      "duration_seconds": 1.281,
+      "status": "SUCCESS",
+      "tokens": 529,
+      "prompt_tokens": 319,
+      "completion_tokens": 210,
+      "output": {
+        "is_arithmetic_valid": false,
+        "discrepancy_usd": 25.0,
+        "verification_notes": "Subtotal (268.16) + Tax (37.54) = 305.70. Declared total is 330.70, resulting in a $25.00 discrepancy. No negative amounts detected. All values are to two decimal places; rounding is correct."
+      },
+      "notes": ""
+    },
+    {
+      "order": 5,
+      "agent_id": "policy_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_19 (gsk_99...IlGY)",
+      "duration_seconds": 1.598,
+      "status": "SUCCESS",
+      "tokens": 715,
+      "prompt_tokens": 377,
+      "completion_tokens": 338,
+      "output": {
+        "policy_compliance_status": "Non-compliant",
+        "cited_policy_ids": [
+          "POL-EXP-03"
+        ],
+        "violation_reasons": [
+          "Accommodation cost of $330.70 exceeds the standard nightly cap of $250.00 (high-cost tier not indicated)."
+        ]
+      },
+      "notes": ""
+    },
+    {
+      "order": 6,
+      "agent_id": "duplicate_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 1.21,
+      "status": "SUCCESS",
+      "tokens": 580,
+      "prompt_tokens": 382,
+      "completion_tokens": 198,
+      "output": {
+        "duplicate_status": "Confirmed Duplicate",
+        "matching_claim_ids": [
+          "HIST-CLM-2006"
+        ],
+        "duplicate_risk_score": 0.99
+      },
+      "notes": ""
+    },
+    {
+      "order": 7,
+      "agent_id": "exception_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_10 (gsk_jW...DBpq)",
+      "duration_seconds": 3.266,
+      "status": "SUCCESS",
+      "tokens": 1723,
+      "prompt_tokens": 637,
+      "completion_tokens": 1086,
+      "output": {
+        "exceptions_found": [
+          {
+            "type": "Policy Violation",
+            "detail": "Accommodation cost $330.70 exceeds nightly cap of $250.00 per policy POL-EXP-03.",
+            "policy_id": "POL-EXP-03",
+            "severity": "High"
+          },
+          {
+            "type": "Excessive Amount",
+            "detail": "Total amount $330.70 is $25.00 higher than the sum of subtotal and tax, indicating an overcharge.",
+            "policy_id": "POL-EXP-02",
+            "severity": "Medium"
+          },
+          {
+            "type": "Duplicate Claim",
+            "detail": "Receipt matches previously submitted claim HIST-CLM-2006 with duplicate risk score 0.99.",
+            "policy_id": "POL-DUP-01",
+            "severity": "Critical"
+          },
+          {
+            "type": "Unitemized Receipt",
+            "detail": "Line items list a corporate service item, not lodging details for the hotel stay.",
+            "policy_id": "POL-REC-01",
+            "severity": "Low"
+          }
+        ],
+        "severity_levels": {
+          "Critical": 1,
+          "High": 1,
+          "Medium": 1,
+          "Low": 1
+        },
+        "audit_warnings": [
+          "Arithmetic discrepancy of $25.00 detected between subtotal+tax and declared total.",
+          "Duplicate claim risk score is 0.99, indicating near certainty of duplication."
+        ]
+      },
+      "notes": ""
+    },
+    {
+      "order": 8,
+      "agent_id": "expense_review_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_13 (gsk_i9...Ujsn)",
+      "duration_seconds": 2.621,
+      "status": "SUCCESS",
+      "tokens": 1995,
+      "prompt_tokens": 1229,
+      "completion_tokens": 766,
+      "output": {
+        "claim_id": "CLM-2006",
+        "employee_id": "EMP-406",
+        "merchant": "Hilton Garden Inn",
+        "date": "2026-10-03",
+        "currency": "USD",
+        "total_amount": 330.7,
+        "final_decision": "INELIGIBLE",
+        "rationale": [
+          "The total amount $330.70 exceeds the nightly accommodation cap of $250.00 defined in policy POL-EXP-03.",
+          "There is a $25.00 arithmetic discrepancy: subtotal plus tax equals $305.70, not the declared total of $330.70.",
+          "The claim is a confirmed duplicate of a previously submitted claim (HIST-CLM-2006) with a duplicate risk score of 0.99.",
+          "The receipt does not itemize lodging details; it lists a generic corporate service item, violating receipt detail policy POL-REC-01."
+        ],
+        "cited_stages": {
+          "receipt_extraction": "Receipt captured merchant Hilton Garden Inn, date 2026-10-03, subtotal $268.16, tax $37.54, total $330.70, with a single line item labeled 'Corporate Service Item 1'.",
+          "normalization": "Data normalized correctly; employee ID EMP-406, currency USD, amounts unchanged.",
+          "categorization": "Expense classified as 'Accommodation' with high confidence (0.98) based on hotel merchant.",
+          "amount_check": "Arithmetic validation failed; subtotal + tax = $305.70, but declared total is $330.70, indicating a $25.00 discrepancy.",
+          "policy_verification": "Policy check flagged non‑compliance with POL-EXP-03 because the amount exceeds the $250 nightly cap.",
+          "duplicate_check": "Duplicate detection confirmed a match to prior claim HIST-CLM-2006 with a 0.99 risk score.",
+          "exception_audit": "Exceptions identified: policy violation (high severity), excessive amount (medium), duplicate claim (critical), and unitemized receipt (low)."
+        },
+        "recommendation": "Reject the claim as INELIGIBLE. Notify the employee of the policy violations, arithmetic discrepancy, and duplicate submission. Advise resubmission with a correct, itemized receipt that complies with the nightly cap and without duplication."
+      },
+      "notes": ""
+    }
+  ],
+  "total_tokens": 7963,
+  "prompt_tokens": 4537,
+  "completion_tokens": 3426,
+  "estimated_cost_usd": 0.005383,
+  "error_message": null,
+  "final_output": "{\n  \"claim_id\": \"CLM-2006\",\n  \"employee_id\": \"EMP-406\",\n  \"merchant\": \"Hilton Garden Inn\",\n  \"date\": \"2026-10-03\",\n  \"currency\": \"USD\",\n  \"total_amount\": 330.7,\n  \"final_decision\": \"INELIGIBLE\",\n  \"rationale\": [\n    \"The total amount $330.70 exceeds the nightly accommodation cap of $250.00 defined in policy POL-EXP-03.\",\n    \"There is a $25.00 arithmetic discrepancy: subtotal plus tax equals $305.70, not the declared total of $330.70.\",\n    \"The claim is a confirmed duplicate of a previously submitted claim (HIST-CLM-2006) with a duplicate risk score of 0.99.\",\n    \"The receipt does not itemize lodging details; it lists a generic corporate service item, violating receipt detail policy POL-REC-01.\"\n  ],\n  \"cited_stages\": {\n    \"receipt_extraction\": \"Receipt captured merchant Hilton Garden Inn, date 2026-10-03, subtotal $268.16, tax $37.54, total $330.70, with a single line item labeled 'Corporate Service Item 1'.\",\n    \"normalization\": \"Data normalized correctly; employee ID EMP-406, currency USD, amounts unchanged.\",\n    \"categorization\": \"Expense classified as 'Accommodation' with high confidence (0.98) based on hotel merchant.\",\n    \"amount_check\": \"Arithmetic validation failed; subtotal + tax = $305.70, but declared total is $330.70, indicating a $25.00 discrepancy.\",\n    \"policy_verification\": \"Policy check flagged non\\u2011compliance with POL-EXP-03 because the amount exceeds the $250 nightly cap.\",\n    \"duplicate_check\": \"Duplicate detection confirmed a match to prior claim HIST-CLM-2006 with a 0.99 risk score.\",\n    \"exception_audit\": \"Exceptions identified: policy violation (high severity), excessive amount (medium), duplicate claim (critical), and unitemized receipt (low).\"\n  },\n  \"recommendation\": \"Reject the claim as INELIGIBLE. Notify the employee of the policy violations, arithmetic discrepancy, and duplicate submission. Advise resubmission with a correct, itemized receipt that complies with the nightly cap and without duplication.\"\n}",
+  "output": {
+    "workflow": "expense_reimbursement",
+    "run_id": "live_20261031_181956_trace06",
+    "input": {
+      "claim_id": "CLM-2006",
+      "employee_id": "EMP-406",
+      "employee_name": "Jessica Taylor",
+      "department": "Sales",
+      "submission_date": "2026-10-03",
+      "category": "Accommodation",
+      "merchant": "Hilton Garden Inn",
+      "currency": "USD",
+      "subtotal": 268.16,
+      "tax": 37.54,
+      "total": 330.7,
+      "business_purpose": "Official client engagement and operational workflow meeting at Hilton Garden Inn.",
+      "receipt_text": "\n==================================================\n                 HILTON GARDEN INN\n                 TAX INVOICE / RECEIPT\n==================================================\nDate: 2026-10-03                Time: 19:42:10\nOrder / Trans ID: TXN-379676\nServer / Terminal: REG-04\n--------------------------------------------------\nItem Description                 Qty        Price\n--------------------------------------------------\nCorporate Service Item 1           1       $268.16\n--------------------------------------------------\nSUBTOTAL:                                  $268.16\nTAX / VAT (Est):                           $37.54\nTOTAL PAID:                                $330.70\n--------------------------------------------------\nPayment Method: VISA ending in 4192\nApproval Code: AUTH-20828\nThank you for your business!\n==================================================\n",
+      "scenario_tag": "ARITHMETIC_ERROR",
+      "synthetic": true
+    },
+    "stages": {
+      "receipt": "{\n  \"merchant\": \"HILTON GARDEN INN\",\n  \"transaction_date\": \"2026-10-03\",\n  \"currency\": \"USD\",\n  \"subtotal\": 268.16,\n  \"tax\": 37.54,\n  \"total\": 330.7,\n  \"line_items\": [\n    {\n      \"description\": \"Corporate Service Item 1\",\n      \"quantity\": 1,\n      \"price\": 268.16\n    }\n  ],\n  \"missing_fields\": []\n}",
+      "normalize": "{\n  \"employee_id\": \"EMP-406\",\n  \"merchant\": \"Hilton Garden Inn\",\n  \"date\": \"2026-10-03\",\n  \"currency\": \"USD\",\n  \"subtotal\": 268.16,\n  \"tax\": 37.54,\n  \"total\": 330.7\n}",
+      "category": "{\n  \"category\": \"Accommodation\",\n  \"classification_confidence\": 0.98,\n  \"reasoning\": \"The merchant is Hilton Garden Inn, a hotel chain, and the expense includes room charges (subtotal) plus tax, which aligns with lodging costs. This matches the 'Accommodation' category used for hotel stays during business travel.\"\n}",
+      "amount": "{\n  \"is_arithmetic_valid\": false,\n  \"discrepancy_usd\": 25.0,\n  \"verification_notes\": \"Subtotal (268.16) + Tax (37.54) = 305.70. Declared total is 330.70, resulting in a $25.00 discrepancy. No negative amounts detected. All values are to two decimal places; rounding is correct.\"\n}",
+      "policy": "{\n  \"policy_compliance_status\": \"Non-compliant\",\n  \"cited_policy_ids\": [\n    \"POL-EXP-03\"\n  ],\n  \"violation_reasons\": [\n    \"Accommodation cost of $330.70 exceeds the standard nightly cap of $250.00 (high-cost tier not indicated).\"\n  ]\n}",
+      "duplicate": "{\n  \"duplicate_status\": \"Confirmed Duplicate\",\n  \"matching_claim_ids\": [\n    \"HIST-CLM-2006\"\n  ],\n  \"duplicate_risk_score\": 0.99\n}",
+      "exceptions": "{\n  \"exceptions_found\": [\n    {\n      \"type\": \"Policy Violation\",\n      \"detail\": \"Accommodation cost $330.70 exceeds nightly cap of $250.00 per policy POL-EXP-03.\",\n      \"policy_id\": \"POL-EXP-03\",\n      \"severity\": \"High\"\n    },\n    {\n      \"type\": \"Excessive Amount\",\n      \"detail\": \"Total amount $330.70 is $25.00 higher than the sum of subtotal and tax, indicating an overcharge.\",\n      \"policy_id\": \"POL-EXP-02\",\n      \"severity\": \"Medium\"\n    },\n    {\n      \"type\": \"Duplicate Claim\",\n      \"detail\": \"Receipt matches previously submitted claim HIST-CLM-2006 with duplicate risk score 0.99.\",\n      \"policy_id\": \"POL-DUP-01\",\n      \"severity\": \"Critical\"\n    },\n    {\n      \"type\": \"Unitemized Receipt\",\n      \"detail\": \"Line items list a corporate service item, not lodging details for the hotel stay.\",\n      \"policy_id\": \"POL-REC-01\",\n      \"severity\": \"Low\"\n    }\n  ],\n  \"severity_levels\": {\n    \"Critical\": 1,\n    \"High\": 1,\n    \"Medium\": 1,\n    \"Low\": 1\n  },\n  \"audit_warnings\": [\n    \"Arithmetic discrepancy of $25.00 detected between subtotal+tax and declared total.\",\n    \"Duplicate claim risk score is 0.99, indicating near certainty of duplication.\"\n  ]\n}",
+      "final_review": "{\n  \"claim_id\": \"CLM-2006\",\n  \"employee_id\": \"EMP-406\",\n  \"merchant\": \"Hilton Garden Inn\",\n  \"date\": \"2026-10-03\",\n  \"currency\": \"USD\",\n  \"total_amount\": 330.7,\n  \"final_decision\": \"INELIGIBLE\",\n  \"rationale\": [\n    \"The total amount $330.70 exceeds the nightly accommodation cap of $250.00 defined in policy POL-EXP-03.\",\n    \"There is a $25.00 arithmetic discrepancy: subtotal plus tax equals $305.70, not the declared total of $330.70.\",\n    \"The claim is a confirmed duplicate of a previously submitted claim (HIST-CLM-2006) with a duplicate risk score of 0.99.\",\n    \"The receipt does not itemize lodging details; it lists a generic corporate service item, violating receipt detail policy POL-REC-01.\"\n  ],\n  \"cited_stages\": {\n    \"receipt_extraction\": \"Receipt captured merchant Hilton Garden Inn, date 2026-10-03, subtotal $268.16, tax $37.54, total $330.70, with a single line item labeled 'Corporate Service Item 1'.\",\n    \"normalization\": \"Data normalized correctly; employee ID EMP-406, currency USD, amounts unchanged.\",\n    \"categorization\": \"Expense classified as 'Accommodation' with high confidence (0.98) based on hotel merchant.\",\n    \"amount_check\": \"Arithmetic validation failed; subtotal + tax = $305.70, but declared total is $330.70, indicating a $25.00 discrepancy.\",\n    \"policy_verification\": \"Policy check flagged non\\u2011compliance with POL-EXP-03 because the amount exceeds the $250 nightly cap.\",\n    \"duplicate_check\": \"Duplicate detection confirmed a match to prior claim HIST-CLM-2006 with a 0.99 risk score.\",\n    \"exception_audit\": \"Exceptions identified: policy violation (high severity), excessive amount (medium), duplicate claim (critical), and unitemized receipt (low).\"\n  },\n  \"recommendation\": \"Reject the claim as INELIGIBLE. Notify the employee of the policy violations, arithmetic discrepancy, and duplicate submission. Advise resubmission with a correct, itemized receipt that complies with the nightly cap and without duplication.\"\n}"
+    },
+    "synthetic": true
+  },
+  "timestamp": "2026-10-31T18:20:11.140782+00:00"
+}

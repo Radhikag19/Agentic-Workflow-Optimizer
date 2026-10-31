@@ -1,0 +1,101 @@
+{
+  "services": [
+    {
+      "service_id": "auth-gateway",
+      "tier": "Tier-1",
+      "sla_pct": 99.99,
+      "owner": "sec-ops",
+      "dependencies": [
+        "redis-session",
+        "user-db"
+      ]
+    },
+    {
+      "service_id": "payment-processor",
+      "tier": "Tier-1",
+      "sla_pct": 99.99,
+      "owner": "fintech-core",
+      "dependencies": [
+        "postgres-primary",
+        "stripe-gateway"
+      ]
+    },
+    {
+      "service_id": "order-service",
+      "tier": "Tier-1",
+      "sla_pct": 99.95,
+      "owner": "checkout-team",
+      "dependencies": [
+        "postgres-primary",
+        "kafka-cluster"
+      ]
+    },
+    {
+      "service_id": "inventory-api",
+      "tier": "Tier-2",
+      "sla_pct": 99.9,
+      "owner": "logistics-eng",
+      "dependencies": [
+        "postgres-replica",
+        "redis-cache"
+      ]
+    },
+    {
+      "service_id": "notification-hub",
+      "tier": "Tier-3",
+      "sla_pct": 99.5,
+      "owner": "growth-eng",
+      "dependencies": [
+        "kafka-cluster",
+        "sendgrid-relay"
+      ]
+    },
+    {
+      "service_id": "database-primary",
+      "tier": "Tier-1",
+      "sla_pct": 99.99,
+      "owner": "dba-team",
+      "dependencies": [
+        "ebs-storage"
+      ]
+    },
+    {
+      "service_id": "redis-cluster",
+      "tier": "Tier-2",
+      "sla_pct": 99.9,
+      "owner": "infra-ops",
+      "dependencies": [
+        "vpc-peering"
+      ]
+    },
+    {
+      "service_id": "ingress-lb",
+      "tier": "Tier-1",
+      "sla_pct": 99.99,
+      "owner": "net-infra",
+      "dependencies": [
+        "aws-route53"
+      ]
+    },
+    {
+      "service_id": "search-indexer",
+      "tier": "Tier-3",
+      "sla_pct": 99.0,
+      "owner": "search-team",
+      "dependencies": [
+        "elasticsearch-prod"
+      ]
+    },
+    {
+      "service_id": "analytics-pipeline",
+      "tier": "Tier-3",
+      "sla_pct": 98.5,
+      "owner": "data-platform",
+      "dependencies": [
+        "s3-datalake"
+      ]
+    }
+  ],
+  "synthetic": true,
+  "count": 10
+}

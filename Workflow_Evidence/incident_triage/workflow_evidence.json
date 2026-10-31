@@ -1,0 +1,2043 @@
+{
+  "metadata": {
+    "workflow_id": "incident_triage",
+    "workflow_name": "incident_triage",
+    "evidence_schema_version": "1.0",
+    "generated_at": "2026-10-31T19:56:52.220149+00:00",
+    "traces_discovered": 30,
+    "traces_processed": 30,
+    "traces_failed": 0,
+    "input_files": {
+      "workflow_json": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\incident_triage\\workflow.json",
+      "workflow_context_json": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\incident_triage\\workflow_context.json",
+      "traces_directory": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Ingestion_Traces_final\\Ingestion_Traces\\incident_triage",
+      "trace_files": [
+        "live_20261031_174840_trace01.json",
+        "live_20261031_175102_trace02.json",
+        "live_20261031_175123_trace03.json",
+        "live_20261031_175155_trace04.json",
+        "live_20261031_175249_trace05.json",
+        "live_20261031_175344_trace06.json",
+        "live_20261031_175432_trace07.json",
+        "live_20261031_175519_trace08.json",
+        "live_20261031_175613_trace09.json",
+        "live_20261031_175705_trace10.json",
+        "live_20261031_175754_trace11.json",
+        "live_20261031_175837_trace12.json",
+        "live_20261031_175924_trace13.json",
+        "live_20261031_180018_trace14.json",
+        "live_20261031_180106_trace15.json",
+        "live_20261031_180158_trace16.json",
+        "live_20261031_180243_trace17.json",
+        "live_20261031_180346_trace18.json",
+        "live_20261031_180407_trace19.json",
+        "live_20261031_180500_trace20.json",
+        "live_20261031_180551_trace21.json",
+        "live_20261031_180642_trace22.json",
+        "live_20261031_180735_trace23.json",
+        "live_20261031_180819_trace24.json",
+        "live_20261031_180904_trace25.json",
+        "live_20261031_180948_trace26.json",
+        "live_20261031_181039_trace27.json",
+        "live_20261031_181132_trace28.json",
+        "live_20261031_181230_trace29.json",
+        "live_20261031_181318_trace30.json"
+      ]
+    },
+    "aggregation_status": "complete"
+  },
+  "workflow_definition": {
+    "description": "Baseline 7-agent sequential IT incident triage and remediation workflow.",
+    "version": "1.0.0",
+    "declared_agents": [
+      {
+        "agent_id": "",
+        "name": "Incident Intake Specialist",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "raw_ticket_text",
+          "service",
+          "reported_impact",
+          "timestamp"
+        ],
+        "declared_outputs": [
+          "normalized_title",
+          "affected_service",
+          "symptoms",
+          "timestamps",
+          "reported_impact_users",
+          "outage_minutes",
+          "missing_fields"
+        ],
+        "declared_dependencies": [],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Incident Classification Engineer",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "normalized_telemetry"
+        ],
+        "declared_outputs": [
+          "category",
+          "apparent_complexity",
+          "classification_reasoning"
+        ],
+        "declared_dependencies": [
+          "intake_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Runbook Retrieval Specialist",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "category",
+          "symptoms"
+        ],
+        "declared_outputs": [
+          "selected_runbook_id",
+          "match_confidence",
+          "prerequisites",
+          "safety_notes"
+        ],
+        "declared_dependencies": [
+          "classification_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Diagnostic & Symptom Correlation Specialist",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "service",
+          "category",
+          "symptoms"
+        ],
+        "declared_outputs": [
+          "correlated_incident_ids",
+          "recurring_patterns",
+          "diagnostic_stage_assessment"
+        ],
+        "declared_dependencies": [
+          "classification_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Severity Assessment Specialist",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "impact_users",
+          "service_tier",
+          "outage_minutes",
+          "diagnostic_context"
+        ],
+        "declared_outputs": [
+          "severity_level",
+          "governing_sla_rule",
+          "justification"
+        ],
+        "declared_dependencies": [
+          "symptom_agent",
+          "runbook_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Remediation Planning Engineer",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "selected_runbook",
+          "severity_level",
+          "diagnosis"
+        ],
+        "declared_outputs": [
+          "remediation_steps",
+          "rollback_plan",
+          "safety_verification"
+        ],
+        "declared_dependencies": [
+          "severity_agent",
+          "runbook_agent"
+        ],
+        "assigned_key_env": null
+      },
+      {
+        "agent_id": "",
+        "name": "Incident Quality Reviewer",
+        "role": null,
+        "responsibilities": null,
+        "declared_inputs": [
+          "all_previous_stages"
+        ],
+        "declared_outputs": [
+          "final_structured_incident_report"
+        ],
+        "declared_dependencies": [
+          "remediation_agent"
+        ],
+        "assigned_key_env": null
+      }
+    ],
+    "declared_dependencies": [
+      {
+        "source": "intake_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "classification_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "classification_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "symptom_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "runbook_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "severity_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "runbook_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "remediation_agent",
+        "target": "",
+        "relationship_type": "declared_dependency"
+      }
+    ],
+    "declared_execution_order": [
+      "intake_agent",
+      "classification_agent",
+      "runbook_agent",
+      "symptom_agent",
+      "severity_agent",
+      "remediation_agent",
+      "incident_review_agent"
+    ],
+    "declared_model_configuration": {
+      "model": "openai/gpt-oss-120b",
+      "provider": null,
+      "assigned_groq_key_env": null
+    },
+    "optimizer_annotations": {
+      "optimization_opportunities": [
+        "Dynamic routing for simple vs complex incidents",
+        "Bypassing symptom diagnostic branch for low-complexity / known-issue incidents",
+        "Parallel execution of runbook retrieval and symptom correlation",
+        "Early stopping when runbook confidence exceeds 0.95 and severity is SEV-4"
+      ],
+      "hypothesis_disclaimer": "Declared candidate hypothesis from workflow specification, not an empirical or validated optimization opportunity."
+    }
+  },
+  "static_implementation_context": {
+    "source_files": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "agents": [
+      {
+        "agent_id": "classification_agent",
+        "role": "Incident Classification Engineer",
+        "goal": "Categorize the incident into a precise failure domain (network_failure, application_error, authentication_issue, database_problem, storage_exhaustion) and assess complexity level (Simple, Moderate, Complex) for dynamic routing.",
+        "backstory": "You are a Senior Systems Architect who excels at recognizing system failure topologies, root failure domains, and whether an incident is standard or multi-service complex.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'Based on the intake findings below, classify the primary failure category (network_failure, application_error, authentication_issue, database_problem, storage_exhaustion) and apparent complexity (Simple, Moderate, Complex):\\nIntake Findings: {intake_text}'",
+            "expected_output": "JSON containing category, apparent_complexity, and classification_reasoning.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'Based on the intake findings below, classify the primary failure category (network_failure, application_error, authentication_issue, database_problem, storage_exhaustion) and apparent complexity (Simple, Moderate, Complex):\\nIntake Findings: {intake_text}'",
+          "Backstory: You are a Senior Systems Architect who excels at recognizing system failure topologies, root failure domains, and whether an incident is standard or multi-service complex."
+        ],
+        "model": "classification_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\incident_triage\\classification_agent.py",
+        "start_line": 11,
+        "end_line": 26,
+        "evidence_refs": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "agent_id": "intake_agent",
+        "role": "Incident Intake Specialist",
+        "goal": "Normalize raw incident ticket text, extract affected services, symptoms, timestamps, and impacted users, and flag any missing critical fields without inventing facts.",
+        "backstory": "You are a Tier-1 SRE Intake Specialist. You parse messy, emergency incident tickets into crisp, unambiguous facts and telemetry without speculating or adding unsupported assumptions.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'Normalize this raw incident ticket and extract structured fields:\\nRaw Ticket: {json.dumps(incident_input, indent=2)}\\nReturn JSON with: normalized_title, affected_service, symptoms, timestamps, reported_impact_users, outage_minutes, and missing_fields.'",
+            "expected_output": "Valid JSON string containing normalized incident telemetry and missing fields.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'Normalize this raw incident ticket and extract structured fields:\\nRaw Ticket: {json.dumps(incident_input, indent=2)}\\nReturn JSON with: normalized_title, affected_service, symptoms, timestamps, reported_impact_users, outage_minutes, and missing_fields.'",
+          "Backstory: You are a Tier-1 SRE Intake Specialist. You parse messy, emergency incident tickets into crisp, unambiguous facts and telemetry without speculating or adding unsupported assumptions."
+        ],
+        "model": "intake_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\incident_triage\\intake_agent.py",
+        "start_line": 11,
+        "end_line": 25,
+        "evidence_refs": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "agent_id": "remediation_agent",
+        "role": "Remediation Planning Engineer",
+        "goal": "Recommend structured, reversible, and safe troubleshooting actions based on retrieved runbooks and incident evidence. Never execute commands or connect to real infrastructure.",
+        "backstory": "You are a Senior Infrastructure Automation Engineer focused on safe system recovery. You specify explicit rollback procedures and safety prerequisites for every action.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'Based on the selected runbook and diagnosis:\\nRunbook: {runbook_text}\\nDiagnosis & Symptoms: {symptom_text}\\nRecommend step-by-step troubleshooting and remediation actions. Must be safe, documented, and fully reversible. Do not execute real infrastructure changes.'",
+            "expected_output": "JSON with ordered remediation_steps, rollback_plan, and safety_verification.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'Based on the selected runbook and diagnosis:\\nRunbook: {runbook_text}\\nDiagnosis & Symptoms: {symptom_text}\\nRecommend step-by-step troubleshooting and remediation actions. Must be safe, documented, and fully reversible. Do not execute real infrastructure changes.'",
+          "Backstory: You are a Senior Infrastructure Automation Engineer focused on safe system recovery. You specify explicit rollback procedures and safety prerequisites for every action."
+        ],
+        "model": "remediation_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\incident_triage\\remediation_agent.py",
+        "start_line": 11,
+        "end_line": 25,
+        "evidence_refs": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "agent_id": "review_agent",
+        "role": "Incident Quality Reviewer",
+        "goal": "Audit findings across intake, classification, runbooks, symptoms, severity, and remediation. Detect contradictions or unsupported claims and compile the final structured JSON incident triage report.",
+        "backstory": "You are the Principal SRE Review Lead. You ensure incident reports maintain the highest standards of factual consistency, SLA compliance, and remediation safety.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'Audit all 6 preceding stages for agreement and missing info:\\nIntake: {intake_text}\\nClassification: {classification_text}\\nRunbook: {runbook_text}\\nSymptoms: {symptom_text}\\nSeverity: {severity_text}\\nRemediation: {remediation_text}\\nProduce the final structured incident triage report in clean JSON.'",
+            "expected_output": "Complete final incident triage JSON report.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'Audit all 6 preceding stages for agreement and missing info:\\nIntake: {intake_text}\\nClassification: {classification_text}\\nRunbook: {runbook_text}\\nSymptoms: {symptom_text}\\nSeverity: {severity_text}\\nRemediation: {remediation_text}\\nProduce the final structured incident triage report in clean JSON.'",
+          "Backstory: You are the Principal SRE Review Lead. You ensure incident reports maintain the highest standards of factual consistency, SLA compliance, and remediation safety."
+        ],
+        "model": "incident_review_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\incident_triage\\review_agent.py",
+        "start_line": 11,
+        "end_line": 25,
+        "evidence_refs": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "agent_id": "runbook_agent",
+        "role": "Runbook Retrieval Specialist",
+        "goal": "Examine candidate runbooks from the local knowledge base, evaluate symptom matches, and select the optimal runbook IDs with supporting evidence.",
+        "backstory": "You are an Operations Reliability Engineer who knows every standard operating procedure and selects the most relevant, proven runbook for active incidents.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Evaluate these candidate operational runbooks for category '{detected_category}':\\n{json.dumps(candidate_runbooks, indent=2)}\\nIncident Telemetry: {intake_text}\\nSelect the best matching runbook_id, outline why it applies, and state its safety notes.\"",
+            "expected_output": "JSON with selected_runbook_id, match_confidence, prerequisites, and safety_notes.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Evaluate these candidate operational runbooks for category '{detected_category}':\\n{json.dumps(candidate_runbooks, indent=2)}\\nIncident Telemetry: {intake_text}\\nSelect the best matching runbook_id, outline why it applies, and state its safety notes.\"",
+          "Backstory: You are an Operations Reliability Engineer who knows every standard operating procedure and selects the most relevant, proven runbook for active incidents."
+        ],
+        "model": "runbook_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [
+          "query_candidate_runbooks"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\incident_triage\\runbook_agent.py",
+        "start_line": 27,
+        "end_line": 41,
+        "evidence_refs": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "agent_id": "severity_agent",
+        "role": "Severity Assessment Specialist",
+        "goal": "Apply deterministic corporate severity thresholds and evaluate contextual impact, returning the final severity level (SEV-1 to SEV-4) and complete justification.",
+        "backstory": "You are an Incident Commander responsible for assigning definitive incident severity levels, strictly adhering to SLA policies and business continuity guidelines.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'Deterministic Severity Rule Result:\\n{json.dumps(deterministic_sev, indent=2)}\\nTelemetry: Users={users_impacted}, ServiceTier={srv_tier}, OutageDuration={outage_dur}m.\\nCorrelated Context: {symptom_text}\\nConfirm or refine the final severity level (SEV-1..SEV-4) with clear SLA justification.'",
+            "expected_output": "JSON with severity_level, governing_sla_rule, and justification.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'Deterministic Severity Rule Result:\\n{json.dumps(deterministic_sev, indent=2)}\\nTelemetry: Users={users_impacted}, ServiceTier={srv_tier}, OutageDuration={outage_dur}m.\\nCorrelated Context: {symptom_text}\\nConfirm or refine the final severity level (SEV-1..SEV-4) with clear SLA justification.'",
+          "Backstory: You are an Incident Commander responsible for assigning definitive incident severity levels, strictly adhering to SLA policies and business continuity guidelines."
+        ],
+        "model": "severity_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [
+          "calculate_deterministic_severity"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\incident_triage\\severity_agent.py",
+        "start_line": 32,
+        "end_line": 46,
+        "evidence_refs": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "agent_id": "symptom_agent",
+        "role": "Diagnostic & Symptom Correlation Specialist",
+        "goal": "Correlate active incident symptoms with synthetic historical incidents and log records. Identify recurring patterns and return matching historical IDs and evidence.",
+        "backstory": "You are a Root Cause Diagnostics Specialist who performs deep telemetry correlation across past outages to spot systemic regressions and recurring anomalies.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f'Correlate current symptoms with historical incidents and log records:\\nHistorical Evidence: {json.dumps(evidence_data, indent=2)}\\nCurrent Symptoms: {intake_text}\\nReturn matching past incident IDs, recurring error signatures, and diagnosis confidence.'",
+            "expected_output": "JSON with correlated_incident_ids, recurring_patterns, and diagnostic_stage_assessment.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f'Correlate current symptoms with historical incidents and log records:\\nHistorical Evidence: {json.dumps(evidence_data, indent=2)}\\nCurrent Symptoms: {intake_text}\\nReturn matching past incident IDs, recurring error signatures, and diagnosis confidence.'",
+          "Backstory: You are a Root Cause Diagnostics Specialist who performs deep telemetry correlation across past outages to spot systemic regressions and recurring anomalies."
+        ],
+        "model": "symptom_agent",
+        "provider": "Unknown",
+        "resolution_status": "static",
+        "registered_tools": [],
+        "helper_functions": [
+          "query_historical_evidence"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\incident_triage\\symptom_agent.py",
+        "start_line": 42,
+        "end_line": 56,
+        "evidence_refs": [
+          "ev_agent_008"
+        ]
+      }
+    ],
+    "invocation_relationships": [],
+    "data_handoffs": [],
+    "conditional_branches": [],
+    "tools_and_helpers": {
+      "registered_tools": [],
+      "explicit_code_invocations": [],
+      "helper_functions": [
+        "calculate_deterministic_severity",
+        "query_candidate_runbooks",
+        "query_historical_evidence",
+        "run_incident_triage_workflow"
+      ],
+      "runtime_llm_tool_selection": {
+        "observable": false,
+        "reason": "Runtime LLM tool selection is unobservable via static AST analysis"
+      }
+    },
+    "analysis_limitations": {
+      "unresolved_references": [],
+      "dynamic_expressions": [],
+      "unsupported_patterns": [],
+      "static_analysis_limitations": [
+        "Dynamic runtime LLM decisions and tool selection cannot be observed via static AST",
+        "Procedural workflow statement order does not imply internal framework agent scheduling"
+      ]
+    }
+  },
+  "runtime_observations": {
+    "total_runs": 30,
+    "successful_runs": 30,
+    "failed_runs": 0,
+    "observed_models": [
+      "openai/gpt-oss-120b"
+    ],
+    "key_distribution": {
+      "GROQ_API_KEY_18": 30,
+      "GROQ_API_KEY_20": 30,
+      "GROQ_API_KEY_19": 30,
+      "GROQ_API_KEY_16": 30,
+      "GROQ_API_KEY_14": 30,
+      "GROQ_API_KEY_11": 30,
+      "GROQ_API_KEY_12": 17,
+      "GROQ_API_KEY_15": 13
+    },
+    "workflow_latency": {
+      "mean_seconds": 46.7083,
+      "median_seconds": 48.649,
+      "min_seconds": 18.062,
+      "max_seconds": 63.388,
+      "observation_count": 30
+    },
+    "workflow_tokens": {
+      "total_tokens": 454776,
+      "mean_tokens": 15159.2,
+      "min_tokens": 13394,
+      "max_tokens": 17514,
+      "total_prompt_tokens": 284411,
+      "mean_prompt_tokens": 9480.4,
+      "total_completion_tokens": 170365,
+      "mean_completion_tokens": 5678.8,
+      "observation_count": 30
+    },
+    "workflow_cost": {
+      "total_cost_usd": 0.30239,
+      "mean_cost_usd": 0.01008,
+      "pricing_source": "trace_telemetry_estimates",
+      "observation_count": 30
+    },
+    "agent_metrics": {
+      "intake_agent": {
+        "agent_id": "intake_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          1
+        ],
+        "latency": {
+          "mean_seconds": 1.4987,
+          "median_seconds": 1.42,
+          "min_seconds": 1.043,
+          "max_seconds": 2.312,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 21644,
+          "mean_tokens": 721.5,
+          "min_tokens": 664,
+          "max_tokens": 864,
+          "total_prompt_tokens": 15950,
+          "mean_prompt_tokens": 531.7,
+          "total_completion_tokens": 5694,
+          "mean_completion_tokens": 189.8,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_18"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "normalized_title": "inventory-api: Thread deadlock detected in OrderFulfillmentWorker (inventory-api)",
+          "affected_service": "inventory-api",
+          "symptoms": [
+            "Thread deadlock detected in OrderFulfillmentWorker",
+            "Secondary telemetry spike on inventory-api"
+          ],
+          "timestamps": {
+            "created_at": "2026-08-01T14:49:00+00:00"
+          },
+          "reported_impact_users": 3500,
+          "outage_minutes": 55,
+          "missing_fields": [
+            "resolved_at"
+          ]
+        },
+        "error_count": 0
+      },
+      "classification_agent": {
+        "agent_id": "classification_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          2
+        ],
+        "latency": {
+          "mean_seconds": 1.5978,
+          "median_seconds": 1.433,
+          "min_seconds": 0.99,
+          "max_seconds": 4.162,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 18172,
+          "mean_tokens": 605.7,
+          "min_tokens": 568,
+          "max_tokens": 654,
+          "total_prompt_tokens": 11090,
+          "mean_prompt_tokens": 369.7,
+          "total_completion_tokens": 7082,
+          "mean_completion_tokens": 236.1,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_20"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "category": "application_error",
+          "apparent_complexity": "Moderate",
+          "classification_reasoning": "The intake reports a thread deadlock in the OrderFulfillmentWorker of the inventory‑api service. A deadlock is an internal application logic/concurrency issue rather than a network, authentication, database, or storage problem, matching the ground‑truth category of application_error. Resolving a deadlock typically requires code analysis, lock ordering review, and possibly changes to threading models, which involves multiple components within the service but does not usually require a full system redesign. This places the incident at a moderate level of operational complexity."
+        },
+        "error_count": 0
+      },
+      "runbook_agent": {
+        "agent_id": "runbook_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          3
+        ],
+        "latency": {
+          "mean_seconds": 2.2051,
+          "median_seconds": 2.067,
+          "min_seconds": 1.298,
+          "max_seconds": 6.037,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 57847,
+          "mean_tokens": 1928.2,
+          "min_tokens": 1676,
+          "max_tokens": 2319,
+          "total_prompt_tokens": 43995,
+          "mean_prompt_tokens": 1466.5,
+          "total_completion_tokens": 13852,
+          "mean_completion_tokens": 461.7,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_19"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "selected_runbook_id": "RB-105",
+          "match_confidence": 0.85,
+          "prerequisites": [
+            "Root access or AWS SSO role ProdOperations",
+            "Kubectl context set to production cluster"
+          ],
+          "security_notes": "Verify write freeze before node reboot. Promote read-replica prior to primary teardown."
+        },
+        "error_count": 0
+      },
+      "symptom_agent": {
+        "agent_id": "symptom_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          4
+        ],
+        "latency": {
+          "mean_seconds": 2.2172,
+          "median_seconds": 2.1505,
+          "min_seconds": 1.316,
+          "max_seconds": 2.758,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 60362,
+          "mean_tokens": 2012.1,
+          "min_tokens": 1691,
+          "max_tokens": 2305,
+          "total_prompt_tokens": 44736,
+          "mean_prompt_tokens": 1491.2,
+          "total_completion_tokens": 15626,
+          "mean_completion_tokens": 520.9,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_16"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "correlated_incident_ids": [
+            "INC-1001"
+          ],
+          "recurring_patterns": {
+            "error_signatures": [
+              "ERR_APPLICATION_ERROR_925"
+            ],
+            "symptom_pattern": "inventory-api: Thread deadlock detected in OrderFulfillmentWorker",
+            "affected_services": [
+              "inventory-api"
+            ],
+            "category": "application_error"
+          },
+          "diagnostic_stage_assessment": {
+            "stage": "Root Cause Confirmed",
+            "confidence_score": 0.95,
+            "notes": "Historical correlation indicates recurring pattern in inventory-api."
+          }
+        },
+        "error_count": 0
+      },
+      "severity_agent": {
+        "agent_id": "severity_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          5
+        ],
+        "latency": {
+          "mean_seconds": 1.4995,
+          "median_seconds": 1.394,
+          "min_seconds": 0.989,
+          "max_seconds": 2.643,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 20254,
+          "mean_tokens": 675.1,
+          "min_tokens": 614,
+          "max_tokens": 770,
+          "total_prompt_tokens": 14067,
+          "mean_prompt_tokens": 468.9,
+          "total_completion_tokens": 6187,
+          "mean_completion_tokens": 206.2,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_14"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "severity_level": "SEV-2",
+          "governing_sla_rule": "Tier-1 service impacting >= 500 users, or cross-tier impact >= 2,000 users.",
+          "justification": "The incident impacts 3,500 users, exceeding the 2,000‑user cross‑tier threshold defined in the SLA rule. Although the affected service is Tier‑2, the user count alone triggers the SEV‑2 classification. The outage duration of 55 minutes is within the response window for SEV‑2 (typically < 1 hour for initial acknowledgment and remediation), and the root cause has been confirmed with high confidence (0.95). Therefore, the deterministic rule and the contextual metrics both validate a final severity level of SEV‑2."
+        },
+        "error_count": 0
+      },
+      "remediation_agent": {
+        "agent_id": "remediation_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          6
+        ],
+        "latency": {
+          "mean_seconds": 4.4755,
+          "median_seconds": 4.4925,
+          "min_seconds": 3.47,
+          "max_seconds": 5.534,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 77198,
+          "mean_tokens": 2573.3,
+          "min_tokens": 2135,
+          "max_tokens": 3154,
+          "total_prompt_tokens": 28154,
+          "mean_prompt_tokens": 938.5,
+          "total_completion_tokens": 49044,
+          "mean_completion_tokens": 1634.8,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_11"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "remediation_steps": [
+            {
+              "step_number": 1,
+              "title": "Validate Access and Cluster Context",
+              "description": "Ensure the operator has the required root or ProdOperations SSO role and that kubectl is pointed at the production cluster.",
+              "commands": [
+                "aws sts get-caller-identity",
+                "kubectl config current-context",
+                "kubectl get nodes --selector=node-role.kubernetes.io/master"
+              ],
+              "verification": [
+                "AWS identity ARN matches ProdOperations role",
+                "kubectl context name contains 'prod'",
+                "Node list shows expected production node names"
+              ]
+            },
+            {
+              "step_number": 2,
+              "title": "Verify Write‑Freeze and Promote Read‑Replica",
+              "description": "Confirm that no write traffic is in flight, then promote the standby read‑replica to become the primary database for inventory‑api.",
+              "commands": [
+                "curl -sSf https://inventory-api.internal/metrics | grep write_requests_in_flight",
+                "aws rds describe-db-instances --db-instance-identifier inventory-db-primary",
+                "aws rds promote-read-replica-db-cluster --db-cluster-identifier inventory-db-replica"
+              ],
+              "verification": [
+                "Write‑freeze metric returns 0",
+                "Primary DB instance status changes to 'available' and role = 'writer'",
+                "Read‑replica status changes to 'promoted'"
+              ]
+            },
+            {
+              "step_number": 3,
+              "title": "Graceful Rolling Restart of inventory‑api Pods",
+              "description": "Perform a rolling restart to clear the deadlocked OrderFulfillmentWorker threads while preserving service continuity.",
+              "commands": [
+                "kubectl rollout restart deployment/inventory-api",
+                "kubectl get pods -l app=inventory-api -w"
+              ],
+              "verification": [
+                "All pods reach READY 1/1 and STATUS Running within 5 minutes",
+                "kubectl logs -l app=inventory-api --tail=20 | grep -i 'deadlock' returns no matches"
+              ]
+            },
+            {
+              "step_number": 4,
+              "title": "Post‑Remediation Health Audit",
+              "description": "Validate that the service health endpoint is healthy and that error rates have dropped to baseline.",
+              "commands": [
+                "curl -sSf https://inventory-api.internal/healthz",
+                "curl -sSf https://inventory-api.internal/metrics | grep ERR_APPLICATION_ERROR_925",
+                "kubectl top pods -l app=inventory-api"
+              ],
+              "verification": [
+                "Health endpoint returns HTTP 200 with body 'OK'",
+                "Error metric count is 0 or below threshold (<5 per minute)",
+                "CPU/Memory usage within normal range (<70% of request limits)"
+              ]
+            }
+          ],
+          "rollback_plan": {
+            "overall_strategy": "Revert the deployment to the previous container image tag and, if needed, demote the promoted replica back to read‑only while re‑establishing the original primary.",
+            "steps": [
+              {
+                "step_number": 1,
+                "description": "Undo the rolling restart by rolling back to the prior image tag.",
+                "commands": [
+                  "kubectl rollout undo deployment/inventory-api"
+                ],
+                "verification": [
+                  "Pods restart with the previous image tag (verify via kubectl describe pod)",
+                  "Previous deadlock state does not reappear within 10 minutes"
+                ]
+              },
+              {
+                "step_number": 2,
+                "description": "If the promoted replica caused data divergence, demote it and re‑attach the original primary.",
+                "commands": [
+                  "aws rds modify-db-cluster --db-cluster-identifier inventory-db-replica --apply-immediately --no-allow-major-version-upgrade",
+                  "aws rds failover-db-cluster --db-cluster-identifier inventory-db-primary"
+                ],
+                "verification": [
+                  "Primary endpoint points back to original instance",
+                  "Replication lag returns to <5 seconds"
+                ]
+              },
+              {
+                "step_number": 3,
+                "description": "Re‑run health audit to confirm service stability after rollback.",
+                "commands": [
+                  "curl -sSf https://inventory-api.internal/healthz",
+                  "curl -sSf https://inventory-api.internal/metrics | grep ERR_APPLICATION_ERROR_925"
+                ],
+                "verification": [
+                  "Health endpoint returns HTTP 200",
+                  "Error metric remains at baseline"
+                ]
+              }
+            ]
+          },
+          "safety_verification": {
+            "prerequisite_checks": [
+              "Operator credentials verified (ProdOperations role)",
+              "Write‑freeze confirmed (no in‑flight writes)",
+              "Rollback procedure documented and approved by change management",
+              "Current deployment image tag recorded for undo"
+            ],
+            "is_safe_to_execute": true
+          }
+        },
+        "error_count": 0
+      },
+      "incident_review_agent": {
+        "agent_id": "incident_review_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          7
+        ],
+        "latency": {
+          "mean_seconds": 33.2103,
+          "median_seconds": 36.7795,
+          "min_seconds": 6.184,
+          "max_seconds": 48.938,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 199299,
+          "mean_tokens": 6643.3,
+          "min_tokens": 5387,
+          "max_tokens": 8116,
+          "total_prompt_tokens": 126419,
+          "mean_prompt_tokens": 4214.0,
+          "total_completion_tokens": 72880,
+          "mean_completion_tokens": 2429.3,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_12",
+          "GROQ_API_KEY_15"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "intake": {
+            "normalized_title": "inventory-api: Thread deadlock detected in OrderFulfillmentWorker (inventory-api)",
+            "affected_service": "inventory-api",
+            "symptoms": [
+              "Thread deadlock detected in OrderFulfillmentWorker",
+              "Secondary telemetry spike on inventory-api"
+            ],
+            "timestamps": {
+              "created_at": "2026-08-01T14:49:00+00:00"
+            },
+            "reported_impact_users": 3500,
+            "outage_minutes": 55,
+            "missing_fields": [
+              "resolved_at"
+            ]
+          },
+          "classification": {
+            "category": "application_error",
+            "apparent_complexity": "Moderate",
+            "classification_reasoning": "The intake reports a thread deadlock in the OrderFulfillmentWorker of the inventory‑api service. A deadlock is an internal application logic/concurrency issue rather than a network, authentication, database, or storage problem, matching the ground‑truth category of application_error. Resolving a deadlock typically requires code analysis, lock ordering review, and possibly changes to threading models, which involves multiple components within the service but does not usually require a full system redesign. This places the incident at a moderate level of operational complexity."
+          },
+          "runbook": {
+            "selected_runbook_id": "RB-105",
+            "match_confidence": 0.85,
+            "prerequisites": [
+              "Root access or AWS SSO role ProdOperations",
+              "Kubectl context set to production cluster"
+            ],
+            "security_notes": "Verify write freeze before node reboot. Promote read-replica prior to primary teardown."
+          },
+          "symptoms": {
+            "correlated_incident_ids": [
+              "INC-1001"
+            ],
+            "recurring_patterns": {
+              "error_signatures": [
+                "ERR_APPLICATION_ERROR_925"
+              ],
+              "symptom_pattern": "inventory-api: Thread deadlock detected in OrderFulfillmentWorker",
+              "affected_services": [
+                "inventory-api"
+              ],
+              "category": "application_error"
+            },
+            "diagnostic_stage_assessment": {
+              "stage": "Root Cause Confirmed",
+              "confidence_score": 0.95,
+              "notes": "Historical correlation indicates recurring pattern in inventory-api."
+            }
+          },
+          "severity": {
+            "severity_level": "SEV-2",
+            "governing_sla_rule": "Tier-1 service impacting >= 500 users, or cross-tier impact >= 2,000 users.",
+            "justification": "The incident impacts 3,500 users, exceeding the 2,000‑user cross‑tier threshold defined in the SLA rule. Although the affected service is Tier‑2, the user count alone triggers the SEV‑2 classification. The outage duration of 55 minutes is within the response window for SEV‑2 (typically < 1 hour for initial acknowledgment and remediation), and the root cause has been confirmed with high confidence (0.95). Therefore, the deterministic rule and the contextual metrics both validate a final severity level of SEV‑2."
+          },
+          "remediation": {
+            "remediation_steps": [
+              {
+                "step_number": 1,
+                "title": "Validate Access and Cluster Context",
+                "description": "Ensure the operator has the required root or ProdOperations SSO role and that kubectl is pointed at the production cluster.",
+                "commands": [
+                  "aws sts get-caller-identity",
+                  "kubectl config current-context",
+                  "kubectl get nodes --selector=node-role.kubernetes.io/master"
+                ],
+                "verification": [
+                  "AWS identity ARN matches ProdOperations role",
+                  "kubectl context name contains 'prod'",
+                  "Node list shows expected production node names"
+                ]
+              },
+              {
+                "step_number": 2,
+                "title": "Verify Write‑Freeze and Promote Read‑Replica",
+                "description": "Confirm that no write traffic is in flight, then promote the standby read‑replica to become the primary database for inventory‑api.",
+                "commands": [
+                  "curl -sSf https://inventory-api.internal/metrics | grep write_requests_in_flight",
+                  "aws rds describe-db-instances --db-instance-identifier inventory-db-primary",
+                  "aws rds promote-read-replica-db-cluster --db-cluster-identifier inventory-db-replica"
+                ],
+                "verification": [
+                  "Write‑freeze metric returns 0",
+                  "Primary DB instance status changes to 'available' and role = 'writer'",
+                  "Read‑replica status changes to 'promoted'"
+                ]
+              },
+              {
+                "step_number": 3,
+                "title": "Graceful Rolling Restart of inventory‑api Pods",
+                "description": "Perform a rolling restart to clear the deadlocked OrderFulfillmentWorker threads while preserving service continuity.",
+                "commands": [
+                  "kubectl rollout restart deployment/inventory-api",
+                  "kubectl get pods -l app=inventory-api -w"
+                ],
+                "verification": [
+                  "All pods reach READY 1/1 and STATUS Running within 5 minutes",
+                  "kubectl logs -l app=inventory-api --tail=20 | grep -i 'deadlock' returns no matches"
+                ]
+              },
+              {
+                "step_number": 4,
+                "title": "Post‑Remediation Health Audit",
+                "description": "Validate that the service health endpoint is healthy and that error rates have dropped to baseline.",
+                "commands": [
+                  "curl -sSf https://inventory-api.internal/healthz",
+                  "curl -sSf https://inventory-api.internal/metrics | grep ERR_APPLICATION_ERROR_925",
+                  "kubectl top pods -l app=inventory-api"
+                ],
+                "verification": [
+                  "Health endpoint returns HTTP 200 with body 'OK'",
+                  "Error metric count is 0 or below threshold (<5 per minute)",
+                  "CPU/Memory usage within normal range (<70% of request limits)"
+                ]
+              }
+            ],
+            "rollback_plan": {
+              "overall_strategy": "Revert the deployment to the previous container image tag and, if needed, demote the promoted replica back to read‑only while re‑establishing the original primary.",
+              "steps": [
+                {
+                  "step_number": 1,
+                  "description": "Undo the rolling restart by rolling back to the prior image tag.",
+                  "commands": [
+                    "kubectl rollout undo deployment/inventory-api"
+                  ],
+                  "verification": [
+                    "Pods restart with the previous image tag (verify via kubectl describe pod)",
+                    "Previous deadlock state does not reappear within 10 minutes"
+                  ]
+                },
+                {
+                  "step_number": 2,
+                  "description": "If the promoted replica caused data divergence, demote it and re‑attach the original primary.",
+                  "commands": [
+                    "aws rds modify-db-cluster --db-cluster-identifier inventory-db-replica --apply-immediately --no-allow-major-version-upgrade",
+                    "aws rds failover-db-cluster --db-cluster-identifier inventory-db-primary"
+                  ],
+                  "verification": [
+                    "Primary endpoint points back to original instance",
+                    "Replication lag returns to <5 seconds"
+                  ]
+                },
+                {
+                  "step_number": 3,
+                  "description": "Re‑run health audit to confirm service stability after rollback.",
+                  "commands": [
+                    "curl -sSf https://inventory-api.internal/healthz",
+                    "curl -sSf https://inventory-api.internal/metrics | grep ERR_APPLICATION_ERROR_925"
+                  ],
+                  "verification": [
+                    "Health endpoint returns HTTP 200",
+                    "Error metric remains at baseline"
+                  ]
+                }
+              ]
+            },
+            "safety_verification": {
+              "prerequisite_checks": [
+                "Operator credentials verified (ProdOperations role)",
+                "Write‑freeze confirmed (no in‑flight writes)",
+                "Rollback procedure documented and approved by change management",
+                "Current deployment image tag recorded for undo"
+              ],
+              "is_safe_to_execute": true
+            }
+          },
+          "final_review_summary": {
+            "incident_id": "INC-1001",
+            "service": "inventory-api",
+            "final_severity": "SEV-2",
+            "runbook_assigned": "RB-105",
+            "remediation_status": "READY_FOR_OPERATOR_APPROVAL",
+            "qa_verification": "PASS - All safety constraints and rollback plans validated."
+          }
+        },
+        "error_count": 0
+      }
+    },
+    "runs_summary": [
+      {
+        "run_id": "live_20261031_174840_trace01",
+        "status": "SUCCESS",
+        "duration_seconds": 18.062,
+        "total_tokens": 13394,
+        "prompt_tokens": 8775,
+        "completion_tokens": 4619,
+        "estimated_cost_usd": 0.008826,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T17:48:58.364343+00:00",
+        "trace_file": "live_20261031_174840_trace01.json"
+      },
+      {
+        "run_id": "live_20261031_175102_trace02",
+        "status": "SUCCESS",
+        "duration_seconds": 20.751,
+        "total_tokens": 13779,
+        "prompt_tokens": 8688,
+        "completion_tokens": 5091,
+        "estimated_cost_usd": 0.009148,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T17:51:23.480619+00:00",
+        "trace_file": "live_20261031_175102_trace02.json"
+      },
+      {
+        "run_id": "live_20261031_175123_trace03",
+        "status": "SUCCESS",
+        "duration_seconds": 31.546,
+        "total_tokens": 14833,
+        "prompt_tokens": 9173,
+        "completion_tokens": 5660,
+        "estimated_cost_usd": 0.009883,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T17:51:55.037291+00:00",
+        "trace_file": "live_20261031_175123_trace03.json"
+      },
+      {
+        "run_id": "live_20261031_175155_trace04",
+        "status": "SUCCESS",
+        "duration_seconds": 54.718,
+        "total_tokens": 15085,
+        "prompt_tokens": 9526,
+        "completion_tokens": 5559,
+        "estimated_cost_usd": 0.010012,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T17:52:49.772363+00:00",
+        "trace_file": "live_20261031_175155_trace04.json"
+      },
+      {
+        "run_id": "live_20261031_175249_trace05",
+        "status": "SUCCESS",
+        "duration_seconds": 54.493,
+        "total_tokens": 16084,
+        "prompt_tokens": 9973,
+        "completion_tokens": 6111,
+        "estimated_cost_usd": 0.010712,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T17:53:44.276338+00:00",
+        "trace_file": "live_20261031_175249_trace05.json"
+      },
+      {
+        "run_id": "live_20261031_175344_trace06",
+        "status": "SUCCESS",
+        "duration_seconds": 48.505,
+        "total_tokens": 14084,
+        "prompt_tokens": 9066,
+        "completion_tokens": 5018,
+        "estimated_cost_usd": 0.009313,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T17:54:32.794138+00:00",
+        "trace_file": "live_20261031_175344_trace06.json"
+      },
+      {
+        "run_id": "live_20261031_175432_trace07",
+        "status": "SUCCESS",
+        "duration_seconds": 47.039,
+        "total_tokens": 14791,
+        "prompt_tokens": 9046,
+        "completion_tokens": 5745,
+        "estimated_cost_usd": 0.009876,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T17:55:19.848656+00:00",
+        "trace_file": "live_20261031_175432_trace07.json"
+      },
+      {
+        "run_id": "live_20261031_175519_trace08",
+        "status": "SUCCESS",
+        "duration_seconds": 53.328,
+        "total_tokens": 15472,
+        "prompt_tokens": 9636,
+        "completion_tokens": 5836,
+        "estimated_cost_usd": 0.010296,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T17:56:13.190647+00:00",
+        "trace_file": "live_20261031_175519_trace08.json"
+      },
+      {
+        "run_id": "live_20261031_175613_trace09",
+        "status": "SUCCESS",
+        "duration_seconds": 52.774,
+        "total_tokens": 14781,
+        "prompt_tokens": 9235,
+        "completion_tokens": 5546,
+        "estimated_cost_usd": 0.00983,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T17:57:05.980021+00:00",
+        "trace_file": "live_20261031_175613_trace09.json"
+      },
+      {
+        "run_id": "live_20261031_175705_trace10",
+        "status": "SUCCESS",
+        "duration_seconds": 48.793,
+        "total_tokens": 14619,
+        "prompt_tokens": 9348,
+        "completion_tokens": 5271,
+        "estimated_cost_usd": 0.009679,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T17:57:54.786455+00:00",
+        "trace_file": "live_20261031_175705_trace10.json"
+      },
+      {
+        "run_id": "live_20261031_175754_trace11",
+        "status": "SUCCESS",
+        "duration_seconds": 42.327,
+        "total_tokens": 13493,
+        "prompt_tokens": 8738,
+        "completion_tokens": 4755,
+        "estimated_cost_usd": 0.008912,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T17:58:37.129825+00:00",
+        "trace_file": "live_20261031_175754_trace11.json"
+      },
+      {
+        "run_id": "live_20261031_175837_trace12",
+        "status": "SUCCESS",
+        "duration_seconds": 47.345,
+        "total_tokens": 15370,
+        "prompt_tokens": 9620,
+        "completion_tokens": 5750,
+        "estimated_cost_usd": 0.010218,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T17:59:24.492575+00:00",
+        "trace_file": "live_20261031_175837_trace12.json"
+      },
+      {
+        "run_id": "live_20261031_175924_trace13",
+        "status": "SUCCESS",
+        "duration_seconds": 54.082,
+        "total_tokens": 15466,
+        "prompt_tokens": 9801,
+        "completion_tokens": 5665,
+        "estimated_cost_usd": 0.010258,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T18:00:18.596571+00:00",
+        "trace_file": "live_20261031_175924_trace13.json"
+      },
+      {
+        "run_id": "live_20261031_180018_trace14",
+        "status": "SUCCESS",
+        "duration_seconds": 47.662,
+        "total_tokens": 15010,
+        "prompt_tokens": 9486,
+        "completion_tokens": 5524,
+        "estimated_cost_usd": 0.009961,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T18:01:06.275376+00:00",
+        "trace_file": "live_20261031_180018_trace14.json"
+      },
+      {
+        "run_id": "live_20261031_180106_trace15",
+        "status": "SUCCESS",
+        "duration_seconds": 52.586,
+        "total_tokens": 15782,
+        "prompt_tokens": 9733,
+        "completion_tokens": 6049,
+        "estimated_cost_usd": 0.010521,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T18:01:58.879622+00:00",
+        "trace_file": "live_20261031_180106_trace15.json"
+      },
+      {
+        "run_id": "live_20261031_180158_trace16",
+        "status": "SUCCESS",
+        "duration_seconds": 44.124,
+        "total_tokens": 13424,
+        "prompt_tokens": 8681,
+        "completion_tokens": 4743,
+        "estimated_cost_usd": 0.008869,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T18:02:43.032447+00:00",
+        "trace_file": "live_20261031_180158_trace16.json"
+      },
+      {
+        "run_id": "live_20261031_180243_trace17",
+        "status": "SUCCESS",
+        "duration_seconds": 63.388,
+        "total_tokens": 17514,
+        "prompt_tokens": 10637,
+        "completion_tokens": 6877,
+        "estimated_cost_usd": 0.011709,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T18:03:46.436291+00:00",
+        "trace_file": "live_20261031_180243_trace17.json"
+      },
+      {
+        "run_id": "live_20261031_180346_trace18",
+        "status": "SUCCESS",
+        "duration_seconds": 20.979,
+        "total_tokens": 16661,
+        "prompt_tokens": 9930,
+        "completion_tokens": 6731,
+        "estimated_cost_usd": 0.011176,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T18:04:07.420597+00:00",
+        "trace_file": "live_20261031_180346_trace18.json"
+      },
+      {
+        "run_id": "live_20261031_180407_trace19",
+        "status": "SUCCESS",
+        "duration_seconds": 53.235,
+        "total_tokens": 16388,
+        "prompt_tokens": 10060,
+        "completion_tokens": 6328,
+        "estimated_cost_usd": 0.010935,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T18:05:00.660777+00:00",
+        "trace_file": "live_20261031_180407_trace19.json"
+      },
+      {
+        "run_id": "live_20261031_180500_trace20",
+        "status": "SUCCESS",
+        "duration_seconds": 51.049,
+        "total_tokens": 15435,
+        "prompt_tokens": 9717,
+        "completion_tokens": 5718,
+        "estimated_cost_usd": 0.01025,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T18:05:51.716715+00:00",
+        "trace_file": "live_20261031_180500_trace20.json"
+      },
+      {
+        "run_id": "live_20261031_180551_trace21",
+        "status": "SUCCESS",
+        "duration_seconds": 50.932,
+        "total_tokens": 15615,
+        "prompt_tokens": 9765,
+        "completion_tokens": 5850,
+        "estimated_cost_usd": 0.010383,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T18:06:42.673539+00:00",
+        "trace_file": "live_20261031_180551_trace21.json"
+      },
+      {
+        "run_id": "live_20261031_180642_trace22",
+        "status": "SUCCESS",
+        "duration_seconds": 53.113,
+        "total_tokens": 16050,
+        "prompt_tokens": 10088,
+        "completion_tokens": 5962,
+        "estimated_cost_usd": 0.010662,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T18:07:35.796905+00:00",
+        "trace_file": "live_20261031_180642_trace22.json"
+      },
+      {
+        "run_id": "live_20261031_180735_trace23",
+        "status": "SUCCESS",
+        "duration_seconds": 43.782,
+        "total_tokens": 13742,
+        "prompt_tokens": 8696,
+        "completion_tokens": 5046,
+        "estimated_cost_usd": 0.009117,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T18:08:19.590588+00:00",
+        "trace_file": "live_20261031_180735_trace23.json"
+      },
+      {
+        "run_id": "live_20261031_180819_trace24",
+        "status": "SUCCESS",
+        "duration_seconds": 44.568,
+        "total_tokens": 14931,
+        "prompt_tokens": 9179,
+        "completion_tokens": 5752,
+        "estimated_cost_usd": 0.00996,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T18:09:04.168911+00:00",
+        "trace_file": "live_20261031_180819_trace24.json"
+      },
+      {
+        "run_id": "live_20261031_180904_trace25",
+        "status": "SUCCESS",
+        "duration_seconds": 43.975,
+        "total_tokens": 14091,
+        "prompt_tokens": 8845,
+        "completion_tokens": 5246,
+        "estimated_cost_usd": 0.009363,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T18:09:48.153479+00:00",
+        "trace_file": "live_20261031_180904_trace25.json"
+      },
+      {
+        "run_id": "live_20261031_180948_trace26",
+        "status": "SUCCESS",
+        "duration_seconds": 51.093,
+        "total_tokens": 15120,
+        "prompt_tokens": 9499,
+        "completion_tokens": 5621,
+        "estimated_cost_usd": 0.010045,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T18:10:39.268470+00:00",
+        "trace_file": "live_20261031_180948_trace26.json"
+      },
+      {
+        "run_id": "live_20261031_181039_trace27",
+        "status": "SUCCESS",
+        "duration_seconds": 53.091,
+        "total_tokens": 17006,
+        "prompt_tokens": 10387,
+        "completion_tokens": 6619,
+        "estimated_cost_usd": 0.011357,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T18:11:32.374499+00:00",
+        "trace_file": "live_20261031_181039_trace27.json"
+      },
+      {
+        "run_id": "live_20261031_181132_trace28",
+        "status": "SUCCESS",
+        "duration_seconds": 57.826,
+        "total_tokens": 16593,
+        "prompt_tokens": 10335,
+        "completion_tokens": 6258,
+        "estimated_cost_usd": 0.011041,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T18:12:30.209027+00:00",
+        "trace_file": "live_20261031_181132_trace28.json"
+      },
+      {
+        "run_id": "live_20261031_181230_trace29",
+        "status": "SUCCESS",
+        "duration_seconds": 48.003,
+        "total_tokens": 14167,
+        "prompt_tokens": 9005,
+        "completion_tokens": 5162,
+        "estimated_cost_usd": 0.009391,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T18:13:18.220402+00:00",
+        "trace_file": "live_20261031_181230_trace29.json"
+      },
+      {
+        "run_id": "live_20261031_181318_trace30",
+        "status": "SUCCESS",
+        "duration_seconds": 48.081,
+        "total_tokens": 15996,
+        "prompt_tokens": 9743,
+        "completion_tokens": 6253,
+        "estimated_cost_usd": 0.010688,
+        "agent_count": 7,
+        "timestamp": "2026-10-31T18:14:06.307965+00:00",
+        "trace_file": "live_20261031_181318_trace30.json"
+      }
+    ]
+  },
+  "workflow_graph": {
+    "nodes": [
+      {
+        "id": "workflow:incident_triage",
+        "type": "workflow",
+        "name": "incident_triage",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:",
+        "type": "agent",
+        "name": "",
+        "source": "declared"
+      },
+      {
+        "id": "agent:classification_agent",
+        "type": "agent",
+        "name": "classification_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:incident_review_agent",
+        "type": "agent",
+        "name": "incident_review_agent",
+        "source": "runtime_observed"
+      },
+      {
+        "id": "agent:intake_agent",
+        "type": "agent",
+        "name": "intake_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:remediation_agent",
+        "type": "agent",
+        "name": "remediation_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:review_agent",
+        "type": "agent",
+        "name": "review_agent",
+        "source": "statically_observed"
+      },
+      {
+        "id": "agent:runbook_agent",
+        "type": "agent",
+        "name": "runbook_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:severity_agent",
+        "type": "agent",
+        "name": "severity_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:symptom_agent",
+        "type": "agent",
+        "name": "symptom_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "task:classification_agent_task",
+        "type": "task",
+        "name": "classification_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:intake_agent_task",
+        "type": "task",
+        "name": "intake_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:remediation_agent_task",
+        "type": "task",
+        "name": "remediation_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:review_agent_task",
+        "type": "task",
+        "name": "review_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:runbook_agent_task",
+        "type": "task",
+        "name": "runbook_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:severity_agent_task",
+        "type": "task",
+        "name": "severity_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:symptom_agent_task",
+        "type": "task",
+        "name": "symptom_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:query_candidate_runbooks",
+        "type": "function",
+        "name": "query_candidate_runbooks",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:calculate_deterministic_severity",
+        "type": "function",
+        "name": "calculate_deterministic_severity",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:query_historical_evidence",
+        "type": "function",
+        "name": "query_historical_evidence",
+        "source": "statically_observed"
+      }
+    ],
+    "edges": [
+      {
+        "source": "agent:classification_agent",
+        "target": "task:classification_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "source": "agent:intake_agent",
+        "target": "task:intake_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "source": "agent:remediation_agent",
+        "target": "task:remediation_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "source": "agent:review_agent",
+        "target": "task:review_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "source": "agent:runbook_agent",
+        "target": "task:runbook_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "source": "agent:severity_agent",
+        "target": "task:severity_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "source": "agent:symptom_agent",
+        "target": "task:symptom_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "source": "agent:runbook_agent",
+        "target": "function:query_candidate_runbooks",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "source": "agent:severity_agent",
+        "target": "function:calculate_deterministic_severity",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "source": "agent:symptom_agent",
+        "target": "function:query_historical_evidence",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "source": "workflow:incident_triage",
+        "target": "agent:review_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:incident_triage",
+        "target": "agent:classification_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:incident_triage",
+        "target": "agent:remediation_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:incident_triage",
+        "target": "agent:severity_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:incident_triage",
+        "target": "agent:symptom_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:incident_triage",
+        "target": "agent:intake_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:incident_triage",
+        "target": "agent:runbook_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "agent:intake_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:classification_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:classification_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:symptom_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:runbook_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:severity_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:runbook_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:remediation_agent",
+        "target": "agent:",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:intake_agent",
+        "target": "agent:classification_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:classification_agent",
+        "target": "agent:runbook_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:runbook_agent",
+        "target": "agent:symptom_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:symptom_agent",
+        "target": "agent:severity_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:severity_agent",
+        "target": "agent:remediation_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:remediation_agent",
+        "target": "agent:incident_review_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      }
+    ]
+  },
+  "reconciliation_and_limitations": {
+    "agent_reconciliation": [
+      {
+        "agent_id": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "declared_unimplemented",
+        "notes": "Agent declared in design but not found in Python source code."
+      },
+      {
+        "agent_id": "classification_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      },
+      {
+        "agent_id": "incident_review_agent",
+        "declared": false,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "discrepancy",
+        "notes": "Dec=False, Stat=False, Run=True"
+      },
+      {
+        "agent_id": "intake_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      },
+      {
+        "agent_id": "remediation_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      },
+      {
+        "agent_id": "review_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": false,
+        "status": "discrepancy",
+        "notes": "Dec=False, Stat=True, Run=False"
+      },
+      {
+        "agent_id": "runbook_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      },
+      {
+        "agent_id": "severity_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      },
+      {
+        "agent_id": "symptom_agent",
+        "declared": false,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "undeclared_runtime_agent",
+        "notes": "Agent implemented in code and observed at runtime but missing from workflow.json manifest."
+      }
+    ],
+    "dependency_reconciliation": [
+      {
+        "source": "intake_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "classification_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "classification_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "symptom_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "runbook_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "severity_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "runbook_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      },
+      {
+        "source": "remediation_agent",
+        "target": "",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": false,
+        "status": "runtime_unverified",
+        "notes": "Dependency not verified at runtime."
+      }
+    ],
+    "model_reconciliation": {
+      "declared_model": "openai/gpt-oss-120b",
+      "statically_extracted_model": "classification_agent",
+      "runtime_observed_model": "openai/gpt-oss-120b",
+      "status": "matching",
+      "notes": "Declared model 'openai/gpt-oss-120b' matches runtime enforced model 'openai/gpt-oss-120b'."
+    },
+    "limitations": [
+      "Per-agent cost in traces is not tracked individually; only workflow-level cost is recorded.",
+      "Dynamic runtime branch outcomes and retry loops are recorded as sequential executions.",
+      "Static prompt text reflects task description parameters; dynamic LLM runtime prompt interpolations are reflected in trace prompt tokens.",
+      "Static AST dependency graph was a flat star topology; inter-agent dependencies are reconciled from workflow.json and runtime trace sequences."
+    ]
+  }
+}

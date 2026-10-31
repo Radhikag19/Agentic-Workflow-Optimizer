@@ -1,0 +1,144 @@
+{
+  "run_id": "live_20261031_132854_trace20",
+  "workflow_name": "customer_support",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 18.096,
+  "agent_execution_count": 6,
+  "agent_executions": [
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_1 (gsk_cj...BPdW)",
+      "duration_seconds": 1.434,
+      "tokens": 762,
+      "prompt_tokens": 446,
+      "completion_tokens": 316,
+      "output": {
+        "category": "refund_request",
+        "urgency": "high",
+        "complexity": "complex",
+        "customer_impact": "financial_loss_potential_and_contractual_dispute",
+        "routing_recommendation": "Escalate to Finance Refund Team with policy exception review; involve Enterprise Account Management for direct handling"
+      },
+      "notes": "",
+      "order": 1,
+      "agent_id": "ticket_classification_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_2 (gsk_RW...f1VS)",
+      "duration_seconds": 1.505,
+      "tokens": 894,
+      "prompt_tokens": 500,
+      "completion_tokens": 394,
+      "output": {
+        "applicable_policy_ids": [
+          "SUP-POL-101"
+        ],
+        "applicable_guide_ids": [],
+        "policy_conditions": {
+          "eligibility": "Full refunds are permitted only within 30 days of the billing date for services that have not been used.",
+          "post_30_day_provision": "For requests beyond the 30‑day window, the customer is eligible only for a pro‑rated service credit, which requires approval from a Senior Manager.",
+          "sla_hours": 24,
+          "restrictions": "Requests for a full refund after 30 days (e.g., 65 days in this ticket) are out of policy and cannot be granted without senior escalation."
+        },
+        "retrieval_summary": "Policy SUP-POL-101 was retrieved; no troubleshooting guide matches. The ticket's refund request exceeds the 30‑day full‑refund window, so it falls under the post‑30‑day provision requiring senior manager approval for a credit, not a full refund."
+      },
+      "notes": "",
+      "order": 2,
+      "agent_id": "policy_retrieval_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_3 (gsk_WO...maHn)",
+      "duration_seconds": 1.592,
+      "tokens": 1090,
+      "prompt_tokens": 682,
+      "completion_tokens": 408,
+      "output": {
+        "investigation_findings": "The ticket is a synthetic test case for a refund request made 65 days after contract start. The request falls outside the standard refund window defined in the company's policy for Enterprise tier contracts. Historical records show the customer has previously resolved billing and technical issues via standard SOPs without policy exceptions. No evidence of system malfunction or prior refund approvals is present.",
+        "root_cause_hypothesis": "Refund request denied due to policy restriction: the request exceeds the allowable refund period (typically 30‑60 days) for Enterprise contracts, triggering an automatic block.",
+        "confirmed_facts": [
+          "Ticket ID TICK-2026-0020 was created on 2026-09-06.",
+          "Customer ID CUST-0020 is an Enterprise tier client, synthetic profile.",
+          "The request is for a full refund 65 days after contract start.",
+          "Category is 'refund_request' with apparent_complexity 'policy_restricted'.",
+          "Historical cases for this customer were resolved via standard SOPs with satisfactory outcomes."
+        ],
+        "data_gaps": [
+          "Exact contractual refund terms for Enterprise tier (e.g., allowed refund window, any exceptions).",
+          "Payment transaction details confirming the contract start date and amount paid.",
+          "Verification of whether any prior partial refunds or credits were issued to this account.",
+          "System logs indicating whether the refund request was automatically blocked by policy enforcement rules."
+        ]
+      },
+      "notes": "",
+      "order": 3,
+      "agent_id": "issue_investigation_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_4 (gsk_LX...Bm5c)",
+      "duration_seconds": 1.969,
+      "tokens": 1625,
+      "prompt_tokens": 1029,
+      "completion_tokens": 596,
+      "output": {
+        "resolution_type": "requires_user_action",
+        "recommended_action": [
+          "1. Retrieve the contract start date and payment transaction details for CUST-0020 to confirm the 65‑day elapsed period.",
+          "2. Calculate the pro‑rated service credit based on the portion of the service period already consumed, per Policy SUP-POL-101.",
+          "3. Submit a Senior Manager approval request for the pro‑rated credit, citing the policy clause that mandates senior approval for refunds beyond the 30‑day window.",
+          "4. Once approval is obtained, have the Finance Refund Team issue the approved credit to the customer's account (no full refund).",
+          "5. Communicate the outcome to the customer: explain that a full refund is outside policy, offer the approved pro‑rated credit, and provide details on the credit amount and expected posting timeline."
+        ],
+        "policy_justification": "Policy SUP-POL-101 states that full refunds are only permitted within 30 days of the billing date for unused services. Requests beyond the 30‑day window (such as this 65‑day request) are out of policy and may only be satisfied with a pro‑rated service credit, which requires Senior Manager approval. Therefore a full refund cannot be granted.",
+        "escalation_required": true
+      },
+      "notes": "",
+      "order": 4,
+      "agent_id": "resolution_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_5 (gsk_OY...sK3t)",
+      "duration_seconds": 6.219,
+      "tokens": 1293,
+      "prompt_tokens": 693,
+      "completion_tokens": 600,
+      "output": {
+        "response_text": "Dear Enterprise Client 20,\n\nThank you for reaching out regarding your request for a full refund. We understand that you are seeking a refund 65 days after your contract start date, and we appreciate the opportunity to review this matter for you.\n\nOur policy (SUP‑POL‑101) permits full refunds only within the first 30 days of the billing date for services that have not been used. Because your request falls outside that window, we are unable to provide a full refund. However, we can offer a pro‑rated service credit for the portion of the service period that remains unused. This credit requires senior‑manager approval before it can be issued.\n\nWe are currently:\n1. Verifying the contract start date and payment details.\n2. Calculating the appropriate pro‑rated credit.\n3. Submitting the required senior‑manager approval request.\n4. Coordinating with our Finance Refund Team to apply the approved credit to your account.\n\nWe will keep you informed of each step and let you know as soon as the credit has been approved and posted. Thank you for your understanding.\n\nSincerely,\nCustomer Success Team",
+        "tone": "professional, empathetic",
+        "next_steps_for_customer": "We are reviewing your request internally and no additional information is needed from you at this time. We will notify you within 3–5 business days of the senior‑manager approval and provide the exact credit amount and expected posting date.",
+        "ticket_status": "in_progress"
+      },
+      "notes": "",
+      "order": 5,
+      "agent_id": "response_drafting_agent"
+    },
+    {
+      "status": "SUCCESS",
+      "assigned_key_identifier": "GROQ_API_KEY_6 (gsk_y8...qtlA)",
+      "duration_seconds": 1.743,
+      "tokens": 2017,
+      "prompt_tokens": 1500,
+      "completion_tokens": 517,
+      "output": {
+        "qa_status": "APPROVED",
+        "final_ticket_status": "ESCALATED",
+        "verification_notes": "The drafted response accurately reflects policy SUP-POL-101, clearly explains why a full refund cannot be granted, and offers a pro‑rated service credit pending senior‑manager approval. No unsupported promises are made, and the tone is professional and empathetic. All required internal actions are outlined, and the customer is informed that no further information is needed from them at this time. The response therefore fully addresses the customer's request within policy constraints.",
+        "support_summary_report": "The ticket is a high‑urgency, complex refund request beyond the 30‑day full‑refund window (65 days). Policy mandates a pro‑rated credit with senior‑manager approval; a full refund is not permissible. The response correctly communicates this, outlines the internal steps (verification, credit calculation, approval, finance processing), and sets a clear expectation of a 3‑5 business‑day update. No policy contradictions or unsupported commitments are present. The ticket requires internal escalation to Finance Refund Team and senior management, thus the final status is ESCALATED."
+      },
+      "notes": "",
+      "order": 6,
+      "agent_id": "resolution_verification_agent"
+    }
+  ],
+  "total_tokens": 7681,
+  "prompt_tokens": 4850,
+  "completion_tokens": 2831,
+  "estimated_cost_usd": 0.005098,
+  "error_message": null,
+  "final_output": "{\n  \"qa_status\": \"APPROVED\",\n  \"final_ticket_status\": \"ESCALATED\",\n  \"verification_notes\": \"The drafted response accurately reflects policy SUP-POL-101, clearly explains why a full refund cannot be granted, and offers a pro\\u2011rated service credit pending senior\\u2011manager approval. No unsupported promises are made, and the tone is professional and empathetic. All required internal actions are outlined, and the customer is informed that no further information is needed from them at this time. The response therefore fully addresses the customer's request within policy constraints.\",\n  \"support_summary_report\": \"The ticket is a high\\u2011urgency, complex refund request beyond the 30\\u2011day full\\u2011refund window (65 days). Policy mandates a pro\\u2011rated credit with senior\\u2011manager approval; a full refund is not permissible. The response correctly communicates this, outlines the internal steps (verification, credit calculation, approval, finance processing), and sets a clear expectation of a 3\\u20115 business\\u2011day update. No policy contradictions or unsupported commitments are present. The ticket requires internal escalation to Finance Refund Team and senior management, thus the final status is ESCALATED.\"\n}",
+  "timestamp": "2026-10-31T13:29:12.227006+00:00"
+}

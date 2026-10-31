@@ -1,0 +1,2412 @@
+{
+  "metadata": {
+    "workflow_id": "procurement_supplier_selection",
+    "workflow_name": "procurement_supplier_selection",
+    "evidence_schema_version": "1.0",
+    "generated_at": "2026-10-31T19:56:52.263887+00:00",
+    "traces_discovered": 30,
+    "traces_processed": 30,
+    "traces_failed": 0,
+    "input_files": {
+      "workflow_json": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\procurement_supplier_selection\\workflow.json",
+      "workflow_context_json": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\procurement_supplier_selection\\workflow_context.json",
+      "traces_directory": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Ingestion_Traces_final\\Ingestion_Traces\\procurement_supplier_selection",
+      "trace_files": [
+        "live_20261031_133429_trace01.json",
+        "live_20261031_133506_trace02.json",
+        "live_20261031_133530_trace03.json",
+        "live_20261031_133554_trace04.json",
+        "live_20261031_133617_trace05.json",
+        "live_20261031_133653_trace06.json",
+        "live_20261031_133727_trace07.json",
+        "live_20261031_133801_trace08.json",
+        "live_20261031_133836_trace09.json",
+        "live_20261031_133912_trace10.json",
+        "live_20261031_134452_trace11.json",
+        "live_20261031_134519_trace12.json",
+        "live_20261031_134542_trace13.json",
+        "live_20261031_134646_trace14.json",
+        "live_20261031_134724_trace15.json",
+        "live_20261031_134757_trace16.json",
+        "live_20261031_134832_trace17.json",
+        "live_20261031_134918_trace18.json",
+        "live_20261031_135827_trace19.json",
+        "live_20261031_135856_trace20.json",
+        "live_20261031_140638_trace21.json",
+        "live_20261031_142353_trace22.json",
+        "live_20261031_150442_trace23.json",
+        "live_20261031_154747_trace24.json",
+        "live_20261031_154819_trace25.json",
+        "live_20261031_154852_trace26.json",
+        "live_20261031_154918_trace27.json",
+        "live_20261031_154947_trace28.json",
+        "live_20261031_155013_trace29.json",
+        "live_20261031_155042_trace30.json"
+      ]
+    },
+    "aggregation_status": "complete"
+  },
+  "workflow_definition": {
+    "description": "Baseline Procurement and Supplier Selection Multi-Agent Workflow",
+    "version": "1.0.0",
+    "declared_agents": [
+      {
+        "agent_id": "quotation_analysis_agent",
+        "name": null,
+        "role": "Senior Quotation Analyst",
+        "responsibilities": null,
+        "declared_inputs": [
+          "procurement_request",
+          "quotations"
+        ],
+        "declared_outputs": [
+          "request_id",
+          "normalized_quotations",
+          "extraction_flags"
+        ],
+        "declared_dependencies": [],
+        "assigned_key_env": "GROQ_API_KEY_3"
+      },
+      {
+        "agent_id": "supplier_profile_agent",
+        "name": null,
+        "role": "Supplier Intelligence Officer",
+        "responsibilities": null,
+        "declared_inputs": [
+          "supplier_ids",
+          "supplier_profiles.json"
+        ],
+        "declared_outputs": [
+          "evaluated_profiles",
+          "profile_strengths",
+          "operational_concerns"
+        ],
+        "declared_dependencies": [],
+        "assigned_key_env": "GROQ_API_KEY_3"
+      },
+      {
+        "agent_id": "delivery_analysis_agent",
+        "name": null,
+        "role": "Supply Chain Fulfillment Analyst",
+        "responsibilities": null,
+        "declared_inputs": [
+          "target_delivery_date",
+          "delivery_schedules.json"
+        ],
+        "declared_outputs": [
+          "delivery_evaluation",
+          "on_time_suppliers",
+          "late_risk_suppliers",
+          "logistics_summary"
+        ],
+        "declared_dependencies": [],
+        "assigned_key_env": "GROQ_API_KEY_3"
+      },
+      {
+        "agent_id": "supplier_risk_agent",
+        "name": null,
+        "role": "Procurement Risk & Compliance Auditor",
+        "responsibilities": null,
+        "declared_inputs": [
+          "supplier_ids",
+          "risk_records.json"
+        ],
+        "declared_outputs": [
+          "supplier_risk_scores",
+          "flagged_suppliers",
+          "risk_mitigation_notes"
+        ],
+        "declared_dependencies": [],
+        "assigned_key_env": "GROQ_API_KEY_3"
+      },
+      {
+        "agent_id": "contract_analysis_agent",
+        "name": null,
+        "role": "Commercial Contracts Specialist",
+        "responsibilities": null,
+        "declared_inputs": [
+          "supplier_ids",
+          "contracts.json"
+        ],
+        "declared_outputs": [
+          "contract_comparison",
+          "best_terms_supplier",
+          "contract_risks"
+        ],
+        "declared_dependencies": [],
+        "assigned_key_env": "GROQ_API_KEY_3"
+      },
+      {
+        "agent_id": "cost_comparison_agent",
+        "name": null,
+        "role": "Cost & Financial Analyst",
+        "responsibilities": null,
+        "declared_inputs": [
+          "normalized_quotations"
+        ],
+        "declared_outputs": [
+          "cost_ranking",
+          "lowest_cost_bidder",
+          "cost_spread_percentage",
+          "commercial_summary"
+        ],
+        "declared_dependencies": [
+          "quotation_analysis_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_3"
+      },
+      {
+        "agent_id": "weighted_evaluation_agent",
+        "name": null,
+        "role": "Multi-Criteria Decision Analysis Specialist",
+        "responsibilities": null,
+        "declared_inputs": [
+          "cost_ranking",
+          "delivery_eval",
+          "risk_eval",
+          "profile_eval",
+          "contract_eval",
+          "evaluation_criteria.json"
+        ],
+        "declared_outputs": [
+          "weighted_scores",
+          "top_ranked_supplier",
+          "score_spread",
+          "evaluation_rationale"
+        ],
+        "declared_dependencies": [
+          "cost_comparison_agent",
+          "delivery_analysis_agent",
+          "supplier_risk_agent",
+          "supplier_profile_agent",
+          "contract_analysis_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_3"
+      },
+      {
+        "agent_id": "selection_recommendation_agent",
+        "name": null,
+        "role": "Strategic Sourcing Committee Chair",
+        "responsibilities": null,
+        "declared_inputs": [
+          "consolidated_procurement_evidence"
+        ],
+        "declared_outputs": [
+          "recommended_supplier_id",
+          "commercial_rationale",
+          "risk_acceptance",
+          "next_steps"
+        ],
+        "declared_dependencies": [
+          "weighted_evaluation_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_3"
+      },
+      {
+        "agent_id": "final_review_agent_procurement",
+        "name": null,
+        "role": "Chief Procurement Officer & Audit Lead",
+        "responsibilities": null,
+        "declared_inputs": [
+          "complete_procurement_audit"
+        ],
+        "declared_outputs": [
+          "workflow_status",
+          "selected_supplier",
+          "compliance_verification",
+          "summary_report",
+          "award_justification"
+        ],
+        "declared_dependencies": [
+          "selection_recommendation_agent"
+        ],
+        "assigned_key_env": "GROQ_API_KEY_3"
+      }
+    ],
+    "declared_dependencies": [
+      {
+        "source": "quotation_analysis_agent",
+        "target": "cost_comparison_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "cost_comparison_agent",
+        "target": "weighted_evaluation_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "delivery_analysis_agent",
+        "target": "weighted_evaluation_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "supplier_risk_agent",
+        "target": "weighted_evaluation_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "supplier_profile_agent",
+        "target": "weighted_evaluation_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "contract_analysis_agent",
+        "target": "weighted_evaluation_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "weighted_evaluation_agent",
+        "target": "selection_recommendation_agent",
+        "relationship_type": "declared_dependency"
+      },
+      {
+        "source": "selection_recommendation_agent",
+        "target": "final_review_agent_procurement",
+        "relationship_type": "declared_dependency"
+      }
+    ],
+    "declared_execution_order": [
+      "quotation_analysis_agent",
+      "supplier_profile_agent",
+      "delivery_analysis_agent",
+      "supplier_risk_agent",
+      "contract_analysis_agent",
+      "cost_comparison_agent",
+      "weighted_evaluation_agent",
+      "selection_recommendation_agent",
+      "final_review_agent_procurement"
+    ],
+    "declared_model_configuration": {
+      "model": "openai/gpt-oss-120b",
+      "provider": null,
+      "assigned_groq_key_env": "GROQ_API_KEY_3"
+    },
+    "optimizer_annotations": {
+      "optimization_opportunities": [
+        "Parallelize the 5 independent stages: quotation_analysis, supplier_profile, delivery_analysis, supplier_risk, and contract_analysis",
+        "Consolidate cost_comparison_agent directly into weighted_evaluation_agent",
+        "Prompt compression: Aggregate structured numeric evidence rather than re-sending raw bid documents to downstream agents",
+        "Prune contract analysis when standard pre-approved supplier contracts are in place"
+      ],
+      "hypothesis_disclaimer": "Declared candidate hypothesis from workflow specification, not an empirical or validated optimization opportunity."
+    }
+  },
+  "static_implementation_context": {
+    "source_files": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "agents": [
+      {
+        "agent_id": "contract_analysis_agent",
+        "role": "Commercial Contracts Specialist",
+        "goal": "Audit legal terms, payment conditions, delay penalties, and warranty protections.",
+        "backstory": "A corporate contract analyst reviewing vendor terms to protect organizational interests.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Analyze contract terms across all competing suppliers.\\nContract Terms by Supplier:\\n{json.dumps(contract_data, indent=2)}\\n\\nTasks:\\n1. Compare payment terms (e.g. Net 30 vs Net 45), warranty length, and delay penalties.\\n2. Identify any unfavorable or restrictive clauses.\\nReturn strictly valid JSON with keys: 'contract_comparison', 'best_terms_supplier', and 'contract_risks'.\"",
+            "expected_output": "Strictly valid JSON containing contract_comparison, best_terms_supplier, and contract_risks.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Analyze contract terms across all competing suppliers.\\nContract Terms by Supplier:\\n{json.dumps(contract_data, indent=2)}\\n\\nTasks:\\n1. Compare payment terms (e.g. Net 30 vs Net 45), warranty length, and delay penalties.\\n2. Identify any unfavorable or restrictive clauses.\\nReturn strictly valid JSON with keys: 'contract_comparison', 'best_terms_supplier', and 'contract_risks'.\"",
+          "Backstory: A corporate contract analyst reviewing vendor terms to protect organizational interests."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task",
+          "deterministic_contract_lookup"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\procurement_supplier_selection\\contract_analysis_agent.py",
+        "start_line": 25,
+        "end_line": 34,
+        "evidence_refs": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "agent_id": "cost_comparison_agent",
+        "role": "Cost & Financial Analyst",
+        "goal": "Perform rigorous commercial cost comparison and rank suppliers by total evaluated cost.",
+        "backstory": "A financial procurement analyst calculating total cost of ownership across competing supplier bids.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Analyze the total commercial cost of competing supplier quotations.\\nDeterministic Landed Cost Ranking from Python:\\n{json.dumps(cost_ranking, indent=2)}\\n\\nTasks:\\n1. Explain the cost breakdown (unit price vs. shipping vs. tax).\\n2. Highlight the lowest-cost bidder and the cost variance to other bidders.\\nReturn strictly valid JSON with keys: 'cost_ranking', 'lowest_cost_bidder', 'cost_spread_percentage', and 'commercial_summary'.\"",
+            "expected_output": "Strictly valid JSON containing cost_ranking, lowest_cost_bidder, cost_spread_percentage, and commercial_summary.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Analyze the total commercial cost of competing supplier quotations.\\nDeterministic Landed Cost Ranking from Python:\\n{json.dumps(cost_ranking, indent=2)}\\n\\nTasks:\\n1. Explain the cost breakdown (unit price vs. shipping vs. tax).\\n2. Highlight the lowest-cost bidder and the cost variance to other bidders.\\nReturn strictly valid JSON with keys: 'cost_ranking', 'lowest_cost_bidder', 'cost_spread_percentage', and 'commercial_summary'.\"",
+          "Backstory: A financial procurement analyst calculating total cost of ownership across competing supplier bids."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task",
+          "deterministic_cost_ranking"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\procurement_supplier_selection\\cost_comparison_agent.py",
+        "start_line": 34,
+        "end_line": 43,
+        "evidence_refs": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "agent_id": "delivery_analysis_agent",
+        "role": "Supply Chain Fulfillment Analyst",
+        "goal": "Evaluate supplier delivery schedules, shipping transit times, and milestone feasibility.",
+        "backstory": "A logistics specialist focused on critical path analysis and preventing supply chain delays.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Analyze delivery commitments and schedule risks for this procurement request.\\nRequired Target Date: {required_date_str}\\nDeterministic Schedule Analysis from Python:\\n{json.dumps(delivery_eval, indent=2)}\\n\\nInstructions:\\n1. Highlight suppliers that meet vs. violate the delivery deadline.\\n2. Assess buffer margins and fulfillment risk.\\nReturn strictly valid JSON with keys: 'delivery_evaluation', 'on_time_suppliers', 'late_risk_suppliers', and 'logistics_summary'.\"",
+            "expected_output": "Strictly valid JSON containing delivery_evaluation, on_time_suppliers, late_risk_suppliers, and logistics_summary.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Analyze delivery commitments and schedule risks for this procurement request.\\nRequired Target Date: {required_date_str}\\nDeterministic Schedule Analysis from Python:\\n{json.dumps(delivery_eval, indent=2)}\\n\\nInstructions:\\n1. Highlight suppliers that meet vs. violate the delivery deadline.\\n2. Assess buffer margins and fulfillment risk.\\nReturn strictly valid JSON with keys: 'delivery_evaluation', 'on_time_suppliers', 'late_risk_suppliers', and 'logistics_summary'.\"",
+          "Backstory: A logistics specialist focused on critical path analysis and preventing supply chain delays."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task",
+          "deterministic_delivery_check"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\procurement_supplier_selection\\delivery_analysis_agent.py",
+        "start_line": 32,
+        "end_line": 41,
+        "evidence_refs": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "agent_id": "final_review_agent_procurement",
+        "role": "Chief Procurement Officer & Audit Lead",
+        "goal": "Verify evaluation integrity, confirm weighted arithmetic, and authorize the final sourcing report.",
+        "backstory": "The final governance authority ensuring procurement awards comply with organizational ethics and policy.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Perform the final governance audit on this supplier selection process.\\nComplete Sourcing Audit File:\\n{json.dumps(complete_procurement_audit, indent=2)}\\n\\nTasks:\\n1. Verify that the recommended supplier actually meets mandatory criteria and passed weighted evaluation.\\n2. Confirm there are no unverified cost calculations or unaddressed risk flags.\\n3. Generate the final executive procurement report.\\nOutput strictly valid JSON with keys: 'workflow_status' ('COMPLETED'), 'selected_supplier', 'compliance_verification', 'summary_report', and 'award_justification'.\"",
+            "expected_output": "Strictly valid JSON containing workflow_status, selected_supplier, compliance_verification, summary_report, and award_justification.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Perform the final governance audit on this supplier selection process.\\nComplete Sourcing Audit File:\\n{json.dumps(complete_procurement_audit, indent=2)}\\n\\nTasks:\\n1. Verify that the recommended supplier actually meets mandatory criteria and passed weighted evaluation.\\n2. Confirm there are no unverified cost calculations or unaddressed risk flags.\\n3. Generate the final executive procurement report.\\nOutput strictly valid JSON with keys: 'workflow_status' ('COMPLETED'), 'selected_supplier', 'compliance_verification', 'summary_report', and 'award_justification'.\"",
+          "Backstory: The final governance authority ensuring procurement awards comply with organizational ethics and policy."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\procurement_supplier_selection\\final_review_agent.py",
+        "start_line": 12,
+        "end_line": 21,
+        "evidence_refs": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "agent_id": "quotation_analysis_agent",
+        "role": "Senior Quotation Analyst",
+        "goal": "Extract, normalize, and validate competing supplier bids and commercial terms.",
+        "backstory": "A procurement analyst specializing in normalizing commercial bids across disparate supplier formats.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Analyze and normalize competing quotations for this procurement request.\\nProcurement Request:\\n{json.dumps(procurement_request, indent=2)}\\n\\nSubmitted Supplier Quotations:\\n{json.dumps(quotations, indent=2)}\\n\\nTasks:\\n1. Normalize item quantities, unit prices, shipping, and taxes per supplier.\\n2. Identify missing pricing elements, validity periods, or currency discrepancies.\\n3. Return normalized quotation summaries for all competing bidders.\\nReturn strictly valid JSON with keys: 'request_id', 'normalized_quotations', and 'extraction_flags'.\"",
+            "expected_output": "Strictly valid JSON containing request_id, normalized_quotations, and extraction_flags.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Analyze and normalize competing quotations for this procurement request.\\nProcurement Request:\\n{json.dumps(procurement_request, indent=2)}\\n\\nSubmitted Supplier Quotations:\\n{json.dumps(quotations, indent=2)}\\n\\nTasks:\\n1. Normalize item quantities, unit prices, shipping, and taxes per supplier.\\n2. Identify missing pricing elements, validity periods, or currency discrepancies.\\n3. Return normalized quotation summaries for all competing bidders.\\nReturn strictly valid JSON with keys: 'request_id', 'normalized_quotations', and 'extraction_flags'.\"",
+          "Backstory: A procurement analyst specializing in normalizing commercial bids across disparate supplier formats."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\procurement_supplier_selection\\quotation_analysis_agent.py",
+        "start_line": 12,
+        "end_line": 21,
+        "evidence_refs": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "agent_id": "selection_recommendation_agent",
+        "role": "Strategic Sourcing Committee Chair",
+        "goal": "Synthesize technical, delivery, commercial, risk, and scoring evidence into an authoritative supplier recommendation.",
+        "backstory": "An executive procurement director balancing strategic risk, quality, and commercial value.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Formulate an authoritative supplier award recommendation.\\nConsolidated Procurement Evidence:\\n{json.dumps(all_procurement_evidence, indent=2)}\\n\\nInstructions:\\n1. Recommend the winning supplier or explain why no supplier qualifies.\\n2. Explicitly detail trade-offs (e.g. lowest cost vs. delivery buffer).\\n3. Note: NEVER issue binding contracts or purchase orders.\\nReturn strictly valid JSON with keys: 'recommended_supplier_id', 'commercial_rationale', 'risk_acceptance', and 'next_steps'.\"",
+            "expected_output": "Strictly valid JSON containing recommended_supplier_id, commercial_rationale, risk_acceptance, and next_steps.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Formulate an authoritative supplier award recommendation.\\nConsolidated Procurement Evidence:\\n{json.dumps(all_procurement_evidence, indent=2)}\\n\\nInstructions:\\n1. Recommend the winning supplier or explain why no supplier qualifies.\\n2. Explicitly detail trade-offs (e.g. lowest cost vs. delivery buffer).\\n3. Note: NEVER issue binding contracts or purchase orders.\\nReturn strictly valid JSON with keys: 'recommended_supplier_id', 'commercial_rationale', 'risk_acceptance', and 'next_steps'.\"",
+          "Backstory: An executive procurement director balancing strategic risk, quality, and commercial value."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\procurement_supplier_selection\\selection_recommendation_agent.py",
+        "start_line": 12,
+        "end_line": 21,
+        "evidence_refs": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "agent_id": "supplier_profile_agent",
+        "role": "Supplier Intelligence Officer",
+        "goal": "Evaluate supplier capabilities, manufacturing capacity, and operational standing.",
+        "backstory": "A strategic sourcing specialist who audits supplier corporate health, certifications, and technical capacity.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Evaluate the profiles of competing suppliers.\\nTarget Supplier Profiles from Registry:\\n{json.dumps(profiles, indent=2)}\\n\\nTasks:\\n1. Compare technical capability, ISO certifications, and manufacturing capacity.\\n2. Note any operational limitations or unverified profile data.\\nReturn strictly valid JSON with keys: 'evaluated_profiles', 'profile_strengths', and 'operational_concerns'.\"",
+            "expected_output": "Strictly valid JSON containing evaluated_profiles, profile_strengths, and operational_concerns.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Evaluate the profiles of competing suppliers.\\nTarget Supplier Profiles from Registry:\\n{json.dumps(profiles, indent=2)}\\n\\nTasks:\\n1. Compare technical capability, ISO certifications, and manufacturing capacity.\\n2. Note any operational limitations or unverified profile data.\\nReturn strictly valid JSON with keys: 'evaluated_profiles', 'profile_strengths', and 'operational_concerns'.\"",
+          "Backstory: A strategic sourcing specialist who audits supplier corporate health, certifications, and technical capacity."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task",
+          "deterministic_profile_lookup"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\procurement_supplier_selection\\supplier_profile_agent.py",
+        "start_line": 25,
+        "end_line": 34,
+        "evidence_refs": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "agent_id": "supplier_risk_agent",
+        "role": "Procurement Risk & Compliance Auditor",
+        "goal": "Assess supplier quality defect rates, historical failure frequency, and audit status.",
+        "backstory": "A risk governance analyst evaluating supplier reliability and preventing vendor failures.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Perform risk assessment across all competing suppliers.\\nSynthetic Supplier Risk Records:\\n{json.dumps(risk_data, indent=2)}\\n\\nInstructions:\\n1. Evaluate defect rates, delivery failure rates, and audit warnings.\\n2. Categorize each supplier's risk ('LOW', 'MEDIUM', 'HIGH').\\n3. Highlight red flags that should block supplier selection.\\nReturn strictly valid JSON with keys: 'supplier_risk_scores', 'flagged_suppliers', and 'risk_mitigation_notes'.\"",
+            "expected_output": "Strictly valid JSON containing supplier_risk_scores, flagged_suppliers, and risk_mitigation_notes.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Perform risk assessment across all competing suppliers.\\nSynthetic Supplier Risk Records:\\n{json.dumps(risk_data, indent=2)}\\n\\nInstructions:\\n1. Evaluate defect rates, delivery failure rates, and audit warnings.\\n2. Categorize each supplier's risk ('LOW', 'MEDIUM', 'HIGH').\\n3. Highlight red flags that should block supplier selection.\\nReturn strictly valid JSON with keys: 'supplier_risk_scores', 'flagged_suppliers', and 'risk_mitigation_notes'.\"",
+          "Backstory: A risk governance analyst evaluating supplier reliability and preventing vendor failures."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task",
+          "deterministic_risk_lookup"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\procurement_supplier_selection\\supplier_risk_agent.py",
+        "start_line": 25,
+        "end_line": 34,
+        "evidence_refs": [
+          "ev_agent_009"
+        ]
+      },
+      {
+        "agent_id": "weighted_evaluation_agent",
+        "role": "Multi-Criteria Decision Analysis Specialist",
+        "goal": "Apply formal weighted decision matrices to rank suppliers objectively across all evaluation pillars.",
+        "backstory": "An operations research analyst calculating quantitative scoring models for vendor selection.",
+        "tasks": [
+          {
+            "task_name": null,
+            "description": "f\"Review and explain the multi-criteria weighted scoring across competing suppliers.\\nDeterministic Weighted Scores from Python:\\n{json.dumps(scored_results, indent=2)}\\n\\nInstructions:\\n1. Explain why the top-ranked supplier achieved the highest score.\\n2. Discuss the trade-offs between cost savings and risk/delivery factors.\\nReturn strictly valid JSON with keys: 'weighted_scores', 'top_ranked_supplier', 'score_spread', and 'evaluation_rationale'.\"",
+            "expected_output": "Strictly valid JSON containing weighted_scores, top_ranked_supplier, score_spread, and evaluation_rationale.",
+            "tools": []
+          }
+        ],
+        "prompts": [
+          "f\"Review and explain the multi-criteria weighted scoring across competing suppliers.\\nDeterministic Weighted Scores from Python:\\n{json.dumps(scored_results, indent=2)}\\n\\nInstructions:\\n1. Explain why the top-ranked supplier achieved the highest score.\\n2. Discuss the trade-offs between cost savings and risk/delivery factors.\\nReturn strictly valid JSON with keys: 'weighted_scores', 'top_ranked_supplier', 'score_spread', and 'evaluation_rationale'.\"",
+          "Backstory: An operations research analyst calculating quantitative scoring models for vendor selection."
+        ],
+        "model": null,
+        "provider": null,
+        "resolution_status": "unresolved",
+        "registered_tools": [],
+        "helper_functions": [
+          "create_task",
+          "deterministic_weighted_scoring"
+        ],
+        "source_file": "C:\\Users\\Chait\\Downloads\\Target-MAS-Dataset-main\\Target-MAS-Dataset-main\\Agents\\procurement_supplier_selection\\weighted_evaluation_agent.py",
+        "start_line": 82,
+        "end_line": 91,
+        "evidence_refs": [
+          "ev_agent_010"
+        ]
+      }
+    ],
+    "invocation_relationships": [],
+    "data_handoffs": [],
+    "conditional_branches": [],
+    "tools_and_helpers": {
+      "registered_tools": [],
+      "explicit_code_invocations": [],
+      "helper_functions": [
+        "create_task",
+        "deterministic_contract_lookup",
+        "deterministic_cost_ranking",
+        "deterministic_delivery_check",
+        "deterministic_profile_lookup",
+        "deterministic_risk_lookup",
+        "deterministic_weighted_scoring",
+        "run_procurement_workflow"
+      ],
+      "runtime_llm_tool_selection": {
+        "observable": false,
+        "reason": "Runtime LLM tool selection is unobservable via static AST analysis"
+      }
+    },
+    "analysis_limitations": {
+      "unresolved_references": [],
+      "dynamic_expressions": [],
+      "unsupported_patterns": [],
+      "static_analysis_limitations": [
+        "Dynamic runtime LLM decisions and tool selection cannot be observed via static AST",
+        "Procedural workflow statement order does not imply internal framework agent scheduling"
+      ]
+    }
+  },
+  "runtime_observations": {
+    "total_runs": 30,
+    "successful_runs": 30,
+    "failed_runs": 0,
+    "observed_models": [
+      "openai/gpt-oss-120b"
+    ],
+    "key_distribution": {
+      "GROQ_API_KEY_1": 30,
+      "GROQ_API_KEY_2": 30,
+      "GROQ_API_KEY_3": 30,
+      "GROQ_API_KEY_4": 30,
+      "GROQ_API_KEY_5": 30,
+      "GROQ_API_KEY_6": 23,
+      "GROQ_API_KEY_7": 30,
+      "GROQ_API_KEY_8": 18,
+      "GROQ_API_KEY_9": 23,
+      "GROQ_API_KEY_10": 5,
+      "GROQ_API_KEY_11": 7,
+      "GROQ_API_KEY_12": 7,
+      "GROQ_API_KEY_13": 7
+    },
+    "workflow_latency": {
+      "mean_seconds": 102.0962,
+      "median_seconds": 32.137,
+      "min_seconds": 22.834,
+      "max_seconds": 1035.233,
+      "observation_count": 30
+    },
+    "workflow_tokens": {
+      "total_tokens": 528185,
+      "mean_tokens": 17606.2,
+      "min_tokens": 16428,
+      "max_tokens": 18930,
+      "total_prompt_tokens": 321494,
+      "mean_prompt_tokens": 10716.5,
+      "total_completion_tokens": 206691,
+      "mean_completion_tokens": 6889.7,
+      "observation_count": 30
+    },
+    "workflow_cost": {
+      "total_cost_usd": 0.35296,
+      "mean_cost_usd": 0.011765,
+      "pricing_source": "trace_telemetry_estimates",
+      "observation_count": 30
+    },
+    "agent_metrics": {
+      "quotation_analysis_agent": {
+        "agent_id": "quotation_analysis_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          1
+        ],
+        "latency": {
+          "mean_seconds": 2.8877,
+          "median_seconds": 2.8775,
+          "min_seconds": 2.39,
+          "max_seconds": 3.576,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 53809,
+          "mean_tokens": 1793.6,
+          "min_tokens": 1554,
+          "max_tokens": 2552,
+          "total_prompt_tokens": 24068,
+          "mean_prompt_tokens": 802.3,
+          "total_completion_tokens": 29741,
+          "mean_completion_tokens": 991.4,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_1"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "request_id": "RFQ-2026-001",
+          "normalized_quotations": [
+            {
+              "quotation_id": "QUO-RFQ-2026-001-PRO-SUP-01",
+              "supplier_id": "PRO-SUP-01",
+              "supplier_name": "Titanium Engineering Solutions",
+              "unit_price": 42.75,
+              "quantity_quoted": 500,
+              "item_total": 21375.0,
+              "shipping_cost": 500.0,
+              "tax_amount": 1496.25,
+              "total_cost": 23371.25,
+              "currency": "USD",
+              "validity_days": 60,
+              "shipping_per_unit": 1.0,
+              "tax_rate": 0.07,
+              "recalculated_total_cost": 23371.25,
+              "cost_consistency": true
+            },
+            {
+              "quotation_id": "QUO-RFQ-2026-001-PRO-SUP-02",
+              "supplier_id": "PRO-SUP-02",
+              "supplier_name": "Kestrel Industrial Fasteners",
+              "unit_price": 51.5,
+              "quantity_quoted": 500,
+              "item_total": 25750.0,
+              "shipping_cost": 750.0,
+              "tax_amount": 1802.5,
+              "total_cost": 28302.5,
+              "currency": "USD",
+              "validity_days": 60,
+              "shipping_per_unit": 1.5,
+              "tax_rate": 0.07,
+              "recalculated_total_cost": 28302.5,
+              "cost_consistency": true
+            },
+            {
+              "quotation_id": "QUO-RFQ-2026-001-PRO-SUP-03",
+              "supplier_id": "PRO-SUP-03",
+              "supplier_name": "Atlas Smart Robotics Corp",
+              "unit_price": 60.9,
+              "quantity_quoted": 500,
+              "item_total": 30450.0,
+              "shipping_cost": 1000.0,
+              "tax_amount": 2131.5,
+              "total_cost": 33581.5,
+              "currency": "USD",
+              "validity_days": 60,
+              "shipping_per_unit": 2.0,
+              "tax_rate": 0.07,
+              "recalculated_total_cost": 33581.5,
+              "cost_consistency": true
+            }
+          ],
+          "extraction_flags": []
+        },
+        "error_count": 0
+      },
+      "supplier_profile_agent": {
+        "agent_id": "supplier_profile_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          2
+        ],
+        "latency": {
+          "mean_seconds": 8.6268,
+          "median_seconds": 2.515,
+          "min_seconds": 1.969,
+          "max_seconds": 180.255,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 39358,
+          "mean_tokens": 1311.9,
+          "min_tokens": 1085,
+          "max_tokens": 1513,
+          "total_prompt_tokens": 13950,
+          "mean_prompt_tokens": 465.0,
+          "total_completion_tokens": 25408,
+          "mean_completion_tokens": 846.9,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_2"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "evaluated_profiles": [
+            {
+              "supplier_id": "PRO-SUP-01",
+              "capability_summary": "High‑precision aerospace machining and structural alloy parts",
+              "iso_certified": true,
+              "capacity_per_month": 50000,
+              "financial_stability_score": 92
+            },
+            {
+              "supplier_id": "PRO-SUP-02",
+              "capability_summary": "Standardized industrial fasteners, bolts, and bulk structural hardware",
+              "iso_certified": true,
+              "capacity_per_month": 250000,
+              "financial_stability_score": 85
+            },
+            {
+              "supplier_id": "PRO-SUP-03",
+              "capability_summary": "Automated warehouse robotics and optical inspection sensors",
+              "iso_certified": true,
+              "capacity_per_month": 1200,
+              "financial_stability_score": 78
+            }
+          ],
+          "profile_strengths": [
+            {
+              "supplier_id": "PRO-SUP-01",
+              "strengths": [
+                "Specialized high‑precision aerospace machining",
+                "Strong financial stability (score 92)",
+                "ISO certified"
+              ]
+            },
+            {
+              "supplier_id": "PRO-SUP-02",
+              "strengths": [
+                "Very high production volume capacity (250k units/month)",
+                "Broad product range for fasteners and hardware",
+                "ISO certified",
+                "Solid financial stability (score 85)"
+              ]
+            },
+            {
+              "supplier_id": "PRO-SUP-03",
+              "strengths": [
+                "Advanced automation and robotics expertise",
+                "Capability in optical inspection sensors",
+                "ISO certified",
+                "Adequate financial stability for niche market (score 78)"
+              ]
+            }
+          ],
+          "operational_concerns": [
+            {
+              "supplier_id": "PRO-SUP-01",
+              "concerns": [
+                "Limited monthly capacity (50k) relative to large aerospace programs",
+                "Profile flagged as synthetic – data may be unverified"
+              ]
+            },
+            {
+              "supplier_id": "PRO-SUP-02",
+              "concerns": [
+                "Product focus is generic fasteners; may lack the specialized engineering needed for high‑performance aerospace parts",
+                "Profile flagged as synthetic – data may be unverified"
+              ]
+            },
+            {
+              "supplier_id": "PRO-SUP-03",
+              "concerns": [
+                "Low manufacturing throughput (1.2k units/month) could restrict scaling for large deployments",
+                "Financial stability score is the lowest among the three",
+                "Profile flagged as synthetic – data may be unverified"
+              ]
+            }
+          ]
+        },
+        "error_count": 0
+      },
+      "delivery_analysis_agent": {
+        "agent_id": "delivery_analysis_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          3
+        ],
+        "latency": {
+          "mean_seconds": 1.8972,
+          "median_seconds": 1.7455,
+          "min_seconds": 1.455,
+          "max_seconds": 5.504,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 28245,
+          "mean_tokens": 941.5,
+          "min_tokens": 808,
+          "max_tokens": 1202,
+          "total_prompt_tokens": 13080,
+          "mean_prompt_tokens": 436.0,
+          "total_completion_tokens": 15165,
+          "mean_completion_tokens": 505.5,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_3"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "delivery_evaluation": [
+            {
+              "supplier_id": "PRO-SUP-01",
+              "meets_deadline": true,
+              "buffer_days": 55,
+              "risk_level": "low"
+            },
+            {
+              "supplier_id": "PRO-SUP-02",
+              "meets_deadline": true,
+              "buffer_days": 45,
+              "risk_level": "low"
+            },
+            {
+              "supplier_id": "PRO-SUP-03",
+              "meets_deadline": true,
+              "buffer_days": 35,
+              "risk_level": "low"
+            }
+          ],
+          "on_time_suppliers": [
+            "PRO-SUP-01",
+            "PRO-SUP-02",
+            "PRO-SUP-03"
+          ],
+          "late_risk_suppliers": [],
+          "logistics_summary": {
+            "total_suppliers": 3,
+            "on_time_count": 3,
+            "average_buffer_days": 41.67,
+            "overall_fulfillment_risk": "low",
+            "comments": "All suppliers deliver well before the required date of 2026-11-15, providing comfortable buffers (>30 days). No immediate delivery risk identified."
+          }
+        },
+        "error_count": 0
+      },
+      "supplier_risk_agent": {
+        "agent_id": "supplier_risk_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          4
+        ],
+        "latency": {
+          "mean_seconds": 6.9081,
+          "median_seconds": 2.0675,
+          "min_seconds": 1.632,
+          "max_seconds": 145.512,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 32775,
+          "mean_tokens": 1092.5,
+          "min_tokens": 937,
+          "max_tokens": 1250,
+          "total_prompt_tokens": 13110,
+          "mean_prompt_tokens": 437.0,
+          "total_completion_tokens": 19665,
+          "mean_completion_tokens": 655.5,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_4"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "supplier_risk_scores": {
+            "PRO-SUP-01": "LOW",
+            "PRO-SUP-02": "LOW",
+            "PRO-SUP-03": "MEDIUM"
+          },
+          "flagged_suppliers": [
+            "PRO-SUP-03"
+          ],
+          "risk_mitigation_notes": {
+            "PRO-SUP-01": "Continue monitoring; rates within acceptable low‑risk thresholds.",
+            "PRO-SUP-02": "Maintain current oversight; performance acceptable.",
+            "PRO-SUP-03": "Audit status is conditional and defect/delivery rates approach medium thresholds; require a corrective action plan and re‑audit before selection."
+          }
+        },
+        "error_count": 0
+      },
+      "contract_analysis_agent": {
+        "agent_id": "contract_analysis_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          5
+        ],
+        "latency": {
+          "mean_seconds": 2.6753,
+          "median_seconds": 2.1815,
+          "min_seconds": 1.763,
+          "max_seconds": 7.759,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 38269,
+          "mean_tokens": 1275.6,
+          "min_tokens": 1098,
+          "max_tokens": 1671,
+          "total_prompt_tokens": 17298,
+          "mean_prompt_tokens": 576.6,
+          "total_completion_tokens": 20971,
+          "mean_completion_tokens": 699.0,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_5"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "contract_comparison": {
+            "PRO-SUP-01": {
+              "payment_terms": "Net 45 days after verified receipt",
+              "warranty_months": 24,
+              "penalty_for_delay": "1.5% per week of delay up to 15% maximum"
+            },
+            "PRO-SUP-02": {
+              "payment_terms": "Net 45 days after verified receipt",
+              "warranty_months": 24,
+              "penalty_for_delay": "1.5% per week of delay up to 15% maximum"
+            },
+            "PRO-SUP-03": {
+              "payment_terms": "Net 45 days after verified receipt",
+              "warranty_months": 24,
+              "penalty_for_delay": "1.5% per week of delay up to 15% maximum"
+            }
+          },
+          "best_terms_supplier": [
+            "PRO-SUP-01",
+            "PRO-SUP-02",
+            "PRO-SUP-03"
+          ],
+          "contract_risks": [
+            "Net 45 payment term may strain cash flow compared to more common Net 30 terms.",
+            "Delay penalty of 1.5% per week, capped at 15%, could represent a significant financial exposure if delivery schedules slip.",
+            "Cancellation requires a 30‑day written notice even for quality breaches, potentially delaying termination of under‑performing suppliers.",
+            "All contracts are flagged as synthetic, indicating they may be template or placeholder agreements and might lack negotiated protections."
+          ]
+        },
+        "error_count": 0
+      },
+      "cost_comparison_agent": {
+        "agent_id": "cost_comparison_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          6
+        ],
+        "latency": {
+          "mean_seconds": 43.9445,
+          "median_seconds": 2.286,
+          "min_seconds": 1.681,
+          "max_seconds": 1007.311,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 36144,
+          "mean_tokens": 1204.8,
+          "min_tokens": 1015,
+          "max_tokens": 1615,
+          "total_prompt_tokens": 14875,
+          "mean_prompt_tokens": 495.8,
+          "total_completion_tokens": 21269,
+          "mean_completion_tokens": 709.0,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_11",
+          "GROQ_API_KEY_6"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "cost_ranking": [
+            {
+              "supplier_id": "PRO-SUP-01",
+              "rank": 1,
+              "total_landed_cost": 23371.25
+            },
+            {
+              "supplier_id": "PRO-SUP-02",
+              "rank": 2,
+              "total_landed_cost": 28302.5
+            },
+            {
+              "supplier_id": "PRO-SUP-03",
+              "rank": 3,
+              "total_landed_cost": 33581.5
+            }
+          ],
+          "lowest_cost_bidder": {
+            "supplier_id": "PRO-SUP-01",
+            "supplier_name": "Titanium Engineering Solutions",
+            "total_landed_cost": 23371.25,
+            "unit_price": 42.75,
+            "shipping_cost": 500.0,
+            "tax_amount": 1496.25
+          },
+          "cost_spread_percentage": {
+            "PRO-SUP-02": 21.1,
+            "PRO-SUP-03": 43.7
+          },
+          "commercial_summary": "The landed cost for each supplier consists of three components: the unit price multiplied by the quantity (item_total), a fixed shipping charge, and tax calculated on the item total. Supplier PRO-SUP-01 offers the lowest overall cost at $23,371.25, with a unit price of $42.75, shipping of $500, and tax of $1,496.25. The next cheapest, PRO-SUP-02, is $5,931.25 higher (21.1% more) due to a higher unit price ($51.50) and greater shipping ($750). The most expensive, PRO-SUP-03, costs $10,210.25 more (43.7% higher) driven by the highest unit price ($60.90) and the highest shipping fee ($1,000). Selecting the lowest‑cost bidder yields a potential savings of over $5,900 compared with the second‑best offer."
+        },
+        "error_count": 0
+      },
+      "weighted_evaluation_agent": {
+        "agent_id": "weighted_evaluation_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          7
+        ],
+        "latency": {
+          "mean_seconds": 3.348,
+          "median_seconds": 3.06,
+          "min_seconds": 2.46,
+          "max_seconds": 7.762,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 45374,
+          "mean_tokens": 1512.5,
+          "min_tokens": 1354,
+          "max_tokens": 1673,
+          "total_prompt_tokens": 14490,
+          "mean_prompt_tokens": 483.0,
+          "total_completion_tokens": 30884,
+          "mean_completion_tokens": 1029.5,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_7"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "weighted_scores": [
+            {
+              "supplier_id": "PRO-SUP-01",
+              "cost_score": 100.0,
+              "delivery_score": 100.0,
+              "risk_score": 95.0,
+              "contract_score": 90.0,
+              "capability_score": 95.0,
+              "total_weighted_score": 97.5,
+              "overall_rank": 1
+            },
+            {
+              "supplier_id": "PRO-SUP-02",
+              "cost_score": 82.58,
+              "delivery_score": 100.0,
+              "risk_score": 90.0,
+              "contract_score": 90.0,
+              "capability_score": 95.0,
+              "total_weighted_score": 90.4,
+              "overall_rank": 2
+            },
+            {
+              "supplier_id": "PRO-SUP-03",
+              "cost_score": 69.6,
+              "delivery_score": 100.0,
+              "risk_score": 75.0,
+              "contract_score": 90.0,
+              "capability_score": 95.0,
+              "total_weighted_score": 82.86,
+              "overall_rank": 3
+            }
+          ],
+          "top_ranked_supplier": {
+            "supplier_id": "PRO-SUP-01",
+            "total_weighted_score": 97.5,
+            "overall_rank": 1
+          },
+          "score_spread": {
+            "highest_score": 97.5,
+            "lowest_score": 82.86,
+            "score_range": 14.64,
+            "average_score": 90.25
+          },
+          "evaluation_rationale": "PRO-SUP-01 achieved the highest total weighted score because it excelled in the two most heavily weighted criteria—cost and delivery—receiving perfect scores of 100 on both. In addition, its risk (95), contract (90) and capability (95) scores were all near the top of the scale, resulting in a balanced, high‑performing profile across every pillar. \n\nThe trade‑off analysis shows that while PRO‑SUP‑02 and PRO‑SUP‑03 offer lower cost scores (82.58 and 69.6 respectively), they do not gain enough advantage in other dimensions to offset the loss. Delivery is identical (100) for all three suppliers, so differentiation comes from risk, contract, and capability. PRO‑SUP‑02 maintains a strong risk score (90) and identical contract/capability scores, but its lower cost score reduces the overall weighted result to 90.4. PRO‑SUP‑03 further sacrifices risk (75) and cost, leading to the lowest total of 82.86 despite the same delivery, contract, and capability scores. \n\nThus, the weighted model confirms that cost savings alone are insufficient to outrank a supplier that also delivers high risk mitigation and capability performance. Decision‑makers must weigh the marginal cost benefit against the potential increase in risk exposure, especially when delivery reliability is already maximized across all options."
+        },
+        "error_count": 0
+      },
+      "selection_recommendation_agent": {
+        "agent_id": "selection_recommendation_agent",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          8
+        ],
+        "latency": {
+          "mean_seconds": 16.0428,
+          "median_seconds": 2.1415,
+          "min_seconds": 1.747,
+          "max_seconds": 396.283,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 115789,
+          "mean_tokens": 3859.6,
+          "min_tokens": 3590,
+          "max_tokens": 4281,
+          "total_prompt_tokens": 98164,
+          "mean_prompt_tokens": 3272.1,
+          "total_completion_tokens": 17625,
+          "mean_completion_tokens": 587.5,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_10",
+          "GROQ_API_KEY_12",
+          "GROQ_API_KEY_8"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "recommended_supplier_id": "PRO-SUP-01",
+          "commercial_rationale": "Titanium Engineering Solutions (PRO-SUP-01) offers the lowest landed cost ($23,371.25) – a $5,931.25 saving versus the next best bid – while delivering the highest total weighted score (97.5). The supplier meets the required delivery date with the largest buffer (55 days) and a low delivery risk. Capability strengths include high‑precision aerospace machining, strong financial stability (score 92), and ISO certification. Contractual terms are identical to the other bidders, so there is no disadvantage on warranty, payment, or penalties. The combined cost advantage, delivery confidence, and robust capability profile make PRO‑SUP‑01 the most value‑driven choice.",
+          "risk_acceptance": "Overall risk is classified as LOW. The only residual concern is the synthetic nature of the supplier profile, which warrants verification. Acceptance is granted contingent on completing a focused data validation audit and confirming financial statements before award. Ongoing monitoring of performance metrics is recommended.",
+          "next_steps": [
+            "Initiate a formal supplier verification audit to confirm the synthetic profile data (financials, ISO certification, capacity).",
+            "Engage legal to finalize a negotiated contract that addresses the identified synthetic contract risk (add stronger termination clauses and cash‑flow protections).",
+            "Obtain internal approvals from finance and engineering stakeholders for the award recommendation.",
+            "Issue a non‑binding award notice to PRO‑SUP‑01 pending successful audit completion.",
+            "Prepare a contingency plan with PRO‑SUP‑02 as an alternate, should the audit reveal material issues with PRO‑SUP‑01."
+          ]
+        },
+        "error_count": 0
+      },
+      "final_review_agent_procurement": {
+        "agent_id": "final_review_agent_procurement",
+        "invocation_count": 30,
+        "success_count": 30,
+        "failure_count": 0,
+        "observed_execution_orders": [
+          9
+        ],
+        "latency": {
+          "mean_seconds": 5.7129,
+          "median_seconds": 2.9635,
+          "min_seconds": 2.258,
+          "max_seconds": 40.559,
+          "observation_count": 30
+        },
+        "tokens": {
+          "total_tokens": 138422,
+          "mean_tokens": 4614.1,
+          "min_tokens": 4031,
+          "max_tokens": 4993,
+          "total_prompt_tokens": 112459,
+          "mean_prompt_tokens": 3748.6,
+          "total_completion_tokens": 25963,
+          "mean_completion_tokens": 865.4,
+          "observation_count": 30
+        },
+        "cost": {
+          "total_cost_usd": null,
+          "mean_cost_usd": null,
+          "calculation_basis": "unresolved_at_agent_level_trace_provides_workflow_level_cost"
+        },
+        "assigned_keys": [
+          "GROQ_API_KEY_13",
+          "GROQ_API_KEY_9"
+        ],
+        "sample_inputs": null,
+        "sample_outputs": {
+          "workflow_status": "COMPLETED",
+          "selected_supplier": {
+            "supplier_id": "PRO-SUP-01",
+            "supplier_name": "Titanium Engineering Solutions",
+            "total_landed_cost": 23371.25,
+            "total_weighted_score": 97.5,
+            "rank": 1
+          },
+          "compliance_verification": {
+            "mandatory_criteria_met": true,
+            "cost_calculations_verified": true,
+            "risk_flags_addressed": true,
+            "synthetic_profile_flag_note": "Profile flagged as synthetic; mitigation plan included in recommendation.",
+            "overall_compliance": "PASS"
+          },
+          "summary_report": "The evaluation of three suppliers was completed. PRO-SUP-01 achieved the lowest landed cost and the highest weighted score (97.5) while meeting all mandatory criteria: cost, delivery, risk, contract, and capability. All cost components were verified as consistent, and no outstanding risk flags remain unmitigated. Delivery risk is low with a 55‑day buffer. Contract terms are identical across bidders. The only residual issue is the synthetic nature of the supplier profile, which is addressed by a required verification audit.",
+          "award_justification": "Titanium Engineering Solutions (PRO-SUP-01) is selected because it provides the greatest value: the lowest total landed cost ($23,371.25), perfect scores for cost and delivery, and high scores for risk (95), contract (90), and capability (95), resulting in a total weighted score of 97.5. The supplier meets delivery deadlines with a substantial buffer and holds strong financial stability and ISO certification. Contractual terms are on par with competitors. The recommendation includes conditional acceptance pending a focused data validation audit to resolve the synthetic profile flag."
+        },
+        "error_count": 0
+      }
+    },
+    "runs_summary": [
+      {
+        "run_id": "live_20261031_133429_trace01",
+        "status": "SUCCESS",
+        "duration_seconds": 24.402,
+        "total_tokens": 17256,
+        "prompt_tokens": 10538,
+        "completion_tokens": 6718,
+        "estimated_cost_usd": 0.011525,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T13:34:53.777005+00:00",
+        "trace_file": "live_20261031_133429_trace01.json"
+      },
+      {
+        "run_id": "live_20261031_133506_trace02",
+        "status": "SUCCESS",
+        "duration_seconds": 24.35,
+        "total_tokens": 18168,
+        "prompt_tokens": 10942,
+        "completion_tokens": 7226,
+        "estimated_cost_usd": 0.012164,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T13:35:30.426975+00:00",
+        "trace_file": "live_20261031_133506_trace02.json"
+      },
+      {
+        "run_id": "live_20261031_133530_trace03",
+        "status": "SUCCESS",
+        "duration_seconds": 23.583,
+        "total_tokens": 17912,
+        "prompt_tokens": 10971,
+        "completion_tokens": 6941,
+        "estimated_cost_usd": 0.011956,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T13:35:54.016904+00:00",
+        "trace_file": "live_20261031_133530_trace03.json"
+      },
+      {
+        "run_id": "live_20261031_133554_trace04",
+        "status": "SUCCESS",
+        "duration_seconds": 23.279,
+        "total_tokens": 17666,
+        "prompt_tokens": 10625,
+        "completion_tokens": 7041,
+        "estimated_cost_usd": 0.011831,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T13:36:17.303525+00:00",
+        "trace_file": "live_20261031_133554_trace04.json"
+      },
+      {
+        "run_id": "live_20261031_133617_trace05",
+        "status": "SUCCESS",
+        "duration_seconds": 35.834,
+        "total_tokens": 17428,
+        "prompt_tokens": 10439,
+        "completion_tokens": 6989,
+        "estimated_cost_usd": 0.01168,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T13:36:53.143459+00:00",
+        "trace_file": "live_20261031_133617_trace05.json"
+      },
+      {
+        "run_id": "live_20261031_133653_trace06",
+        "status": "SUCCESS",
+        "duration_seconds": 33.863,
+        "total_tokens": 16896,
+        "prompt_tokens": 10229,
+        "completion_tokens": 6667,
+        "estimated_cost_usd": 0.011302,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T13:37:27.015184+00:00",
+        "trace_file": "live_20261031_133653_trace06.json"
+      },
+      {
+        "run_id": "live_20261031_133727_trace07",
+        "status": "SUCCESS",
+        "duration_seconds": 34.649,
+        "total_tokens": 17192,
+        "prompt_tokens": 10634,
+        "completion_tokens": 6558,
+        "estimated_cost_usd": 0.011455,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T13:38:01.669833+00:00",
+        "trace_file": "live_20261031_133727_trace07.json"
+      },
+      {
+        "run_id": "live_20261031_133801_trace08",
+        "status": "SUCCESS",
+        "duration_seconds": 34.403,
+        "total_tokens": 17454,
+        "prompt_tokens": 11032,
+        "completion_tokens": 6422,
+        "estimated_cost_usd": 0.011582,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T13:38:36.081951+00:00",
+        "trace_file": "live_20261031_133801_trace08.json"
+      },
+      {
+        "run_id": "live_20261031_133836_trace09",
+        "status": "SUCCESS",
+        "duration_seconds": 35.965,
+        "total_tokens": 17715,
+        "prompt_tokens": 10914,
+        "completion_tokens": 6801,
+        "estimated_cost_usd": 0.011812,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T13:39:12.057575+00:00",
+        "trace_file": "live_20261031_133836_trace09.json"
+      },
+      {
+        "run_id": "live_20261031_133912_trace10",
+        "status": "SUCCESS",
+        "duration_seconds": 340.563,
+        "total_tokens": 17971,
+        "prompt_tokens": 10819,
+        "completion_tokens": 7152,
+        "estimated_cost_usd": 0.012033,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T13:44:52.630492+00:00",
+        "trace_file": "live_20261031_133912_trace10.json"
+      },
+      {
+        "run_id": "live_20261031_134452_trace11",
+        "status": "SUCCESS",
+        "duration_seconds": 26.962,
+        "total_tokens": 17832,
+        "prompt_tokens": 10481,
+        "completion_tokens": 7351,
+        "estimated_cost_usd": 0.011991,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T13:45:19.607195+00:00",
+        "trace_file": "live_20261031_134452_trace11.json"
+      },
+      {
+        "run_id": "live_20261031_134519_trace12",
+        "status": "SUCCESS",
+        "duration_seconds": 22.834,
+        "total_tokens": 17408,
+        "prompt_tokens": 10733,
+        "completion_tokens": 6675,
+        "estimated_cost_usd": 0.011606,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T13:45:42.451263+00:00",
+        "trace_file": "live_20261031_134519_trace12.json"
+      },
+      {
+        "run_id": "live_20261031_134542_trace13",
+        "status": "SUCCESS",
+        "duration_seconds": 63.842,
+        "total_tokens": 18373,
+        "prompt_tokens": 11046,
+        "completion_tokens": 7327,
+        "estimated_cost_usd": 0.012305,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T13:46:46.298528+00:00",
+        "trace_file": "live_20261031_134542_trace13.json"
+      },
+      {
+        "run_id": "live_20261031_134646_trace14",
+        "status": "SUCCESS",
+        "duration_seconds": 38.282,
+        "total_tokens": 18101,
+        "prompt_tokens": 10781,
+        "completion_tokens": 7320,
+        "estimated_cost_usd": 0.012144,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T13:47:24.584699+00:00",
+        "trace_file": "live_20261031_134646_trace14.json"
+      },
+      {
+        "run_id": "live_20261031_134724_trace15",
+        "status": "SUCCESS",
+        "duration_seconds": 32.659,
+        "total_tokens": 17493,
+        "prompt_tokens": 10856,
+        "completion_tokens": 6637,
+        "estimated_cost_usd": 0.011648,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T13:47:57.252051+00:00",
+        "trace_file": "live_20261031_134724_trace15.json"
+      },
+      {
+        "run_id": "live_20261031_134757_trace16",
+        "status": "SUCCESS",
+        "duration_seconds": 34.766,
+        "total_tokens": 17765,
+        "prompt_tokens": 10877,
+        "completion_tokens": 6888,
+        "estimated_cost_usd": 0.011859,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T13:48:32.026953+00:00",
+        "trace_file": "live_20261031_134757_trace16.json"
+      },
+      {
+        "run_id": "live_20261031_134832_trace17",
+        "status": "SUCCESS",
+        "duration_seconds": 46.792,
+        "total_tokens": 18228,
+        "prompt_tokens": 11524,
+        "completion_tokens": 6704,
+        "estimated_cost_usd": 0.012095,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T13:49:18.824926+00:00",
+        "trace_file": "live_20261031_134832_trace17.json"
+      },
+      {
+        "run_id": "live_20261031_134918_trace18",
+        "status": "SUCCESS",
+        "duration_seconds": 28.709,
+        "total_tokens": 17631,
+        "prompt_tokens": 10355,
+        "completion_tokens": 7276,
+        "estimated_cost_usd": 0.011857,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T13:49:47.538440+00:00",
+        "trace_file": "live_20261031_134918_trace18.json"
+      },
+      {
+        "run_id": "live_20261031_135827_trace19",
+        "status": "SUCCESS",
+        "duration_seconds": 29.117,
+        "total_tokens": 17826,
+        "prompt_tokens": 11280,
+        "completion_tokens": 6546,
+        "estimated_cost_usd": 0.011827,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T13:58:56.575562+00:00",
+        "trace_file": "live_20261031_135827_trace19.json"
+      },
+      {
+        "run_id": "live_20261031_135856_trace20",
+        "status": "SUCCESS",
+        "duration_seconds": 29.774,
+        "total_tokens": 18930,
+        "prompt_tokens": 12056,
+        "completion_tokens": 6874,
+        "estimated_cost_usd": 0.012543,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T13:59:26.356098+00:00",
+        "trace_file": "live_20261031_135856_trace20.json"
+      },
+      {
+        "run_id": "live_20261031_140638_trace21",
+        "status": "SUCCESS",
+        "duration_seconds": 1035.233,
+        "total_tokens": 18145,
+        "prompt_tokens": 11126,
+        "completion_tokens": 7019,
+        "estimated_cost_usd": 0.012109,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T14:23:53.249827+00:00",
+        "trace_file": "live_20261031_140638_trace21.json"
+      },
+      {
+        "run_id": "live_20261031_142353_trace22",
+        "status": "SUCCESS",
+        "duration_seconds": 832.528,
+        "total_tokens": 17161,
+        "prompt_tokens": 10312,
+        "completion_tokens": 6849,
+        "estimated_cost_usd": 0.011495,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T14:37:45.782123+00:00",
+        "trace_file": "live_20261031_142353_trace22.json"
+      },
+      {
+        "run_id": "live_20261031_150442_trace23",
+        "status": "SUCCESS",
+        "duration_seconds": 23.091,
+        "total_tokens": 16895,
+        "prompt_tokens": 10230,
+        "completion_tokens": 6665,
+        "estimated_cost_usd": 0.011301,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T15:05:05.572363+00:00",
+        "trace_file": "live_20261031_150442_trace23.json"
+      },
+      {
+        "run_id": "live_20261031_154747_trace24",
+        "status": "SUCCESS",
+        "duration_seconds": 32.149,
+        "total_tokens": 17082,
+        "prompt_tokens": 10539,
+        "completion_tokens": 6543,
+        "estimated_cost_usd": 0.011387,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T15:48:19.861783+00:00",
+        "trace_file": "live_20261031_154747_trace24.json"
+      },
+      {
+        "run_id": "live_20261031_154819_trace25",
+        "status": "SUCCESS",
+        "duration_seconds": 32.125,
+        "total_tokens": 16828,
+        "prompt_tokens": 10189,
+        "completion_tokens": 6639,
+        "estimated_cost_usd": 0.011256,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T15:48:51.998116+00:00",
+        "trace_file": "live_20261031_154819_trace25.json"
+      },
+      {
+        "run_id": "live_20261031_154852_trace26",
+        "status": "SUCCESS",
+        "duration_seconds": 26.584,
+        "total_tokens": 17824,
+        "prompt_tokens": 10620,
+        "completion_tokens": 7204,
+        "estimated_cost_usd": 0.011957,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T15:49:18.590443+00:00",
+        "trace_file": "live_20261031_154852_trace26.json"
+      },
+      {
+        "run_id": "live_20261031_154918_trace27",
+        "status": "SUCCESS",
+        "duration_seconds": 29.356,
+        "total_tokens": 17600,
+        "prompt_tokens": 10446,
+        "completion_tokens": 7154,
+        "estimated_cost_usd": 0.011815,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T15:49:47.953218+00:00",
+        "trace_file": "live_20261031_154918_trace27.json"
+      },
+      {
+        "run_id": "live_20261031_154947_trace28",
+        "status": "SUCCESS",
+        "duration_seconds": 25.838,
+        "total_tokens": 16428,
+        "prompt_tokens": 10020,
+        "completion_tokens": 6408,
+        "estimated_cost_usd": 0.010974,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T15:50:13.803462+00:00",
+        "trace_file": "live_20261031_154947_trace28.json"
+      },
+      {
+        "run_id": "live_20261031_155013_trace29",
+        "status": "SUCCESS",
+        "duration_seconds": 29.002,
+        "total_tokens": 17426,
+        "prompt_tokens": 10452,
+        "completion_tokens": 6974,
+        "estimated_cost_usd": 0.011676,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T15:50:42.849211+00:00",
+        "trace_file": "live_20261031_155013_trace29.json"
+      },
+      {
+        "run_id": "live_20261031_155042_trace30",
+        "status": "SUCCESS",
+        "duration_seconds": 32.353,
+        "total_tokens": 17551,
+        "prompt_tokens": 10428,
+        "completion_tokens": 7123,
+        "estimated_cost_usd": 0.01178,
+        "agent_count": 9,
+        "timestamp": "2026-10-31T15:51:15.209589+00:00",
+        "trace_file": "live_20261031_155042_trace30.json"
+      }
+    ]
+  },
+  "workflow_graph": {
+    "nodes": [
+      {
+        "id": "workflow:procurement_supplier_selection",
+        "type": "workflow",
+        "name": "procurement_supplier_selection",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:contract_analysis_agent",
+        "type": "agent",
+        "name": "contract_analysis_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:cost_comparison_agent",
+        "type": "agent",
+        "name": "cost_comparison_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:delivery_analysis_agent",
+        "type": "agent",
+        "name": "delivery_analysis_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:final_review_agent_procurement",
+        "type": "agent",
+        "name": "final_review_agent_procurement",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:quotation_analysis_agent",
+        "type": "agent",
+        "name": "quotation_analysis_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:selection_recommendation_agent",
+        "type": "agent",
+        "name": "selection_recommendation_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:supplier_profile_agent",
+        "type": "agent",
+        "name": "supplier_profile_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:supplier_risk_agent",
+        "type": "agent",
+        "name": "supplier_risk_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "agent:weighted_evaluation_agent",
+        "type": "agent",
+        "name": "weighted_evaluation_agent",
+        "source": "multi_source"
+      },
+      {
+        "id": "task:contract_analysis_agent_task",
+        "type": "task",
+        "name": "contract_analysis_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:cost_comparison_agent_task",
+        "type": "task",
+        "name": "cost_comparison_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:delivery_analysis_agent_task",
+        "type": "task",
+        "name": "delivery_analysis_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:final_review_agent_procurement_task",
+        "type": "task",
+        "name": "final_review_agent_procurement_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:quotation_analysis_agent_task",
+        "type": "task",
+        "name": "quotation_analysis_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:selection_recommendation_agent_task",
+        "type": "task",
+        "name": "selection_recommendation_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:supplier_profile_agent_task",
+        "type": "task",
+        "name": "supplier_profile_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:supplier_risk_agent_task",
+        "type": "task",
+        "name": "supplier_risk_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "task:weighted_evaluation_agent_task",
+        "type": "task",
+        "name": "weighted_evaluation_agent_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:create_task",
+        "type": "function",
+        "name": "create_task",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:deterministic_contract_lookup",
+        "type": "function",
+        "name": "deterministic_contract_lookup",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:deterministic_cost_ranking",
+        "type": "function",
+        "name": "deterministic_cost_ranking",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:deterministic_delivery_check",
+        "type": "function",
+        "name": "deterministic_delivery_check",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:deterministic_profile_lookup",
+        "type": "function",
+        "name": "deterministic_profile_lookup",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:deterministic_risk_lookup",
+        "type": "function",
+        "name": "deterministic_risk_lookup",
+        "source": "statically_observed"
+      },
+      {
+        "id": "function:deterministic_weighted_scoring",
+        "type": "function",
+        "name": "deterministic_weighted_scoring",
+        "source": "statically_observed"
+      }
+    ],
+    "edges": [
+      {
+        "source": "agent:contract_analysis_agent",
+        "target": "task:contract_analysis_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "source": "agent:cost_comparison_agent",
+        "target": "task:cost_comparison_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "source": "agent:delivery_analysis_agent",
+        "target": "task:delivery_analysis_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "source": "agent:final_review_agent_procurement",
+        "target": "task:final_review_agent_procurement_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "source": "agent:quotation_analysis_agent",
+        "target": "task:quotation_analysis_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "source": "agent:selection_recommendation_agent",
+        "target": "task:selection_recommendation_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "source": "agent:supplier_profile_agent",
+        "target": "task:supplier_profile_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "source": "agent:supplier_risk_agent",
+        "target": "task:supplier_risk_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_009"
+        ]
+      },
+      {
+        "source": "agent:weighted_evaluation_agent",
+        "target": "task:weighted_evaluation_agent_task",
+        "relationship": "agent_task_assignment",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_010"
+        ]
+      },
+      {
+        "source": "agent:contract_analysis_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "source": "agent:contract_analysis_agent",
+        "target": "function:deterministic_contract_lookup",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_002"
+        ]
+      },
+      {
+        "source": "agent:cost_comparison_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "source": "agent:cost_comparison_agent",
+        "target": "function:deterministic_cost_ranking",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_003"
+        ]
+      },
+      {
+        "source": "agent:delivery_analysis_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "source": "agent:delivery_analysis_agent",
+        "target": "function:deterministic_delivery_check",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_004"
+        ]
+      },
+      {
+        "source": "agent:final_review_agent_procurement",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_005"
+        ]
+      },
+      {
+        "source": "agent:quotation_analysis_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_006"
+        ]
+      },
+      {
+        "source": "agent:selection_recommendation_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_007"
+        ]
+      },
+      {
+        "source": "agent:supplier_profile_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "source": "agent:supplier_profile_agent",
+        "target": "function:deterministic_profile_lookup",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_008"
+        ]
+      },
+      {
+        "source": "agent:supplier_risk_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_009"
+        ]
+      },
+      {
+        "source": "agent:supplier_risk_agent",
+        "target": "function:deterministic_risk_lookup",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_009"
+        ]
+      },
+      {
+        "source": "agent:weighted_evaluation_agent",
+        "target": "function:create_task",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_010"
+        ]
+      },
+      {
+        "source": "agent:weighted_evaluation_agent",
+        "target": "function:deterministic_weighted_scoring",
+        "relationship": "function_call",
+        "provenance": "statically_observed",
+        "evidence_ref": [
+          "ev_agent_010"
+        ]
+      },
+      {
+        "source": "workflow:procurement_supplier_selection",
+        "target": "agent:delivery_analysis_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:procurement_supplier_selection",
+        "target": "agent:final_review_agent_procurement",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:procurement_supplier_selection",
+        "target": "agent:quotation_analysis_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:procurement_supplier_selection",
+        "target": "agent:supplier_risk_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:procurement_supplier_selection",
+        "target": "agent:supplier_profile_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:procurement_supplier_selection",
+        "target": "agent:cost_comparison_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:procurement_supplier_selection",
+        "target": "agent:weighted_evaluation_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:procurement_supplier_selection",
+        "target": "agent:contract_analysis_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "workflow:procurement_supplier_selection",
+        "target": "agent:selection_recommendation_agent",
+        "relationship": "agent_invocation",
+        "provenance": "statically_observed",
+        "evidence_ref": "outer_workflow_flow"
+      },
+      {
+        "source": "agent:quotation_analysis_agent",
+        "target": "agent:cost_comparison_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:cost_comparison_agent",
+        "target": "agent:weighted_evaluation_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:delivery_analysis_agent",
+        "target": "agent:weighted_evaluation_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:supplier_risk_agent",
+        "target": "agent:weighted_evaluation_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:supplier_profile_agent",
+        "target": "agent:weighted_evaluation_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:contract_analysis_agent",
+        "target": "agent:weighted_evaluation_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:weighted_evaluation_agent",
+        "target": "agent:selection_recommendation_agent",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:selection_recommendation_agent",
+        "target": "agent:final_review_agent_procurement",
+        "relationship": "declared_dependency",
+        "provenance": "declared",
+        "evidence_ref": "workflow.json"
+      },
+      {
+        "source": "agent:quotation_analysis_agent",
+        "target": "agent:supplier_profile_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:supplier_profile_agent",
+        "target": "agent:delivery_analysis_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:delivery_analysis_agent",
+        "target": "agent:supplier_risk_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:supplier_risk_agent",
+        "target": "agent:contract_analysis_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:contract_analysis_agent",
+        "target": "agent:cost_comparison_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:cost_comparison_agent",
+        "target": "agent:weighted_evaluation_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:weighted_evaluation_agent",
+        "target": "agent:selection_recommendation_agent",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      },
+      {
+        "source": "agent:selection_recommendation_agent",
+        "target": "agent:final_review_agent_procurement",
+        "relationship": "observed_execution_order",
+        "provenance": "runtime_observed",
+        "evidence_ref": "traces_telemetry"
+      }
+    ]
+  },
+  "reconciliation_and_limitations": {
+    "agent_reconciliation": [
+      {
+        "agent_id": "contract_analysis_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "cost_comparison_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "delivery_analysis_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "final_review_agent_procurement",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "quotation_analysis_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "selection_recommendation_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "supplier_profile_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "supplier_risk_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      },
+      {
+        "agent_id": "weighted_evaluation_agent",
+        "declared": true,
+        "statically_observed": true,
+        "runtime_observed": true,
+        "status": "fully_verified",
+        "notes": "Agent declared in design, identified in AST, and verified across all runtime traces."
+      }
+    ],
+    "dependency_reconciliation": [
+      {
+        "source": "quotation_analysis_agent",
+        "target": "cost_comparison_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "cost_comparison_agent",
+        "target": "weighted_evaluation_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "delivery_analysis_agent",
+        "target": "weighted_evaluation_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "supplier_risk_agent",
+        "target": "weighted_evaluation_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "supplier_profile_agent",
+        "target": "weighted_evaluation_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "contract_analysis_agent",
+        "target": "weighted_evaluation_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "weighted_evaluation_agent",
+        "target": "selection_recommendation_agent",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      },
+      {
+        "source": "selection_recommendation_agent",
+        "target": "final_review_agent_procurement",
+        "declared": true,
+        "statically_observed": false,
+        "runtime_observed": true,
+        "status": "runtime_order_consistent",
+        "notes": "Declared dependency matches runtime chronological execution sequence."
+      }
+    ],
+    "model_reconciliation": {
+      "declared_model": "openai/gpt-oss-120b",
+      "statically_extracted_model": null,
+      "runtime_observed_model": "openai/gpt-oss-120b",
+      "status": "matching",
+      "notes": "Declared model 'openai/gpt-oss-120b' matches runtime enforced model 'openai/gpt-oss-120b'."
+    },
+    "limitations": [
+      "Per-agent cost in traces is not tracked individually; only workflow-level cost is recorded.",
+      "Dynamic runtime branch outcomes and retry loops are recorded as sequential executions.",
+      "Static prompt text reflects task description parameters; dynamic LLM runtime prompt interpolations are reflected in trace prompt tokens.",
+      "Static AST dependency graph was a flat star topology; inter-agent dependencies are reconciled from workflow.json and runtime trace sequences."
+    ]
+  }
+}

@@ -1,0 +1,237 @@
+{
+  "run_id": "live_20261031_182815_trace28",
+  "workflow_name": "expense_reimbursement",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 20.451,
+  "agent_execution_count": 8,
+  "agent_executions": [
+    {
+      "order": 1,
+      "agent_id": "receipt_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_20 (gsk_1f...ghyb)",
+      "duration_seconds": 1.902,
+      "status": "SUCCESS",
+      "tokens": 683,
+      "prompt_tokens": 454,
+      "completion_tokens": 229,
+      "output": {
+        "merchant": "HYATT REGENCY",
+        "transaction_date": "2026-10-02",
+        "currency": "USD",
+        "subtotal": 373.76,
+        "tax": 52.33,
+        "total": 426.09,
+        "line_items": [
+          {
+            "description": "Corporate Service Item 1",
+            "quantity": 1,
+            "price": 373.76
+          }
+        ],
+        "missing_fields": []
+      },
+      "notes": ""
+    },
+    {
+      "order": 2,
+      "agent_id": "normalize_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_18 (gsk_qB...kphs)",
+      "duration_seconds": 2.074,
+      "status": "SUCCESS",
+      "tokens": 963,
+      "prompt_tokens": 675,
+      "completion_tokens": 288,
+      "output": {
+        "employee_id": "EMP-408",
+        "merchant": "HYATT REGENCY",
+        "date": "2026-10-02",
+        "currency": "USD",
+        "subtotal": 373.76,
+        "tax": 52.33,
+        "total": 426.09
+      },
+      "notes": ""
+    },
+    {
+      "order": 3,
+      "agent_id": "category_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_17 (gsk_qB...KRNJ)",
+      "duration_seconds": 1.957,
+      "status": "SUCCESS",
+      "tokens": 712,
+      "prompt_tokens": 442,
+      "completion_tokens": 270,
+      "output": {
+        "category": "Accommodation",
+        "classification_confidence": 0.98,
+        "reasoning": "The merchant is Hyatt Regency, a hotel chain, and the line items (room charge subtotal and associated tax) are characteristic of lodging expenses. The business purpose cites an official client engagement and workflow meeting, which typically requires overnight stay. These factors strongly indicate the expense belongs to the Accommodation category."
+      },
+      "notes": ""
+    },
+    {
+      "order": 4,
+      "agent_id": "amount_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_14 (gsk_6G...l7b1)",
+      "duration_seconds": 1.798,
+      "status": "SUCCESS",
+      "tokens": 494,
+      "prompt_tokens": 319,
+      "completion_tokens": 175,
+      "output": {
+        "is_arithmetic_valid": true,
+        "discrepancy_usd": 0.0,
+        "verification_notes": "Subtotal (373.76) plus tax (52.33) equals the declared total (426.09) exactly; no rounding differences detected and all amounts are non‑negative."
+      },
+      "notes": ""
+    },
+    {
+      "order": 5,
+      "agent_id": "policy_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_19 (gsk_99...IlGY)",
+      "duration_seconds": 2.008,
+      "status": "SUCCESS",
+      "tokens": 625,
+      "prompt_tokens": 376,
+      "completion_tokens": 249,
+      "output": {
+        "policy_compliance_status": "Non-compliant",
+        "cited_policy_ids": [
+          "POL-EXP-03"
+        ],
+        "violation_reasons": [
+          "Accommodation total $426.09 exceeds the high-cost nightly cap of $350.00"
+        ]
+      },
+      "notes": ""
+    },
+    {
+      "order": 6,
+      "agent_id": "duplicate_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 1.633,
+      "status": "SUCCESS",
+      "tokens": 539,
+      "prompt_tokens": 381,
+      "completion_tokens": 158,
+      "output": {
+        "duplicate_status": "Confirmed Duplicate",
+        "matching_claim_ids": [
+          "HIST-CLM-2028"
+        ],
+        "duplicate_risk_score": 0.99
+      },
+      "notes": ""
+    },
+    {
+      "order": 7,
+      "agent_id": "exception_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_16 (gsk_ID...uEx3)",
+      "duration_seconds": 6.963,
+      "status": "SUCCESS",
+      "tokens": 1223,
+      "prompt_tokens": 610,
+      "completion_tokens": 613,
+      "output": {
+        "exceptions_found": [
+          {
+            "type": "Policy Violation",
+            "detail": "Accommodation total $426.09 exceeds the high-cost nightly cap of $350.00 as per policy POL-EXP-03.",
+            "policy_id": "POL-EXP-03",
+            "severity": "High"
+          },
+          {
+            "type": "Duplicate Claim",
+            "detail": "Receipt matches a previously submitted claim (HIST-CLM-2028) with a duplicate risk score of 0.99.",
+            "policy_id": "DUP-CLM-01",
+            "severity": "High"
+          }
+        ],
+        "severity_levels": {
+          "Critical": 0,
+          "High": 2,
+          "Medium": 0,
+          "Low": 0
+        },
+        "audit_warnings": [
+          "Duplicate claim detected with a high risk score (0.99).",
+          "Total amount exceeds the nightly cap defined in policy POL-EXP-03."
+        ]
+      },
+      "notes": ""
+    },
+    {
+      "order": 8,
+      "agent_id": "expense_review_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_13 (gsk_i9...Ujsn)",
+      "duration_seconds": 2.114,
+      "status": "SUCCESS",
+      "tokens": 1652,
+      "prompt_tokens": 1107,
+      "completion_tokens": 545,
+      "output": {
+        "claim_id": "CLM-2028",
+        "employee_id": "EMP-408",
+        "merchant": "Hyatt Regency",
+        "date": "2026-10-02",
+        "currency": "USD",
+        "total_amount": 426.09,
+        "final_decision": "INELIGIBLE",
+        "rationale": [
+          "The expense exceeds the policy‑defined nightly accommodation cap of $350.00 (POL-EXP-03), resulting in a high‑severity policy violation.",
+          "The receipt matches a previously submitted claim (HIST-CLM-2028) with a duplicate risk score of 0.99, confirming a duplicate claim."
+        ],
+        "cited_stages": {
+          "receipt_extraction": "Receipt captured complete merchant, date, subtotal, tax, total and line item details with no missing fields.",
+          "normalization": "Data normalized correctly: employee ID EMP-408, merchant Hyatt Regency, date 2026-10-02, amounts consistent.",
+          "categorization": "Classified as Accommodation with 0.98 confidence based on hotel merchant and lodging line item.",
+          "amount_check": "Arithmetic validation passed; subtotal plus tax equals total with zero discrepancy.",
+          "policy_verification": "Flagged as non‑compliant: total $426.09 exceeds the $350 nightly cap per POL-EXP-03.",
+          "duplicate_check": "Confirmed duplicate of claim HIST-CLM-2028 with a 0.99 risk score.",
+          "exception_audit": "Two high‑severity exceptions identified: policy violation (POL-EXP-03) and duplicate claim (DUP-CLM-01)."
+        },
+        "recommendation": "Reject the claim and notify the employee of the policy breach and duplicate submission. Advise the employee to submit a corrected claim if the expense is legitimate and within policy limits."
+      },
+      "notes": ""
+    }
+  ],
+  "total_tokens": 6891,
+  "prompt_tokens": 4364,
+  "completion_tokens": 2527,
+  "estimated_cost_usd": 0.004571,
+  "error_message": null,
+  "final_output": "{\n  \"claim_id\": \"CLM-2028\",\n  \"employee_id\": \"EMP-408\",\n  \"merchant\": \"Hyatt Regency\",\n  \"date\": \"2026-10-02\",\n  \"currency\": \"USD\",\n  \"total_amount\": 426.09,\n  \"final_decision\": \"INELIGIBLE\",\n  \"rationale\": [\n    \"The expense exceeds the policy\\u2011defined nightly accommodation cap of $350.00 (POL-EXP-03), resulting in a high\\u2011severity policy violation.\",\n    \"The receipt matches a previously submitted claim (HIST-CLM-2028) with a duplicate risk score of 0.99, confirming a duplicate claim.\"\n  ],\n  \"cited_stages\": {\n    \"receipt_extraction\": \"Receipt captured complete merchant, date, subtotal, tax, total and line item details with no missing fields.\",\n    \"normalization\": \"Data normalized correctly: employee ID EMP-408, merchant Hyatt Regency, date 2026-10-02, amounts consistent.\",\n    \"categorization\": \"Classified as Accommodation with 0.98 confidence based on hotel merchant and lodging line item.\",\n    \"amount_check\": \"Arithmetic validation passed; subtotal plus tax equals total with zero discrepancy.\",\n    \"policy_verification\": \"Flagged as non\\u2011compliant: total $426.09 exceeds the $350 nightly cap per POL-EXP-03.\",\n    \"duplicate_check\": \"Confirmed duplicate of claim HIST-CLM-2028 with a 0.99 risk score.\",\n    \"exception_audit\": \"Two high\\u2011severity exceptions identified: policy violation (POL-EXP-03) and duplicate claim (DUP-CLM-01).\"\n  },\n  \"recommendation\": \"Reject the claim and notify the employee of the policy breach and duplicate submission. Advise the employee to submit a corrected claim if the expense is legitimate and within policy limits.\"\n}",
+  "output": {
+    "workflow": "expense_reimbursement",
+    "run_id": "live_20261031_182815_trace28",
+    "input": {
+      "claim_id": "CLM-2028",
+      "employee_id": "EMP-408",
+      "employee_name": "Priya Sharma",
+      "department": "Finance",
+      "submission_date": "2026-10-02",
+      "category": "Accommodation",
+      "merchant": "Hyatt Regency",
+      "currency": "USD",
+      "subtotal": 373.76,
+      "tax": 52.33,
+      "total": 426.09,
+      "business_purpose": "Official client engagement and operational workflow meeting at Hyatt Regency.",
+      "receipt_text": "\n==================================================\n                 HYATT REGENCY\n                 TAX INVOICE / RECEIPT\n==================================================\nDate: 2026-10-02                Time: 19:42:10\nOrder / Trans ID: TXN-525818\nServer / Terminal: REG-04\n--------------------------------------------------\nItem Description                 Qty        Price\n--------------------------------------------------\nCorporate Service Item 1           1       $373.76\n--------------------------------------------------\nSUBTOTAL:                                  $373.76\nTAX / VAT (Est):                           $52.33\nTOTAL PAID:                                $426.09\n--------------------------------------------------\nPayment Method: VISA ending in 4192\nApproval Code: AUTH-48985\nThank you for your business!\n==================================================\n",
+      "scenario_tag": "NORMAL",
+      "synthetic": true
+    },
+    "stages": {
+      "receipt": "{\n  \"merchant\": \"HYATT REGENCY\",\n  \"transaction_date\": \"2026-10-02\",\n  \"currency\": \"USD\",\n  \"subtotal\": 373.76,\n  \"tax\": 52.33,\n  \"total\": 426.09,\n  \"line_items\": [\n    {\n      \"description\": \"Corporate Service Item 1\",\n      \"quantity\": 1,\n      \"price\": 373.76\n    }\n  ],\n  \"missing_fields\": []\n}",
+      "normalize": "{\n  \"employee_id\": \"EMP-408\",\n  \"merchant\": \"HYATT REGENCY\",\n  \"date\": \"2026-10-02\",\n  \"currency\": \"USD\",\n  \"subtotal\": 373.76,\n  \"tax\": 52.33,\n  \"total\": 426.09\n}",
+      "category": "{\n  \"category\": \"Accommodation\",\n  \"classification_confidence\": 0.98,\n  \"reasoning\": \"The merchant is Hyatt Regency, a hotel chain, and the line items (room charge subtotal and associated tax) are characteristic of lodging expenses. The business purpose cites an official client engagement and workflow meeting, which typically requires overnight stay. These factors strongly indicate the expense belongs to the Accommodation category.\"\n}",
+      "amount": "{\n  \"is_arithmetic_valid\": true,\n  \"discrepancy_usd\": 0.0,\n  \"verification_notes\": \"Subtotal (373.76) plus tax (52.33) equals the declared total (426.09) exactly; no rounding differences detected and all amounts are non\\u2011negative.\"\n}",
+      "policy": "{\n  \"policy_compliance_status\": \"Non-compliant\",\n  \"cited_policy_ids\": [\n    \"POL-EXP-03\"\n  ],\n  \"violation_reasons\": [\n    \"Accommodation total $426.09 exceeds the high-cost nightly cap of $350.00\"\n  ]\n}",
+      "duplicate": "{\n  \"duplicate_status\": \"Confirmed Duplicate\",\n  \"matching_claim_ids\": [\n    \"HIST-CLM-2028\"\n  ],\n  \"duplicate_risk_score\": 0.99\n}",
+      "exceptions": "{\n  \"exceptions_found\": [\n    {\n      \"type\": \"Policy Violation\",\n      \"detail\": \"Accommodation total $426.09 exceeds the high-cost nightly cap of $350.00 as per policy POL-EXP-03.\",\n      \"policy_id\": \"POL-EXP-03\",\n      \"severity\": \"High\"\n    },\n    {\n      \"type\": \"Duplicate Claim\",\n      \"detail\": \"Receipt matches a previously submitted claim (HIST-CLM-2028) with a duplicate risk score of 0.99.\",\n      \"policy_id\": \"DUP-CLM-01\",\n      \"severity\": \"High\"\n    }\n  ],\n  \"severity_levels\": {\n    \"Critical\": 0,\n    \"High\": 2,\n    \"Medium\": 0,\n    \"Low\": 0\n  },\n  \"audit_warnings\": [\n    \"Duplicate claim detected with a high risk score (0.99).\",\n    \"Total amount exceeds the nightly cap defined in policy POL-EXP-03.\"\n  ]\n}",
+      "final_review": "{\n  \"claim_id\": \"CLM-2028\",\n  \"employee_id\": \"EMP-408\",\n  \"merchant\": \"Hyatt Regency\",\n  \"date\": \"2026-10-02\",\n  \"currency\": \"USD\",\n  \"total_amount\": 426.09,\n  \"final_decision\": \"INELIGIBLE\",\n  \"rationale\": [\n    \"The expense exceeds the policy\\u2011defined nightly accommodation cap of $350.00 (POL-EXP-03), resulting in a high\\u2011severity policy violation.\",\n    \"The receipt matches a previously submitted claim (HIST-CLM-2028) with a duplicate risk score of 0.99, confirming a duplicate claim.\"\n  ],\n  \"cited_stages\": {\n    \"receipt_extraction\": \"Receipt captured complete merchant, date, subtotal, tax, total and line item details with no missing fields.\",\n    \"normalization\": \"Data normalized correctly: employee ID EMP-408, merchant Hyatt Regency, date 2026-10-02, amounts consistent.\",\n    \"categorization\": \"Classified as Accommodation with 0.98 confidence based on hotel merchant and lodging line item.\",\n    \"amount_check\": \"Arithmetic validation passed; subtotal plus tax equals total with zero discrepancy.\",\n    \"policy_verification\": \"Flagged as non\\u2011compliant: total $426.09 exceeds the $350 nightly cap per POL-EXP-03.\",\n    \"duplicate_check\": \"Confirmed duplicate of claim HIST-CLM-2028 with a 0.99 risk score.\",\n    \"exception_audit\": \"Two high\\u2011severity exceptions identified: policy violation (POL-EXP-03) and duplicate claim (DUP-CLM-01).\"\n  },\n  \"recommendation\": \"Reject the claim and notify the employee of the policy breach and duplicate submission. Advise the employee to submit a corrected claim if the expense is legitimate and within policy limits.\"\n}"
+    },
+    "synthetic": true
+  },
+  "timestamp": "2026-10-31T18:28:36.206832+00:00"
+}

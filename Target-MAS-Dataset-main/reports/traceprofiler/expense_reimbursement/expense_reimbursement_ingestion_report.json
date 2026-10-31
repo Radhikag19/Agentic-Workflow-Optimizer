@@ -1,0 +1,3391 @@
+{
+  "workflow_name": "expense_reimbursement",
+  "report_type": "traceprofiler_single_workflow_ingestion",
+  "analysis_mode": "static_ast_non_executing",
+  "metrics": {
+    "declared_agents": 8,
+    "implemented_agents": 8,
+    "python_files": 9,
+    "telemetry_runs": 1,
+    "discrepancy_count": 2
+  },
+  "manifest": {
+    "file": "Agents/expense_reimbursement/workflow.json",
+    "dir": "Agents/expense_reimbursement",
+    "workflow_name": "expense_reimbursement",
+    "version": "1.0.0",
+    "description": "Baseline 8-agent sequential employee expense reimbursement validation workflow.",
+    "fixed_model": "openai/gpt-oss-120b",
+    "total_agents": 8,
+    "execution_mode": "sequential",
+    "execution_order": [
+      "receipt_agent",
+      "normalize_agent",
+      "category_agent",
+      "amount_agent",
+      "policy_agent",
+      "duplicate_agent",
+      "exception_agent",
+      "expense_review_agent"
+    ],
+    "optimization_opportunities": [
+      "Pruning exception_agent by merging checks into policy_agent and amount_agent",
+      "Parallelizing amount_agent, policy_agent, and duplicate_agent",
+      "Fast-path routing for recurring verified merchants with subtotal < $25",
+      "Compressing prompts across combined compliance stages"
+    ],
+    "agents": [
+      {
+        "id": "receipt_agent",
+        "name": "Receipt Extraction Specialist",
+        "role": "Receipt Extraction Specialist",
+        "declared_file": "receipt_agent.py",
+        "dependencies": [],
+        "inputs": [
+          "receipt_text",
+          "raw_claim"
+        ],
+        "outputs": [
+          "merchant",
+          "transaction_date",
+          "currency",
+          "subtotal",
+          "tax",
+          "total",
+          "line_items"
+        ],
+        "assigned_key": "GROQ_API_KEY_8",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "id": "receipt_agent",
+          "name": "Receipt Extraction Specialist",
+          "assigned_key": "GROQ_API_KEY_8",
+          "file": "receipt_agent.py",
+          "dependencies": [],
+          "inputs": [
+            "receipt_text",
+            "raw_claim"
+          ],
+          "outputs": [
+            "merchant",
+            "transaction_date",
+            "currency",
+            "subtotal",
+            "tax",
+            "total",
+            "line_items"
+          ],
+          "parallelizable": false
+        }
+      },
+      {
+        "id": "normalize_agent",
+        "name": "Expense Normalization Specialist",
+        "role": "Expense Normalization Specialist",
+        "declared_file": "normalize_agent.py",
+        "dependencies": [
+          "receipt_agent"
+        ],
+        "inputs": [
+          "receipt_extracted_data",
+          "claim_input"
+        ],
+        "outputs": [
+          "normalized_employee_id",
+          "normalized_merchant",
+          "normalized_date",
+          "currency",
+          "amounts"
+        ],
+        "assigned_key": "GROQ_API_KEY_9",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "id": "normalize_agent",
+          "name": "Expense Normalization Specialist",
+          "assigned_key": "GROQ_API_KEY_9",
+          "file": "normalize_agent.py",
+          "dependencies": [
+            "receipt_agent"
+          ],
+          "inputs": [
+            "receipt_extracted_data",
+            "claim_input"
+          ],
+          "outputs": [
+            "normalized_employee_id",
+            "normalized_merchant",
+            "normalized_date",
+            "currency",
+            "amounts"
+          ],
+          "parallelizable": false
+        }
+      },
+      {
+        "id": "category_agent",
+        "name": "Expense Categorization Specialist",
+        "role": "Expense Categorization Specialist",
+        "declared_file": "category_agent.py",
+        "dependencies": [
+          "normalize_agent"
+        ],
+        "inputs": [
+          "normalized_claim"
+        ],
+        "outputs": [
+          "category",
+          "classification_confidence",
+          "reasoning"
+        ],
+        "assigned_key": "GROQ_API_KEY_10",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "id": "category_agent",
+          "name": "Expense Categorization Specialist",
+          "assigned_key": "GROQ_API_KEY_10",
+          "file": "category_agent.py",
+          "dependencies": [
+            "normalize_agent"
+          ],
+          "inputs": [
+            "normalized_claim"
+          ],
+          "outputs": [
+            "category",
+            "classification_confidence",
+            "reasoning"
+          ],
+          "parallelizable": false
+        }
+      },
+      {
+        "id": "amount_agent",
+        "name": "Expense Arithmetic Specialist",
+        "role": "Expense Arithmetic Specialist",
+        "declared_file": "amount_agent.py",
+        "dependencies": [
+          "normalize_agent"
+        ],
+        "inputs": [
+          "subtotal",
+          "tax",
+          "total"
+        ],
+        "outputs": [
+          "is_arithmetic_valid",
+          "discrepancy_usd",
+          "verification_notes"
+        ],
+        "assigned_key": "GROQ_API_KEY_11",
+        "parallelizable": true,
+        "parallel_group": "compliance_branch",
+        "pruning_candidate": null,
+        "raw": {
+          "id": "amount_agent",
+          "name": "Expense Arithmetic Specialist",
+          "assigned_key": "GROQ_API_KEY_11",
+          "file": "amount_agent.py",
+          "dependencies": [
+            "normalize_agent"
+          ],
+          "inputs": [
+            "subtotal",
+            "tax",
+            "total"
+          ],
+          "outputs": [
+            "is_arithmetic_valid",
+            "discrepancy_usd",
+            "verification_notes"
+          ],
+          "parallelizable": true,
+          "parallel_group": "compliance_branch"
+        }
+      },
+      {
+        "id": "policy_agent",
+        "name": "Reimbursement Policy Compliance Specialist",
+        "role": "Reimbursement Policy Compliance Specialist",
+        "declared_file": "policy_agent.py",
+        "dependencies": [
+          "category_agent"
+        ],
+        "inputs": [
+          "category",
+          "total",
+          "receipt_presence"
+        ],
+        "outputs": [
+          "policy_compliance_status",
+          "cited_policy_ids",
+          "violation_reasons"
+        ],
+        "assigned_key": "GROQ_API_KEY_12",
+        "parallelizable": true,
+        "parallel_group": "compliance_branch",
+        "pruning_candidate": null,
+        "raw": {
+          "id": "policy_agent",
+          "name": "Reimbursement Policy Compliance Specialist",
+          "assigned_key": "GROQ_API_KEY_12",
+          "file": "policy_agent.py",
+          "dependencies": [
+            "category_agent"
+          ],
+          "inputs": [
+            "category",
+            "total",
+            "receipt_presence"
+          ],
+          "outputs": [
+            "policy_compliance_status",
+            "cited_policy_ids",
+            "violation_reasons"
+          ],
+          "parallelizable": true,
+          "parallel_group": "compliance_branch"
+        }
+      },
+      {
+        "id": "duplicate_agent",
+        "name": "Duplicate Claim Detection Specialist",
+        "role": "Duplicate Claim Detection Specialist",
+        "declared_file": "duplicate_agent.py",
+        "dependencies": [
+          "normalize_agent"
+        ],
+        "inputs": [
+          "employee_id",
+          "merchant",
+          "total",
+          "date"
+        ],
+        "outputs": [
+          "duplicate_status",
+          "matching_claim_ids",
+          "duplicate_risk_score"
+        ],
+        "assigned_key": "GROQ_API_KEY_13",
+        "parallelizable": true,
+        "parallel_group": "compliance_branch",
+        "pruning_candidate": null,
+        "raw": {
+          "id": "duplicate_agent",
+          "name": "Duplicate Claim Detection Specialist",
+          "assigned_key": "GROQ_API_KEY_13",
+          "file": "duplicate_agent.py",
+          "dependencies": [
+            "normalize_agent"
+          ],
+          "inputs": [
+            "employee_id",
+            "merchant",
+            "total",
+            "date"
+          ],
+          "outputs": [
+            "duplicate_status",
+            "matching_claim_ids",
+            "duplicate_risk_score"
+          ],
+          "parallelizable": true,
+          "parallel_group": "compliance_branch"
+        }
+      },
+      {
+        "id": "exception_agent",
+        "name": "Expense Exception & Audit Specialist",
+        "role": "Expense Exception & Audit Specialist",
+        "declared_file": "exception_agent.py",
+        "dependencies": [
+          "amount_agent",
+          "policy_agent",
+          "duplicate_agent"
+        ],
+        "inputs": [
+          "receipt_text",
+          "amount_status",
+          "policy_status",
+          "duplicate_status"
+        ],
+        "outputs": [
+          "exceptions_found",
+          "severity_levels",
+          "audit_warnings"
+        ],
+        "assigned_key": "GROQ_API_KEY_14",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": "Prime target for AWO consolidation into Policy and Amount agents",
+        "raw": {
+          "id": "exception_agent",
+          "name": "Expense Exception & Audit Specialist",
+          "assigned_key": "GROQ_API_KEY_14",
+          "file": "exception_agent.py",
+          "dependencies": [
+            "amount_agent",
+            "policy_agent",
+            "duplicate_agent"
+          ],
+          "inputs": [
+            "receipt_text",
+            "amount_status",
+            "policy_status",
+            "duplicate_status"
+          ],
+          "outputs": [
+            "exceptions_found",
+            "severity_levels",
+            "audit_warnings"
+          ],
+          "parallelizable": false,
+          "pruning_candidate": "Prime target for AWO consolidation into Policy and Amount agents"
+        }
+      },
+      {
+        "id": "expense_review_agent",
+        "name": "Expense Review & Adjudication Specialist",
+        "role": "Expense Review & Adjudication Specialist",
+        "declared_file": "review_agent.py",
+        "dependencies": [
+          "exception_agent"
+        ],
+        "inputs": [
+          "all_previous_stages"
+        ],
+        "outputs": [
+          "final_reimbursement_decision",
+          "decision_reasons",
+          "audit_trail"
+        ],
+        "assigned_key": "GROQ_API_KEY_8",
+        "parallelizable": false,
+        "parallel_group": null,
+        "pruning_candidate": null,
+        "raw": {
+          "id": "expense_review_agent",
+          "name": "Expense Review & Adjudication Specialist",
+          "assigned_key": "GROQ_API_KEY_8",
+          "file": "review_agent.py",
+          "dependencies": [
+            "exception_agent"
+          ],
+          "inputs": [
+            "all_previous_stages"
+          ],
+          "outputs": [
+            "final_reimbursement_decision",
+            "decision_reasons",
+            "audit_trail"
+          ],
+          "parallelizable": false
+        }
+      }
+    ]
+  },
+  "agent_inventory": [
+    {
+      "id": "receipt_agent",
+      "name": "Receipt Extraction Specialist",
+      "role": "Receipt Extraction Specialist",
+      "workflow": "expense_reimbursement",
+      "declared_file": "receipt_agent.py",
+      "assigned_key": "GROQ_API_KEY_8",
+      "dependencies": [],
+      "inputs": [
+        "receipt_text",
+        "raw_claim"
+      ],
+      "outputs": [
+        "merchant",
+        "transaction_date",
+        "currency",
+        "subtotal",
+        "tax",
+        "total",
+        "line_items"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/expense_reimbursement/receipt_agent.py",
+      "agent_constructors": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Receipt Extraction Specialist",
+          "goal": "Extract merchant name, transaction date, currency, subtotal, tax amount, total amount, and itemized lines from raw receipt text. Flag any missing fields.",
+          "backstory": "You are a Forensic Accounts Payable Auditor specializing in reading receipt structures, itemized charges, and payment metadata accurately without guessing.",
+          "llm_expression": "create_agent_llm(\"receipt_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_receipt_agent",
+          "line": 11,
+          "end_line": 25,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    },
+    {
+      "id": "normalize_agent",
+      "name": "Expense Normalization Specialist",
+      "role": "Expense Normalization Specialist",
+      "workflow": "expense_reimbursement",
+      "declared_file": "normalize_agent.py",
+      "assigned_key": "GROQ_API_KEY_9",
+      "dependencies": [
+        "receipt_agent"
+      ],
+      "inputs": [
+        "receipt_extracted_data",
+        "claim_input"
+      ],
+      "outputs": [
+        "normalized_employee_id",
+        "normalized_merchant",
+        "normalized_date",
+        "currency",
+        "amounts"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/expense_reimbursement/normalize_agent.py",
+      "agent_constructors": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Expense Normalization Specialist",
+          "goal": "Standardize extracted claim dates, numeric amounts, currency codes, and employee IDs. Flag inconsistencies between the claim submission and receipt evidence.",
+          "backstory": "You are a Financial Data Integrity Engineer who ensures all accounting records conform to strict ISO standards, uniform data schemas, and validated identifiers.",
+          "llm_expression": "create_agent_llm(\"normalize_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_normalize_agent",
+          "line": 11,
+          "end_line": 25,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    },
+    {
+      "id": "category_agent",
+      "name": "Expense Categorization Specialist",
+      "role": "Expense Categorization Specialist",
+      "workflow": "expense_reimbursement",
+      "declared_file": "category_agent.py",
+      "assigned_key": "GROQ_API_KEY_10",
+      "dependencies": [
+        "normalize_agent"
+      ],
+      "inputs": [
+        "normalized_claim"
+      ],
+      "outputs": [
+        "category",
+        "classification_confidence",
+        "reasoning"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/expense_reimbursement/category_agent.py",
+      "agent_constructors": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Expense Categorization Specialist",
+          "goal": "Categorize the claim into Travel, Meals & Entertainment, Accommodation, Transport, Office Supplies, or Software & Cloud. Cite supporting merchant and line item evidence.",
+          "backstory": "You are a Corporate Controller who maps receipts to General Ledger accounting categories based on merchant type, business purpose, and line item context.",
+          "llm_expression": "create_agent_llm(\"category_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_category_agent",
+          "line": 11,
+          "end_line": 25,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    },
+    {
+      "id": "amount_agent",
+      "name": "Expense Arithmetic Specialist",
+      "role": "Expense Arithmetic Specialist",
+      "workflow": "expense_reimbursement",
+      "declared_file": "amount_agent.py",
+      "assigned_key": "GROQ_API_KEY_11",
+      "dependencies": [
+        "normalize_agent"
+      ],
+      "inputs": [
+        "subtotal",
+        "tax",
+        "total"
+      ],
+      "outputs": [
+        "is_arithmetic_valid",
+        "discrepancy_usd",
+        "verification_notes"
+      ],
+      "parallelizable": true,
+      "parallel_group": "compliance_branch",
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/expense_reimbursement/amount_agent.py",
+      "agent_constructors": [
+        {
+          "line": 30,
+          "constructor": "Agent",
+          "role": "Expense Arithmetic Specialist",
+          "goal": "Verify all arithmetic calculations on the claim: subtotal + tax = total. Flag rounding errors, negative sums, or declared total mismatches.",
+          "backstory": "You are a Forensic Financial Auditor who checks numerical calculations to the exact cent, ensuring books reconcile with mathematical precision.",
+          "llm_expression": "create_agent_llm(\"amount_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "calculate_deterministic_arithmetic",
+          "line": 12,
+          "end_line": 26,
+          "docstring": "Perform exact deterministic financial arithmetic verification.",
+          "args": [
+            "subtotal",
+            "tax",
+            "total"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_amount_agent",
+          "line": 29,
+          "end_line": 43,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 9
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "calculate_deterministic_arithmetic",
+          "line": 12,
+          "classification": "function_candidate",
+          "docstring": "Perform exact deterministic financial arithmetic verification."
+        }
+      ]
+    },
+    {
+      "id": "policy_agent",
+      "name": "Reimbursement Policy Compliance Specialist",
+      "role": "Reimbursement Policy Compliance Specialist",
+      "workflow": "expense_reimbursement",
+      "declared_file": "policy_agent.py",
+      "assigned_key": "GROQ_API_KEY_12",
+      "dependencies": [
+        "category_agent"
+      ],
+      "inputs": [
+        "category",
+        "total",
+        "receipt_presence"
+      ],
+      "outputs": [
+        "policy_compliance_status",
+        "cited_policy_ids",
+        "violation_reasons"
+      ],
+      "parallelizable": true,
+      "parallel_group": "compliance_branch",
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/expense_reimbursement/policy_agent.py",
+      "agent_constructors": [
+        {
+          "line": 29,
+          "constructor": "Agent",
+          "role": "Reimbursement Policy Compliance Specialist",
+          "goal": "Apply corporate reimbursement policies against the claim details. Check caps, receipt requirements, and advance approval rules. Return policy IDs cited.",
+          "backstory": "You are a Corporate Compliance Officer with encyclopedic knowledge of company travel and expense policies, spending limits, and audit standards.",
+          "llm_expression": "create_agent_llm(\"policy_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "query_policies_for_category",
+          "line": 16,
+          "end_line": 25,
+          "docstring": "Retrieve applicable corporate policies for the given expense category.",
+          "args": [
+            "category"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_policy_agent",
+          "line": 28,
+          "end_line": 42,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 7
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 10
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 11
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "query_policies_for_category",
+          "line": 16,
+          "classification": "function_candidate",
+          "docstring": "Retrieve applicable corporate policies for the given expense category."
+        }
+      ]
+    },
+    {
+      "id": "duplicate_agent",
+      "name": "Duplicate Claim Detection Specialist",
+      "role": "Duplicate Claim Detection Specialist",
+      "workflow": "expense_reimbursement",
+      "declared_file": "duplicate_agent.py",
+      "assigned_key": "GROQ_API_KEY_13",
+      "dependencies": [
+        "normalize_agent"
+      ],
+      "inputs": [
+        "employee_id",
+        "merchant",
+        "total",
+        "date"
+      ],
+      "outputs": [
+        "duplicate_status",
+        "matching_claim_ids",
+        "duplicate_risk_score"
+      ],
+      "parallelizable": true,
+      "parallel_group": "compliance_branch",
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/expense_reimbursement/duplicate_agent.py",
+      "agent_constructors": [
+        {
+          "line": 37,
+          "constructor": "Agent",
+          "role": "Duplicate Claim Detection Specialist",
+          "goal": "Cross-reference active claim against historical submissions. Distinguish between confirmed duplicate submissions and coincidentally similar expenses.",
+          "backstory": "You are a Fraud Prevention Analyst who scans transaction histories to prevent double-reimbursements and duplicate receipt submissions across accounting periods.",
+          "llm_expression": "create_agent_llm(\"duplicate_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "query_candidate_duplicates",
+          "line": 16,
+          "end_line": 33,
+          "docstring": "Deterministic lookup for potential duplicate claims.",
+          "args": [
+            "employee_id",
+            "merchant",
+            "amount"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_duplicate_agent",
+          "line": 36,
+          "end_line": 50,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 7
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 10
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 11
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "query_candidate_duplicates",
+          "line": 16,
+          "classification": "function_candidate",
+          "docstring": "Deterministic lookup for potential duplicate claims."
+        }
+      ]
+    },
+    {
+      "id": "exception_agent",
+      "name": "Expense Exception & Audit Specialist",
+      "role": "Expense Exception & Audit Specialist",
+      "workflow": "expense_reimbursement",
+      "declared_file": "exception_agent.py",
+      "assigned_key": "GROQ_API_KEY_14",
+      "dependencies": [
+        "amount_agent",
+        "policy_agent",
+        "duplicate_agent"
+      ],
+      "inputs": [
+        "receipt_text",
+        "amount_status",
+        "policy_status",
+        "duplicate_status"
+      ],
+      "outputs": [
+        "exceptions_found",
+        "severity_levels",
+        "audit_warnings"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": "Prime target for AWO consolidation into Policy and Amount agents",
+      "implementation_found": true,
+      "implementation_file": "Agents/expense_reimbursement/exception_agent.py",
+      "agent_constructors": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Expense Exception & Audit Specialist",
+          "goal": "Conduct an independent red-team audit of the claim: check for policy violations, missing receipt documentation, excessive sums, or unapproved perks. Generate structured warnings.",
+          "backstory": "You are an Internal Affairs Financial Auditor. You operate with healthy skepticism, spotting irregular spending patterns, missing documentation, and policy circumvention.",
+          "llm_expression": "create_agent_llm(\"exception_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_exception_agent",
+          "line": 11,
+          "end_line": 25,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    },
+    {
+      "id": "expense_review_agent",
+      "name": "Expense Review & Adjudication Specialist",
+      "role": "Expense Review & Adjudication Specialist",
+      "workflow": "expense_reimbursement",
+      "declared_file": "review_agent.py",
+      "assigned_key": "GROQ_API_KEY_8",
+      "dependencies": [
+        "exception_agent"
+      ],
+      "inputs": [
+        "all_previous_stages"
+      ],
+      "outputs": [
+        "final_reimbursement_decision",
+        "decision_reasons",
+        "audit_trail"
+      ],
+      "parallelizable": false,
+      "parallel_group": null,
+      "pruning_candidate": null,
+      "implementation_found": true,
+      "implementation_file": "Agents/expense_reimbursement/review_agent.py",
+      "agent_constructors": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Expense Review & Adjudication Specialist",
+          "goal": "Synthesize outputs from receipt extraction, normalization, categorization, amount check, policy verification, duplicate check, and exception audit. Deliver final adjudication (ELIGIBLE, INELIGIBLE, NEEDS_REVIEW) with citations and justifications. Never disburse funds.",
+          "backstory": "You are the Head of Accounts Payable & Disbursements. You make the final compliance determination on expense claims, balancing fair employee reimbursement with strict governance.",
+          "llm_expression": "create_agent_llm(\"expense_review_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_constructors": [],
+      "functions": [
+        {
+          "name": "create_expense_review_agent",
+          "line": 11,
+          "end_line": 26,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "tool_references": []
+    }
+  ],
+  "workflow_analysis": {
+    "file": "Agents/expense_reimbursement/workflow.py",
+    "classes": [],
+    "entry_points": [
+      {
+        "name": "run_expense_workflow",
+        "line": 34,
+        "args": [
+          "claim_input",
+          "run_id"
+        ],
+        "docstring": "Execute the 8-agent Expense Reimbursement workflow."
+      }
+    ],
+    "crew_constructions": [
+      {
+        "line": 70,
+        "source": "Crew(agents=[receipt_agent], tasks=[receipt_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 89,
+        "source": "Crew(agents=[normalize_agent], tasks=[normalize_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 108,
+        "source": "Crew(agents=[category_agent], tasks=[category_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 138,
+        "source": "Crew(agents=[amount_agent], tasks=[amount_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 158,
+        "source": "Crew(agents=[policy_agent], tasks=[policy_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 181,
+        "source": "Crew(agents=[duplicate_agent], tasks=[duplicate_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 202,
+        "source": "Crew(agents=[exception_agent], tasks=[exception_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 226,
+        "source": "Crew(agents=[review_agent], tasks=[review_task], process=Process.sequential, verbose=False)"
+      }
+    ],
+    "assignments": [
+      {
+        "line": 40,
+        "targets": [
+          "run_id"
+        ],
+        "value_names": [
+          "generate_run_id",
+          "run_id"
+        ],
+        "expression": "run_id or generate_run_id(\"expense\")"
+      },
+      {
+        "line": 41,
+        "targets": [
+          "start_total"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 42,
+        "targets": [
+          "agent_durations"
+        ],
+        "value_names": [],
+        "expression": "{}"
+      },
+      {
+        "line": 43,
+        "targets": [
+          "order"
+        ],
+        "value_names": [],
+        "expression": "[\n        \"receipt_agent\",\n        \"normalize_agent\",\n        \"category_agent\",\n        \"amount_agent\",\n        \"policy_agent\",\n        \"duplicate_agent\",\n        \"exception_agent\",\n        \"expense_review_agent\",\n    ]"
+      },
+      {
+        "line": 231,
+        "targets": [
+          "total_duration"
+        ],
+        "value_names": [
+          "start_total",
+          "time"
+        ],
+        "expression": "time.perf_counter() - start_total"
+      },
+      {
+        "line": 233,
+        "targets": [
+          "final_payload"
+        ],
+        "value_names": [
+          "amount_text",
+          "category_text",
+          "claim_input",
+          "duplicate_text",
+          "exception_text",
+          "normalize_text",
+          "policy_text",
+          "receipt_text",
+          "review_text",
+          "run_id"
+        ],
+        "expression": "{\n        \"workflow\": \"expense_reimbursement\",\n        \"run_id\": run_id,\n        \"input\": claim_input,\n        \"stages\": {\n            \"receipt\": receipt_text,\n            \"normalize\": normalize_text,\n            \"category\": category_text,\n            \"amount\": amount_text,\n            \"policy\": pol"
+      },
+      {
+        "line": 250,
+        "targets": [
+          "tracker_data"
+        ],
+        "value_names": [
+          "ACTIVE_TRACKER"
+        ],
+        "expression": "ACTIVE_TRACKER.snapshot()"
+      },
+      {
+        "line": 251,
+        "targets": [
+          "result"
+        ],
+        "value_names": [
+          "WorkflowExecutionResult",
+          "agent_durations",
+          "final_payload",
+          "len",
+          "order",
+          "run_id",
+          "total_duration",
+          "tracker_data"
+        ],
+        "expression": "WorkflowExecutionResult(\n        workflow_name=\"expense_reimbursement\",\n        run_id=run_id,\n        status=\"SUCCESS\",\n        execution_order=order,\n        agent_durations=agent_durations,\n        total_duration_seconds=total_duration,\n        agent_count=len(order),\n        llm_call_count=track"
+      },
+      {
+        "line": 56,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 57,
+        "targets": [
+          "raw_receipt"
+        ],
+        "value_names": [
+          "claim_input"
+        ],
+        "expression": "claim_input.get(\"receipt_text\", \"\")"
+      },
+      {
+        "line": 73,
+        "targets": [
+          "receipt_text"
+        ],
+        "value_names": [
+          "hasattr",
+          "receipt_output",
+          "str"
+        ],
+        "expression": "str(receipt_output.raw if hasattr(receipt_output, \"raw\") else receipt_output)"
+      },
+      {
+        "line": 76,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 92,
+        "targets": [
+          "normalize_text"
+        ],
+        "value_names": [
+          "hasattr",
+          "normalize_output",
+          "str"
+        ],
+        "expression": "str(normalize_output.raw if hasattr(normalize_output, \"raw\") else normalize_output)"
+      },
+      {
+        "line": 95,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 111,
+        "targets": [
+          "category_text"
+        ],
+        "value_names": [
+          "category_output",
+          "hasattr",
+          "str"
+        ],
+        "expression": "str(category_output.raw if hasattr(category_output, \"raw\") else category_output)"
+      },
+      {
+        "line": 114,
+        "targets": [
+          "assigned_category"
+        ],
+        "value_names": [
+          "claim_input"
+        ],
+        "expression": "claim_input.get(\"category\", \"Meals & Entertainment\")"
+      },
+      {
+        "line": 121,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 122,
+        "targets": [
+          "sub"
+        ],
+        "value_names": [
+          "claim_input",
+          "float"
+        ],
+        "expression": "float(claim_input.get(\"subtotal\", 0.0))"
+      },
+      {
+        "line": 123,
+        "targets": [
+          "tx"
+        ],
+        "value_names": [
+          "claim_input",
+          "float"
+        ],
+        "expression": "float(claim_input.get(\"tax\", 0.0))"
+      },
+      {
+        "line": 124,
+        "targets": [
+          "tot"
+        ],
+        "value_names": [
+          "claim_input",
+          "float"
+        ],
+        "expression": "float(claim_input.get(\"total\", 0.0))"
+      },
+      {
+        "line": 125,
+        "targets": [
+          "arithmetic_check"
+        ],
+        "value_names": [
+          "calculate_deterministic_arithmetic",
+          "sub",
+          "tot",
+          "tx"
+        ],
+        "expression": "calculate_deterministic_arithmetic(sub, tx, tot)"
+      },
+      {
+        "line": 141,
+        "targets": [
+          "amount_text"
+        ],
+        "value_names": [
+          "amount_output",
+          "hasattr",
+          "str"
+        ],
+        "expression": "str(amount_output.raw if hasattr(amount_output, \"raw\") else amount_output)"
+      },
+      {
+        "line": 144,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 145,
+        "targets": [
+          "policies"
+        ],
+        "value_names": [
+          "assigned_category",
+          "query_policies_for_category"
+        ],
+        "expression": "query_policies_for_category(assigned_category)"
+      },
+      {
+        "line": 161,
+        "targets": [
+          "policy_text"
+        ],
+        "value_names": [
+          "hasattr",
+          "policy_output",
+          "str"
+        ],
+        "expression": "str(policy_output.raw if hasattr(policy_output, \"raw\") else policy_output)"
+      },
+      {
+        "line": 164,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 165,
+        "targets": [
+          "emp_id"
+        ],
+        "value_names": [
+          "claim_input"
+        ],
+        "expression": "claim_input.get(\"employee_id\", \"\")"
+      },
+      {
+        "line": 166,
+        "targets": [
+          "merchant_name"
+        ],
+        "value_names": [
+          "claim_input"
+        ],
+        "expression": "claim_input.get(\"merchant\", \"\")"
+      },
+      {
+        "line": 167,
+        "targets": [
+          "duplicate_candidates"
+        ],
+        "value_names": [
+          "emp_id",
+          "merchant_name",
+          "query_candidate_duplicates",
+          "tot"
+        ],
+        "expression": "query_candidate_duplicates(emp_id, merchant_name, tot)"
+      },
+      {
+        "line": 184,
+        "targets": [
+          "duplicate_text"
+        ],
+        "value_names": [
+          "duplicate_output",
+          "hasattr",
+          "str"
+        ],
+        "expression": "str(duplicate_output.raw if hasattr(duplicate_output, \"raw\") else duplicate_output)"
+      },
+      {
+        "line": 187,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 205,
+        "targets": [
+          "exception_text"
+        ],
+        "value_names": [
+          "exception_output",
+          "hasattr",
+          "str"
+        ],
+        "expression": "str(exception_output.raw if hasattr(exception_output, \"raw\") else exception_output)"
+      },
+      {
+        "line": 208,
+        "targets": [
+          "t0"
+        ],
+        "value_names": [
+          "time"
+        ],
+        "expression": "time.perf_counter()"
+      },
+      {
+        "line": 229,
+        "targets": [
+          "review_text"
+        ],
+        "value_names": [
+          "hasattr",
+          "review_output",
+          "str"
+        ],
+        "expression": "str(review_output.raw if hasattr(review_output, \"raw\") else review_output)"
+      },
+      {
+        "line": 59,
+        "targets": [
+          "receipt_agent"
+        ],
+        "value_names": [
+          "create_receipt_agent"
+        ],
+        "expression": "create_receipt_agent()"
+      },
+      {
+        "line": 60,
+        "targets": [
+          "receipt_task"
+        ],
+        "value_names": [
+          "Task",
+          "raw_receipt",
+          "receipt_agent"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Read and parse this synthetic receipt text:\\n\"\n                    f\"{raw_receipt if raw_receipt else '[NO RECEIPT TEXT PROVIDED IN CLAIM]'}\\n\"\n                    f\"Extract merchant, transaction_date, currency, subtotal, tax, total, and line"
+      },
+      {
+        "line": 70,
+        "targets": [
+          "crew1"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "receipt_agent",
+          "receipt_task"
+        ],
+        "expression": "Crew(agents=[receipt_agent], tasks=[receipt_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 71,
+        "targets": [
+          "receipt_output"
+        ],
+        "value_names": [
+          "crew1"
+        ],
+        "expression": "crew1.kickoff()"
+      },
+      {
+        "line": 78,
+        "targets": [
+          "normalize_agent"
+        ],
+        "value_names": [
+          "create_normalize_agent"
+        ],
+        "expression": "create_normalize_agent()"
+      },
+      {
+        "line": 79,
+        "targets": [
+          "normalize_task"
+        ],
+        "value_names": [
+          "Task",
+          "claim_input",
+          "json",
+          "normalize_agent",
+          "receipt_text"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Standardize and validate fields between claim and receipt:\\n\"\n                    f\"Claim Payload: {json.dumps(claim_input, indent=2)}\\n\"\n                    f\"Receipt Output: {receipt_text}\\n\"\n                    f\"Format dates to YYYY-MM-DD"
+      },
+      {
+        "line": 89,
+        "targets": [
+          "crew2"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "normalize_agent",
+          "normalize_task"
+        ],
+        "expression": "Crew(agents=[normalize_agent], tasks=[normalize_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 90,
+        "targets": [
+          "normalize_output"
+        ],
+        "value_names": [
+          "crew2"
+        ],
+        "expression": "crew2.kickoff()"
+      },
+      {
+        "line": 97,
+        "targets": [
+          "category_agent"
+        ],
+        "value_names": [
+          "create_category_agent"
+        ],
+        "expression": "create_category_agent()"
+      },
+      {
+        "line": 98,
+        "targets": [
+          "category_task"
+        ],
+        "value_names": [
+          "Task",
+          "category_agent",
+          "normalize_text"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Classify this expense into an official category:\\n\"\n                    f\"Allowed: Travel, Meals & Entertainment, Accommodation, Transport, Office Supplies, Software & Cloud.\\n\"\n                    f\"Normalized Context: {normalize_text}\\n\"\n  "
+      },
+      {
+        "line": 108,
+        "targets": [
+          "crew3"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "category_agent",
+          "category_task"
+        ],
+        "expression": "Crew(agents=[category_agent], tasks=[category_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 109,
+        "targets": [
+          "category_output"
+        ],
+        "value_names": [
+          "crew3"
+        ],
+        "expression": "crew3.kickoff()"
+      },
+      {
+        "line": 128,
+        "targets": [
+          "amount_agent"
+        ],
+        "value_names": [
+          "create_amount_agent"
+        ],
+        "expression": "create_amount_agent()"
+      },
+      {
+        "line": 129,
+        "targets": [
+          "amount_task"
+        ],
+        "value_names": [
+          "Task",
+          "amount_agent",
+          "arithmetic_check",
+          "json",
+          "sub",
+          "tot",
+          "tx"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Deterministic Arithmetic Verification:\\n{json.dumps(arithmetic_check, indent=2)}\\n\"\n                    f\"Verify if subtotal (${sub:.2f}) + tax (${tx:.2f}) equals total (${tot:.2f}). \"\n                    f\"Confirm whether any negative amount"
+      },
+      {
+        "line": 138,
+        "targets": [
+          "crew4"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "amount_agent",
+          "amount_task"
+        ],
+        "expression": "Crew(agents=[amount_agent], tasks=[amount_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 139,
+        "targets": [
+          "amount_output"
+        ],
+        "value_names": [
+          "crew4"
+        ],
+        "expression": "crew4.kickoff()"
+      },
+      {
+        "line": 147,
+        "targets": [
+          "policy_agent"
+        ],
+        "value_names": [
+          "create_policy_agent"
+        ],
+        "expression": "create_policy_agent()"
+      },
+      {
+        "line": 148,
+        "targets": [
+          "policy_task"
+        ],
+        "value_names": [
+          "Task",
+          "assigned_category",
+          "bool",
+          "json",
+          "policies",
+          "policy_agent",
+          "raw_receipt",
+          "tot"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Evaluate this claim against corporate policy limits:\\n\"\n                    f\"Applicable Policies:\\n{json.dumps(policies, indent=2)}\\n\"\n                    f\"Claim Details: Total=${tot:.2f}, Category={assigned_category}, HasReceipt={bool(raw_"
+      },
+      {
+        "line": 158,
+        "targets": [
+          "crew5"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "policy_agent",
+          "policy_task"
+        ],
+        "expression": "Crew(agents=[policy_agent], tasks=[policy_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 159,
+        "targets": [
+          "policy_output"
+        ],
+        "value_names": [
+          "crew5"
+        ],
+        "expression": "crew5.kickoff()"
+      },
+      {
+        "line": 170,
+        "targets": [
+          "duplicate_agent"
+        ],
+        "value_names": [
+          "create_duplicate_agent"
+        ],
+        "expression": "create_duplicate_agent()"
+      },
+      {
+        "line": 171,
+        "targets": [
+          "duplicate_task"
+        ],
+        "value_names": [
+          "Task",
+          "claim_input",
+          "duplicate_agent",
+          "duplicate_candidates",
+          "emp_id",
+          "json",
+          "merchant_name",
+          "tot"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Check for duplicate submissions against historical database:\\n\"\n                    f\"Candidate Submissions:\\n{json.dumps(duplicate_candidates, indent=2)}\\n\"\n                    f\"Current Claim: Employee={emp_id}, Merchant={merchant_name}, To"
+      },
+      {
+        "line": 181,
+        "targets": [
+          "crew6"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "duplicate_agent",
+          "duplicate_task"
+        ],
+        "expression": "Crew(agents=[duplicate_agent], tasks=[duplicate_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 182,
+        "targets": [
+          "duplicate_output"
+        ],
+        "value_names": [
+          "crew6"
+        ],
+        "expression": "crew6.kickoff()"
+      },
+      {
+        "line": 189,
+        "targets": [
+          "exception_agent"
+        ],
+        "value_names": [
+          "create_exception_agent"
+        ],
+        "expression": "create_exception_agent()"
+      },
+      {
+        "line": 190,
+        "targets": [
+          "exception_task"
+        ],
+        "value_names": [
+          "Task",
+          "amount_text",
+          "duplicate_text",
+          "exception_agent",
+          "policy_text",
+          "receipt_text"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Conduct an independent exception audit across all findings:\\n\"\n                    f\"Receipt Info: {receipt_text}\\n\"\n                    f\"Arithmetic: {amount_text}\\n\"\n                    f\"Policy Check: {policy_text}\\n\"\n                    f"
+      },
+      {
+        "line": 202,
+        "targets": [
+          "crew7"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "exception_agent",
+          "exception_task"
+        ],
+        "expression": "Crew(agents=[exception_agent], tasks=[exception_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 203,
+        "targets": [
+          "exception_output"
+        ],
+        "value_names": [
+          "crew7"
+        ],
+        "expression": "crew7.kickoff()"
+      },
+      {
+        "line": 210,
+        "targets": [
+          "review_agent"
+        ],
+        "value_names": [
+          "create_expense_review_agent"
+        ],
+        "expression": "create_expense_review_agent()"
+      },
+      {
+        "line": 211,
+        "targets": [
+          "review_task"
+        ],
+        "value_names": [
+          "Task",
+          "amount_text",
+          "category_text",
+          "duplicate_text",
+          "exception_text",
+          "normalize_text",
+          "policy_text",
+          "receipt_text",
+          "review_agent"
+        ],
+        "expression": "Task(\n                description=(\n                    f\"Synthesize all preceding 7 stages into a final reimbursement decision:\\n\"\n                    f\"1. Receipt: {receipt_text}\\n\"\n                    f\"2. Normalization: {normalize_text}\\n\"\n                    f\"3. Category: {category_text}\\n\"\n  "
+      },
+      {
+        "line": 226,
+        "targets": [
+          "crew8"
+        ],
+        "value_names": [
+          "Crew",
+          "Process",
+          "review_agent",
+          "review_task"
+        ],
+        "expression": "Crew(agents=[review_agent], tasks=[review_task], process=Process.sequential, verbose=False)"
+      },
+      {
+        "line": 227,
+        "targets": [
+          "review_output"
+        ],
+        "value_names": [
+          "crew8"
+        ],
+        "expression": "crew8.kickoff()"
+      },
+      {
+        "line": 117,
+        "targets": [
+          "assigned_category"
+        ],
+        "value_names": [
+          "cat"
+        ],
+        "expression": "cat"
+      }
+    ],
+    "task_handoffs": [
+      {
+        "line": 60,
+        "referenced_variables": [
+          "raw_receipt"
+        ],
+        "description_literals": [
+          "Read and parse this synthetic receipt text:",
+          "Extract merchant, transaction_date, currency, subtotal, tax, total, and line items. Explicitly note if receipt is missing or illegible.",
+          "[NO RECEIPT TEXT PROVIDED IN CLAIM]"
+        ],
+        "agent_expression": "receipt_agent"
+      },
+      {
+        "line": 79,
+        "referenced_variables": [
+          "claim_input",
+          "json",
+          "receipt_text"
+        ],
+        "description_literals": [
+          "Standardize and validate fields between claim and receipt:\nClaim Payload:",
+          "Receipt Output:",
+          "Format dates to YYYY-MM-DD, currency to ISO code (e.g., USD), and numeric amounts to 2 decimals."
+        ],
+        "agent_expression": "normalize_agent"
+      },
+      {
+        "line": 98,
+        "referenced_variables": [
+          "normalize_text"
+        ],
+        "description_literals": [
+          "Classify this expense into an official category:\nAllowed: Travel, Meals & Entertainment, Accommodation, Transport, Office Supplies, Software & Cloud.\nNormalized Context:",
+          "State the assigned category and provide evidence for this classification."
+        ],
+        "agent_expression": "category_agent"
+      },
+      {
+        "line": 129,
+        "referenced_variables": [
+          "arithmetic_check",
+          "json",
+          "sub",
+          "tot",
+          "tx"
+        ],
+        "description_literals": [
+          "Deterministic Arithmetic Verification:",
+          "Verify if subtotal ($",
+          ") + tax ($",
+          ") equals total ($",
+          "). Confirm whether any negative amounts or rounding anomalies exist.",
+          ".2f"
+        ],
+        "agent_expression": "amount_agent"
+      },
+      {
+        "line": 148,
+        "referenced_variables": [
+          "assigned_category",
+          "bool",
+          "json",
+          "policies",
+          "raw_receipt",
+          "tot"
+        ],
+        "description_literals": [
+          "Evaluate this claim against corporate policy limits:\nApplicable Policies:",
+          "Claim Details: Total=$",
+          ", Category=",
+          ", HasReceipt=",
+          "Return which policy IDs apply, whether any limit is breached, and compliance status.",
+          ".2f"
+        ],
+        "agent_expression": "policy_agent"
+      },
+      {
+        "line": 171,
+        "referenced_variables": [
+          "claim_input",
+          "duplicate_candidates",
+          "emp_id",
+          "json",
+          "merchant_name",
+          "tot"
+        ],
+        "description_literals": [
+          "Check for duplicate submissions against historical database:\nCandidate Submissions:",
+          "Current Claim: Employee=",
+          ", Merchant=",
+          ", Total=$",
+          ", Date=",
+          "Determine if this is a Confirmed Duplicate, Possible Coincidence, or No Duplicate Found.",
+          ".2f",
+          "submission_date"
+        ],
+        "agent_expression": "duplicate_agent"
+      },
+      {
+        "line": 190,
+        "referenced_variables": [
+          "amount_text",
+          "duplicate_text",
+          "policy_text",
+          "receipt_text"
+        ],
+        "description_literals": [
+          "Conduct an independent exception audit across all findings:\nReceipt Info:",
+          "Arithmetic:",
+          "Policy Check:",
+          "Duplicate Check:",
+          "Identify all anomalies, unitemized receipts, policy breaches, or red flags."
+        ],
+        "agent_expression": "exception_agent"
+      },
+      {
+        "line": 211,
+        "referenced_variables": [
+          "amount_text",
+          "category_text",
+          "duplicate_text",
+          "exception_text",
+          "normalize_text",
+          "policy_text",
+          "receipt_text"
+        ],
+        "description_literals": [
+          "Synthesize all preceding 7 stages into a final reimbursement decision:\n1. Receipt:",
+          "2. Normalization:",
+          "3. Category:",
+          "4. Amount:",
+          "5. Policy:",
+          "6. Duplicate:",
+          "7. Exceptions:",
+          "Output final decision: ELIGIBLE, INELIGIBLE, or NEEDS_REVIEW. Include clear rationale."
+        ],
+        "agent_expression": "review_agent"
+      }
+    ],
+    "observed_order": [
+      "receipt_agent",
+      "normalize_agent",
+      "category_agent",
+      "amount_agent",
+      "policy_agent",
+      "duplicate_agent",
+      "exception_agent",
+      "expense_review_agent"
+    ],
+    "sequential_kickoffs": 8
+  },
+  "comparison": {
+    "workflow": "expense_reimbursement",
+    "manifest_file": "Agents/expense_reimbursement/workflow.json",
+    "workflow_source": "Agents/expense_reimbursement/workflow.py",
+    "declared_order": [
+      "receipt_agent",
+      "normalize_agent",
+      "category_agent",
+      "amount_agent",
+      "policy_agent",
+      "duplicate_agent",
+      "exception_agent",
+      "expense_review_agent"
+    ],
+    "source_observed_order": [
+      "receipt_agent",
+      "normalize_agent",
+      "category_agent",
+      "amount_agent",
+      "policy_agent",
+      "duplicate_agent",
+      "exception_agent",
+      "expense_review_agent"
+    ],
+    "declared_agent_count": 8,
+    "observed_agent_count": 8,
+    "discrepancy_count": 2,
+    "findings": [
+      {
+        "type": "DECLARED_PARALLELIZABLE",
+        "severity": "INFO",
+        "agents": [
+          "amount_agent",
+          "policy_agent",
+          "duplicate_agent"
+        ],
+        "note": "Agents declared parallelizable in manifest; confirm concurrency in runtime traces."
+      },
+      {
+        "type": "MULTIPLE_KICKOFF_CALLS",
+        "severity": "WARNING",
+        "count": 8,
+        "note": "Workflow invokes 8 sequential Crew kickoff calls instead of single execution graph."
+      }
+    ]
+  },
+  "python_files": [
+    {
+      "file": "Agents/expense_reimbursement/amount_agent.py",
+      "filename": "amount_agent.py",
+      "stem": "amount_agent",
+      "sha256": "cbe46d59f89284697b2176c737f88d31d847bce0db612bd4d15ef29a83911008",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 9
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "calculate_deterministic_arithmetic",
+          "line": 12,
+          "end_line": 26,
+          "docstring": "Perform exact deterministic financial arithmetic verification.",
+          "args": [
+            "subtotal",
+            "tax",
+            "total"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_amount_agent",
+          "line": 29,
+          "end_line": 43,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 30,
+          "constructor": "Agent",
+          "role": "Expense Arithmetic Specialist",
+          "goal": "Verify all arithmetic calculations on the claim: subtotal + tax = total. Flag rounding errors, negative sums, or declared total mismatches.",
+          "backstory": "You are a Forensic Financial Auditor who checks numerical calculations to the exact cent, ensuring books reconcile with mathematical precision.",
+          "llm_expression": "create_agent_llm(\"amount_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 40,
+          "arguments": [
+            "\"amount_agent\""
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "calculate_deterministic_arithmetic",
+          "line": 12,
+          "classification": "function_candidate",
+          "docstring": "Perform exact deterministic financial arithmetic verification."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Amount Agent for Employee Expense Reimbursement.\n\nExecutes deterministic Python arithmetic to verify subtotal, tax,\nand total consistency, flagging mathematical discrepancies.\n",
+          "line": 1
+        },
+        {
+          "value": "Perform exact deterministic financial arithmetic verification.",
+          "line": 13
+        },
+        {
+          "value": "Verify all arithmetic calculations on the claim: subtotal + tax = total. Flag rounding errors, negative sums, or declared total mismatches.",
+          "line": 33
+        },
+        {
+          "value": "You are a Forensic Financial Auditor who checks numerical calculations to the exact cent, ensuring books reconcile with mathematical precision.",
+          "line": 37
+        }
+      ]
+    },
+    {
+      "file": "Agents/expense_reimbursement/category_agent.py",
+      "filename": "category_agent.py",
+      "stem": "category_agent",
+      "sha256": "c962a40bdf5ed90a3b649d983997964aa5978e9e336ac000411766c806d5dbee",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_category_agent",
+          "line": 11,
+          "end_line": 25,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Expense Categorization Specialist",
+          "goal": "Categorize the claim into Travel, Meals & Entertainment, Accommodation, Transport, Office Supplies, or Software & Cloud. Cite supporting merchant and line item evidence.",
+          "backstory": "You are a Corporate Controller who maps receipts to General Ledger accounting categories based on merchant type, business purpose, and line item context.",
+          "llm_expression": "create_agent_llm(\"category_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 22,
+          "arguments": [
+            "\"category_agent\""
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Category Agent for Employee Expense Reimbursement.\n\nClassifies the expense into the appropriate corporate accounting category\nand justifies the assignment with merchant and itemized line evidence.\n",
+          "line": 1
+        },
+        {
+          "value": "Categorize the claim into Travel, Meals & Entertainment, Accommodation, Transport, Office Supplies, or Software & Cloud. Cite supporting merchant and line item evidence.",
+          "line": 15
+        },
+        {
+          "value": "You are a Corporate Controller who maps receipts to General Ledger accounting categories based on merchant type, business purpose, and line item context.",
+          "line": 19
+        }
+      ]
+    },
+    {
+      "file": "Agents/expense_reimbursement/duplicate_agent.py",
+      "filename": "duplicate_agent.py",
+      "stem": "duplicate_agent",
+      "sha256": "4a908a6fa55252a40724cd501f7049828d5ffea5d7de3478d8bad411b6027489",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 7
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 10
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 11
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "query_candidate_duplicates",
+          "line": 16,
+          "end_line": 33,
+          "docstring": "Deterministic lookup for potential duplicate claims.",
+          "args": [
+            "employee_id",
+            "merchant",
+            "amount"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_duplicate_agent",
+          "line": 36,
+          "end_line": 50,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 37,
+          "constructor": "Agent",
+          "role": "Duplicate Claim Detection Specialist",
+          "goal": "Cross-reference active claim against historical submissions. Distinguish between confirmed duplicate submissions and coincidentally similar expenses.",
+          "backstory": "You are a Fraud Prevention Analyst who scans transaction histories to prevent double-reimbursements and duplicate receipt submissions across accounting periods.",
+          "llm_expression": "create_agent_llm(\"duplicate_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 47,
+          "arguments": [
+            "\"duplicate_agent\""
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "query_candidate_duplicates",
+          "line": 16,
+          "classification": "function_candidate",
+          "docstring": "Deterministic lookup for potential duplicate claims."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Duplicate Agent for Employee Expense Reimbursement.\n\nDetects potential duplicate claims against historical submissions,\ndifferentiating between exact matches and plausible coincidences.\n",
+          "line": 1
+        },
+        {
+          "value": "Deterministic lookup for potential duplicate claims.",
+          "line": 17
+        },
+        {
+          "value": "Duplicate Claim Detection Specialist",
+          "line": 38
+        },
+        {
+          "value": "Cross-reference active claim against historical submissions. Distinguish between confirmed duplicate submissions and coincidentally similar expenses.",
+          "line": 40
+        },
+        {
+          "value": "You are a Fraud Prevention Analyst who scans transaction histories to prevent double-reimbursements and duplicate receipt submissions across accounting periods.",
+          "line": 44
+        }
+      ]
+    },
+    {
+      "file": "Agents/expense_reimbursement/exception_agent.py",
+      "filename": "exception_agent.py",
+      "stem": "exception_agent",
+      "sha256": "4565af1024383c2b5055ba90548ab657f816158418bae3c03b6c2d97c605951b",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_exception_agent",
+          "line": 11,
+          "end_line": 25,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Expense Exception & Audit Specialist",
+          "goal": "Conduct an independent red-team audit of the claim: check for policy violations, missing receipt documentation, excessive sums, or unapproved perks. Generate structured warnings.",
+          "backstory": "You are an Internal Affairs Financial Auditor. You operate with healthy skepticism, spotting irregular spending patterns, missing documentation, and policy circumvention.",
+          "llm_expression": "create_agent_llm(\"exception_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 22,
+          "arguments": [
+            "\"exception_agent\""
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Exception Agent for Employee Expense Reimbursement.\n\nIndependently inspects claims for anomalies, policy infractions, and red flags.\nIntentionally overlaps with Amount and Policy agents to serve as an AWO pruning/consolidation candidate.\n",
+          "line": 1
+        },
+        {
+          "value": "Expense Exception & Audit Specialist",
+          "line": 13
+        },
+        {
+          "value": "Conduct an independent red-team audit of the claim: check for policy violations, missing receipt documentation, excessive sums, or unapproved perks. Generate structured warnings.",
+          "line": 15
+        },
+        {
+          "value": "You are an Internal Affairs Financial Auditor. You operate with healthy skepticism, spotting irregular spending patterns, missing documentation, and policy circumvention.",
+          "line": 19
+        }
+      ]
+    },
+    {
+      "file": "Agents/expense_reimbursement/normalize_agent.py",
+      "filename": "normalize_agent.py",
+      "stem": "normalize_agent",
+      "sha256": "b2bf80d6b5f7818479a8c46af5114e1e237992800fb66b8c8644627236390fe4",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_normalize_agent",
+          "line": 11,
+          "end_line": 25,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Expense Normalization Specialist",
+          "goal": "Standardize extracted claim dates, numeric amounts, currency codes, and employee IDs. Flag inconsistencies between the claim submission and receipt evidence.",
+          "backstory": "You are a Financial Data Integrity Engineer who ensures all accounting records conform to strict ISO standards, uniform data schemas, and validated identifiers.",
+          "llm_expression": "create_agent_llm(\"normalize_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 22,
+          "arguments": [
+            "\"normalize_agent\""
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Normalization Agent for Employee Expense Reimbursement.\n\nStandardizes dates into ISO-8601, amounts to two-decimal floats,\ncurrencies into ISO codes, and validates employee identifier syntax.\n",
+          "line": 1
+        },
+        {
+          "value": "Standardize extracted claim dates, numeric amounts, currency codes, and employee IDs. Flag inconsistencies between the claim submission and receipt evidence.",
+          "line": 15
+        },
+        {
+          "value": "You are a Financial Data Integrity Engineer who ensures all accounting records conform to strict ISO standards, uniform data schemas, and validated identifiers.",
+          "line": 19
+        }
+      ]
+    },
+    {
+      "file": "Agents/expense_reimbursement/policy_agent.py",
+      "filename": "policy_agent.py",
+      "stem": "policy_agent",
+      "sha256": "af1c9bb2ef0ff575a8ecd53fec3bc89ea04b35c8f1a87c430b868c86ae5f2634",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "json",
+          "asname": null,
+          "line": 7
+        },
+        {
+          "module": "pathlib",
+          "level": 0,
+          "names": [
+            "Path"
+          ],
+          "aliases": {},
+          "line": 8
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "List"
+          ],
+          "aliases": {},
+          "line": 9
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 10
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 11
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "query_policies_for_category",
+          "line": 16,
+          "end_line": 25,
+          "docstring": "Retrieve applicable corporate policies for the given expense category.",
+          "args": [
+            "category"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "create_policy_agent",
+          "line": 28,
+          "end_line": 42,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 29,
+          "constructor": "Agent",
+          "role": "Reimbursement Policy Compliance Specialist",
+          "goal": "Apply corporate reimbursement policies against the claim details. Check caps, receipt requirements, and advance approval rules. Return policy IDs cited.",
+          "backstory": "You are a Corporate Compliance Officer with encyclopedic knowledge of company travel and expense policies, spending limits, and audit standards.",
+          "llm_expression": "create_agent_llm(\"policy_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 39,
+          "arguments": [
+            "\"policy_agent\""
+          ]
+        }
+      ],
+      "tool_references": [
+        {
+          "name": "query_policies_for_category",
+          "line": 16,
+          "classification": "function_candidate",
+          "docstring": "Retrieve applicable corporate policies for the given expense category."
+        }
+      ],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Policy Agent for Employee Expense Reimbursement.\n\nRetrieves corporate reimbursement policies, tests category limits,\nper diem allowances, and itemization mandates.\n",
+          "line": 1
+        },
+        {
+          "value": "Retrieve applicable corporate policies for the given expense category.",
+          "line": 17
+        },
+        {
+          "value": "Reimbursement Policy Compliance Specialist",
+          "line": 30
+        },
+        {
+          "value": "Apply corporate reimbursement policies against the claim details. Check caps, receipt requirements, and advance approval rules. Return policy IDs cited.",
+          "line": 32
+        },
+        {
+          "value": "You are a Corporate Compliance Officer with encyclopedic knowledge of company travel and expense policies, spending limits, and audit standards.",
+          "line": 36
+        }
+      ]
+    },
+    {
+      "file": "Agents/expense_reimbursement/receipt_agent.py",
+      "filename": "receipt_agent.py",
+      "stem": "receipt_agent",
+      "sha256": "1a08a79fabc87419821f726866432d1cd5aa6f5085b898ab95bef8ee50db9cfb",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_receipt_agent",
+          "line": 11,
+          "end_line": 25,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Receipt Extraction Specialist",
+          "goal": "Extract merchant name, transaction date, currency, subtotal, tax amount, total amount, and itemized lines from raw receipt text. Flag any missing fields.",
+          "backstory": "You are a Forensic Accounts Payable Auditor specializing in reading receipt structures, itemized charges, and payment metadata accurately without guessing.",
+          "llm_expression": "create_agent_llm(\"receipt_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 22,
+          "arguments": [
+            "\"receipt_agent\""
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Receipt Agent for Employee Expense Reimbursement.\n\nExtracts structured merchant, transaction date, currency, subtotal,\ntax, and line items from synthetic receipt text.\n",
+          "line": 1
+        },
+        {
+          "value": "Extract merchant name, transaction date, currency, subtotal, tax amount, total amount, and itemized lines from raw receipt text. Flag any missing fields.",
+          "line": 15
+        },
+        {
+          "value": "You are a Forensic Accounts Payable Auditor specializing in reading receipt structures, itemized charges, and payment metadata accurately without guessing.",
+          "line": 19
+        }
+      ]
+    },
+    {
+      "file": "Agents/expense_reimbursement/review_agent.py",
+      "filename": "review_agent.py",
+      "stem": "review_agent",
+      "sha256": "19a6d19297e30c000e51618b09a6b7bde474ca026c09a33f736c4340c217f56e",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Agent"
+          ],
+          "aliases": {},
+          "line": 7
+        },
+        {
+          "module": "common.settings",
+          "level": 0,
+          "names": [
+            "create_agent_llm"
+          ],
+          "aliases": {},
+          "line": 8
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "create_expense_review_agent",
+          "line": 11,
+          "end_line": 26,
+          "docstring": null,
+          "args": [],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [
+        {
+          "line": 12,
+          "constructor": "Agent",
+          "role": "Expense Review & Adjudication Specialist",
+          "goal": "Synthesize outputs from receipt extraction, normalization, categorization, amount check, policy verification, duplicate check, and exception audit. Deliver final adjudication (ELIGIBLE, INELIGIBLE, NEEDS_REVIEW) with citations and justifications. Never disburse funds.",
+          "backstory": "You are the Head of Accounts Payable & Disbursements. You make the final compliance determination on expense claims, balancing fair employee reimbursement with strict governance.",
+          "llm_expression": "create_agent_llm(\"expense_review_agent\")",
+          "verbose": false,
+          "allow_delegation": false
+        }
+      ],
+      "task_definitions": [],
+      "crew_definitions": [],
+      "llm_references": [
+        {
+          "call": "create_agent_llm",
+          "line": 23,
+          "arguments": [
+            "\"expense_review_agent\""
+          ]
+        }
+      ],
+      "tool_references": [],
+      "execution_calls": [],
+      "string_literals": [
+        {
+          "value": "Review Agent for Employee Expense Reimbursement.\n\nSynthesizes findings from all 7 validation agents and issues a final\nrecommendation (ELIGIBLE, INELIGIBLE, NEEDS_REVIEW). Never executes actual payment.\n",
+          "line": 1
+        },
+        {
+          "value": "Expense Review & Adjudication Specialist",
+          "line": 13
+        },
+        {
+          "value": "Synthesize outputs from receipt extraction, normalization, categorization, amount check, policy verification, duplicate check, and exception audit. Deliver final adjudication (ELIGIBLE, INELIGIBLE, NEEDS_REVIEW) with citations and justifications. Never disburse funds.",
+          "line": 15
+        },
+        {
+          "value": "You are the Head of Accounts Payable & Disbursements. You make the final compliance determination on expense claims, balancing fair employee reimbursement with strict governance.",
+          "line": 20
+        }
+      ]
+    },
+    {
+      "file": "Agents/expense_reimbursement/workflow.py",
+      "filename": "workflow.py",
+      "stem": "workflow",
+      "sha256": "08a17489684610878c08e0e7daa9d385b9141b59aa44d3da967188561b2d0ef3",
+      "parse_status": "ok",
+      "parse_error": null,
+      "imports": [
+        {
+          "module": "__future__",
+          "level": 0,
+          "names": [
+            "annotations"
+          ],
+          "aliases": {},
+          "line": 14
+        },
+        {
+          "module": "json",
+          "asname": null,
+          "line": 16
+        },
+        {
+          "module": "time",
+          "asname": null,
+          "line": 17
+        },
+        {
+          "module": "typing",
+          "level": 0,
+          "names": [
+            "Any",
+            "Dict",
+            "Optional"
+          ],
+          "aliases": {},
+          "line": 18
+        },
+        {
+          "module": "crewai",
+          "level": 0,
+          "names": [
+            "Crew",
+            "Process",
+            "Task"
+          ],
+          "aliases": {},
+          "line": 20
+        },
+        {
+          "module": "Agents.expense_reimbursement.amount_agent",
+          "level": 0,
+          "names": [
+            "calculate_deterministic_arithmetic",
+            "create_amount_agent"
+          ],
+          "aliases": {},
+          "line": 22
+        },
+        {
+          "module": "Agents.expense_reimbursement.category_agent",
+          "level": 0,
+          "names": [
+            "create_category_agent"
+          ],
+          "aliases": {},
+          "line": 23
+        },
+        {
+          "module": "Agents.expense_reimbursement.duplicate_agent",
+          "level": 0,
+          "names": [
+            "create_duplicate_agent",
+            "query_candidate_duplicates"
+          ],
+          "aliases": {},
+          "line": 24
+        },
+        {
+          "module": "Agents.expense_reimbursement.exception_agent",
+          "level": 0,
+          "names": [
+            "create_exception_agent"
+          ],
+          "aliases": {},
+          "line": 25
+        },
+        {
+          "module": "Agents.expense_reimbursement.normalize_agent",
+          "level": 0,
+          "names": [
+            "create_normalize_agent"
+          ],
+          "aliases": {},
+          "line": 26
+        },
+        {
+          "module": "Agents.expense_reimbursement.policy_agent",
+          "level": 0,
+          "names": [
+            "create_policy_agent",
+            "query_policies_for_category"
+          ],
+          "aliases": {},
+          "line": 27
+        },
+        {
+          "module": "Agents.expense_reimbursement.receipt_agent",
+          "level": 0,
+          "names": [
+            "create_receipt_agent"
+          ],
+          "aliases": {},
+          "line": 28
+        },
+        {
+          "module": "Agents.expense_reimbursement.review_agent",
+          "level": 0,
+          "names": [
+            "create_expense_review_agent"
+          ],
+          "aliases": {},
+          "line": 29
+        },
+        {
+          "module": "common.agent_runner",
+          "level": 0,
+          "names": [
+            "ACTIVE_TRACKER",
+            "WorkflowExecutionResult",
+            "generate_run_id",
+            "save_run_result"
+          ],
+          "aliases": {},
+          "line": 30
+        },
+        {
+          "module": "common.tracing",
+          "level": 0,
+          "names": [
+            "agent_span",
+            "workflow_span"
+          ],
+          "aliases": {},
+          "line": 31
+        }
+      ],
+      "classes": [],
+      "functions": [
+        {
+          "name": "run_expense_workflow",
+          "line": 34,
+          "end_line": 266,
+          "docstring": "Execute the 8-agent Expense Reimbursement workflow.",
+          "args": [
+            "claim_input",
+            "run_id"
+          ],
+          "decorators": []
+        }
+      ],
+      "agent_id_constants": [],
+      "agent_definitions": [],
+      "task_definitions": [
+        {
+          "line": 60,
+          "description_expression": "f\"Read and parse this synthetic receipt text:\\n\"\n                    f\"{raw_receipt if raw_receipt else '[NO RECEIPT TEXT PROVIDED IN CLAIM]'}\\n\"\n                    f\"Extract merchant, transaction_date, currency, subtotal, tax, total, and line items. \"\n                    f\"Explicitly note if receipt is missing or illegible.\"",
+          "description_literals": [
+            "Read and parse this synthetic receipt text:",
+            "Extract merchant, transaction_date, currency, subtotal, tax, total, and line items. Explicitly note if receipt is missing or illegible.",
+            "[NO RECEIPT TEXT PROVIDED IN CLAIM]"
+          ],
+          "expected_output": "JSON containing extracted merchant, date, currency, subtotal, tax, total, and line items.",
+          "agent_expression": "receipt_agent"
+        },
+        {
+          "line": 79,
+          "description_expression": "f\"Standardize and validate fields between claim and receipt:\\n\"\n                    f\"Claim Payload: {json.dumps(claim_input, indent=2)}\\n\"\n                    f\"Receipt Output: {receipt_text}\\n\"\n                    f\"Format dates to YYYY-MM-DD, currency to ISO code (e.g., USD), and numeric amounts to 2 decimals.\"",
+          "description_literals": [
+            "Standardize and validate fields between claim and receipt:\nClaim Payload:",
+            "Receipt Output:",
+            "Format dates to YYYY-MM-DD, currency to ISO code (e.g., USD), and numeric amounts to 2 decimals."
+          ],
+          "expected_output": "JSON containing normalized employee_id, merchant, date, currency, subtotal, tax, and total.",
+          "agent_expression": "normalize_agent"
+        },
+        {
+          "line": 98,
+          "description_expression": "f\"Classify this expense into an official category:\\n\"\n                    f\"Allowed: Travel, Meals & Entertainment, Accommodation, Transport, Office Supplies, Software & Cloud.\\n\"\n                    f\"Normalized Context: {normalize_text}\\n\"\n                    f\"State the assigned category and provide evidence for this classification.\"",
+          "description_literals": [
+            "Classify this expense into an official category:\nAllowed: Travel, Meals & Entertainment, Accommodation, Transport, Office Supplies, Software & Cloud.\nNormalized Context:",
+            "State the assigned category and provide evidence for this classification."
+          ],
+          "expected_output": "JSON containing category, classification_confidence, and reasoning.",
+          "agent_expression": "category_agent"
+        },
+        {
+          "line": 129,
+          "description_expression": "f\"Deterministic Arithmetic Verification:\\n{json.dumps(arithmetic_check, indent=2)}\\n\"\n                    f\"Verify if subtotal (${sub:.2f}) + tax (${tx:.2f}) equals total (${tot:.2f}). \"\n                    f\"Confirm whether any negative amounts or rounding anomalies exist.\"",
+          "description_literals": [
+            "Deterministic Arithmetic Verification:",
+            "Verify if subtotal ($",
+            ") + tax ($",
+            ") equals total ($",
+            "). Confirm whether any negative amounts or rounding anomalies exist.",
+            ".2f"
+          ],
+          "expected_output": "JSON with is_arithmetic_valid, discrepancy_usd, and verification_notes.",
+          "agent_expression": "amount_agent"
+        },
+        {
+          "line": 148,
+          "description_expression": "f\"Evaluate this claim against corporate policy limits:\\n\"\n                    f\"Applicable Policies:\\n{json.dumps(policies, indent=2)}\\n\"\n                    f\"Claim Details: Total=${tot:.2f}, Category={assigned_category}, HasReceipt={bool(raw_receipt)}\\n\"\n                    f\"Return which policy IDs apply, whether any limit is breached, and compliance status.\"",
+          "description_literals": [
+            "Evaluate this claim against corporate policy limits:\nApplicable Policies:",
+            "Claim Details: Total=$",
+            ", Category=",
+            ", HasReceipt=",
+            "Return which policy IDs apply, whether any limit is breached, and compliance status.",
+            ".2f"
+          ],
+          "expected_output": "JSON with policy_compliance_status, cited_policy_ids, and violation_reasons.",
+          "agent_expression": "policy_agent"
+        },
+        {
+          "line": 171,
+          "description_expression": "f\"Check for duplicate submissions against historical database:\\n\"\n                    f\"Candidate Submissions:\\n{json.dumps(duplicate_candidates, indent=2)}\\n\"\n                    f\"Current Claim: Employee={emp_id}, Merchant={merchant_name}, Total=${tot:.2f}, Date={claim_input.get('submission_date')}\\n\"\n                    f\"Determine if this is a Confirmed Duplicate, Possible Coincidence, or No Duplicate Found.\"",
+          "description_literals": [
+            "Check for duplicate submissions against historical database:\nCandidate Submissions:",
+            "Current Claim: Employee=",
+            ", Merchant=",
+            ", Total=$",
+            ", Date=",
+            "Determine if this is a Confirmed Duplicate, Possible Coincidence, or No Duplicate Found.",
+            ".2f",
+            "submission_date"
+          ],
+          "expected_output": "JSON with duplicate_status, matching_claim_ids, and duplicate_risk_score.",
+          "agent_expression": "duplicate_agent"
+        },
+        {
+          "line": 190,
+          "description_expression": "f\"Conduct an independent exception audit across all findings:\\n\"\n                    f\"Receipt Info: {receipt_text}\\n\"\n                    f\"Arithmetic: {amount_text}\\n\"\n                    f\"Policy Check: {policy_text}\\n\"\n                    f\"Duplicate Check: {duplicate_text}\\n\"\n                    f\"Identify all anomalies, unitemized receipts, policy breaches, or red flags.\"",
+          "description_literals": [
+            "Conduct an independent exception audit across all findings:\nReceipt Info:",
+            "Arithmetic:",
+            "Policy Check:",
+            "Duplicate Check:",
+            "Identify all anomalies, unitemized receipts, policy breaches, or red flags."
+          ],
+          "expected_output": "JSON with list of exceptions_found, severity_levels, and audit_warnings.",
+          "agent_expression": "exception_agent"
+        },
+        {
+          "line": 211,
+          "description_expression": "f\"Synthesize all preceding 7 stages into a final reimbursement decision:\\n\"\n                    f\"1. Receipt: {receipt_text}\\n\"\n                    f\"2. Normalization: {normalize_text}\\n\"\n                    f\"3. Category: {category_text}\\n\"\n                    f\"4. Amount: {amount_text}\\n\"\n                    f\"5. Policy: {policy_text}\\n\"\n                    f\"6. Duplicate: {duplicate_text}\\n\"\n                    f\"7. Exceptions: {exception_text}\\n\"\n                    f\"Output final decision: ELIGIBLE, INELIGIBLE, or NEEDS_REVIEW. Include clear rationale.\"",
+          "description_literals": [
+            "Synthesize all preceding 7 stages into a final reimbursement decision:\n1. Receipt:",
+            "2. Normalization:",
+            "3. Category:",
+            "4. Amount:",
+            "5. Policy:",
+            "6. Duplicate:",
+            "7. Exceptions:",
+            "Output final decision: ELIGIBLE, INELIGIBLE, or NEEDS_REVIEW. Include clear rationale."
+          ],
+          "expected_output": "Final Expense Adjudication JSON report.",
+          "agent_expression": "review_agent"
+        }
+      ],
+      "crew_definitions": [
+        {
+          "line": 70,
+          "agents_expression": "[receipt_agent]",
+          "tasks_expression": "[receipt_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 89,
+          "agents_expression": "[normalize_agent]",
+          "tasks_expression": "[normalize_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 108,
+          "agents_expression": "[category_agent]",
+          "tasks_expression": "[category_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 138,
+          "agents_expression": "[amount_agent]",
+          "tasks_expression": "[amount_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 158,
+          "agents_expression": "[policy_agent]",
+          "tasks_expression": "[policy_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 181,
+          "agents_expression": "[duplicate_agent]",
+          "tasks_expression": "[duplicate_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 202,
+          "agents_expression": "[exception_agent]",
+          "tasks_expression": "[exception_task]",
+          "process_expression": "Process.sequential"
+        },
+        {
+          "line": 226,
+          "agents_expression": "[review_agent]",
+          "tasks_expression": "[review_task]",
+          "process_expression": "Process.sequential"
+        }
+      ],
+      "llm_references": [],
+      "tool_references": [
+        {
+          "name": "run_expense_workflow",
+          "line": 34,
+          "classification": "function_candidate",
+          "docstring": "Execute the 8-agent Expense Reimbursement workflow."
+        }
+      ],
+      "execution_calls": [
+        {
+          "call": "agent_span",
+          "line": 58
+        },
+        {
+          "call": "crew1.kickoff",
+          "line": 71
+        },
+        {
+          "call": "agent_span",
+          "line": 77
+        },
+        {
+          "call": "crew2.kickoff",
+          "line": 90
+        },
+        {
+          "call": "agent_span",
+          "line": 96
+        },
+        {
+          "call": "crew3.kickoff",
+          "line": 109
+        },
+        {
+          "call": "agent_span",
+          "line": 127
+        },
+        {
+          "call": "crew4.kickoff",
+          "line": 139
+        },
+        {
+          "call": "agent_span",
+          "line": 146
+        },
+        {
+          "call": "crew5.kickoff",
+          "line": 159
+        },
+        {
+          "call": "agent_span",
+          "line": 169
+        },
+        {
+          "call": "crew6.kickoff",
+          "line": 182
+        },
+        {
+          "call": "agent_span",
+          "line": 188
+        },
+        {
+          "call": "crew7.kickoff",
+          "line": 203
+        },
+        {
+          "call": "agent_span",
+          "line": 209
+        },
+        {
+          "call": "crew8.kickoff",
+          "line": 227
+        }
+      ],
+      "string_literals": [
+        {
+          "value": "Employee Expense Reimbursement Baseline Multi-Agent Workflow.\n\nWorkflow Two: Exactly 8 agents executing sequentially:\n1. Receipt Agent\n2. Normalization Agent\n3. Category Agent\n4. Amount Agent\n5. Policy Agent\n6. Duplicate Agent\n7. Exception Agent\n8. Review Agent\n",
+          "line": 1
+        },
+        {
+          "value": "Execute the 8-agent Expense Reimbursement workflow.",
+          "line": 38
+        },
+        {
+          "value": "JSON containing extracted merchant, date, currency, subtotal, tax, total, and line items.",
+          "line": 67
+        },
+        {
+          "value": "JSON containing normalized employee_id, merchant, date, currency, subtotal, tax, and total.",
+          "line": 86
+        },
+        {
+          "value": "JSON containing category, classification_confidence, and reasoning.",
+          "line": 105
+        },
+        {
+          "value": "JSON with is_arithmetic_valid, discrepancy_usd, and verification_notes.",
+          "line": 135
+        },
+        {
+          "value": "JSON with policy_compliance_status, cited_policy_ids, and violation_reasons.",
+          "line": 155
+        },
+        {
+          "value": "JSON with duplicate_status, matching_claim_ids, and duplicate_risk_score.",
+          "line": 178
+        },
+        {
+          "value": "JSON with list of exceptions_found, severity_levels, and audit_warnings.",
+          "line": 199
+        },
+        {
+          "value": "Final Expense Adjudication JSON report.",
+          "line": 223
+        },
+        {
+          "value": "Read and parse this synthetic receipt text:\n",
+          "line": 62
+        },
+        {
+          "value": "\nExtract merchant, transaction_date, currency, subtotal, tax, total, and line items. Explicitly note if receipt is missing or illegible.",
+          "line": 63
+        },
+        {
+          "value": "Standardize and validate fields between claim and receipt:\nClaim Payload: ",
+          "line": 81
+        },
+        {
+          "value": "\nFormat dates to YYYY-MM-DD, currency to ISO code (e.g., USD), and numeric amounts to 2 decimals.",
+          "line": 83
+        },
+        {
+          "value": "Classify this expense into an official category:\nAllowed: Travel, Meals & Entertainment, Accommodation, Transport, Office Supplies, Software & Cloud.\nNormalized Context: ",
+          "line": 100
+        },
+        {
+          "value": "\nState the assigned category and provide evidence for this classification.",
+          "line": 102
+        },
+        {
+          "value": "Deterministic Arithmetic Verification:\n",
+          "line": 131
+        },
+        {
+          "value": "). Confirm whether any negative amounts or rounding anomalies exist.",
+          "line": 132
+        },
+        {
+          "value": "Evaluate this claim against corporate policy limits:\nApplicable Policies:\n",
+          "line": 150
+        },
+        {
+          "value": "\nReturn which policy IDs apply, whether any limit is breached, and compliance status.",
+          "line": 152
+        },
+        {
+          "value": "Check for duplicate submissions against historical database:\nCandidate Submissions:\n",
+          "line": 173
+        },
+        {
+          "value": "\nDetermine if this is a Confirmed Duplicate, Possible Coincidence, or No Duplicate Found.",
+          "line": 175
+        },
+        {
+          "value": "Conduct an independent exception audit across all findings:\nReceipt Info: ",
+          "line": 192
+        },
+        {
+          "value": "\nIdentify all anomalies, unitemized receipts, policy breaches, or red flags.",
+          "line": 196
+        },
+        {
+          "value": "Synthesize all preceding 7 stages into a final reimbursement decision:\n1. Receipt: ",
+          "line": 213
+        },
+        {
+          "value": "\nOutput final decision: ELIGIBLE, INELIGIBLE, or NEEDS_REVIEW. Include clear rationale.",
+          "line": 220
+        },
+        {
+          "value": "[NO RECEIPT TEXT PROVIDED IN CLAIM]",
+          "line": 63
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "file": "runs/expense_reimbursement/live_20261023_070709_expens.json",
+      "filename": "live_20261023_070709_expens.json",
+      "suffix": ".json",
+      "workflow_name": "expense_reimbursement",
+      "run_id": "live_20261023_070709_expens",
+      "status": "SUCCESS",
+      "total_duration_seconds": 11.763127799989888,
+      "agent_count": 8,
+      "total_tokens": null,
+      "estimated_cost_usd": 0.004815
+    }
+  ]
+}

@@ -1,0 +1,237 @@
+{
+  "run_id": "live_20261031_182321_trace20",
+  "workflow_name": "expense_reimbursement",
+  "model": "openai/gpt-oss-120b",
+  "status": "SUCCESS",
+  "duration_seconds": 15.138,
+  "agent_execution_count": 8,
+  "agent_executions": [
+    {
+      "order": 1,
+      "agent_id": "receipt_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_20 (gsk_1f...ghyb)",
+      "duration_seconds": 1.306,
+      "status": "SUCCESS",
+      "tokens": 693,
+      "prompt_tokens": 457,
+      "completion_tokens": 236,
+      "output": {
+        "merchant": "THE WESTIN CONVENTION CENTER",
+        "transaction_date": "2026-10-02",
+        "currency": "USD",
+        "subtotal": 364.6,
+        "tax": 51.04,
+        "total": 415.64,
+        "line_items": [
+          {
+            "description": "Corporate Service Item 1",
+            "quantity": 1,
+            "price": 364.6
+          }
+        ],
+        "missing_fields": []
+      },
+      "notes": ""
+    },
+    {
+      "order": 2,
+      "agent_id": "normalize_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_18 (gsk_qB...kphs)",
+      "duration_seconds": 1.429,
+      "status": "SUCCESS",
+      "tokens": 957,
+      "prompt_tokens": 685,
+      "completion_tokens": 272,
+      "output": {
+        "employee_id": "EMP-401",
+        "merchant": "THE WESTIN CONVENTION CENTER",
+        "date": "2026-10-02",
+        "currency": "USD",
+        "subtotal": 364.6,
+        "tax": 51.04,
+        "total": 415.64
+      },
+      "notes": ""
+    },
+    {
+      "order": 3,
+      "agent_id": "category_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_17 (gsk_qB...KRNJ)",
+      "duration_seconds": 1.414,
+      "status": "SUCCESS",
+      "tokens": 742,
+      "prompt_tokens": 449,
+      "completion_tokens": 293,
+      "output": {
+        "category": "Accommodation",
+        "classification_confidence": 0.97,
+        "reasoning": "The merchant is a hotel (The Westin Convention Center) and the expense consists of a room charge plus tax. The business purpose explicitly mentions an official client engagement and operational workflow meeting at the venue, indicating lodging for a business event. This aligns directly with the Accommodation category."
+      },
+      "notes": ""
+    },
+    {
+      "order": 4,
+      "agent_id": "amount_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_14 (gsk_6G...l7b1)",
+      "duration_seconds": 1.156,
+      "status": "SUCCESS",
+      "tokens": 466,
+      "prompt_tokens": 319,
+      "completion_tokens": 147,
+      "output": {
+        "is_arithmetic_valid": true,
+        "discrepancy_usd": 0.0,
+        "verification_notes": "Subtotal of $364.60 plus tax of $51.04 equals $415.64 exactly. No negative values detected and rounding to two decimal places is consistent."
+      },
+      "notes": ""
+    },
+    {
+      "order": 5,
+      "agent_id": "policy_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_19 (gsk_99...IlGY)",
+      "duration_seconds": 1.26,
+      "status": "SUCCESS",
+      "tokens": 651,
+      "prompt_tokens": 379,
+      "completion_tokens": 272,
+      "output": {
+        "policy_compliance_status": "Non-compliant",
+        "cited_policy_ids": [
+          "POL-EXP-03"
+        ],
+        "violation_reasons": [
+          "Total accommodation cost $415.64 exceeds the nightly cap of $350.00 for high-cost cities"
+        ]
+      },
+      "notes": ""
+    },
+    {
+      "order": 6,
+      "agent_id": "duplicate_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_7 (gsk_zX...ERhy)",
+      "duration_seconds": 1.303,
+      "status": "SUCCESS",
+      "tokens": 534,
+      "prompt_tokens": 385,
+      "completion_tokens": 149,
+      "output": {
+        "duplicate_status": "Confirmed Duplicate",
+        "matching_claim_ids": [
+          "HIST-CLM-2020"
+        ],
+        "duplicate_risk_score": 0.99
+      },
+      "notes": ""
+    },
+    {
+      "order": 7,
+      "agent_id": "exception_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_16 (gsk_ID...uEx3)",
+      "duration_seconds": 4.915,
+      "status": "SUCCESS",
+      "tokens": 1291,
+      "prompt_tokens": 611,
+      "completion_tokens": 680,
+      "output": {
+        "exceptions_found": [
+          {
+            "type": "Policy Violation",
+            "detail": "Total accommodation cost $415.64 exceeds the nightly cap of $350.00 for high-cost cities as per policy POL-EXP-03.",
+            "policy_id": "POL-EXP-03",
+            "severity": "High"
+          },
+          {
+            "type": "Duplicate Claim",
+            "detail": "Receipt matches a previously submitted claim HIST-CLM-2020 with a duplicate risk score of 0.99.",
+            "policy_id": "",
+            "severity": "Critical"
+          }
+        ],
+        "severity_levels": {
+          "Critical": 1,
+          "High": 1,
+          "Medium": 0,
+          "Low": 0
+        },
+        "audit_warnings": [
+          "Receipt flagged as a duplicate of historical claim HIST-CLM-2020.",
+          "Total exceeds city nightly cap per POL-EXP-03."
+        ]
+      },
+      "notes": ""
+    },
+    {
+      "order": 8,
+      "agent_id": "expense_review_agent",
+      "assigned_key_identifier": "GROQ_API_KEY_13 (gsk_i9...Ujsn)",
+      "duration_seconds": 2.353,
+      "status": "SUCCESS",
+      "tokens": 1786,
+      "prompt_tokens": 1101,
+      "completion_tokens": 685,
+      "output": {
+        "claim_id": "CLM-2020",
+        "employee_id": "EMP-401",
+        "merchant": "The Westin Convention Center",
+        "date": "2026-10-02",
+        "currency": "USD",
+        "total_amount": 415.64,
+        "final_decision": "INELIGIBLE",
+        "rationale": [
+          "The total accommodation cost of $415.64 exceeds the nightly cap of $350.00 for high‑cost cities as defined in policy POL-EXP-03.",
+          "The receipt has been identified as a confirmed duplicate of a previously submitted claim (HIST-CLM-2020) with a duplicate risk score of 0.99."
+        ],
+        "cited_stages": {
+          "receipt_extraction": "Receipt captured merchant, date, subtotal, tax, total, and line item details with no missing fields.",
+          "normalization": "Data normalized to employee ID, merchant name, date, currency, subtotal, tax, and total.",
+          "categorization": "Classified as Accommodation with 0.97 confidence based on hotel merchant and lodging purpose.",
+          "amount_check": "Arithmetic validation passed; subtotal plus tax equals total with no discrepancies.",
+          "policy_verification": "Flagged as non‑compliant: total exceeds nightly cap per POL-EXP-03.",
+          "duplicate_check": "Confirmed duplicate of historical claim HIST-CLM-2020; duplicate risk score 0.99.",
+          "exception_audit": "Two high‑severity exceptions detected: policy violation (high) and duplicate claim (critical)."
+        },
+        "recommendation": "Reject the claim and notify the employee of the policy breach and duplicate submission. Advise the employee to submit a corrected claim that complies with the nightly cap or provide justification for an exception, and ensure no duplicate submissions are made."
+      },
+      "notes": ""
+    }
+  ],
+  "total_tokens": 7120,
+  "prompt_tokens": 4386,
+  "completion_tokens": 2734,
+  "estimated_cost_usd": 0.004748,
+  "error_message": null,
+  "final_output": "{\n  \"claim_id\": \"CLM-2020\",\n  \"employee_id\": \"EMP-401\",\n  \"merchant\": \"The Westin Convention Center\",\n  \"date\": \"2026-10-02\",\n  \"currency\": \"USD\",\n  \"total_amount\": 415.64,\n  \"final_decision\": \"INELIGIBLE\",\n  \"rationale\": [\n    \"The total accommodation cost of $415.64 exceeds the nightly cap of $350.00 for high\\u2011cost cities as defined in policy POL-EXP-03.\",\n    \"The receipt has been identified as a confirmed duplicate of a previously submitted claim (HIST-CLM-2020) with a duplicate risk score of 0.99.\"\n  ],\n  \"cited_stages\": {\n    \"receipt_extraction\": \"Receipt captured merchant, date, subtotal, tax, total, and line item details with no missing fields.\",\n    \"normalization\": \"Data normalized to employee ID, merchant name, date, currency, subtotal, tax, and total.\",\n    \"categorization\": \"Classified as Accommodation with 0.97 confidence based on hotel merchant and lodging purpose.\",\n    \"amount_check\": \"Arithmetic validation passed; subtotal plus tax equals total with no discrepancies.\",\n    \"policy_verification\": \"Flagged as non\\u2011compliant: total exceeds nightly cap per POL-EXP-03.\",\n    \"duplicate_check\": \"Confirmed duplicate of historical claim HIST-CLM-2020; duplicate risk score 0.99.\",\n    \"exception_audit\": \"Two high\\u2011severity exceptions detected: policy violation (high) and duplicate claim (critical).\"\n  },\n  \"recommendation\": \"Reject the claim and notify the employee of the policy breach and duplicate submission. Advise the employee to submit a corrected claim that complies with the nightly cap or provide justification for an exception, and ensure no duplicate submissions are made.\"\n}",
+  "output": {
+    "workflow": "expense_reimbursement",
+    "run_id": "live_20261031_182321_trace20",
+    "input": {
+      "claim_id": "CLM-2020",
+      "employee_id": "EMP-401",
+      "employee_name": "Marcus Chen",
+      "department": "Product",
+      "submission_date": "2026-10-02",
+      "category": "Accommodation",
+      "merchant": "The Westin Convention Center",
+      "currency": "USD",
+      "subtotal": 364.6,
+      "tax": 51.04,
+      "total": 415.64,
+      "business_purpose": "Official client engagement and operational workflow meeting at The Westin Convention Center.",
+      "receipt_text": "\n==================================================\n                 THE WESTIN CONVENTION CENTER\n                 TAX INVOICE / RECEIPT\n==================================================\nDate: 2026-10-02                Time: 19:42:10\nOrder / Trans ID: TXN-963333\nServer / Terminal: REG-04\n--------------------------------------------------\nItem Description                 Qty        Price\n--------------------------------------------------\nCorporate Service Item 1           1       $364.60\n--------------------------------------------------\nSUBTOTAL:                                  $364.60\nTAX / VAT (Est):                           $51.04\nTOTAL PAID:                                $415.64\n--------------------------------------------------\nPayment Method: VISA ending in 4192\nApproval Code: AUTH-85353\nThank you for your business!\n==================================================\n",
+      "scenario_tag": "NORMAL",
+      "synthetic": true
+    },
+    "stages": {
+      "receipt": "{\n  \"merchant\": \"THE WESTIN CONVENTION CENTER\",\n  \"transaction_date\": \"2026-10-02\",\n  \"currency\": \"USD\",\n  \"subtotal\": 364.6,\n  \"tax\": 51.04,\n  \"total\": 415.64,\n  \"line_items\": [\n    {\n      \"description\": \"Corporate Service Item 1\",\n      \"quantity\": 1,\n      \"price\": 364.6\n    }\n  ],\n  \"missing_fields\": []\n}",
+      "normalize": "{\n  \"employee_id\": \"EMP-401\",\n  \"merchant\": \"THE WESTIN CONVENTION CENTER\",\n  \"date\": \"2026-10-02\",\n  \"currency\": \"USD\",\n  \"subtotal\": 364.6,\n  \"tax\": 51.04,\n  \"total\": 415.64\n}",
+      "category": "{\n  \"category\": \"Accommodation\",\n  \"classification_confidence\": 0.97,\n  \"reasoning\": \"The merchant is a hotel (The Westin Convention Center) and the expense consists of a room charge plus tax. The business purpose explicitly mentions an official client engagement and operational workflow meeting at the venue, indicating lodging for a business event. This aligns directly with the Accommodation category.\"\n}",
+      "amount": "{\n  \"is_arithmetic_valid\": true,\n  \"discrepancy_usd\": 0.0,\n  \"verification_notes\": \"Subtotal of $364.60 plus tax of $51.04 equals $415.64 exactly. No negative values detected and rounding to two decimal places is consistent.\"\n}",
+      "policy": "{\n  \"policy_compliance_status\": \"Non-compliant\",\n  \"cited_policy_ids\": [\n    \"POL-EXP-03\"\n  ],\n  \"violation_reasons\": [\n    \"Total accommodation cost $415.64 exceeds the nightly cap of $350.00 for high-cost cities\"\n  ]\n}",
+      "duplicate": "{\n  \"duplicate_status\": \"Confirmed Duplicate\",\n  \"matching_claim_ids\": [\n    \"HIST-CLM-2020\"\n  ],\n  \"duplicate_risk_score\": 0.99\n}",
+      "exceptions": "{\n  \"exceptions_found\": [\n    {\n      \"type\": \"Policy Violation\",\n      \"detail\": \"Total accommodation cost $415.64 exceeds the nightly cap of $350.00 for high-cost cities as per policy POL-EXP-03.\",\n      \"policy_id\": \"POL-EXP-03\",\n      \"severity\": \"High\"\n    },\n    {\n      \"type\": \"Duplicate Claim\",\n      \"detail\": \"Receipt matches a previously submitted claim HIST-CLM-2020 with a duplicate risk score of 0.99.\",\n      \"policy_id\": \"\",\n      \"severity\": \"Critical\"\n    }\n  ],\n  \"severity_levels\": {\n    \"Critical\": 1,\n    \"High\": 1,\n    \"Medium\": 0,\n    \"Low\": 0\n  },\n  \"audit_warnings\": [\n    \"Receipt flagged as a duplicate of historical claim HIST-CLM-2020.\",\n    \"Total exceeds city nightly cap per POL-EXP-03.\"\n  ]\n}",
+      "final_review": "{\n  \"claim_id\": \"CLM-2020\",\n  \"employee_id\": \"EMP-401\",\n  \"merchant\": \"The Westin Convention Center\",\n  \"date\": \"2026-10-02\",\n  \"currency\": \"USD\",\n  \"total_amount\": 415.64,\n  \"final_decision\": \"INELIGIBLE\",\n  \"rationale\": [\n    \"The total accommodation cost of $415.64 exceeds the nightly cap of $350.00 for high\\u2011cost cities as defined in policy POL-EXP-03.\",\n    \"The receipt has been identified as a confirmed duplicate of a previously submitted claim (HIST-CLM-2020) with a duplicate risk score of 0.99.\"\n  ],\n  \"cited_stages\": {\n    \"receipt_extraction\": \"Receipt captured merchant, date, subtotal, tax, total, and line item details with no missing fields.\",\n    \"normalization\": \"Data normalized to employee ID, merchant name, date, currency, subtotal, tax, and total.\",\n    \"categorization\": \"Classified as Accommodation with 0.97 confidence based on hotel merchant and lodging purpose.\",\n    \"amount_check\": \"Arithmetic validation passed; subtotal plus tax equals total with no discrepancies.\",\n    \"policy_verification\": \"Flagged as non\\u2011compliant: total exceeds nightly cap per POL-EXP-03.\",\n    \"duplicate_check\": \"Confirmed duplicate of historical claim HIST-CLM-2020; duplicate risk score 0.99.\",\n    \"exception_audit\": \"Two high\\u2011severity exceptions detected: policy violation (high) and duplicate claim (critical).\"\n  },\n  \"recommendation\": \"Reject the claim and notify the employee of the policy breach and duplicate submission. Advise the employee to submit a corrected claim that complies with the nightly cap or provide justification for an exception, and ensure no duplicate submissions are made.\"\n}"
+    },
+    "synthetic": true
+  },
+  "timestamp": "2026-10-31T18:23:36.630271+00:00"
+}

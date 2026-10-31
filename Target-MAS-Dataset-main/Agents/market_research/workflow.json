@@ -1,0 +1,125 @@
+{
+  "workflow_name": "market_research",
+  "version": "1.0.0",
+  "description": "Baseline 9-agent sequential competitor research and fact-checked synthesis workflow.",
+  "fixed_model": "openai/gpt-oss-120b",
+  "total_agents": 9,
+  "model_configuration": {
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "enforce_fixed_model": true
+  },
+  "execution_order": [
+    "planning_agent",
+    "profile_agent",
+    "product_agent",
+    "pricing_agent",
+    "feedback_agent",
+    "evidence_agent",
+    "comparison_agent",
+    "synthesis_agent",
+    "fact_check_agent"
+  ],
+  "agents": [
+    {
+      "id": "planning_agent",
+      "name": "Research Planning Specialist",
+      "assigned_key": "GROQ_API_KEY_8",
+      "file": "planning_agent.py",
+      "dependencies": [],
+      "inputs": ["research_query"],
+      "outputs": ["target_competitors", "evaluation_dimensions", "evidence_gathering_plan"],
+      "parallelizable": false
+    },
+    {
+      "id": "profile_agent",
+      "name": "Company Profiling Specialist",
+      "assigned_key": "GROQ_API_KEY_9",
+      "file": "profile_agent.py",
+      "dependencies": ["planning_agent"],
+      "inputs": ["target_competitors", "profile_documents"],
+      "outputs": ["competitor_profiles", "source_doc_ids"],
+      "parallelizable": true,
+      "parallel_group": "data_collection_branch"
+    },
+    {
+      "id": "product_agent",
+      "name": "Product Capabilities Analyst",
+      "assigned_key": "GROQ_API_KEY_10",
+      "file": "product_agent.py",
+      "dependencies": ["planning_agent"],
+      "inputs": ["product_documents"],
+      "outputs": ["technical_capabilities", "metrics", "sdk_support", "source_doc_ids"],
+      "parallelizable": true,
+      "parallel_group": "data_collection_branch"
+    },
+    {
+      "id": "pricing_agent",
+      "name": "Pricing & Commercial Terms Specialist",
+      "assigned_key": "GROQ_API_KEY_11",
+      "file": "pricing_agent.py",
+      "dependencies": ["planning_agent"],
+      "inputs": ["pricing_documents"],
+      "outputs": ["commercial_tiers", "overage_clauses", "minimums", "source_doc_ids"],
+      "parallelizable": true,
+      "parallel_group": "data_collection_branch"
+    },
+    {
+      "id": "feedback_agent",
+      "name": "Customer Feedback & Review Analyst",
+      "assigned_key": "GROQ_API_KEY_12",
+      "file": "feedback_agent.py",
+      "dependencies": ["planning_agent"],
+      "inputs": ["feedback_documents"],
+      "outputs": ["customer_sentiments", "reported_outages", "praise", "source_doc_ids"],
+      "parallelizable": true,
+      "parallel_group": "data_collection_branch"
+    },
+    {
+      "id": "evidence_agent",
+      "name": "Evidence Correlation & Conflict Analyst",
+      "assigned_key": "GROQ_API_KEY_13",
+      "file": "evidence_agent.py",
+      "dependencies": ["profile_agent", "product_agent", "pricing_agent", "feedback_agent"],
+      "inputs": ["profiles", "products", "pricing", "feedback"],
+      "outputs": ["triangulated_evidence", "verified_contradictions", "citation_gaps"],
+      "parallelizable": false
+    },
+    {
+      "id": "comparison_agent",
+      "name": "Competitor Comparison & Matrix Specialist",
+      "assigned_key": "GROQ_API_KEY_14",
+      "file": "comparison_agent.py",
+      "dependencies": ["evidence_agent"],
+      "inputs": ["triangulated_evidence"],
+      "outputs": ["comparison_matrix", "factual_specifications"],
+      "parallelizable": false
+    },
+    {
+      "id": "synthesis_agent",
+      "name": "Research Synthesis & Narrative Specialist",
+      "assigned_key": "GROQ_API_KEY_8",
+      "file": "synthesis_agent.py",
+      "dependencies": ["comparison_agent"],
+      "inputs": ["comparison_matrix", "evidence_report"],
+      "outputs": ["executive_research_narrative", "recommendations"],
+      "parallelizable": false
+    },
+    {
+      "id": "fact_check_agent",
+      "name": "Fact-Checking & Citation Verification Specialist",
+      "assigned_key": "GROQ_API_KEY_9",
+      "file": "fact_check_agent.py",
+      "dependencies": ["synthesis_agent"],
+      "inputs": ["synthesis_narrative", "all_source_documents"],
+      "outputs": ["final_checked_report", "verified_citations", "audit_flags"],
+      "parallelizable": false
+    }
+  ],
+  "optimization_opportunities": [
+    "Parallel execution of 4 data collection agents (profile, product, pricing, feedback)",
+    "Consolidating comparison and synthesis into a single-pass executive briefing agent",
+    "Direct retrieval of source citations during synthesis to prune independent fact-check overhead",
+    "Early routing for single-competitor deep dives"
+  ]
+}

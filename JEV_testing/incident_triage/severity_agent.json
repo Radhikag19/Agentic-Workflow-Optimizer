@@ -1,0 +1,133 @@
+{
+  "workflow_id": "incident_triage",
+  "workflow_name": "incident_triage",
+  "selected_agent_id": "severity_agent",
+  "baseline_model": "openai/gpt-oss-120b",
+  "agent_requirements": {
+    "agent_id": "severity_agent",
+    "jev_model": "jev-1.14.0",
+    "task_complexity": {
+      "class": "Medium",
+      "score_position": 1.18,
+      "probabilities": {
+        "0": 0.01,
+        "1": 0.8,
+        "2": 0.19
+      },
+      "top_level_probability": 0.8
+    },
+    "prompt_complexity": {
+      "class": "Medium",
+      "score_position": 1.23,
+      "probabilities": {
+        "0": 0.02,
+        "1": 0.73,
+        "2": 0.25
+      },
+      "top_level_probability": 0.73
+    },
+    "token_consumption": {
+      "class": "Low",
+      "score_position": 0.01,
+      "probabilities": {
+        "0": 0.99,
+        "1": 0.01,
+        "2": 0.0
+      },
+      "top_level_probability": 0.99
+    },
+    "jev_usage": {
+      "input_tokens": 1558,
+      "output_tokens": 53
+    }
+  },
+  "model_recommendation": {
+    "selected_model": "openai/gpt-oss-20b",
+    "selected_model_metadata": {
+      "model_id": "openai/gpt-oss-20b",
+      "owned_by": "OpenAI",
+      "active": true,
+      "api_context_window": 131072,
+      "model_role": "general_purpose_reasoning",
+      "suitable_for_general_agent_tasks": true,
+      "context_window": 131072,
+      "max_input_tokens": 65536,
+      "max_output_tokens": 65536,
+      "max_input_is_derived": true,
+      "reasoning_capability": "High",
+      "instruction_following": "High",
+      "tool_calling_support": true,
+      "input_price_per_million_usd": 0.075,
+      "output_price_per_million_usd": 0.3,
+      "metadata_source": "Groq model documentation; max input derived; qualitative ratings are project heuristics"
+    },
+    "selection_validated": true,
+    "reason": "Selected from the deterministically eligible general-purpose candidates. Role=general_purpose_reasoning; reasoning=High; instruction-following=High; context-window=131072; tool-calling=True.",
+    "choice_probabilities": {
+      "no_suitable_model": 0.02,
+      "openai/gpt-oss-120b": 0.04,
+      "openai/gpt-oss-20b": 0.94,
+      "qwen/qwen3.8-27b": 0.0
+    },
+    "choice_confidence": 0.92,
+    "jev_model": "jev-1.14.0",
+    "jev_usage": {
+      "input_tokens": 1633,
+      "output_tokens": 88
+    },
+    "raw_answer": {
+      "type": "choice",
+      "choice": "openai/gpt-oss-20b",
+      "confidence": 0.92,
+      "probabilities": {
+        "no_suitable_model": 0.02,
+        "openai/gpt-oss-120b": 0.04,
+        "openai/gpt-oss-20b": 0.94,
+        "qwen/qwen3.8-27b": 0.0
+      }
+    }
+  },
+  "eligible_model_ids": [
+    "openai/gpt-oss-120b",
+    "openai/gpt-oss-20b",
+    "qwen/qwen3.8-27b"
+  ],
+  "excluded_models": [
+    {
+      "model_id": "openai/gpt-oss-safeguard-20b",
+      "reasons": [
+        "Specialized model (policy_following_safety_classifier); not approved for general-purpose agent tasks."
+      ]
+    },
+    {
+      "model_id": "meta-llama/llama-prompt-guard-2-22m",
+      "reasons": [
+        "Specialized model (prompt_injection_classifier); not approved for general-purpose agent tasks.",
+        "Context window (512) is below the rough estimated context requirement (810)."
+      ]
+    },
+    {
+      "model_id": "meta-llama/llama-prompt-guard-2-86m",
+      "reasons": [
+        "Specialized model (multilingual_prompt_injection_classifier); not approved for general-purpose agent tasks.",
+        "Context window (512) is below the rough estimated context requirement (810)."
+      ]
+    }
+  ],
+  "token_reference": {
+    "low_upper_boundary_approx": 721.5,
+    "medium_upper_boundary_approx": 2012.1,
+    "scope": "Per-agent mean token consumption within workflow incident_triage (7 agents)"
+  },
+  "selection_validation": {
+    "validated_against_eligibility_rules": true,
+    "is_downgrade_candidate": true,
+    "requires_empirical_quality_validation": true
+  },
+  "limitations": [
+    "JEV classifications and selections depend on the supplied evidence and prompt.",
+    "Reasoning and instruction-following ratings are qualitative project heuristics.",
+    "Derived maximum input token values are planning estimates, not separate provider-published limits.",
+    "A capability-fit recommendation does not establish output-quality equivalence."
+  ]
+}

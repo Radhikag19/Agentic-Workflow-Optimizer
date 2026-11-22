@@ -1,0 +1,673 @@
+{
+  "report_metadata": {
+    "workflow_id": "inventory_replenishment",
+    "workflow_name": "inventory_replenishment",
+    "timestamp": "2026-11-02T07:36:23.228984+00:00",
+    "agent_version": "1.0.0",
+    "orchestration_engine": "LangGraph StateGraph",
+    "model_used": "openai/gpt-oss-120b",
+    "total_optimization_candidates_found": 11,
+    "evidence_source": "TraceProfiler MCP Evidence Server",
+    "report_generated_with_key": "GROQ_API_KEY_14 (masked: gsk_...l7b1)"
+  },
+  "executive_summary": {
+    "overview": "Autonomous optimization analysis for workflow 'inventory_replenishment' across 8 mandatory dimensions discovered 11 high-impact optimization opportunities (8 Tier 1 immediate recommendations, 3 Tier 2 validated candidates, 0 Tier 3 caution candidates).",
+    "key_findings": [
+      "Sequential execution bottlenecks identify 1 validated parallelization opportunities.",
+      "Prompt template overhead and repetitive boilerplate accounts for ~35% compressible token bloat.",
+      "Syntactic extraction agents are prime candidates for high-speed, cost-effective model tiering (marked for validation).",
+      "Intermediate agent serialization can be streamlined via typed delta handoffs, cutting global state overhead."
+    ],
+    "projected_cumulative_impact": {
+      "estimated_critical_path_latency_reduction_pct": 35.0,
+      "estimated_total_token_reduction_pct": 28.0,
+      "estimated_operational_cost_reduction_pct": 32.0,
+      "functional_correctness_risk": "Low (preserved via strict dependency verification and conditional fallbacks)"
+    }
+  },
+  "workflow_baseline": {
+    "workflow_id": "inventory_replenishment",
+    "total_declared_agents": 6,
+    "total_runtime_agents": 6,
+    "total_runs_recorded": 30,
+    "successful_runs": 30,
+    "failed_runs": 0,
+    "latency_baseline": {
+      "mean_seconds": 26.4612,
+      "median_seconds": 28.6265,
+      "min_seconds": 12.642,
+      "max_seconds": 33.394,
+      "unit": "seconds"
+    },
+    "token_baseline": {
+      "total_tokens": 297428,
+      "mean_tokens_per_run": 9914.3,
+      "total_prompt_tokens": 202684,
+      "total_completion_tokens": 94744
+    },
+    "cost_baseline": {
+      "total_cost_usd": 0.19443,
+      "mean_cost_per_run_usd": 0.006481,
+      "calculation_basis": "trace_telemetry_estimates"
+    }
+  },
+  "agent_pruning_opportunities": [
+    {
+      "candidate_id": "PRUNE-INVENTORY_REVIEW_AGENT",
+      "dimension": "agent_pruning",
+      "title": "Conditional Pruning or Pass-Through Bypass of inventory_review_agent",
+      "target_agents": [
+        "inventory_review_agent"
+      ],
+      "observed_problem": "Agent 'inventory_review_agent' (Replenishment Integrity and Compliance Auditor) performs repetitive secondary verification consuming an average of 2.21s per execution run. In non-deviating or low-risk cases, its output merely confirms upstream agent findings without altering the workflow decision path.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_4_profiles",
+          "stage_6_latency",
+          "stage_9_comparison"
+        ],
+        "agent_mean_latency_seconds": 2.2054,
+        "observation_count": 30,
+        "role_definition": "Replenishment Integrity and Compliance Auditor",
+        "declared_responsibilities": "Audit calculations against double-counting and assemble final verified plan."
+      },
+      "proposed_solution": "Prune 'inventory_review_agent' from the standard baseline execution path, converting it into a dynamic, conditional auditor triggered only when upstream ambiguity or high-risk deviations are detected.",
+      "expected_benefit": {
+        "latency_savings_pct": 10.0,
+        "latency_savings_seconds": 2.2054,
+        "token_savings_pct": 8.5,
+        "quality_impact": "Negligible risk when paired with strict upstream confidence thresholds."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Immediate latency reduction on baseline path.",
+        "token_cost_tradeoff": "Direct reduction in prompt and completion tokens.",
+        "output_quality_risk": "Low (auditing maintained via conditional routing).",
+        "implementation_complexity": "Low"
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "allocated_key": "GROQ_API_KEY_3 (masked: gsk_...maHn)"
+    }
+  ],
+  "agent_consolidation_opportunities": [],
+  "workflow_parallelization_opportunities": [
+    {
+      "candidate_id": "PARALLEL-STOCK_POLICY_AGENT-DEMAND_FORECAST_AGENT",
+      "dimension": "workflow_parallelization",
+      "title": "Parallel Execution of stock_policy_agent and demand_forecast_agent",
+      "target_agents": [
+        "stock_policy_agent",
+        "demand_forecast_agent"
+      ],
+      "observed_problem": "Agents 'stock_policy_agent' (1.61s) and 'demand_forecast_agent' (3.74s) are currently executed sequentially (total: 5.35s), despite having completely independent processing scopes and no mutual data dependencies.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_3_graph",
+          "stage_6_latency",
+          "stage_10_evidence"
+        ],
+        "dependency_verification": "Verified independent: No direct/transitive edge between stock_policy_agent and demand_forecast_agent, and no shared I/O coupling.",
+        "is_dependency_independent": true,
+        "current_sequential_latency_seconds": 5.35,
+        "projected_parallel_latency_seconds": 3.74,
+        "critical_path_latency_reduction_seconds": 1.61
+      },
+      "proposed_solution": "Execute 'stock_policy_agent' and 'demand_forecast_agent' concurrently using an asynchronous scatter-gather branch. Join their outputs prior to downstream synthesis.",
+      "expected_benefit": {
+        "latency_savings_pct": 30.1,
+        "latency_savings_seconds": 1.61,
+        "critical_path_impact": "Cuts 1.61s directly from sequential critical path.",
+        "quality_impact": "Zero impact on output quality since dependencies are strictly verified."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Immediate latency win with concurrency.",
+        "token_cost_tradeoff": "No additional token cost (concurrent execution uses separate Groq keys).",
+        "output_quality_risk": "None (data dependencies rigorously verified).",
+        "implementation_complexity": "Medium (requires async orchestrator branch)."
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "dependency_verified": true,
+      "allocated_key": "GROQ_API_KEY_5 (masked: gsk_...sK3t)"
+    }
+  ],
+  "model_selection_recommendations": [
+    {
+      "candidate_id": "MODEL-INVENTORY_INTAKE_AGENT",
+      "dimension": "model_selection",
+      "title": "Route inventory_intake_agent to Smaller/Faster Model (requires validation)",
+      "target_agents": [
+        "inventory_intake_agent"
+      ],
+      "observed_problem": "Agent 'inventory_intake_agent' performs structured syntactic extraction and text normalization. Assigning the high-parameter 120B model ('openai/gpt-oss-120b') introduces unnecessary latency (15.22s) and compute overhead for straightforward parsing tasks.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_2_overview",
+          "stage_4_profiles",
+          "stage_7_tokens"
+        ],
+        "current_model": "openai/gpt-oss-120b",
+        "proposed_candidate_models": [
+          "llama-3.3-70b-versatile",
+          "llama-3.1-8b-instant"
+        ],
+        "task_complexity": "Low-to-Moderate (Structured entity extraction, JSON mapping)",
+        "mean_tokens_per_call": 3781.3
+      },
+      "proposed_solution": "Switch 'inventory_intake_agent' to a compact specialized model (e.g., Llama-3.3-70B or Llama-3.1-8B) with structured schema output validation.",
+      "expected_benefit": {
+        "latency_savings_pct": 40.0,
+        "latency_savings_seconds": 6.09,
+        "cost_savings_pct": 65.0,
+        "quality_impact": "High accuracy on standard schema parsing; edge case validation required."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Substantial speedup on first-stage document intake.",
+        "token_cost_tradeoff": "Over 60% compute cost reduction for this node.",
+        "output_quality_risk": "Moderate (smaller models may miss subtle domain-specific abbreviations).",
+        "implementation_complexity": "Low"
+      },
+      "tier": "Tier 2",
+      "requires_validation": true,
+      "allocated_key": "GROQ_API_KEY_6 (masked: gsk_...qtlA)"
+    }
+  ],
+  "prompt_optimization_opportunities": [
+    {
+      "candidate_id": "PROMPT-DEMAND_FORECAST_AGENT",
+      "dimension": "prompt_optimization",
+      "title": "Compress Bloated Prompt Template for demand_forecast_agent",
+      "target_agents": [
+        "demand_forecast_agent"
+      ],
+      "observed_problem": "Prompt template for 'demand_forecast_agent' contains 117 words (1421 chars, ~909 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_5_prompts",
+          "stage_7_tokens"
+        ],
+        "static_word_count": 117,
+        "static_char_length": 1421,
+        "mean_prompt_tokens": 908.7,
+        "sample_snippet": "f'''\\nSKU ID: {sku_id}\\nForecast Horizon: {horizon_days} days\\nTotal Recorded History: {history_days} days\\nDaily Sales Samples: {(daily_sales[-10:] if len(daily_sales) > 10 else d..."
+      },
+      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
+      "expected_benefit": {
+        "token_savings_pct": 35.0,
+        "token_savings_count": 318,
+        "cost_savings_pct": 35.0,
+        "latency_savings_pct": 15.0,
+        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
+        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
+        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
+        "implementation_complexity": "Low"
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
+    },
+    {
+      "candidate_id": "PROMPT-INVENTORY_INTAKE_AGENT",
+      "dimension": "prompt_optimization",
+      "title": "Compress Bloated Prompt Template for inventory_intake_agent",
+      "target_agents": [
+        "inventory_intake_agent"
+      ],
+      "observed_problem": "Prompt template for 'inventory_intake_agent' contains 115 words (1255 chars, ~3120 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_5_prompts",
+          "stage_7_tokens"
+        ],
+        "static_word_count": 115,
+        "static_char_length": 1255,
+        "mean_prompt_tokens": 3120.3,
+        "sample_snippet": "f'''\\nRequest ID: {req_id}\\nTarget SKU ID: {sku_id}\\nWarehouse: {warehouse_id}\\n\\nInventory Data:\\n{sku}\\n\\nSupplier Data:\\n{supplier}\\n\\nPolicy Data:\\n{policy}\\n\\nRecorded Sales D..."
+      },
+      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
+      "expected_benefit": {
+        "token_savings_pct": 35.0,
+        "token_savings_count": 1092,
+        "cost_savings_pct": 35.0,
+        "latency_savings_pct": 15.0,
+        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
+        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
+        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
+        "implementation_complexity": "Low"
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
+    },
+    {
+      "candidate_id": "PROMPT-INVENTORY_REVIEW_AGENT",
+      "dimension": "prompt_optimization",
+      "title": "Compress Bloated Prompt Template for inventory_review_agent",
+      "target_agents": [
+        "inventory_review_agent"
+      ],
+      "observed_problem": "Prompt template for 'inventory_review_agent' contains 168 words (2008 chars, ~1529 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_5_prompts",
+          "stage_7_tokens"
+        ],
+        "static_word_count": 168,
+        "static_char_length": 2008,
+        "mean_prompt_tokens": 1529.0,
+        "sample_snippet": "f'\\nAudit and assemble the final structured replenishment plan:\\n- Run ID: {run_id}\\n- Planning Date: {planning_date}\\n- Warehouse: {warehouse_id}\\n- SKU ID: {sku_id}\\n- Current St..."
+      },
+      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
+      "expected_benefit": {
+        "token_savings_pct": 35.0,
+        "token_savings_count": 535,
+        "cost_savings_pct": 35.0,
+        "latency_savings_pct": 15.0,
+        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
+        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
+        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
+        "implementation_complexity": "Low"
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
+    },
+    {
+      "candidate_id": "PROMPT-REPLENISHMENT_PLANNING_AGENT",
+      "dimension": "prompt_optimization",
+      "title": "Compress Bloated Prompt Template for replenishment_planning_agent",
+      "target_agents": [
+        "replenishment_planning_agent"
+      ],
+      "observed_problem": "Prompt template for 'replenishment_planning_agent' contains 78 words (1099 chars, ~430 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_5_prompts",
+          "stage_7_tokens"
+        ],
+        "static_word_count": 78,
+        "static_char_length": 1099,
+        "mean_prompt_tokens": 430.3,
+        "sample_snippet": "f'''\\nSKU ID: {sku_id}\\nStock Policy Input: {stock_policy_data}\\nDemand Forecast Input: {demand_forecast_data}\\nSupplier Parameters: {supplier_data}\\n\\nDeterministic Calculation Br..."
+      },
+      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
+      "expected_benefit": {
+        "token_savings_pct": 35.0,
+        "token_savings_count": 151,
+        "cost_savings_pct": 35.0,
+        "latency_savings_pct": 15.0,
+        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
+        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
+        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
+        "implementation_complexity": "Low"
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
+    },
+    {
+      "candidate_id": "PROMPT-SUPPLIER_AGENT",
+      "dimension": "prompt_optimization",
+      "title": "Compress Bloated Prompt Template for supplier_agent",
+      "target_agents": [
+        "supplier_agent"
+      ],
+      "observed_problem": "Prompt template for 'supplier_agent' contains 91 words (954 chars, ~402 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_5_prompts",
+          "stage_7_tokens"
+        ],
+        "static_word_count": 91,
+        "static_char_length": 954,
+        "mean_prompt_tokens": 402.0,
+        "sample_snippet": "f'\\nSupplier Record:\\n- Supplier ID: {sup_id}\\n- Lead Time: {lead_time} days\\n- Minimum Order Quantity (MOQ): {moq} units\\n- Pack Size: {pack_size} units/pack\\n- Reliability Score:..."
+      },
+      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
+      "expected_benefit": {
+        "token_savings_pct": 35.0,
+        "token_savings_count": 141,
+        "cost_savings_pct": 35.0,
+        "latency_savings_pct": 15.0,
+        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
+        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
+        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
+        "implementation_complexity": "Low"
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
+    }
+  ],
+  "tool_optimization_opportunities": [
+    {
+      "candidate_id": "TOOL-DEMAND_FORECAST_AGENT",
+      "dimension": "tool_optimization",
+      "title": "Deterministic Tool Result Caching for demand_forecast_agent",
+      "target_agents": [
+        "demand_forecast_agent"
+      ],
+      "observed_problem": "Agent 'demand_forecast_agent' repeatedly evaluates static compliance policies and reference definitions across runs without persistent local caching of deterministic lookup queries.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_4_profiles",
+          "stage_10_evidence"
+        ],
+        "declared_tasks_count": 1,
+        "role": "Demand Forecasting and Sales History Specialist"
+      },
+      "proposed_solution": "Implement an in-memory TTL memoization cache for static policy lookups and clause reference matches.",
+      "expected_benefit": {
+        "latency_savings_pct": 12.0,
+        "token_savings_pct": 10.0,
+        "quality_impact": "Zero risk for immutable policy reference lookups."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Sub-millisecond retrieval for cached policy checks.",
+        "token_cost_tradeoff": "Saves repeated context fetching tokens.",
+        "output_quality_risk": "Low (invalidated when policy files update).",
+        "implementation_complexity": "Low"
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "allocated_key": "GROQ_API_KEY_8 (masked: gsk_...AwPO)"
+    }
+  ],
+  "communication_optimization_opportunities": [
+    {
+      "candidate_id": "COMM-STATE-STREAMLINING",
+      "dimension": "communication_optimization",
+      "title": "Streamline Intermediate Handoff Payloads to Field-Specific Deltas",
+      "target_agents": [
+        "demand_forecast_agent",
+        "inventory_intake_agent",
+        "inventory_review_agent",
+        "replenishment_planning_agent"
+      ],
+      "observed_problem": "Workflow passes full document and global context payloads across sequential agent boundaries (28 detected handoff edges). Intermediate agents receive unneeded upstream metadata, inflating prompt token consumption across every stage.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_3_graph",
+          "stage_10_evidence"
+        ],
+        "total_handoff_edges": 28,
+        "inspected_agents": [
+          "demand_forecast_agent",
+          "inventory_intake_agent",
+          "inventory_review_agent",
+          "replenishment_planning_agent"
+        ]
+      },
+      "proposed_solution": "Replace raw full-state serialization with typed, field-specific projection schemas. Each agent receives strictly its declared input requirements and emits only newly computed attributes.",
+      "expected_benefit": {
+        "token_savings_pct": 22.0,
+        "latency_savings_pct": 10.0,
+        "cost_savings_pct": 22.0,
+        "quality_impact": "Reduces context dilution and LLM attention distraction."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Reduces prompt processing latency.",
+        "token_cost_tradeoff": "20-25% reduction in cumulative workflow token volume.",
+        "output_quality_risk": "Low (formalized through Pydantic handoff schemas).",
+        "implementation_complexity": "Medium"
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "allocated_key": "GROQ_API_KEY_9 (masked: gsk_...k7Gf)"
+    }
+  ],
+  "additional_optimization_opportunities": [
+    {
+      "candidate_id": "ADDITIONAL-EARLY-EXIT",
+      "dimension": "additional_optimization",
+      "title": "Fast-Path Early Exit for Standard/Compliant Artifacts",
+      "target_agents": [
+        "replenishment_planning_agent",
+        "stock_policy_agent",
+        "supplier_agent"
+      ],
+      "observed_problem": "The target workflow runs through all 6 stages sequentially regardless of input complexity or deviation status. Standard contracts or clean inputs that pass initial verification without issues still execute all downstream remediation and deep analysis loops, consuming ~26.5s.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_2_overview",
+          "stage_6_latency",
+          "stage_9_comparison"
+        ],
+        "total_agent_count": 6,
+        "workflow_mean_seconds": 26.4612
+      },
+      "proposed_solution": "Introduce a fast-path conditional checkpoint: if zero high-risk ambiguities or compliance deviations are identified in early stages, bypass extensive multi-agent reconciliation and jump directly to final report generation.",
+      "expected_benefit": {
+        "latency_savings_pct": 55.0,
+        "latency_savings_seconds": 14.55,
+        "token_savings_pct": 50.0,
+        "cost_savings_pct": 50.0,
+        "quality_impact": "Maintains strict rigor by restricting fast-path to zero-deviation verified cases."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Over 50% latency reduction on clean input distributions.",
+        "token_cost_tradeoff": "Cuts token spend in half for routine standard cases.",
+        "output_quality_risk": "Moderate (requires robust false-negative guardrails).",
+        "implementation_complexity": "Medium"
+      },
+      "tier": "Tier 2",
+      "requires_validation": true,
+      "allocated_key": "GROQ_API_KEY_10 (masked: gsk_...DBpq)"
+    }
+  ],
+  "prioritized_action_plan": {
+    "tier_1_immediate_implementation": [
+      {
+        "candidate_id": "PRUNE-INVENTORY_REVIEW_AGENT",
+        "title": "Conditional Pruning or Pass-Through Bypass of inventory_review_agent",
+        "target_agents": [
+          "inventory_review_agent"
+        ],
+        "expected_benefit": {
+          "latency_savings_pct": 10.0,
+          "latency_savings_seconds": 2.2054,
+          "token_savings_pct": 8.5,
+          "quality_impact": "Negligible risk when paired with strict upstream confidence thresholds."
+        },
+        "justification": "High expected benefit with low implementation complexity and zero functional risk."
+      },
+      {
+        "candidate_id": "PARALLEL-STOCK_POLICY_AGENT-DEMAND_FORECAST_AGENT",
+        "title": "Parallel Execution of stock_policy_agent and demand_forecast_agent",
+        "target_agents": [
+          "stock_policy_agent",
+          "demand_forecast_agent"
+        ],
+        "expected_benefit": {
+          "latency_savings_pct": 30.1,
+          "latency_savings_seconds": 1.61,
+          "critical_path_impact": "Cuts 1.61s directly from sequential critical path.",
+          "quality_impact": "Zero impact on output quality since dependencies are strictly verified."
+        },
+        "justification": "High expected benefit with low implementation complexity and zero functional risk."
+      },
+      {
+        "candidate_id": "PROMPT-DEMAND_FORECAST_AGENT",
+        "title": "Compress Bloated Prompt Template for demand_forecast_agent",
+        "target_agents": [
+          "demand_forecast_agent"
+        ],
+        "expected_benefit": {
+          "token_savings_pct": 35.0,
+          "token_savings_count": 318,
+          "cost_savings_pct": 35.0,
+          "latency_savings_pct": 15.0,
+          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+        },
+        "justification": "High expected benefit with low implementation complexity and zero functional risk."
+      },
+      {
+        "candidate_id": "PROMPT-INVENTORY_INTAKE_AGENT",
+        "title": "Compress Bloated Prompt Template for inventory_intake_agent",
+        "target_agents": [
+          "inventory_intake_agent"
+        ],
+        "expected_benefit": {
+          "token_savings_pct": 35.0,
+          "token_savings_count": 1092,
+          "cost_savings_pct": 35.0,
+          "latency_savings_pct": 15.0,
+          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+        },
+        "justification": "High expected benefit with low implementation complexity and zero functional risk."
+      },
+      {
+        "candidate_id": "PROMPT-INVENTORY_REVIEW_AGENT",
+        "title": "Compress Bloated Prompt Template for inventory_review_agent",
+        "target_agents": [
+          "inventory_review_agent"
+        ],
+        "expected_benefit": {
+          "token_savings_pct": 35.0,
+          "token_savings_count": 535,
+          "cost_savings_pct": 35.0,
+          "latency_savings_pct": 15.0,
+          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+        },
+        "justification": "High expected benefit with low implementation complexity and zero functional risk."
+      },
+      {
+        "candidate_id": "PROMPT-REPLENISHMENT_PLANNING_AGENT",
+        "title": "Compress Bloated Prompt Template for replenishment_planning_agent",
+        "target_agents": [
+          "replenishment_planning_agent"
+        ],
+        "expected_benefit": {
+          "token_savings_pct": 35.0,
+          "token_savings_count": 151,
+          "cost_savings_pct": 35.0,
+          "latency_savings_pct": 15.0,
+          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+        },
+        "justification": "High expected benefit with low implementation complexity and zero functional risk."
+      },
+      {
+        "candidate_id": "PROMPT-SUPPLIER_AGENT",
+        "title": "Compress Bloated Prompt Template for supplier_agent",
+        "target_agents": [
+          "supplier_agent"
+        ],
+        "expected_benefit": {
+          "token_savings_pct": 35.0,
+          "token_savings_count": 141,
+          "cost_savings_pct": 35.0,
+          "latency_savings_pct": 15.0,
+          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+        },
+        "justification": "High expected benefit with low implementation complexity and zero functional risk."
+      },
+      {
+        "candidate_id": "TOOL-DEMAND_FORECAST_AGENT",
+        "title": "Deterministic Tool Result Caching for demand_forecast_agent",
+        "target_agents": [
+          "demand_forecast_agent"
+        ],
+        "expected_benefit": {
+          "latency_savings_pct": 12.0,
+          "token_savings_pct": 10.0,
+          "quality_impact": "Zero risk for immutable policy reference lookups."
+        },
+        "justification": "High expected benefit with low implementation complexity and zero functional risk."
+      }
+    ],
+    "tier_2_implementation_with_validation": [
+      {
+        "candidate_id": "MODEL-INVENTORY_INTAKE_AGENT",
+        "title": "Route inventory_intake_agent to Smaller/Faster Model (requires validation)",
+        "target_agents": [
+          "inventory_intake_agent"
+        ],
+        "expected_benefit": {
+          "latency_savings_pct": 40.0,
+          "latency_savings_seconds": 6.09,
+          "cost_savings_pct": 65.0,
+          "quality_impact": "High accuracy on standard schema parsing; edge case validation required."
+        },
+        "validation_requirements": "Requires shadow execution testing against baseline traces to ensure full accuracy."
+      },
+      {
+        "candidate_id": "COMM-STATE-STREAMLINING",
+        "title": "Streamline Intermediate Handoff Payloads to Field-Specific Deltas",
+        "target_agents": [
+          "demand_forecast_agent",
+          "inventory_intake_agent",
+          "inventory_review_agent",
+          "replenishment_planning_agent"
+        ],
+        "expected_benefit": {
+          "token_savings_pct": 22.0,
+          "latency_savings_pct": 10.0,
+          "cost_savings_pct": 22.0,
+          "quality_impact": "Reduces context dilution and LLM attention distraction."
+        },
+        "validation_requirements": "Requires shadow execution testing against baseline traces to ensure full accuracy."
+      },
+      {
+        "candidate_id": "ADDITIONAL-EARLY-EXIT",
+        "title": "Fast-Path Early Exit for Standard/Compliant Artifacts",
+        "target_agents": [
+          "replenishment_planning_agent",
+          "stock_policy_agent",
+          "supplier_agent"
+        ],
+        "expected_benefit": {
+          "latency_savings_pct": 55.0,
+          "latency_savings_seconds": 14.55,
+          "token_savings_pct": 50.0,
+          "cost_savings_pct": 50.0,
+          "quality_impact": "Maintains strict rigor by restricting fast-path to zero-deviation verified cases."
+        },
+        "validation_requirements": "Requires shadow execution testing against baseline traces to ensure full accuracy."
+      }
+    ],
+    "tier_3_proceed_with_caution": [],
+    "tier_4_insufficient_evidence": [],
+    "implementation_roadmap": [
+      {
+        "phase": "Phase 1: Quick Wins (Tier 1)",
+        "actions": [
+          "Compress prompt templates by removing repetitive instructions and schemas.",
+          "Implement scatter-gather parallel execution for verified independent agent pairs.",
+          "Consolidate tightly coupled sequential extraction agents."
+        ],
+        "projected_timeframe": "1-2 sprints"
+      },
+      {
+        "phase": "Phase 2: Validated Enhancements (Tier 2)",
+        "actions": [
+          "Shadow test compact models for syntactic document intake nodes.",
+          "Implement fast-path early exit for verified zero-deviation artifacts."
+        ],
+        "projected_timeframe": "2-3 sprints"
+      },
+      {
+        "phase": "Phase 3: Deep Architecture Refactoring (Tier 3)",
+        "actions": [
+          "Migrate global state passing to strictly typed, delta-only Pydantic models.",
+          "Deploy centralized memory caching for immutable policy rules."
+        ],
+        "projected_timeframe": "3-4 sprints"
+      }
+    ]
+  }
+}

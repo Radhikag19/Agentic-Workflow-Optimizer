@@ -30,6 +30,7 @@ TASK_KEY_MAPPING: Dict[str, List[str]] = {
     "prompt_optimization": ["GROQ_API_KEY_7"],
     "tool_optimization": ["GROQ_API_KEY_8"],
     "communication_optimization": ["GROQ_API_KEY_9"],
+    "communication_data_handoff": ["GROQ_API_KEY_9"],
     "additional_optimization": ["GROQ_API_KEY_10"],
     "tradeoff_assessment": ["GROQ_API_KEY_11", "GROQ_API_KEY_12"],
     "report_generation": ["GROQ_API_KEY_13", "GROQ_API_KEY_14"],

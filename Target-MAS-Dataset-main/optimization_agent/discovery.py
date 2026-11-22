@@ -98,8 +98,17 @@ def verify_dependency_independence(
 class OptimizationDiscoveryEngine:
     """Discovers optimization opportunities across all 8 dimensions."""
 
-    def __init__(self, key_manager: Optional[GroqKeyManager] = None):
+    def __init__(
+        self,
+        key_manager: Optional[GroqKeyManager] = None,
+        consolidation_client: Optional[Any] = None,
+        prompt_opt_client: Optional[Any] = None,
+        handoff_client: Optional[Any] = None,
+    ):
         self.key_mgr = key_manager or get_default_key_manager()
+        self.consolidation_client = consolidation_client
+        self.prompt_opt_client = prompt_opt_client
+        self.handoff_client = handoff_client
 
     def discover_all_dimensions(self, state: OptimizationAgentState) -> Dict[str, Any]:
         """Execute systematic analysis for Dimensions A through H."""
@@ -131,7 +140,9 @@ class OptimizationDiscoveryEngine:
         dim_analyses["model_selection"] = ana_d
 
         # Dimension E: Prompt Optimization
-        cand_e, ana_e = self._analyze_dimension_e_prompt_optimization(state)
+        cand_e, ana_e = self._analyze_dimension_e_prompt_optimization(
+            state, consolidation_candidates=cand_b
+        )
         candidates.extend(cand_e)
         dim_analyses["prompt_optimization"] = ana_e
 
@@ -231,74 +242,13 @@ class OptimizationDiscoveryEngine:
     def _analyze_dimension_b_consolidation(
         self, state: OptimizationAgentState
     ) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
-        raw_key, env_var, masked = self.key_mgr.get_key_for_task("agent_consolidation")
-        agents = state.get("discovered_agents", [])
-        profiles = {p["agent_id"]: p for p in state.get("agent_profiles", {}).get("profiles", []) if isinstance(p, dict)}
-        latency_map = state.get("latency_metrics", {}).get("agent_latency_metrics", {})
-        token_map = state.get("token_metrics", {}).get("agent_token_metrics", {})
+        from optimization_agent.consolidation import AgentConsolidationEngine
 
-        candidates: List[Dict[str, Any]] = []
-
-        # Look for complementary sequential pairs
-        pairs_to_check = [
-            ("contract_intake_agent", "clause_extraction_agent"),
-            ("compliance_deviation_agent", "risk_ambiguity_agent"),
-            ("intake_agent", "clause_extraction_agent"),
-            ("receipt_agent", "normalize_agent"),
-            ("invoice_extraction_agent", "invoice_validation_agent"),
-        ]
-
-        for a1, a2 in pairs_to_check:
-            if a1 in agents and a2 in agents:
-                lat1 = latency_map.get(a1, {}).get("mean_seconds", 0.0)
-                lat2 = latency_map.get(a2, {}).get("mean_seconds", 0.0)
-                tok1 = token_map.get(a1, {}).get("mean_tokens", 0.0)
-                tok2 = token_map.get(a2, {}).get("mean_tokens", 0.0)
-
-                candidates.append({
-                    "candidate_id": f"CONSOLIDATE-{a1.upper()}-{a2.upper()}",
-                    "dimension": "agent_consolidation",
-                    "title": f"Consolidate {a1} and {a2} into Unified Agent",
-                    "target_agents": [a1, a2],
-                    "observed_problem": (
-                        f"Agents '{a1}' and '{a2}' share tightly coupled operational scopes and require high "
-                        f"intermediate data handoffs. Executing them as separate LLM agents introduces redundant context "
-                        f"re-loading and inter-agent serialization latency ({lat1:.2f}s + {lat2:.2f}s = {lat1+lat2:.2f}s)."
-                    ),
-                    "supporting_evidence": {
-                        "mcp_stage_source": ["stage_4_profiles", "stage_6_latency", "stage_7_tokens"],
-                        "combined_latency_seconds": lat1 + lat2,
-                        "combined_tokens_per_run": tok1 + tok2,
-                        "agent_1_role": profiles.get(a1, {}).get("role"),
-                        "agent_2_role": profiles.get(a2, {}).get("role"),
-                    },
-                    "proposed_solution": (
-                        f"Merge '{a1}' and '{a2}' into a single specialized agent with unified system instructions, "
-                        f"eliminating the intermediate payload serialization and reducing prompt token re-transmission."
-                    ),
-                    "expected_benefit": {
-                        "latency_savings_pct": 25.0,
-                        "latency_savings_seconds": round((lat1 + lat2) * 0.25, 2),
-                        "token_savings_pct": 20.0,
-                        "token_savings_count": round((tok1 + tok2) * 0.20),
-                        "quality_impact": "Maintains full reasoning fidelity by handling extraction and categorization in a single coherent prompt.",
-                    },
-                    "tradeoffs_and_risks": {
-                        "latency_tradeoff": "Significant latency reduction by eliminating one agent dispatch round-trip.",
-                        "token_cost_tradeoff": "Eliminates duplicate system prompt overhead.",
-                        "output_quality_risk": "Low (joint extraction is well within standard LLM contextual capabilities).",
-                        "implementation_complexity": "Medium",
-                    },
-                    "tier": "Tier 1",
-                    "requires_validation": False,
-                    "allocated_key": masked,
-                })
-
-        return candidates, {
-            "dimension": "agent_consolidation",
-            "allocated_key": masked,
-            "candidates_found": len(candidates),
-        }
+        engine = AgentConsolidationEngine(
+            key_manager=self.key_mgr,
+            groq_client=self.consolidation_client,
+        )
+        return engine.analyze(state)
 
     # =========================================================================
     # Dimension C: Workflow Parallelization
@@ -457,70 +407,17 @@ class OptimizationDiscoveryEngine:
     # Dimension E: Prompt Optimization
     # =========================================================================
     def _analyze_dimension_e_prompt_optimization(
-        self, state: OptimizationAgentState
+        self,
+        state: OptimizationAgentState,
+        consolidation_candidates: Optional[List[Dict[str, Any]]] = None,
     ) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
-        raw_key, env_var, masked = self.key_mgr.get_key_for_task("prompt_optimization")
-        prompts = state.get("prompt_metrics", {}).get("prompt_metrics", [])
-        token_map = state.get("token_metrics", {}).get("agent_token_metrics", {})
+        from optimization_agent.prompt_optimization import PromptOptimizationEngine
 
-        candidates: List[Dict[str, Any]] = []
-
-        for p in prompts:
-            if not isinstance(p, dict):
-                continue
-            agent_id = p.get("agent_id", "")
-            char_len = p.get("static_prompt_char_length", 0)
-            word_cnt = p.get("static_prompt_word_count", 0)
-            prompt_text = p.get("prompt_text") or p.get("sample_prompt_text", "")
-            tok_info = token_map.get(agent_id, {})
-            mean_prompt_tokens = tok_info.get("mean_prompt_tokens", word_cnt * 1.3)
-
-            # Detect prompt bloat: lengthy static prompt with repetitive instructions
-            if word_cnt > 250 or mean_prompt_tokens > 400:
-                candidates.append({
-                    "candidate_id": f"PROMPT-{agent_id.upper()}",
-                    "dimension": "prompt_optimization",
-                    "title": f"Compress Bloated Prompt Template for {agent_id}",
-                    "target_agents": [agent_id],
-                    "observed_problem": (
-                        f"Prompt template for '{agent_id}' contains {word_cnt} words ({char_len} chars, "
-                        f"~{mean_prompt_tokens:.0f} prompt tokens per run). Static AST analysis shows repetitive "
-                        f"role descriptions, verbose schema guardrails, and boilerplate output instructions."
-                    ),
-                    "supporting_evidence": {
-                        "mcp_stage_source": ["stage_5_prompts", "stage_7_tokens"],
-                        "static_word_count": word_cnt,
-                        "static_char_length": char_len,
-                        "mean_prompt_tokens": mean_prompt_tokens,
-                        "sample_snippet": prompt_text[:180] + "..." if len(prompt_text) > 180 else prompt_text,
-                    },
-                    "proposed_solution": (
-                        f"Refactor prompt into concise declarative instructions using structured markdown directives. "
-                        f"Eliminate duplicate role narrative and move schema validation to Pydantic structured output."
-                    ),
-                    "expected_benefit": {
-                        "token_savings_pct": 35.0,
-                        "token_savings_count": round(mean_prompt_tokens * 0.35),
-                        "cost_savings_pct": 35.0,
-                        "latency_savings_pct": 15.0,
-                        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity.",
-                    },
-                    "tradeoffs_and_risks": {
-                        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
-                        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
-                        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
-                        "implementation_complexity": "Low",
-                    },
-                    "tier": "Tier 1",
-                    "requires_validation": False,
-                    "allocated_key": masked,
-                })
-
-        return candidates, {
-            "dimension": "prompt_optimization",
-            "allocated_key": masked,
-            "candidates_found": len(candidates),
-        }
+        engine = PromptOptimizationEngine(
+            key_manager=self.key_mgr,
+            groq_client=self.prompt_opt_client,
+        )
+        return engine.analyze(state, consolidation_candidates=consolidation_candidates)
 
     # =========================================================================
     # Dimension F: Tool Optimization
@@ -585,55 +482,13 @@ class OptimizationDiscoveryEngine:
     def _analyze_dimension_g_communication(
         self, state: OptimizationAgentState
     ) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
-        raw_key, env_var, masked = self.key_mgr.get_key_for_task("communication_optimization")
-        agents = state.get("discovered_agents", [])
-        graph = state.get("workflow_graph", {})
-        edges = graph.get("edges", [])
+        from optimization_agent.data_handoff import DataHandoffOptimizationEngine
 
-        candidates: List[Dict[str, Any]] = []
-
-        if len(agents) > 3:
-            candidates.append({
-                "candidate_id": "COMM-STATE-STREAMLINING",
-                "dimension": "communication_optimization",
-                "title": "Streamline Intermediate Handoff Payloads to Field-Specific Deltas",
-                "target_agents": agents[:4],
-                "observed_problem": (
-                    f"Workflow passes full document and global context payloads across sequential agent boundaries "
-                    f"({len(edges)} detected handoff edges). Intermediate agents receive unneeded upstream metadata, "
-                    f"inflating prompt token consumption across every stage."
-                ),
-                "supporting_evidence": {
-                    "mcp_stage_source": ["stage_3_graph", "stage_10_evidence"],
-                    "total_handoff_edges": len(edges),
-                    "inspected_agents": agents[:4],
-                },
-                "proposed_solution": (
-                    "Replace raw full-state serialization with typed, field-specific projection schemas. Each agent "
-                    "receives strictly its declared input requirements and emits only newly computed attributes."
-                ),
-                "expected_benefit": {
-                    "token_savings_pct": 22.0,
-                    "latency_savings_pct": 10.0,
-                    "cost_savings_pct": 22.0,
-                    "quality_impact": "Reduces context dilution and LLM attention distraction.",
-                },
-                "tradeoffs_and_risks": {
-                    "latency_tradeoff": "Reduces prompt processing latency.",
-                    "token_cost_tradeoff": "20-25% reduction in cumulative workflow token volume.",
-                    "output_quality_risk": "Low (formalized through Pydantic handoff schemas).",
-                    "implementation_complexity": "Medium",
-                },
-                "tier": "Tier 1",
-                "requires_validation": False,
-                "allocated_key": masked,
-            })
-
-        return candidates, {
-            "dimension": "communication_optimization",
-            "allocated_key": masked,
-            "candidates_found": len(candidates),
-        }
+        engine = DataHandoffOptimizationEngine(
+            key_manager=self.key_mgr,
+            groq_client=self.handoff_client,
+        )
+        return engine.analyze(state)
 
     # =========================================================================
     # Dimension H: Additional Dimensions (Caching, Early Exit, Routing)

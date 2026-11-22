@@ -18,12 +18,17 @@ class OptimizationCandidate(TypedDict, total=False):
     target_agents: List[str]
     observed_problem: str
     supporting_evidence: Dict[str, Any]
+    unified_prompt: Optional[str]
+    optimized_prompt: Optional[str]
+    proposed_compact_payload_schema: Optional[Dict[str, Any]]
     proposed_solution: str
     expected_benefit: Dict[str, Any]  # latency_savings, token_savings, cost_savings, etc.
     tradeoffs_and_risks: Dict[str, Any]
     tier: str  # 'Tier 1', 'Tier 2', 'Tier 3', 'Tier 4'
+    feasibility_tier: str
     requires_validation: bool
     dependency_verified: Optional[bool]
+    allocated_key: str
 
 
 class OptimizationAgentState(TypedDict, total=False):
@@ -35,6 +40,7 @@ class OptimizationAgentState(TypedDict, total=False):
     workflow_id: str
     evidence_dir: Optional[str]
     target_model: str
+    model_context_window: Optional[int]
 
     # Execution tracking
     stage_status: Dict[str, str]

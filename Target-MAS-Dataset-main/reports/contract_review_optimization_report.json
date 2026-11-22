@@ -2,19 +2,19 @@
   "report_metadata": {
     "workflow_id": "contract_review",
     "workflow_name": "contract_review",
-    "timestamp": "2026-10-31T21:20:01.874976+00:00",
+    "timestamp": "2026-11-22T09:15:57.813858+00:00",
     "agent_version": "1.0.0",
     "orchestration_engine": "LangGraph StateGraph",
     "model_used": "openai/gpt-oss-120b",
-    "total_optimization_candidates_found": 18,
+    "total_optimization_candidates_found": 13,
     "evidence_source": "TraceProfiler MCP Evidence Server",
     "report_generated_with_key": "GROQ_API_KEY_13 (masked: gsk_...Ujsn)"
   },
   "executive_summary": {
-    "overview": "Autonomous optimization analysis for workflow 'contract_review' across 8 mandatory dimensions discovered 18 high-impact optimization opportunities (12 Tier 1 immediate recommendations, 6 Tier 2 validated candidates, 0 Tier 3 caution candidates).",
+    "overview": "Autonomous optimization analysis for workflow 'contract_review' across 8 mandatory dimensions discovered 13 high-impact optimization opportunities (4 Tier 1 immediate recommendations, 9 Tier 2 validated candidates, 0 Tier 3 caution candidates).",
     "key_findings": [
       "Sequential execution bottlenecks identify 1 validated parallelization opportunities.",
-      "Prompt template overhead and repetitive boilerplate accounts for ~35% compressible token bloat.",
+      "Prompt optimization inspected 10 prompts and compressed 0 eligible prompt(s), saving 0 static prompt tokens (0.0% additional reduction; validation required).",
       "Syntactic extraction agents are prime candidates for high-speed, cost-effective model tiering (marked for validation).",
       "Intermediate agent serialization can be streamlined via typed delta handoffs, cutting global state overhead."
     ],
@@ -86,7 +86,8 @@
       },
       "tier": "Tier 1",
       "requires_validation": false,
-      "allocated_key": "GROQ_API_KEY_3 (masked: gsk_...maHn)"
+      "allocated_key": "GROQ_API_KEY_3 (masked: gsk_...maHn)",
+      "feasibility_tier": "Tier 1: High potential, low trade-off"
     },
     {
       "candidate_id": "PRUNE-EVIDENCE_VALIDATION_AGENT",
@@ -122,87 +123,349 @@
       },
       "tier": "Tier 1",
       "requires_validation": false,
-      "allocated_key": "GROQ_API_KEY_3 (masked: gsk_...maHn)"
+      "allocated_key": "GROQ_API_KEY_3 (masked: gsk_...maHn)",
+      "feasibility_tier": "Tier 1: High potential, low trade-off"
     }
   ],
-  "agent_consolidation_opportunities": [
-    {
-      "candidate_id": "CONSOLIDATE-CONTRACT_INTAKE_AGENT-CLAUSE_EXTRACTION_AGENT",
-      "dimension": "agent_consolidation",
-      "title": "Consolidate contract_intake_agent and clause_extraction_agent into Unified Agent",
-      "target_agents": [
-        "contract_intake_agent",
-        "clause_extraction_agent"
-      ],
-      "observed_problem": "Agents 'contract_intake_agent' and 'clause_extraction_agent' share tightly coupled operational scopes and require high intermediate data handoffs. Executing them as separate LLM agents introduces redundant context re-loading and inter-agent serialization latency (1.81s + 1.96s = 3.77s).",
-      "supporting_evidence": {
-        "mcp_stage_source": [
-          "stage_4_profiles",
-          "stage_6_latency",
-          "stage_7_tokens"
-        ],
-        "combined_latency_seconds": 3.7675,
-        "combined_tokens_per_run": 2039.0,
-        "agent_1_role": "Contract Intake and Ingestion Specialist",
-        "agent_2_role": "Contract Clause Extraction Specialist"
-      },
-      "proposed_solution": "Merge 'contract_intake_agent' and 'clause_extraction_agent' into a single specialized agent with unified system instructions, eliminating the intermediate payload serialization and reducing prompt token re-transmission.",
-      "expected_benefit": {
-        "latency_savings_pct": 25.0,
-        "latency_savings_seconds": 0.94,
-        "token_savings_pct": 20.0,
-        "token_savings_count": 408,
-        "quality_impact": "Maintains full reasoning fidelity by handling extraction and categorization in a single coherent prompt."
-      },
-      "tradeoffs_and_risks": {
-        "latency_tradeoff": "Significant latency reduction by eliminating one agent dispatch round-trip.",
-        "token_cost_tradeoff": "Eliminates duplicate system prompt overhead.",
-        "output_quality_risk": "Low (joint extraction is well within standard LLM contextual capabilities).",
-        "implementation_complexity": "Medium"
-      },
-      "tier": "Tier 1",
-      "requires_validation": false,
-      "allocated_key": "GROQ_API_KEY_4 (masked: gsk_...Bm5c)"
+  "agent_consolidation_opportunities": {
+    "summary": {
+      "original_agent_count": 10,
+      "initial_theoretical_search_space_size": 1013,
+      "initial_sequential_candidate_count": 4,
+      "sequential_chains_identified": 2,
+      "eliminated_by_context_window_filtering": 0,
+      "eliminated_by_50pct_segmentation_rule": 4,
+      "independent_validation_agents_identified": 0,
+      "independent_validation_agent_ids": [],
+      "conservatively_excluded_agent_ids": [],
+      "eliminated_by_validation_exclusion": 0,
+      "rejected_for_incompatible_responsibilities": 0,
+      "rejected_for_llm_or_schema_errors": 0,
+      "prompt_combinations_generated": 0,
+      "rejected_after_final_prompt_tokenization": 0,
+      "final_consolidation_opportunities": 0,
+      "search_space_reduction_summary": "Initial sequential candidates (4) -> Context filtering (4) -> Token segmentation (0) -> Validation exclusions (0) -> Prompt compatibility (0) -> Final candidates (0)",
+      "dependency_evidence_status": "verified",
+      "warnings": []
     },
-    {
-      "candidate_id": "CONSOLIDATE-COMPLIANCE_DEVIATION_AGENT-RISK_AMBIGUITY_AGENT",
-      "dimension": "agent_consolidation",
-      "title": "Consolidate compliance_deviation_agent and risk_ambiguity_agent into Unified Agent",
-      "target_agents": [
-        "compliance_deviation_agent",
-        "risk_ambiguity_agent"
+    "sequential_chains": [
+      [
+        "clause_mapping_agent",
+        "compliance_deviation_agent"
       ],
-      "observed_problem": "Agents 'compliance_deviation_agent' and 'risk_ambiguity_agent' share tightly coupled operational scopes and require high intermediate data handoffs. Executing them as separate LLM agents introduces redundant context re-loading and inter-agent serialization latency (1.85s + 3.04s = 4.88s).",
-      "supporting_evidence": {
-        "mcp_stage_source": [
-          "stage_4_profiles",
-          "stage_6_latency",
-          "stage_7_tokens"
+      [
+        "evidence_validation_agent",
+        "contract_independent_review_agent",
+        "final_compliance_report_agent"
+      ]
+    ],
+    "segmentation_groups": [
+      {
+        "chain_id": "chain_1",
+        "chain": [
+          "clause_mapping_agent",
+          "compliance_deviation_agent"
         ],
-        "combined_latency_seconds": 4.8825,
-        "combined_tokens_per_run": 2682.9,
-        "agent_1_role": "Contract Compliance Deviation Evaluator",
-        "agent_2_role": "Contract Risk and Ambiguity Analyst"
+        "evidence_status": "sufficient",
+        "fallback_applied": false,
+        "total_chain_contribution": 2441.3,
+        "agent_metrics": {
+          "clause_mapping_agent": {
+            "agent_id": "clause_mapping_agent",
+            "mean_input_tokens": 750.5,
+            "mean_output_tokens": 761.7,
+            "mean_total_tokens": 1512.2,
+            "observation_count": 30,
+            "agent_contribution": 1512.2,
+            "contribution_index": 0.619424
+          },
+          "compliance_deviation_agent": {
+            "agent_id": "compliance_deviation_agent",
+            "mean_input_tokens": 479.2,
+            "mean_output_tokens": 449.9,
+            "mean_total_tokens": 929.1,
+            "observation_count": 30,
+            "agent_contribution": 929.1,
+            "contribution_index": 0.380576
+          }
+        },
+        "groups": [
+          {
+            "group_id": "chain_1_group_1",
+            "chain_id": "chain_1",
+            "agent_ids": [
+              "clause_mapping_agent"
+            ],
+            "group_input_tokens": 750.5,
+            "group_output_tokens": 761.7,
+            "group_contribution_tokens": 1512.2,
+            "group_contribution_pct_of_chain": 61.94,
+            "cumulative_chain_pct_start": 0.0,
+            "cumulative_chain_pct_end": 61.94,
+            "boundary_after_agent": "clause_mapping_agent",
+            "is_isolated_singleton": true,
+            "segmentation_depth": 0,
+            "segmentation_reason": "single_agent_exceeds_50pct_threshold"
+          },
+          {
+            "group_id": "chain_1_group_2",
+            "chain_id": "chain_1",
+            "agent_ids": [
+              "compliance_deviation_agent"
+            ],
+            "group_input_tokens": 479.2,
+            "group_output_tokens": 449.9,
+            "group_contribution_tokens": 929.1,
+            "group_contribution_pct_of_chain": 38.06,
+            "cumulative_chain_pct_start": 61.94,
+            "cumulative_chain_pct_end": 100.0,
+            "boundary_after_agent": null,
+            "is_isolated_singleton": false,
+            "segmentation_depth": 1,
+            "segmentation_reason": "singleton_group_after_boundary"
+          }
+        ]
       },
-      "proposed_solution": "Merge 'compliance_deviation_agent' and 'risk_ambiguity_agent' into a single specialized agent with unified system instructions, eliminating the intermediate payload serialization and reducing prompt token re-transmission.",
-      "expected_benefit": {
-        "latency_savings_pct": 25.0,
-        "latency_savings_seconds": 1.22,
-        "token_savings_pct": 20.0,
-        "token_savings_count": 537,
-        "quality_impact": "Maintains full reasoning fidelity by handling extraction and categorization in a single coherent prompt."
+      {
+        "chain_id": "chain_2",
+        "chain": [
+          "evidence_validation_agent",
+          "contract_independent_review_agent",
+          "final_compliance_report_agent"
+        ],
+        "evidence_status": "sufficient",
+        "fallback_applied": false,
+        "total_chain_contribution": 8562.4,
+        "agent_metrics": {
+          "evidence_validation_agent": {
+            "agent_id": "evidence_validation_agent",
+            "mean_input_tokens": 1320.7,
+            "mean_output_tokens": 602.7,
+            "mean_total_tokens": 1923.5,
+            "observation_count": 30,
+            "agent_contribution": 1923.4,
+            "contribution_index": 0.224633
+          },
+          "contract_independent_review_agent": {
+            "agent_id": "contract_independent_review_agent",
+            "mean_input_tokens": 1102.4,
+            "mean_output_tokens": 1414.2,
+            "mean_total_tokens": 2516.6,
+            "observation_count": 30,
+            "agent_contribution": 2516.6,
+            "contribution_index": 0.293913
+          },
+          "final_compliance_report_agent": {
+            "agent_id": "final_compliance_report_agent",
+            "mean_input_tokens": 1854.3,
+            "mean_output_tokens": 2268.1,
+            "mean_total_tokens": 4122.4,
+            "observation_count": 30,
+            "agent_contribution": 4122.4,
+            "contribution_index": 0.481454
+          }
+        },
+        "groups": [
+          {
+            "group_id": "chain_2_group_1",
+            "chain_id": "chain_2",
+            "agent_ids": [
+              "evidence_validation_agent"
+            ],
+            "group_input_tokens": 1320.7,
+            "group_output_tokens": 602.7,
+            "group_contribution_tokens": 1923.4,
+            "group_contribution_pct_of_chain": 22.46,
+            "cumulative_chain_pct_start": 0.0,
+            "cumulative_chain_pct_end": 22.46,
+            "boundary_after_agent": "evidence_validation_agent",
+            "is_isolated_singleton": false,
+            "segmentation_depth": 2,
+            "segmentation_reason": "singleton_group_after_boundary"
+          },
+          {
+            "group_id": "chain_2_group_2",
+            "chain_id": "chain_2",
+            "agent_ids": [
+              "contract_independent_review_agent"
+            ],
+            "group_input_tokens": 1102.4,
+            "group_output_tokens": 1414.2,
+            "group_contribution_tokens": 2516.6,
+            "group_contribution_pct_of_chain": 29.39,
+            "cumulative_chain_pct_start": 22.46,
+            "cumulative_chain_pct_end": 51.85,
+            "boundary_after_agent": "contract_independent_review_agent",
+            "is_isolated_singleton": false,
+            "segmentation_depth": 2,
+            "segmentation_reason": "singleton_group_after_boundary"
+          },
+          {
+            "group_id": "chain_2_group_3",
+            "chain_id": "chain_2",
+            "agent_ids": [
+              "final_compliance_report_agent"
+            ],
+            "group_input_tokens": 1854.3,
+            "group_output_tokens": 2268.1,
+            "group_contribution_tokens": 4122.4,
+            "group_contribution_pct_of_chain": 48.15,
+            "cumulative_chain_pct_start": 51.85,
+            "cumulative_chain_pct_end": 100.0,
+            "boundary_after_agent": null,
+            "is_isolated_singleton": false,
+            "segmentation_depth": 1,
+            "segmentation_reason": "singleton_group_after_boundary"
+          }
+        ]
+      }
+    ],
+    "validation_classifications": [],
+    "eliminations_audit": [
+      {
+        "stage": "stage_2_token_segmentation",
+        "candidate_agents": [
+          "clause_mapping_agent",
+          "compliance_deviation_agent"
+        ],
+        "reason": "Eliminated by 50% segmentation rule: agent(s) ['clause_mapping_agent'] isolated as singleton (>50% chain token contribution or missing metrics).",
+        "evidence": {
+          "chain_id": "chain_1",
+          "groups_in_chain": [
+            {
+              "group_id": "chain_1_group_1",
+              "agent_ids": [
+                "clause_mapping_agent"
+              ],
+              "pct_of_chain": 61.94,
+              "reason": "single_agent_exceeds_50pct_threshold"
+            },
+            {
+              "group_id": "chain_1_group_2",
+              "agent_ids": [
+                "compliance_deviation_agent"
+              ],
+              "pct_of_chain": 38.06,
+              "reason": "singleton_group_after_boundary"
+            }
+          ]
+        }
       },
-      "tradeoffs_and_risks": {
-        "latency_tradeoff": "Significant latency reduction by eliminating one agent dispatch round-trip.",
-        "token_cost_tradeoff": "Eliminates duplicate system prompt overhead.",
-        "output_quality_risk": "Low (joint extraction is well within standard LLM contextual capabilities).",
-        "implementation_complexity": "Medium"
+      {
+        "stage": "stage_2_token_segmentation",
+        "candidate_agents": [
+          "evidence_validation_agent",
+          "contract_independent_review_agent"
+        ],
+        "reason": "Eliminated by 50% segmentation rule: candidate crosses a cumulative 50% segmentation boundary across distinct search groups.",
+        "evidence": {
+          "chain_id": "chain_2",
+          "groups_in_chain": [
+            {
+              "group_id": "chain_2_group_1",
+              "agent_ids": [
+                "evidence_validation_agent"
+              ],
+              "pct_of_chain": 22.46,
+              "reason": "singleton_group_after_boundary"
+            },
+            {
+              "group_id": "chain_2_group_2",
+              "agent_ids": [
+                "contract_independent_review_agent"
+              ],
+              "pct_of_chain": 29.39,
+              "reason": "singleton_group_after_boundary"
+            },
+            {
+              "group_id": "chain_2_group_3",
+              "agent_ids": [
+                "final_compliance_report_agent"
+              ],
+              "pct_of_chain": 48.15,
+              "reason": "singleton_group_after_boundary"
+            }
+          ]
+        }
       },
-      "tier": "Tier 1",
-      "requires_validation": false,
-      "allocated_key": "GROQ_API_KEY_4 (masked: gsk_...Bm5c)"
-    }
-  ],
+      {
+        "stage": "stage_2_token_segmentation",
+        "candidate_agents": [
+          "evidence_validation_agent",
+          "contract_independent_review_agent",
+          "final_compliance_report_agent"
+        ],
+        "reason": "Eliminated by 50% segmentation rule: candidate crosses a cumulative 50% segmentation boundary across distinct search groups.",
+        "evidence": {
+          "chain_id": "chain_2",
+          "groups_in_chain": [
+            {
+              "group_id": "chain_2_group_1",
+              "agent_ids": [
+                "evidence_validation_agent"
+              ],
+              "pct_of_chain": 22.46,
+              "reason": "singleton_group_after_boundary"
+            },
+            {
+              "group_id": "chain_2_group_2",
+              "agent_ids": [
+                "contract_independent_review_agent"
+              ],
+              "pct_of_chain": 29.39,
+              "reason": "singleton_group_after_boundary"
+            },
+            {
+              "group_id": "chain_2_group_3",
+              "agent_ids": [
+                "final_compliance_report_agent"
+              ],
+              "pct_of_chain": 48.15,
+              "reason": "singleton_group_after_boundary"
+            }
+          ]
+        }
+      },
+      {
+        "stage": "stage_2_token_segmentation",
+        "candidate_agents": [
+          "contract_independent_review_agent",
+          "final_compliance_report_agent"
+        ],
+        "reason": "Eliminated by 50% segmentation rule: candidate crosses a cumulative 50% segmentation boundary across distinct search groups.",
+        "evidence": {
+          "chain_id": "chain_2",
+          "groups_in_chain": [
+            {
+              "group_id": "chain_2_group_1",
+              "agent_ids": [
+                "evidence_validation_agent"
+              ],
+              "pct_of_chain": 22.46,
+              "reason": "singleton_group_after_boundary"
+            },
+            {
+              "group_id": "chain_2_group_2",
+              "agent_ids": [
+                "contract_independent_review_agent"
+              ],
+              "pct_of_chain": 29.39,
+              "reason": "singleton_group_after_boundary"
+            },
+            {
+              "group_id": "chain_2_group_3",
+              "agent_ids": [
+                "final_compliance_report_agent"
+              ],
+              "pct_of_chain": 48.15,
+              "reason": "singleton_group_after_boundary"
+            }
+          ]
+        }
+      }
+    ],
+    "candidates": []
+  },
   "workflow_parallelization_opportunities": [
     {
       "candidate_id": "PARALLEL-COMPLIANCE_DEVIATION_AGENT-RISK_AMBIGUITY_AGENT",
@@ -241,7 +504,8 @@
       "tier": "Tier 1",
       "requires_validation": false,
       "dependency_verified": true,
-      "allocated_key": "GROQ_API_KEY_5 (masked: gsk_...sK3t)"
+      "allocated_key": "GROQ_API_KEY_5 (masked: gsk_...sK3t)",
+      "feasibility_tier": "Tier 1: High potential, low trade-off"
     }
   ],
   "model_selection_recommendations": [
@@ -282,7 +546,8 @@
       },
       "tier": "Tier 2",
       "requires_validation": true,
-      "allocated_key": "GROQ_API_KEY_6 (masked: gsk_...qtlA)"
+      "allocated_key": "GROQ_API_KEY_6 (masked: gsk_...qtlA)",
+      "feasibility_tier": "Tier 2: High potential, moderate trade-off"
     },
     {
       "candidate_id": "MODEL-CONTRACT_INTAKE_AGENT",
@@ -321,299 +586,371 @@
       },
       "tier": "Tier 2",
       "requires_validation": true,
-      "allocated_key": "GROQ_API_KEY_6 (masked: gsk_...qtlA)"
+      "allocated_key": "GROQ_API_KEY_6 (masked: gsk_...qtlA)",
+      "feasibility_tier": "Tier 2: High potential, moderate trade-off"
     }
   ],
-  "prompt_optimization_opportunities": [
-    {
-      "candidate_id": "PROMPT-CLAUSE_EXTRACTION_AGENT",
-      "dimension": "prompt_optimization",
-      "title": "Compress Bloated Prompt Template for clause_extraction_agent",
-      "target_agents": [
-        "clause_extraction_agent"
-      ],
-      "observed_problem": "Prompt template for 'clause_extraction_agent' contains 99 words (1029 chars, ~732 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
-      "supporting_evidence": {
-        "mcp_stage_source": [
-          "stage_5_prompts",
-          "stage_7_tokens"
-        ],
-        "static_word_count": 99,
-        "static_char_length": 1029,
-        "mean_prompt_tokens": 732.5,
-        "sample_snippet": "f'''\\nContract ID: {c_id}\\nContract Text Clauses:\\n{raw_clauses}\\n\\nExtract each discrete clause:\\n- Assign stable clause_id (e.g. CLS-xxxx-PAY, CLS-xxxx-TERM).\\n- Clause type ('pa..."
-      },
-      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
-      "expected_benefit": {
-        "token_savings_pct": 35.0,
-        "token_savings_count": 256,
-        "cost_savings_pct": 35.0,
-        "latency_savings_pct": 15.0,
-        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
-      },
-      "tradeoffs_and_risks": {
-        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
-        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
-        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
-        "implementation_complexity": "Low"
-      },
-      "tier": "Tier 1",
-      "requires_validation": false,
+  "prompt_optimization_opportunities": {
+    "summary": {
+      "total_prompts_inspected": 10,
+      "prompts_exceeding_1000_tokens": 0,
+      "prompts_flagged_for_repetition": 1,
+      "groq_optimization_calls_made": 1,
+      "prompts_successfully_optimized": 0,
+      "rejected_by_post_optimization_validation": 1,
+      "original_token_count": 0,
+      "optimized_token_count": 0,
+      "additional_tokens_saved": 0,
+      "additional_token_savings_percentage": 0.0,
+      "cumulative_savings": null,
       "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
     },
-    {
-      "candidate_id": "PROMPT-CLAUSE_MAPPING_AGENT",
-      "dimension": "prompt_optimization",
-      "title": "Compress Bloated Prompt Template for clause_mapping_agent",
-      "target_agents": [
-        "clause_mapping_agent"
-      ],
-      "observed_problem": "Prompt template for 'clause_mapping_agent' contains 115 words (1170 chars, ~750 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
-      "supporting_evidence": {
-        "mcp_stage_source": [
-          "stage_5_prompts",
-          "stage_7_tokens"
+    "inspected_prompts": [
+      {
+        "target_id": "clause_extraction_agent",
+        "target_agents": [
+          "clause_extraction_agent"
         ],
-        "static_word_count": 115,
-        "static_char_length": 1170,
-        "mean_prompt_tokens": 750.5,
-        "sample_snippet": "f'''\\nContract ID: {contract_id}\\nPolicy ID: {policy_id}\\n\\nPolicy Requirements to Map:\\n{all_reqs}\\n\\nExtracted Contract Clauses:\\n{clauses}\\n\\nMap each requirement to matching co..."
-      },
-      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
-      "expected_benefit": {
-        "token_savings_pct": 35.0,
-        "token_savings_count": 263,
-        "cost_savings_pct": 35.0,
-        "latency_savings_pct": 15.0,
-        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
-      },
-      "tradeoffs_and_risks": {
-        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
-        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
-        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
-        "implementation_complexity": "Low"
-      },
-      "tier": "Tier 1",
-      "requires_validation": false,
-      "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
-    },
-    {
-      "candidate_id": "PROMPT-COMPLIANCE_DEVIATION_AGENT",
-      "dimension": "prompt_optimization",
-      "title": "Compress Bloated Prompt Template for compliance_deviation_agent",
-      "target_agents": [
-        "compliance_deviation_agent"
-      ],
-      "observed_problem": "Prompt template for 'compliance_deviation_agent' contains 129 words (1228 chars, ~479 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
-      "supporting_evidence": {
-        "mcp_stage_source": [
-          "stage_5_prompts",
-          "stage_7_tokens"
+        "originated_from_consolidation": false,
+        "prompt_source": "mcp_prompt_metrics_full",
+        "evidence_status": "sufficient",
+        "eligible": false,
+        "exceeds_1000_tokens": false,
+        "flagged_for_repetition": false,
+        "prompt_tokens": 322,
+        "char_count": 1029,
+        "word_count": 99,
+        "tokenization_method": "conservative_bpe_heuristic",
+        "is_exact_tokenizer": false,
+        "detected_redundancy_signals": [
+          "duplicate_role_or_responsibility_descriptions"
         ],
-        "static_word_count": 129,
-        "static_char_length": 1228,
-        "mean_prompt_tokens": 479.2,
-        "sample_snippet": "f'''\\nContract ID: {contract_id}\\nClause Mappings: {mappings}\\n\\nIdentify all compliance deviations:\\n- For any mapping with status 'conflicting' or 'unaddressed' (on a mandatory r..."
+        "signal_details": {
+          "repeated_line_count": 0,
+          "repeated_sentence_count": 0,
+          "repeated_ngram_count": 0,
+          "repeated_static_dict_count": 0,
+          "repeated_schema_line_count": 0,
+          "role_marker_count": 2,
+          "preamble_marker_count": 0,
+          "handoff_marker_count": 0,
+          "constraint_marker_count": 0,
+          "duplicate_line_ratio": 0.0
+        },
+        "eligibility_reason": "concise_prompt_below_threshold_no_substantial_repetition"
       },
-      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
-      "expected_benefit": {
-        "token_savings_pct": 35.0,
-        "token_savings_count": 168,
-        "cost_savings_pct": 35.0,
-        "latency_savings_pct": 15.0,
-        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
-      },
-      "tradeoffs_and_risks": {
-        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
-        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
-        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
-        "implementation_complexity": "Low"
-      },
-      "tier": "Tier 1",
-      "requires_validation": false,
-      "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
-    },
-    {
-      "candidate_id": "PROMPT-CONTRACT_INDEPENDENT_REVIEW_AGENT",
-      "dimension": "prompt_optimization",
-      "title": "Compress Bloated Prompt Template for contract_independent_review_agent",
-      "target_agents": [
-        "contract_independent_review_agent"
-      ],
-      "observed_problem": "Prompt template for 'contract_independent_review_agent' contains 104 words (1057 chars, ~1102 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
-      "supporting_evidence": {
-        "mcp_stage_source": [
-          "stage_5_prompts",
-          "stage_7_tokens"
+      {
+        "target_id": "clause_mapping_agent",
+        "target_agents": [
+          "clause_mapping_agent"
         ],
-        "static_word_count": 104,
-        "static_char_length": 1057,
-        "mean_prompt_tokens": 1102.4,
-        "sample_snippet": "f'''\\nContract ID: {contract_id}\\nDeviations Count: {len(deviations)} ({deviations})\\nRisks Count: {len(risks)} ({risks})\\nInconsistencies Count: {len(inconsistencies)} ({inconsist..."
-      },
-      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
-      "expected_benefit": {
-        "token_savings_pct": 35.0,
-        "token_savings_count": 386,
-        "cost_savings_pct": 35.0,
-        "latency_savings_pct": 15.0,
-        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
-      },
-      "tradeoffs_and_risks": {
-        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
-        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
-        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
-        "implementation_complexity": "Low"
-      },
-      "tier": "Tier 1",
-      "requires_validation": false,
-      "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
-    },
-    {
-      "candidate_id": "PROMPT-CROSS_CLAUSE_CONSISTENCY_AGENT",
-      "dimension": "prompt_optimization",
-      "title": "Compress Bloated Prompt Template for cross_clause_consistency_agent",
-      "target_agents": [
-        "cross_clause_consistency_agent"
-      ],
-      "observed_problem": "Prompt template for 'cross_clause_consistency_agent' contains 141 words (1342 chars, ~1176 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
-      "supporting_evidence": {
-        "mcp_stage_source": [
-          "stage_5_prompts",
-          "stage_7_tokens"
+        "originated_from_consolidation": false,
+        "prompt_source": "mcp_prompt_metrics_full",
+        "evidence_status": "sufficient",
+        "eligible": false,
+        "exceeds_1000_tokens": false,
+        "flagged_for_repetition": false,
+        "prompt_tokens": 371,
+        "char_count": 1170,
+        "word_count": 115,
+        "tokenization_method": "conservative_bpe_heuristic",
+        "is_exact_tokenizer": false,
+        "detected_redundancy_signals": [
+          "duplicate_role_or_responsibility_descriptions"
         ],
-        "static_word_count": 141,
-        "static_char_length": 1342,
-        "mean_prompt_tokens": 1176.4,
-        "sample_snippet": "f'\\nContract ID: {contract_id}\\nEffective Date: {eff_date}\\nExpiration Date: {exp_date}\\nExtracted Clauses:\\n{clauses}\\n\\nAudit for internal contradictions:\\n1. Check date consiste..."
+        "signal_details": {
+          "repeated_line_count": 0,
+          "repeated_sentence_count": 0,
+          "repeated_ngram_count": 0,
+          "repeated_static_dict_count": 0,
+          "repeated_schema_line_count": 0,
+          "role_marker_count": 2,
+          "preamble_marker_count": 0,
+          "handoff_marker_count": 0,
+          "constraint_marker_count": 0,
+          "duplicate_line_ratio": 0.0
+        },
+        "eligibility_reason": "concise_prompt_below_threshold_no_substantial_repetition"
       },
-      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
-      "expected_benefit": {
-        "token_savings_pct": 35.0,
-        "token_savings_count": 412,
-        "cost_savings_pct": 35.0,
-        "latency_savings_pct": 15.0,
-        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
-      },
-      "tradeoffs_and_risks": {
-        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
-        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
-        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
-        "implementation_complexity": "Low"
-      },
-      "tier": "Tier 1",
-      "requires_validation": false,
-      "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
-    },
-    {
-      "candidate_id": "PROMPT-EVIDENCE_VALIDATION_AGENT",
-      "dimension": "prompt_optimization",
-      "title": "Compress Bloated Prompt Template for evidence_validation_agent",
-      "target_agents": [
-        "evidence_validation_agent"
-      ],
-      "observed_problem": "Prompt template for 'evidence_validation_agent' contains 115 words (1058 chars, ~1321 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
-      "supporting_evidence": {
-        "mcp_stage_source": [
-          "stage_5_prompts",
-          "stage_7_tokens"
+      {
+        "target_id": "compliance_deviation_agent",
+        "target_agents": [
+          "compliance_deviation_agent"
         ],
-        "static_word_count": 115,
-        "static_char_length": 1058,
-        "mean_prompt_tokens": 1320.7,
-        "sample_snippet": "f'\\nContract ID: {contract_id}\\nValid Clause IDs in Document: {valid_clause_ids}\\nValid Policy Requirement IDs: {valid_req_ids}\\n\\nFindings to Validate:\\n- Deviations: {deviations}..."
-      },
-      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
-      "expected_benefit": {
-        "token_savings_pct": 35.0,
-        "token_savings_count": 462,
-        "cost_savings_pct": 35.0,
-        "latency_savings_pct": 15.0,
-        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
-      },
-      "tradeoffs_and_risks": {
-        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
-        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
-        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
-        "implementation_complexity": "Low"
-      },
-      "tier": "Tier 1",
-      "requires_validation": false,
-      "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
-    },
-    {
-      "candidate_id": "PROMPT-FINAL_COMPLIANCE_REPORT_AGENT",
-      "dimension": "prompt_optimization",
-      "title": "Compress Bloated Prompt Template for final_compliance_report_agent",
-      "target_agents": [
-        "final_compliance_report_agent"
-      ],
-      "observed_problem": "Prompt template for 'final_compliance_report_agent' contains 203 words (2073 chars, ~1854 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
-      "supporting_evidence": {
-        "mcp_stage_source": [
-          "stage_5_prompts",
-          "stage_7_tokens"
+        "originated_from_consolidation": false,
+        "prompt_source": "mcp_prompt_metrics_full",
+        "evidence_status": "sufficient",
+        "eligible": false,
+        "exceeds_1000_tokens": false,
+        "flagged_for_repetition": false,
+        "prompt_tokens": 355,
+        "char_count": 1228,
+        "word_count": 129,
+        "tokenization_method": "conservative_bpe_heuristic",
+        "is_exact_tokenizer": false,
+        "detected_redundancy_signals": [
+          "duplicate_role_or_responsibility_descriptions"
         ],
-        "static_word_count": 203,
-        "static_char_length": 2073,
-        "mean_prompt_tokens": 1854.3,
-        "sample_snippet": "f'''\\nAssemble the definitive final contract review report:\\n- Run ID: {run_id}\\n- Contract ID: {c_id} (Version {c_ver}, Type: {c_type})\\n- Policy ID: {p_id} (Version {p_ver})\\n- C..."
+        "signal_details": {
+          "repeated_line_count": 0,
+          "repeated_sentence_count": 0,
+          "repeated_ngram_count": 0,
+          "repeated_static_dict_count": 0,
+          "repeated_schema_line_count": 0,
+          "role_marker_count": 2,
+          "preamble_marker_count": 0,
+          "handoff_marker_count": 0,
+          "constraint_marker_count": 0,
+          "duplicate_line_ratio": 0.0
+        },
+        "eligibility_reason": "concise_prompt_below_threshold_no_substantial_repetition"
       },
-      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
-      "expected_benefit": {
-        "token_savings_pct": 35.0,
-        "token_savings_count": 649,
-        "cost_savings_pct": 35.0,
-        "latency_savings_pct": 15.0,
-        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
-      },
-      "tradeoffs_and_risks": {
-        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
-        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
-        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
-        "implementation_complexity": "Low"
-      },
-      "tier": "Tier 1",
-      "requires_validation": false,
-      "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
-    },
-    {
-      "candidate_id": "PROMPT-RISK_AMBIGUITY_AGENT",
-      "dimension": "prompt_optimization",
-      "title": "Compress Bloated Prompt Template for risk_ambiguity_agent",
-      "target_agents": [
-        "risk_ambiguity_agent"
-      ],
-      "observed_problem": "Prompt template for 'risk_ambiguity_agent' contains 102 words (1085 chars, ~630 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
-      "supporting_evidence": {
-        "mcp_stage_source": [
-          "stage_5_prompts",
-          "stage_7_tokens"
+      {
+        "target_id": "contract_independent_review_agent",
+        "target_agents": [
+          "contract_independent_review_agent"
         ],
-        "static_word_count": 102,
-        "static_char_length": 1085,
-        "mean_prompt_tokens": 629.5,
-        "sample_snippet": "f'''\\nContract ID: {contract_id}\\nContract Clauses to Inspect for Ambiguity:\\n{clauses}\\n\\nIdentify ambiguous phrases, vague timelines, or open-ended liabilities:\\n- Look for non-c..."
+        "originated_from_consolidation": false,
+        "prompt_source": "mcp_prompt_metrics_full",
+        "evidence_status": "sufficient",
+        "eligible": false,
+        "exceeds_1000_tokens": false,
+        "flagged_for_repetition": false,
+        "prompt_tokens": 302,
+        "char_count": 1057,
+        "word_count": 104,
+        "tokenization_method": "conservative_bpe_heuristic",
+        "is_exact_tokenizer": false,
+        "detected_redundancy_signals": [
+          "duplicate_role_or_responsibility_descriptions"
+        ],
+        "signal_details": {
+          "repeated_line_count": 0,
+          "repeated_sentence_count": 0,
+          "repeated_ngram_count": 0,
+          "repeated_static_dict_count": 0,
+          "repeated_schema_line_count": 0,
+          "role_marker_count": 2,
+          "preamble_marker_count": 0,
+          "handoff_marker_count": 0,
+          "constraint_marker_count": 0,
+          "duplicate_line_ratio": 0.0
+        },
+        "eligibility_reason": "concise_prompt_below_threshold_no_substantial_repetition"
       },
-      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
-      "expected_benefit": {
-        "token_savings_pct": 35.0,
-        "token_savings_count": 220,
-        "cost_savings_pct": 35.0,
-        "latency_savings_pct": 15.0,
-        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+      {
+        "target_id": "contract_intake_agent",
+        "target_agents": [
+          "contract_intake_agent"
+        ],
+        "originated_from_consolidation": false,
+        "prompt_source": "mcp_prompt_metrics_full",
+        "evidence_status": "sufficient",
+        "eligible": false,
+        "exceeds_1000_tokens": false,
+        "flagged_for_repetition": false,
+        "prompt_tokens": 474,
+        "char_count": 1316,
+        "word_count": 99,
+        "tokenization_method": "conservative_bpe_heuristic",
+        "is_exact_tokenizer": false,
+        "detected_redundancy_signals": [
+          "duplicate_role_or_responsibility_descriptions"
+        ],
+        "signal_details": {
+          "repeated_line_count": 0,
+          "repeated_sentence_count": 0,
+          "repeated_ngram_count": 0,
+          "repeated_static_dict_count": 0,
+          "repeated_schema_line_count": 0,
+          "role_marker_count": 2,
+          "preamble_marker_count": 0,
+          "handoff_marker_count": 0,
+          "constraint_marker_count": 0,
+          "duplicate_line_ratio": 0.0
+        },
+        "eligibility_reason": "concise_prompt_below_threshold_no_substantial_repetition"
       },
-      "tradeoffs_and_risks": {
-        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
-        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
-        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
-        "implementation_complexity": "Low"
+      {
+        "target_id": "cross_clause_consistency_agent",
+        "target_agents": [
+          "cross_clause_consistency_agent"
+        ],
+        "originated_from_consolidation": false,
+        "prompt_source": "mcp_prompt_metrics_full",
+        "evidence_status": "sufficient",
+        "eligible": true,
+        "exceeds_1000_tokens": false,
+        "flagged_for_repetition": true,
+        "prompt_tokens": 384,
+        "char_count": 1342,
+        "word_count": 141,
+        "tokenization_method": "conservative_bpe_heuristic",
+        "is_exact_tokenizer": false,
+        "detected_redundancy_signals": [
+          "repeated_instructions_or_phrases",
+          "duplicate_role_or_responsibility_descriptions"
+        ],
+        "signal_details": {
+          "repeated_line_count": 0,
+          "repeated_sentence_count": 0,
+          "repeated_ngram_count": 2,
+          "repeated_static_dict_count": 0,
+          "repeated_schema_line_count": 0,
+          "role_marker_count": 3,
+          "preamble_marker_count": 0,
+          "handoff_marker_count": 0,
+          "constraint_marker_count": 0,
+          "duplicate_line_ratio": 0.0
+        },
+        "eligibility_reason": "substantial_repetition_detected"
       },
-      "tier": "Tier 1",
-      "requires_validation": false,
-      "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
-    }
-  ],
+      {
+        "target_id": "evidence_validation_agent",
+        "target_agents": [
+          "evidence_validation_agent"
+        ],
+        "originated_from_consolidation": false,
+        "prompt_source": "mcp_prompt_metrics_full",
+        "evidence_status": "sufficient",
+        "eligible": false,
+        "exceeds_1000_tokens": false,
+        "flagged_for_repetition": false,
+        "prompt_tokens": 303,
+        "char_count": 1058,
+        "word_count": 115,
+        "tokenization_method": "conservative_bpe_heuristic",
+        "is_exact_tokenizer": false,
+        "detected_redundancy_signals": [
+          "duplicate_role_or_responsibility_descriptions"
+        ],
+        "signal_details": {
+          "repeated_line_count": 0,
+          "repeated_sentence_count": 0,
+          "repeated_ngram_count": 0,
+          "repeated_static_dict_count": 0,
+          "repeated_schema_line_count": 0,
+          "role_marker_count": 2,
+          "preamble_marker_count": 0,
+          "handoff_marker_count": 0,
+          "constraint_marker_count": 0,
+          "duplicate_line_ratio": 0.0
+        },
+        "eligibility_reason": "concise_prompt_below_threshold_no_substantial_repetition"
+      },
+      {
+        "target_id": "final_compliance_report_agent",
+        "target_agents": [
+          "final_compliance_report_agent"
+        ],
+        "originated_from_consolidation": false,
+        "prompt_source": "mcp_prompt_metrics_full",
+        "evidence_status": "sufficient",
+        "eligible": false,
+        "exceeds_1000_tokens": false,
+        "flagged_for_repetition": false,
+        "prompt_tokens": 596,
+        "char_count": 2073,
+        "word_count": 203,
+        "tokenization_method": "conservative_bpe_heuristic",
+        "is_exact_tokenizer": false,
+        "detected_redundancy_signals": [
+          "duplicate_role_or_responsibility_descriptions"
+        ],
+        "signal_details": {
+          "repeated_line_count": 0,
+          "repeated_sentence_count": 0,
+          "repeated_ngram_count": 0,
+          "repeated_static_dict_count": 0,
+          "repeated_schema_line_count": 0,
+          "role_marker_count": 2,
+          "preamble_marker_count": 0,
+          "handoff_marker_count": 0,
+          "constraint_marker_count": 0,
+          "duplicate_line_ratio": 0.0
+        },
+        "eligibility_reason": "concise_prompt_below_threshold_no_substantial_repetition"
+      },
+      {
+        "target_id": "policy_interpretation_agent",
+        "target_agents": [
+          "policy_interpretation_agent"
+        ],
+        "originated_from_consolidation": false,
+        "prompt_source": "mcp_prompt_metrics_full",
+        "evidence_status": "sufficient",
+        "eligible": false,
+        "exceeds_1000_tokens": false,
+        "flagged_for_repetition": false,
+        "prompt_tokens": 339,
+        "char_count": 1093,
+        "word_count": 88,
+        "tokenization_method": "conservative_bpe_heuristic",
+        "is_exact_tokenizer": false,
+        "detected_redundancy_signals": [
+          "duplicate_role_or_responsibility_descriptions"
+        ],
+        "signal_details": {
+          "repeated_line_count": 0,
+          "repeated_sentence_count": 0,
+          "repeated_ngram_count": 0,
+          "repeated_static_dict_count": 0,
+          "repeated_schema_line_count": 0,
+          "role_marker_count": 2,
+          "preamble_marker_count": 0,
+          "handoff_marker_count": 0,
+          "constraint_marker_count": 0,
+          "duplicate_line_ratio": 0.0
+        },
+        "eligibility_reason": "concise_prompt_below_threshold_no_substantial_repetition"
+      },
+      {
+        "target_id": "risk_ambiguity_agent",
+        "target_agents": [
+          "risk_ambiguity_agent"
+        ],
+        "originated_from_consolidation": false,
+        "prompt_source": "mcp_prompt_metrics_full",
+        "evidence_status": "sufficient",
+        "eligible": false,
+        "exceeds_1000_tokens": false,
+        "flagged_for_repetition": false,
+        "prompt_tokens": 325,
+        "char_count": 1085,
+        "word_count": 102,
+        "tokenization_method": "conservative_bpe_heuristic",
+        "is_exact_tokenizer": false,
+        "detected_redundancy_signals": [
+          "duplicate_role_or_responsibility_descriptions"
+        ],
+        "signal_details": {
+          "repeated_line_count": 0,
+          "repeated_sentence_count": 0,
+          "repeated_ngram_count": 0,
+          "repeated_static_dict_count": 0,
+          "repeated_schema_line_count": 0,
+          "role_marker_count": 2,
+          "preamble_marker_count": 0,
+          "handoff_marker_count": 0,
+          "constraint_marker_count": 0,
+          "duplicate_line_ratio": 0.0
+        },
+        "eligibility_reason": "concise_prompt_below_threshold_no_substantial_repetition"
+      }
+    ],
+    "rejected_optimizations": [
+      {
+        "target_id": "cross_clause_consistency_agent",
+        "target_agents": [
+          "cross_clause_consistency_agent"
+        ],
+        "originated_from_consolidation": false,
+        "rejection_reason": "llm_optimization_error:groq_api_error:APIConnectionError",
+        "original_prompt_retained": true
+      }
+    ],
+    "candidates": []
+  },
   "tool_optimization_opportunities": [
     {
       "candidate_id": "TOOL-CLAUSE_EXTRACTION_AGENT",
@@ -645,52 +982,2498 @@
       },
       "tier": "Tier 1",
       "requires_validation": false,
-      "allocated_key": "GROQ_API_KEY_8 (masked: gsk_...AwPO)"
+      "allocated_key": "GROQ_API_KEY_8 (masked: gsk_...AwPO)",
+      "feasibility_tier": "Tier 1: High potential, low trade-off"
     }
   ],
-  "communication_optimization_opportunities": [
-    {
-      "candidate_id": "COMM-STATE-STREAMLINING",
-      "dimension": "communication_optimization",
-      "title": "Streamline Intermediate Handoff Payloads to Field-Specific Deltas",
-      "target_agents": [
-        "clause_extraction_agent",
-        "clause_mapping_agent",
-        "compliance_deviation_agent",
-        "contract_independent_review_agent"
-      ],
-      "observed_problem": "Workflow passes full document and global context payloads across sequential agent boundaries (41 detected handoff edges). Intermediate agents receive unneeded upstream metadata, inflating prompt token consumption across every stage.",
-      "supporting_evidence": {
-        "mcp_stage_source": [
-          "stage_3_graph",
-          "stage_10_evidence"
-        ],
-        "total_handoff_edges": 41,
-        "inspected_agents": [
-          "clause_extraction_agent",
-          "clause_mapping_agent",
-          "compliance_deviation_agent",
-          "contract_independent_review_agent"
-        ]
-      },
-      "proposed_solution": "Replace raw full-state serialization with typed, field-specific projection schemas. Each agent receives strictly its declared input requirements and emits only newly computed attributes.",
-      "expected_benefit": {
-        "token_savings_pct": 22.0,
-        "latency_savings_pct": 10.0,
-        "cost_savings_pct": 22.0,
-        "quality_impact": "Reduces context dilution and LLM attention distraction."
-      },
-      "tradeoffs_and_risks": {
-        "latency_tradeoff": "Reduces prompt processing latency.",
-        "token_cost_tradeoff": "20-25% reduction in cumulative workflow token volume.",
-        "output_quality_risk": "Low (formalized through Pydantic handoff schemas).",
-        "implementation_complexity": "Medium"
-      },
-      "tier": "Tier 1",
-      "requires_validation": false,
+  "communication_optimization_opportunities": {
+    "dimension": "communication_data_handoff",
+    "summary": {
+      "total_verified_handoffs_identified": 12,
+      "handoffs_with_runtime_payload_evidence": 12,
+      "statically_inferred_handoffs": 0,
+      "large_payloads_detected": 7,
+      "potential_redundant_fields_identified": 13,
+      "duplicate_fields_identified": 0,
+      "uncertain_fields_identified": 24,
+      "handoffs_analyzed_without_groq": 3,
+      "handoffs_requiring_groq_semantic_analysis": 9,
+      "groq_calls_made": 9,
+      "compact_payload_recommendations_generated": 6,
+      "original_payload_tokens": 1768,
+      "proposed_payload_tokens": 1312,
+      "tokens_saved": 456,
+      "percentage_reduction": 25.79,
+      "dependency_evidence_status": "verified",
+      "warnings": [],
       "allocated_key": "GROQ_API_KEY_9 (masked: gsk_...k7Gf)"
-    }
-  ],
+    },
+    "handoffs_analyzed": [
+      {
+        "handoff_id": "contract_intake_agent->clause_extraction_agent",
+        "producer_agent": "contract_intake_agent",
+        "consumer_agent": "clause_extraction_agent",
+        "evidence_quality": "runtime_observed",
+        "payload_source": "runtime_producer_output",
+        "transmitted_fields": [
+          "document_id",
+          "contract_id",
+          "contract_title",
+          "contract_type",
+          "contract_version",
+          "policy_id",
+          "policy_version",
+          "document_complete",
+          "section_count",
+          "source_metadata",
+          "intake_warnings"
+        ],
+        "original_payload_tokens": 187,
+        "original_payload_bytes": 521,
+        "is_large_payload": false,
+        "required_fields": [
+          "contract_id"
+        ],
+        "used_fields": [],
+        "potentially_redundant_fields": [
+          "source_metadata",
+          "intake_warnings"
+        ],
+        "duplicate_fields": [],
+        "uncertain_fields": [
+          "document_id",
+          "contract_title",
+          "contract_type",
+          "contract_version",
+          "policy_id",
+          "policy_version",
+          "document_complete",
+          "section_count"
+        ],
+        "analyzed_with_groq": true,
+        "groq_accepted": false,
+        "recommendation_generated": true
+      },
+      {
+        "handoff_id": "contract_intake_agent->policy_interpretation_agent",
+        "producer_agent": "contract_intake_agent",
+        "consumer_agent": "policy_interpretation_agent",
+        "evidence_quality": "runtime_observed",
+        "payload_source": "runtime_producer_output",
+        "transmitted_fields": [
+          "document_id",
+          "contract_id",
+          "contract_title",
+          "contract_type",
+          "contract_version",
+          "policy_id",
+          "policy_version",
+          "document_complete",
+          "section_count",
+          "source_metadata",
+          "intake_warnings"
+        ],
+        "original_payload_tokens": 187,
+        "original_payload_bytes": 521,
+        "is_large_payload": false,
+        "required_fields": [
+          "policy_id",
+          "policy_version"
+        ],
+        "used_fields": [],
+        "potentially_redundant_fields": [
+          "document_id",
+          "contract_id",
+          "contract_title",
+          "document_complete",
+          "section_count",
+          "source_metadata",
+          "intake_warnings"
+        ],
+        "duplicate_fields": [],
+        "uncertain_fields": [
+          "contract_type",
+          "contract_version"
+        ],
+        "analyzed_with_groq": true,
+        "groq_accepted": false,
+        "recommendation_generated": true
+      },
+      {
+        "handoff_id": "clause_extraction_agent->clause_mapping_agent",
+        "producer_agent": "clause_extraction_agent",
+        "consumer_agent": "clause_mapping_agent",
+        "evidence_quality": "runtime_observed",
+        "payload_source": "runtime_producer_output",
+        "transmitted_fields": [
+          "contract_id",
+          "clauses",
+          "absent_clause_types",
+          "extraction_notes"
+        ],
+        "original_payload_tokens": 478,
+        "original_payload_bytes": 1580,
+        "is_large_payload": true,
+        "required_fields": [
+          "contract_id",
+          "clauses"
+        ],
+        "used_fields": [],
+        "potentially_redundant_fields": [],
+        "duplicate_fields": [],
+        "uncertain_fields": [
+          "absent_clause_types",
+          "extraction_notes"
+        ],
+        "analyzed_with_groq": true,
+        "groq_accepted": false,
+        "recommendation_generated": false
+      },
+      {
+        "handoff_id": "policy_interpretation_agent->clause_mapping_agent",
+        "producer_agent": "policy_interpretation_agent",
+        "consumer_agent": "clause_mapping_agent",
+        "evidence_quality": "runtime_observed",
+        "payload_source": "runtime_producer_output",
+        "transmitted_fields": [
+          "policy_id",
+          "policy_version",
+          "policy_name",
+          "mandatory_requirements",
+          "recommended_requirements",
+          "ambiguities_in_policy"
+        ],
+        "original_payload_tokens": 199,
+        "original_payload_bytes": 583,
+        "is_large_payload": false,
+        "required_fields": [
+          "policy_id",
+          "mandatory_requirements",
+          "recommended_requirements"
+        ],
+        "used_fields": [],
+        "potentially_redundant_fields": [],
+        "duplicate_fields": [],
+        "uncertain_fields": [
+          "policy_version",
+          "policy_name",
+          "ambiguities_in_policy"
+        ],
+        "analyzed_with_groq": true,
+        "groq_accepted": false,
+        "recommendation_generated": false
+      },
+      {
+        "handoff_id": "clause_mapping_agent->compliance_deviation_agent",
+        "producer_agent": "clause_mapping_agent",
+        "consumer_agent": "compliance_deviation_agent",
+        "evidence_quality": "runtime_observed",
+        "payload_source": "runtime_producer_output",
+        "transmitted_fields": [
+          "contract_id",
+          "policy_id",
+          "mappings",
+          "coverage_percentage"
+        ],
+        "original_payload_tokens": 160,
+        "original_payload_bytes": 469,
+        "is_large_payload": false,
+        "required_fields": [
+          "contract_id",
+          "mappings"
+        ],
+        "used_fields": [],
+        "potentially_redundant_fields": [
+          "coverage_percentage"
+        ],
+        "duplicate_fields": [],
+        "uncertain_fields": [
+          "policy_id"
+        ],
+        "analyzed_with_groq": true,
+        "groq_accepted": false,
+        "recommendation_generated": true
+      },
+      {
+        "handoff_id": "clause_extraction_agent->risk_ambiguity_agent",
+        "producer_agent": "clause_extraction_agent",
+        "consumer_agent": "risk_ambiguity_agent",
+        "evidence_quality": "runtime_observed",
+        "payload_source": "runtime_producer_output",
+        "transmitted_fields": [
+          "contract_id",
+          "clauses",
+          "absent_clause_types",
+          "extraction_notes"
+        ],
+        "original_payload_tokens": 478,
+        "original_payload_bytes": 1580,
+        "is_large_payload": true,
+        "required_fields": [
+          "contract_id",
+          "clauses"
+        ],
+        "used_fields": [],
+        "potentially_redundant_fields": [
+          "extraction_notes"
+        ],
+        "duplicate_fields": [],
+        "uncertain_fields": [
+          "absent_clause_types"
+        ],
+        "analyzed_with_groq": true,
+        "groq_accepted": false,
+        "recommendation_generated": true
+      },
+      {
+        "handoff_id": "clause_extraction_agent->cross_clause_consistency_agent",
+        "producer_agent": "clause_extraction_agent",
+        "consumer_agent": "cross_clause_consistency_agent",
+        "evidence_quality": "runtime_observed",
+        "payload_source": "runtime_producer_output",
+        "transmitted_fields": [
+          "contract_id",
+          "clauses",
+          "absent_clause_types",
+          "extraction_notes"
+        ],
+        "original_payload_tokens": 478,
+        "original_payload_bytes": 1580,
+        "is_large_payload": true,
+        "required_fields": [
+          "contract_id",
+          "clauses"
+        ],
+        "used_fields": [],
+        "potentially_redundant_fields": [
+          "extraction_notes"
+        ],
+        "duplicate_fields": [],
+        "uncertain_fields": [
+          "absent_clause_types"
+        ],
+        "analyzed_with_groq": true,
+        "groq_accepted": false,
+        "recommendation_generated": true
+      },
+      {
+        "handoff_id": "compliance_deviation_agent->evidence_validation_agent",
+        "producer_agent": "compliance_deviation_agent",
+        "consumer_agent": "evidence_validation_agent",
+        "evidence_quality": "runtime_observed",
+        "payload_source": "runtime_producer_output",
+        "transmitted_fields": [
+          "contract_id",
+          "deviations",
+          "has_critical_deviations"
+        ],
+        "original_payload_tokens": 174,
+        "original_payload_bytes": 609,
+        "is_large_payload": true,
+        "required_fields": [
+          "contract_id",
+          "deviations"
+        ],
+        "used_fields": [],
+        "potentially_redundant_fields": [],
+        "duplicate_fields": [],
+        "uncertain_fields": [
+          "has_critical_deviations"
+        ],
+        "analyzed_with_groq": false,
+        "groq_accepted": false,
+        "recommendation_generated": false
+      },
+      {
+        "handoff_id": "risk_ambiguity_agent->evidence_validation_agent",
+        "producer_agent": "risk_ambiguity_agent",
+        "consumer_agent": "evidence_validation_agent",
+        "evidence_quality": "runtime_observed",
+        "payload_source": "runtime_producer_output",
+        "transmitted_fields": [
+          "contract_id",
+          "risk_findings"
+        ],
+        "original_payload_tokens": 632,
+        "original_payload_bytes": 2200,
+        "is_large_payload": true,
+        "required_fields": [
+          "contract_id",
+          "risk_findings"
+        ],
+        "used_fields": [],
+        "potentially_redundant_fields": [],
+        "duplicate_fields": [],
+        "uncertain_fields": [],
+        "analyzed_with_groq": false,
+        "groq_accepted": false,
+        "recommendation_generated": false
+      },
+      {
+        "handoff_id": "cross_clause_consistency_agent->evidence_validation_agent",
+        "producer_agent": "cross_clause_consistency_agent",
+        "consumer_agent": "evidence_validation_agent",
+        "evidence_quality": "runtime_observed",
+        "payload_source": "runtime_producer_output",
+        "transmitted_fields": [
+          "contract_id",
+          "inconsistencies"
+        ],
+        "original_payload_tokens": 23,
+        "original_payload_bytes": 55,
+        "is_large_payload": false,
+        "required_fields": [
+          "contract_id",
+          "inconsistencies"
+        ],
+        "used_fields": [],
+        "potentially_redundant_fields": [],
+        "duplicate_fields": [],
+        "uncertain_fields": [],
+        "analyzed_with_groq": false,
+        "groq_accepted": false,
+        "recommendation_generated": false
+      },
+      {
+        "handoff_id": "evidence_validation_agent->contract_independent_review_agent",
+        "producer_agent": "evidence_validation_agent",
+        "consumer_agent": "contract_independent_review_agent",
+        "evidence_quality": "runtime_observed",
+        "payload_source": "runtime_producer_output",
+        "transmitted_fields": [
+          "contract_id",
+          "all_citations_valid",
+          "verified_finding_ids",
+          "invalid_or_unsupported_findings",
+          "evidence_notes"
+        ],
+        "original_payload_tokens": 278,
+        "original_payload_bytes": 819,
+        "is_large_payload": true,
+        "required_fields": [
+          "contract_id",
+          "all_citations_valid"
+        ],
+        "used_fields": [],
+        "potentially_redundant_fields": [
+          "evidence_notes"
+        ],
+        "duplicate_fields": [],
+        "uncertain_fields": [
+          "verified_finding_ids",
+          "invalid_or_unsupported_findings"
+        ],
+        "analyzed_with_groq": true,
+        "groq_accepted": false,
+        "recommendation_generated": true
+      },
+      {
+        "handoff_id": "contract_independent_review_agent->final_compliance_report_agent",
+        "producer_agent": "contract_independent_review_agent",
+        "consumer_agent": "final_compliance_report_agent",
+        "evidence_quality": "runtime_observed",
+        "payload_source": "runtime_producer_output",
+        "transmitted_fields": [
+          "contract_id",
+          "calibrated_deviations",
+          "calibrated_risks",
+          "review_notes"
+        ],
+        "original_payload_tokens": 988,
+        "original_payload_bytes": 3469,
+        "is_large_payload": true,
+        "required_fields": [
+          "contract_id"
+        ],
+        "used_fields": [],
+        "potentially_redundant_fields": [],
+        "duplicate_fields": [],
+        "uncertain_fields": [
+          "calibrated_deviations",
+          "calibrated_risks",
+          "review_notes"
+        ],
+        "analyzed_with_groq": true,
+        "groq_accepted": false,
+        "recommendation_generated": false
+      }
+    ],
+    "candidates": [
+      {
+        "candidate_id": "HANDOFF-CONTRACT_INTAKE_AGENT-TO-CLAUSE_EXTRACTION_AGENT",
+        "dimension": "communication_data_handoff",
+        "title": "Compact Handoff Payload Schema for contract_intake_agent -> clause_extraction_agent",
+        "target_agents": [
+          "contract_intake_agent",
+          "clause_extraction_agent"
+        ],
+        "observed_problem": "Verified handoff 'contract_intake_agent -> clause_extraction_agent' transmits 11 field(s) (['document_id', 'contract_id', 'contract_title', 'contract_type', 'contract_version', 'policy_id', 'policy_version', 'document_complete', 'section_count', 'source_metadata', 'intake_warnings']), of which 2 (['source_metadata', 'intake_warnings']) are redundant or duplicate for downstream consumption. Observed single-execution payload measures 187 tokens (521 bytes, runtime_payload_observed); compact projection reduces payload to 122 tokens (346 bytes, -65 tokens / 34.76%).",
+        "supporting_evidence": {
+          "mcp_stage_source": [
+            "stage_3_graph",
+            "stage_4_profiles",
+            "stage_10_evidence"
+          ],
+          "producer_agent": "contract_intake_agent",
+          "consumer_agent": "clause_extraction_agent",
+          "verified_dependency_relationship": "declared_dependency",
+          "original_transmitted_fields": [
+            "document_id",
+            "contract_id",
+            "contract_title",
+            "contract_type",
+            "contract_version",
+            "policy_id",
+            "policy_version",
+            "document_complete",
+            "section_count",
+            "source_metadata",
+            "intake_warnings"
+          ],
+          "consumer_required_fields": [
+            "contract_id"
+          ],
+          "consumer_used_fields": [],
+          "conditional_fields_preserved": [],
+          "potentially_redundant_fields": [
+            "intake_warnings",
+            "source_metadata"
+          ],
+          "duplicate_fields": [],
+          "uncertain_fields": [
+            "contract_title",
+            "document_id",
+            "policy_version",
+            "contract_type",
+            "document_complete",
+            "section_count",
+            "contract_version",
+            "policy_id"
+          ],
+          "fields_retained": [
+            "document_id",
+            "contract_id",
+            "contract_title",
+            "contract_type",
+            "contract_version",
+            "policy_id",
+            "policy_version",
+            "document_complete",
+            "section_count"
+          ],
+          "fields_excluded": [
+            "source_metadata",
+            "intake_warnings"
+          ],
+          "fields_replaced_with_reference": [],
+          "field_change_reasons": {
+            "document_id": "Conservatively retained (uncertain necessity).",
+            "contract_id": "Explicitly listed in consumer declared_inputs",
+            "contract_title": "Conservatively retained (uncertain necessity).",
+            "contract_type": "Conservatively retained (uncertain necessity).",
+            "contract_version": "Conservatively retained (uncertain necessity).",
+            "policy_id": "Conservatively retained (uncertain necessity).",
+            "policy_version": "Conservatively retained (uncertain necessity).",
+            "document_complete": "Conservatively retained (uncertain necessity).",
+            "section_count": "Conservatively retained (uncertain necessity).",
+            "source_metadata": "Unreferenced metadata/debug field not required by consumer schema or prompt.",
+            "intake_warnings": "Unreferenced metadata/debug field not required by consumer schema or prompt."
+          },
+          "original_payload_tokens": 187,
+          "proposed_payload_tokens": 122,
+          "tokens_saved": 65,
+          "savings_percentage": 34.76,
+          "original_payload_bytes": 521,
+          "proposed_payload_bytes": 346,
+          "bytes_saved": 175,
+          "byte_savings_percentage": 33.59,
+          "observation_count": 30,
+          "repeated_across_handoffs": [
+            "document_id",
+            "contract_id",
+            "contract_title",
+            "contract_type",
+            "contract_version",
+            "policy_id",
+            "policy_version",
+            "document_complete",
+            "section_count",
+            "source_metadata",
+            "intake_warnings"
+          ],
+          "tokenization_method": "conservative_bpe_heuristic",
+          "is_exact_tokenizer": false,
+          "measurement_type": "estimated_heuristic_tokenizer",
+          "evidence_quality": "runtime_observed",
+          "evidence_basis": "runtime_payload_observed",
+          "original_payload_sample": {
+            "document_id": "DOC-CTR-2026-0001-POL-CORP-SEC-01",
+            "contract_id": "CTR-2026-0001",
+            "contract_title": "Vendor Procurement Agreement with Enterprise Partner 001 LLC",
+            "contract_type": "Vendor Procurement Agreement",
+            "contract_version": "1.0",
+            "policy_id": "POL-CORP-SEC-01",
+            "policy_version": "2.4",
+            "document_complete": true,
+            "section_count": 5,
+            "source_metadata": {
+              "effective_date": "2026-01-01",
+              "expiration_date": "2027-01-01",
+              "parties": [
+                "AWO Enterprise Corp",
+                "Enterprise Partner 001 LLC"
+              ]
+            },
+            "intake_warnings": []
+          },
+          "proposed_compact_payload_sample": {
+            "document_id": "DOC-CTR-2026-0001-POL-CORP-SEC-01",
+            "contract_id": "CTR-2026-0001",
+            "contract_title": "Vendor Procurement Agreement with Enterprise Partner 001 LLC",
+            "contract_type": "Vendor Procurement Agreement",
+            "contract_version": "1.0",
+            "policy_id": "POL-CORP-SEC-01",
+            "policy_version": "2.4",
+            "document_complete": true,
+            "section_count": 5
+          },
+          "python_analysis_results": {
+            "payload_analysis": {
+              "original_payload_tokens": 187,
+              "original_payload_bytes": 521,
+              "transmitted_field_count": 11,
+              "is_large_payload": false,
+              "large_text_or_document_fields": [],
+              "large_json_objects": [],
+              "repeated_across_handoffs": [
+                "document_id",
+                "contract_id",
+                "contract_title",
+                "contract_type",
+                "contract_version",
+                "policy_id",
+                "policy_version",
+                "document_complete",
+                "section_count",
+                "source_metadata",
+                "intake_warnings"
+              ],
+              "repeated_metadata_fields": [
+                "intake_warnings",
+                "source_metadata"
+              ],
+              "repeated_static_fields": [
+                "contract_id",
+                "contract_title",
+                "contract_type",
+                "document_id",
+                "policy_id",
+                "source_metadata"
+              ],
+              "duplicate_value_pairs": [],
+              "per_field_metrics": {
+                "document_id": {
+                  "bytes": 52,
+                  "tokens": 27,
+                  "type": "str",
+                  "handoff_frequency": 2
+                },
+                "contract_id": {
+                  "bytes": 32,
+                  "tokens": 15,
+                  "type": "str",
+                  "handoff_frequency": 11
+                },
+                "contract_title": {
+                  "bytes": 82,
+                  "tokens": 24,
+                  "type": "str",
+                  "handoff_frequency": 2
+                },
+                "contract_type": {
+                  "bytes": 49,
+                  "tokens": 14,
+                  "type": "str",
+                  "handoff_frequency": 2
+                },
+                "contract_version": {
+                  "bytes": 27,
+                  "tokens": 13,
+                  "type": "str",
+                  "handoff_frequency": 2
+                },
+                "policy_id": {
+                  "bytes": 32,
+                  "tokens": 18,
+                  "type": "str",
+                  "handoff_frequency": 4
+                },
+                "policy_version": {
+                  "bytes": 25,
+                  "tokens": 13,
+                  "type": "str",
+                  "handoff_frequency": 3
+                },
+                "document_complete": {
+                  "bytes": 27,
+                  "tokens": 9,
+                  "type": "bool",
+                  "handoff_frequency": 2
+                },
+                "section_count": {
+                  "bytes": 20,
+                  "tokens": 9,
+                  "type": "int",
+                  "handoff_frequency": 2
+                },
+                "source_metadata": {
+                  "bytes": 152,
+                  "tokens": 58,
+                  "type": "dict",
+                  "handoff_frequency": 2
+                },
+                "intake_warnings": {
+                  "bytes": 23,
+                  "tokens": 10,
+                  "type": "list",
+                  "handoff_frequency": 2
+                }
+              },
+              "size_evidence_status": "runtime_payload_measured"
+            },
+            "consumer_mapping": {
+              "producer_agent": "contract_intake_agent",
+              "consumer_agent": "clause_extraction_agent",
+              "consumer_declared_inputs": [
+                "clauses",
+                "contract_id"
+              ],
+              "consumer_prompt_source": "mcp_prompt_metrics_full",
+              "field_classifications": {
+                "document_id": {
+                  "field": "document_id",
+                  "classification": "uncertain",
+                  "is_conditional": false,
+                  "reason": "Absent from declared_inputs, but shares domain stem(s) ['document'] with consumer instructions/goal.",
+                  "bytes": 52,
+                  "tokens": 27
+                },
+                "contract_id": {
+                  "field": "contract_id",
+                  "classification": "required",
+                  "is_conditional": false,
+                  "reason": "Explicitly listed in consumer declared_inputs",
+                  "bytes": 32,
+                  "tokens": 15
+                },
+                "contract_title": {
+                  "field": "contract_title",
+                  "classification": "uncertain",
+                  "is_conditional": false,
+                  "reason": "Absent from declared_inputs, but shares domain stem(s) ['contract', 'title'] with consumer instructions/goal.",
+                  "bytes": 82,
+                  "tokens": 24
+                },
+                "contract_type": {
+                  "field": "contract_type",
+                  "classification": "uncertain",
+                  "is_conditional": false,
+                  "reason": "Absent from declared_inputs, but shares domain stem(s) ['contract', 'type'] with consumer instructions/goal.",
+                  "bytes": 49,
+                  "tokens": 14
+                },
+                "contract_version": {
+                  "field": "contract_version",
+                  "classification": "uncertain",
+                  "is_conditional": false,
+                  "reason": "Absent from declared_inputs, but shares domain stem(s) ['contract'] with consumer instructions/goal.",
+                  "bytes": 27,
+                  "tokens": 13
+                },
+                "policy_id": {
+                  "field": "policy_id",
+                  "classification": "uncertain",
+                  "is_conditional": false,
+                  "reason": "Absent from declared_inputs, but shares domain stem(s) ['policy'] with consumer instructions/goal.",
+                  "bytes": 32,
+                  "tokens": 18
+                },
+                "policy_version": {
+                  "field": "policy_version",
+                  "classification": "uncertain",
+                  "is_conditional": false,
+                  "reason": "Absent from declared_inputs, but shares domain stem(s) ['policy'] with consumer instructions/goal.",
+                  "bytes": 25,
+                  "tokens": 13
+                },
+                "document_complete": {
+                  "field": "document_complete",
+                  "classification": "uncertain",
+                  "is_conditional": false,
+                  "reason": "Absent from declared_inputs, but shares domain stem(s) ['document'] with consumer instructions/goal.",
+                  "bytes": 27,
+                  "tokens": 9
+                },
+                "section_count": {
+                  "field": "section_count",
+                  "classification": "uncertain",
+                  "is_conditional": false,
+                  "reason": "Absent from declared_inputs, but shares domain stem(s) ['section'] with consumer instructions/goal.",
+                  "bytes": 20,
+                  "tokens": 9
+                },
+                "source_metadata": {
+                  "field": "source_metadata",
+                  "classification": "potentially_redundant",
+                  "is_conditional": false,
+                  "reason": "Unreferenced metadata/debug field not required by consumer schema or prompt.",
+                  "bytes": 152,
+                  "tokens": 58
+                },
+                "intake_warnings": {
+                  "field": "intake_warnings",
+                  "classification": "potentially_redundant",
+                  "is_conditional": false,
+                  "reason": "Unreferenced metadata/debug field not required by consumer schema or prompt.",
+                  "bytes": 23,
+                  "tokens": 10
+                }
+              },
+              "required_fields": [
+                "contract_id"
+              ],
+              "used_fields": [],
+              "potentially_redundant_fields": [
+                "source_metadata",
+                "intake_warnings"
+              ],
+              "duplicate_fields": [],
+              "uncertain_fields": [
+                "document_id",
+                "contract_title",
+                "contract_type",
+                "contract_version",
+                "policy_id",
+                "policy_version",
+                "document_complete",
+                "section_count"
+              ],
+              "conditional_fields_preserved": [],
+              "needs_groq_semantic_analysis": true,
+              "semantic_ambiguity_reasons": [
+                "Field 'document_id': semantic stem overlap ['document'] despite missing from declared_inputs.",
+                "Field 'contract_title': semantic stem overlap ['contract', 'title'] despite missing from declared_inputs.",
+                "Field 'contract_type': semantic stem overlap ['contract', 'type'] despite missing from declared_inputs.",
+                "Field 'contract_version': semantic stem overlap ['contract'] despite missing from declared_inputs.",
+                "Field 'policy_id': semantic stem overlap ['policy'] despite missing from declared_inputs.",
+                "Field 'policy_version': semantic stem overlap ['policy'] despite missing from declared_inputs.",
+                "Field 'document_complete': semantic stem overlap ['document'] despite missing from declared_inputs.",
+                "Field 'section_count': semantic stem overlap ['section'] despite missing from declared_inputs."
+              ]
+            }
+          },
+          "groq_semantic_analysis": {
+            "used_groq": true,
+            "accepted": false,
+            "fallback_to_conservative_python": true,
+            "rejection_reason": "groq_semantic_error:groq_api_error:APIConnectionError",
+            "validated_result": null
+          },
+          "evidence_provenance": [
+            "stage_3_graph",
+            "stage_4_profiles",
+            "stage_10_evidence"
+          ]
+        },
+        "proposed_compact_payload_schema": {
+          "retained_fields": [
+            "document_id",
+            "contract_id",
+            "contract_title",
+            "contract_type",
+            "contract_version",
+            "policy_id",
+            "policy_version",
+            "document_complete",
+            "section_count"
+          ],
+          "excluded_fields": [
+            "source_metadata",
+            "intake_warnings"
+          ],
+          "shared_store_references": [],
+          "typed_delta_projection": true
+        },
+        "proposed_solution": "Transmit compact projected fields ['document_id', 'contract_id', 'contract_title', 'contract_type', 'contract_version', 'policy_id', 'policy_version', 'document_complete', 'section_count'] from 'contract_intake_agent' to 'clause_extraction_agent' (excluding ['source_metadata', 'intake_warnings'] from the inter-agent wire payload while preserving all global state).",
+        "expected_benefit": {
+          "original_payload_tokens_per_handoff": 187,
+          "proposed_payload_tokens_per_handoff": 122,
+          "tokens_saved_per_handoff": 65,
+          "token_savings_pct": 34.76,
+          "original_payload_bytes_per_handoff": 521,
+          "proposed_payload_bytes_per_handoff": 346,
+          "bytes_saved_per_handoff": 175,
+          "byte_savings_pct": 33.59,
+          "fields_removed_count": 2,
+          "fields_retained_count": 9,
+          "observation_count": 30,
+          "estimated_repeated_transmissions_eliminated_per_run": 2,
+          "evidence_basis": "runtime_payload_observed",
+          "measurement_type": "estimated_heuristic_tokenizer",
+          "is_estimate": true,
+          "quality_impact": "Requires shadow validation to confirm consumer accuracy with compact payload."
+        },
+        "tradeoffs_and_risks": {
+          "latency_tradeoff": "Lower payload serialization/prompt-prefill volume; runtime delta requires validation.",
+          "token_cost_tradeoff": "Projects 65 fewer payload tokens per execution (34.76% reduction).",
+          "output_quality_risk": "Moderate (changing inter-agent handoff schemas requires regression verification).",
+          "implementation_complexity": "Low",
+          "shared_storage_reference_dependency": false
+        },
+        "tier": "Tier 2",
+        "requires_validation": true,
+        "allocated_key": "GROQ_API_KEY_9 (masked: gsk_...k7Gf)",
+        "feasibility_tier": "Tier 2: High potential, moderate trade-off"
+      },
+      {
+        "candidate_id": "HANDOFF-CONTRACT_INTAKE_AGENT-TO-POLICY_INTERPRETATION_AGENT",
+        "dimension": "communication_data_handoff",
+        "title": "Compact Handoff Payload Schema for contract_intake_agent -> policy_interpretation_agent",
+        "target_agents": [
+          "contract_intake_agent",
+          "policy_interpretation_agent"
+        ],
+        "observed_problem": "Verified handoff 'contract_intake_agent -> policy_interpretation_agent' transmits 11 field(s) (['document_id', 'contract_id', 'contract_title', 'contract_type', 'contract_version', 'policy_id', 'policy_version', 'document_complete', 'section_count', 'source_metadata', 'intake_warnings']), of which 7 (['document_id', 'contract_id', 'contract_title', 'document_complete', 'section_count', 'source_metadata', 'intake_warnings']) are redundant or duplicate for downstream consumption. Observed single-execution payload measures 187 tokens (521 bytes, runtime_payload_observed); compact projection reduces payload to 52 tokens (133 bytes, -135 tokens / 72.19%).",
+        "supporting_evidence": {
+          "mcp_stage_source": [
+            "stage_3_graph",
+            "stage_4_profiles",
+            "stage_10_evidence"
+          ],
+          "producer_agent": "contract_intake_agent",
+          "consumer_agent": "policy_interpretation_agent",
+          "verified_dependency_relationship": "declared_dependency",
+          "original_transmitted_fields": [
+            "document_id",
+            "contract_id",
+            "contract_title",
+            "contract_type",
+            "contract_version",
+            "policy_id",
+            "policy_version",
+            "document_complete",
+            "section_count",
+            "source_metadata",
+            "intake_warnings"
+          ],
+          "consumer_required_fields": [
+            "policy_id",
+            "policy_version"
+          ],
+          "consumer_used_fields": [],
+          "conditional_fields_preserved": [],
+          "potentially_redundant_fields": [
+            "contract_id",
+            "contract_title",
+            "document_complete",
+            "document_id",
+            "intake_warnings",
+            "section_count",
+            "source_metadata"
+          ],
+          "duplicate_fields": [],
+          "uncertain_fields": [
+            "contract_version",
+            "contract_type"
+          ],
+          "fields_retained": [
+            "contract_type",
+            "contract_version",
+            "policy_id",
+            "policy_version"
+          ],
+          "fields_excluded": [
+            "document_id",
+            "contract_id",
+            "contract_title",
+            "document_complete",
+            "section_count",
+            "source_metadata",
+            "intake_warnings"
+          ],
+          "fields_replaced_with_reference": [],
+          "field_change_reasons": {
+            "document_id": "Not in consumer declared_inputs and unreferenced in consumer task/prompt.",
+            "contract_id": "Not in consumer declared_inputs and unreferenced in consumer task/prompt.",
+            "contract_title": "Not in consumer declared_inputs and unreferenced in consumer task/prompt.",
+            "contract_type": "Conservatively retained (uncertain necessity).",
+            "contract_version": "Conservatively retained (uncertain necessity).",
+            "policy_id": "Explicitly listed in consumer declared_inputs",
+            "policy_version": "Explicit input field placeholder in consumer prompt",
+            "document_complete": "Not in consumer declared_inputs and unreferenced in consumer task/prompt.",
+            "section_count": "Not in consumer declared_inputs and unreferenced in consumer task/prompt.",
+            "source_metadata": "Unreferenced metadata/debug field not required by consumer schema or prompt.",
+            "intake_warnings": "Unreferenced metadata/debug field not required by consumer schema or prompt."
+          },
+          "original_payload_tokens": 187,
+          "proposed_payload_tokens": 52,
+          "tokens_saved": 135,
+          "savings_percentage": 72.19,
+          "original_payload_bytes": 521,
+          "proposed_payload_bytes": 133,
+          "bytes_saved": 388,
+          "byte_savings_percentage": 74.47,
+          "observation_count": 30,
+          "repeated_across_handoffs": [
+            "document_id",
+            "contract_id",
+            "contract_title",
+            "contract_type",
+            "contract_version",
+            "policy_id",
+            "policy_version",
+            "document_complete",
+            "section_count",
+            "source_metadata",
+            "intake_warnings"
+          ],
+          "tokenization_method": "conservative_bpe_heuristic",
+          "is_exact_tokenizer": false,
+          "measurement_type": "estimated_heuristic_tokenizer",
+          "evidence_quality": "runtime_observed",
+          "evidence_basis": "runtime_payload_observed",
+          "original_payload_sample": {
+            "document_id": "DOC-CTR-2026-0001-POL-CORP-SEC-01",
+            "contract_id": "CTR-2026-0001",
+            "contract_title": "Vendor Procurement Agreement with Enterprise Partner 001 LLC",
+            "contract_type": "Vendor Procurement Agreement",
+            "contract_version": "1.0",
+            "policy_id": "POL-CORP-SEC-01",
+            "policy_version": "2.4",
+            "document_complete": true,
+            "section_count": 5,
+            "source_metadata": {
+              "effective_date": "2026-01-01",
+              "expiration_date": "2027-01-01",
+              "parties": [
+                "AWO Enterprise Corp",
+                "Enterprise Partner 001 LLC"
+              ]
+            },
+            "intake_warnings": []
+          },
+          "proposed_compact_payload_sample": {
+            "contract_type": "Vendor Procurement Agreement",
+            "contract_version": "1.0",
+            "policy_id": "POL-CORP-SEC-01",
+            "policy_version": "2.4"
+          },
+          "python_analysis_results": {
+            "payload_analysis": {
+              "original_payload_tokens": 187,
+              "original_payload_bytes": 521,
+              "transmitted_field_count": 11,
+              "is_large_payload": false,
+              "large_text_or_document_fields": [],
+              "large_json_objects": [],
+              "repeated_across_handoffs": [
+                "document_id",
+                "contract_id",
+                "contract_title",
+                "contract_type",
+                "contract_version",
+                "policy_id",
+                "policy_version",
+                "document_complete",
+                "section_count",
+                "source_metadata",
+                "intake_warnings"
+              ],
+              "repeated_metadata_fields": [
+                "intake_warnings",
+                "source_metadata"
+              ],
+              "repeated_static_fields": [
+                "contract_id",
+                "contract_title",
+                "contract_type",
+                "document_id",
+                "policy_id",
+                "source_metadata"
+              ],
+              "duplicate_value_pairs": [],
+              "per_field_metrics": {
+                "document_id": {
+                  "bytes": 52,
+                  "tokens": 27,
+                  "type": "str",
+                  "handoff_frequency": 2
+                },
+                "contract_id": {
+                  "bytes": 32,
+                  "tokens": 15,
+                  "type": "str",
+                  "handoff_frequency": 11
+                },
+                "contract_title": {
+                  "bytes": 82,
+                  "tokens": 24,
+                  "type": "str",
+                  "handoff_frequency": 2
+                },
+                "contract_type": {
+                  "bytes": 49,
+                  "tokens": 14,
+                  "type": "str",
+                  "handoff_frequency": 2
+                },
+                "contract_version": {
+                  "bytes": 27,
+                  "tokens": 13,
+                  "type": "str",
+                  "handoff_frequency": 2
+                },
+                "policy_id": {
+                  "bytes": 32,
+                  "tokens": 18,
+                  "type": "str",
+                  "handoff_frequency": 4
+                },
+                "policy_version": {
+                  "bytes": 25,
+                  "tokens": 13,
+                  "type": "str",
+                  "handoff_frequency": 3
+                },
+                "document_complete": {
+                  "bytes": 27,
+                  "tokens": 9,
+                  "type": "bool",
+                  "handoff_frequency": 2
+                },
+                "section_count": {
+                  "bytes": 20,
+                  "tokens": 9,
+                  "type": "int",
+                  "handoff_frequency": 2
+                },
+                "source_metadata": {
+                  "bytes": 152,
+                  "tokens": 58,
+                  "type": "dict",
+                  "handoff_frequency": 2
+                },
+                "intake_warnings": {
+                  "bytes": 23,
+                  "tokens": 10,
+                  "type": "list",
+                  "handoff_frequency": 2
+                }
+              },
+              "size_evidence_status": "runtime_payload_measured"
+            },
+            "consumer_mapping": {
+              "producer_agent": "contract_intake_agent",
+              "consumer_agent": "policy_interpretation_agent",
+              "consumer_declared_inputs": [
+                "policy_id",
+                "policy_name",
+                "requirements"
+              ],
+              "consumer_prompt_source": "mcp_prompt_metrics_full",
+              "field_classifications": {
+                "document_id": {
+                  "field": "document_id",
+                  "classification": "potentially_redundant",
+                  "is_conditional": false,
+                  "reason": "Not in consumer declared_inputs and unreferenced in consumer task/prompt.",
+                  "bytes": 52,
+                  "tokens": 27
+                },
+                "contract_id": {
+                  "field": "contract_id",
+                  "classification": "potentially_redundant",
+                  "is_conditional": false,
+                  "reason": "Not in consumer declared_inputs and unreferenced in consumer task/prompt.",
+                  "bytes": 32,
+                  "tokens": 15
+                },
+                "contract_title": {
+                  "field": "contract_title",
+                  "classification": "potentially_redundant",
+                  "is_conditional": false,
+                  "reason": "Not in consumer declared_inputs and unreferenced in consumer task/prompt.",
+                  "bytes": 82,
+                  "tokens": 24
+                },
+                "contract_type": {
+                  "field": "contract_type",
+                  "classification": "uncertain",
+                  "is_conditional": false,
+                  "reason": "Absent from declared_inputs, but shares domain stem(s) ['type'] with consumer instructions/goal.",
+                  "bytes": 49,
+                  "tokens": 14
+                },
+                "contract_version": {
+                  "field": "contract_version",
+                  "classification": "uncertain",
+                  "is_conditional": false,
+                  "reason": "Absent from declared_inputs, but shares domain stem(s) ['version'] with consumer instructions/goal.",
+                  "bytes": 27,
+                  "tokens": 13
+                },
+                "policy_id": {
+                  "field": "policy_id",
+                  "classification": "required",
+                  "is_conditional": false,
+                  "reason": "Explicitly listed in consumer declared_inputs",
+                  "bytes": 32,
+                  "tokens": 18
+                },
+                "policy_version": {
+                  "field": "policy_version",
+                  "classification": "required",
+                  "is_conditional": false,
+                  "reason": "Explicit input field placeholder in consumer prompt",
+                  "bytes": 25,
+                  "tokens": 13
+                },
+                "document_complete": {
+                  "field": "document_complete",
+                  "classification": "potentially_redundant",
+                  "is_conditional": false,
+                  "reason": "Not in consumer declared_inputs and unreferenced in consumer task/prompt.",
+                  "bytes": 27,
+                  "tokens": 9
+                },
+                "section_count": {
+                  "field": "section_count",
+                  "classification": "potentially_redundant",
+                  "is_conditional": false,
+                  "reason": "Not in consumer declared_inputs and unreferenced in consumer task/prompt.",
+                  "bytes": 20,
+                  "tokens": 9
+                },
+                "source_metadata": {
+                  "field": "source_metadata",
+                  "classification": "potentially_redundant",
+                  "is_conditional": false,
+                  "reason": "Unreferenced metadata/debug field not required by consumer schema or prompt.",
+                  "bytes": 152,
+                  "tokens": 58
+                },
+                "intake_warnings": {
+                  "field": "intake_warnings",
+                  "classification": "potentially_redundant",
+                  "is_conditional": false,
+                  "reason": "Unreferenced metadata/debug field not required by consumer schema or prompt.",
+                  "bytes": 23,
+                  "tokens": 10
+                }
+              },
+              "required_fields": [
+                "policy_id",
+                "policy_version"
+              ],
+              "used_fields": [],
+              "potentially_redundant_fields": [
+                "document_id",
+                "contract_id",
+                "contract_title",
+                "document_complete",
+                "section_count",
+                "source_metadata",
+                "intake_warnings"
+              ],
+              "duplicate_fields": [],
+              "uncertain_fields": [
+                "contract_type",
+                "contract_version"
+              ],
+              "conditional_fields_preserved": [],
+              "needs_groq_semantic_analysis": true,
+              "semantic_ambiguity_reasons": [
+                "Field 'contract_type': semantic stem overlap ['type'] despite missing from declared_inputs.",
+                "Field 'contract_version': semantic stem overlap ['version'] despite missing from declared_inputs."
+              ]
+            }
+          },
+          "groq_semantic_analysis": {
+            "used_groq": true,
+            "accepted": false,
+            "fallback_to_conservative_python": true,
+            "rejection_reason": "groq_semantic_error:groq_api_error:APIConnectionError",
+            "validated_result": null
+          },
+          "evidence_provenance": [
+            "stage_3_graph",
+            "stage_4_profiles",
+            "stage_10_evidence"
+          ]
+        },
+        "proposed_compact_payload_schema": {
+          "retained_fields": [
+            "contract_type",
+            "contract_version",
+            "policy_id",
+            "policy_version"
+          ],
+          "excluded_fields": [
+            "document_id",
+            "contract_id",
+            "contract_title",
+            "document_complete",
+            "section_count",
+            "source_metadata",
+            "intake_warnings"
+          ],
+          "shared_store_references": [],
+          "typed_delta_projection": true
+        },
+        "proposed_solution": "Transmit compact projected fields ['contract_type', 'contract_version', 'policy_id', 'policy_version'] from 'contract_intake_agent' to 'policy_interpretation_agent' (excluding ['document_id', 'contract_id', 'contract_title', 'document_complete', 'section_count', 'source_metadata', 'intake_warnings'] from the inter-agent wire payload while preserving all global state).",
+        "expected_benefit": {
+          "original_payload_tokens_per_handoff": 187,
+          "proposed_payload_tokens_per_handoff": 52,
+          "tokens_saved_per_handoff": 135,
+          "token_savings_pct": 72.19,
+          "original_payload_bytes_per_handoff": 521,
+          "proposed_payload_bytes_per_handoff": 133,
+          "bytes_saved_per_handoff": 388,
+          "byte_savings_pct": 74.47,
+          "fields_removed_count": 7,
+          "fields_retained_count": 4,
+          "observation_count": 30,
+          "estimated_repeated_transmissions_eliminated_per_run": 7,
+          "evidence_basis": "runtime_payload_observed",
+          "measurement_type": "estimated_heuristic_tokenizer",
+          "is_estimate": true,
+          "quality_impact": "Requires shadow validation to confirm consumer accuracy with compact payload."
+        },
+        "tradeoffs_and_risks": {
+          "latency_tradeoff": "Lower payload serialization/prompt-prefill volume; runtime delta requires validation.",
+          "token_cost_tradeoff": "Projects 135 fewer payload tokens per execution (72.19% reduction).",
+          "output_quality_risk": "Moderate (changing inter-agent handoff schemas requires regression verification).",
+          "implementation_complexity": "Low",
+          "shared_storage_reference_dependency": false
+        },
+        "tier": "Tier 2",
+        "requires_validation": true,
+        "allocated_key": "GROQ_API_KEY_9 (masked: gsk_...k7Gf)",
+        "feasibility_tier": "Tier 2: High potential, moderate trade-off"
+      },
+      {
+        "candidate_id": "HANDOFF-CLAUSE_MAPPING_AGENT-TO-COMPLIANCE_DEVIATION_AGENT",
+        "dimension": "communication_data_handoff",
+        "title": "Compact Handoff Payload Schema for clause_mapping_agent -> compliance_deviation_agent",
+        "target_agents": [
+          "clause_mapping_agent",
+          "compliance_deviation_agent"
+        ],
+        "observed_problem": "Verified handoff 'clause_mapping_agent -> compliance_deviation_agent' transmits 4 field(s) (['contract_id', 'policy_id', 'mappings', 'coverage_percentage']), of which 1 (['coverage_percentage']) are redundant or duplicate for downstream consumption. Observed single-execution payload measures 160 tokens (469 bytes, runtime_payload_observed); compact projection reduces payload to 151 tokens (440 bytes, -9 tokens / 5.62%).",
+        "supporting_evidence": {
+          "mcp_stage_source": [
+            "stage_3_graph",
+            "stage_4_profiles",
+            "stage_10_evidence"
+          ],
+          "producer_agent": "clause_mapping_agent",
+          "consumer_agent": "compliance_deviation_agent",
+          "verified_dependency_relationship": "declared_dependency",
+          "original_transmitted_fields": [
+            "contract_id",
+            "policy_id",
+            "mappings",
+            "coverage_percentage"
+          ],
+          "consumer_required_fields": [
+            "contract_id",
+            "mappings"
+          ],
+          "consumer_used_fields": [],
+          "conditional_fields_preserved": [],
+          "potentially_redundant_fields": [
+            "coverage_percentage"
+          ],
+          "duplicate_fields": [],
+          "uncertain_fields": [
+            "policy_id"
+          ],
+          "fields_retained": [
+            "contract_id",
+            "policy_id",
+            "mappings"
+          ],
+          "fields_excluded": [
+            "coverage_percentage"
+          ],
+          "fields_replaced_with_reference": [],
+          "field_change_reasons": {
+            "contract_id": "Explicit input field placeholder in consumer prompt",
+            "policy_id": "Conservatively retained (uncertain necessity).",
+            "mappings": "Explicitly listed in consumer declared_inputs",
+            "coverage_percentage": "Not in consumer declared_inputs and unreferenced in consumer task/prompt."
+          },
+          "original_payload_tokens": 160,
+          "proposed_payload_tokens": 151,
+          "tokens_saved": 9,
+          "savings_percentage": 5.62,
+          "original_payload_bytes": 469,
+          "proposed_payload_bytes": 440,
+          "bytes_saved": 29,
+          "byte_savings_percentage": 6.18,
+          "observation_count": 30,
+          "repeated_across_handoffs": [
+            "contract_id",
+            "policy_id"
+          ],
+          "tokenization_method": "conservative_bpe_heuristic",
+          "is_exact_tokenizer": false,
+          "measurement_type": "estimated_heuristic_tokenizer",
+          "evidence_quality": "runtime_observed",
+          "evidence_basis": "runtime_payload_observed",
+          "original_payload_sample": {
+            "contract_id": "CTR-2026-0001",
+            "policy_id": "DATA_PROTECTION",
+            "mappings": [
+              {
+                "requirement_id": "REQ-SEC-01",
+                "clause_id": "CLS-0001-DATA",
+                "mapping_status": "satisfied",
+                "notes": "Clause requires notification within 24 hours, which meets the 48\u2011hour threshold."
+              },
+              {
+                "requirement_id": "REQ-SEC-02",
+                "clause_id": null,
+                "mapping_status": "unaddressed",
+                "notes": "No clause references encryption standards for data in transit or at rest."
+              }
+            ],
+            "coverage_percentage": 50.0
+          },
+          "proposed_compact_payload_sample": {
+            "contract_id": "CTR-2026-0001",
+            "policy_id": "DATA_PROTECTION",
+            "mappings": [
+              {
+                "requirement_id": "REQ-SEC-01",
+                "clause_id": "CLS-0001-DATA",
+                "mapping_status": "satisfied",
+                "notes": "Clause requires notification within 24 hours, which meets the 48\u2011hour threshold."
+              },
+              {
+                "requirement_id": "REQ-SEC-02",
+                "clause_id": null,
+                "mapping_status": "unaddressed",
+                "notes": "No clause references encryption standards for data in transit or at rest."
+              }
+            ]
+          },
+          "python_analysis_results": {
+            "payload_analysis": {
+              "original_payload_tokens": 160,
+              "original_payload_bytes": 469,
+              "transmitted_field_count": 4,
+              "is_large_payload": false,
+              "large_text_or_document_fields": [],
+              "large_json_objects": [],
+              "repeated_across_handoffs": [
+                "contract_id",
+                "policy_id"
+              ],
+              "repeated_metadata_fields": [],
+              "repeated_static_fields": [
+                "contract_id"
+              ],
+              "duplicate_value_pairs": [],
+              "per_field_metrics": {
+                "contract_id": {
+                  "bytes": 32,
+                  "tokens": 15,
+                  "type": "str",
+                  "handoff_frequency": 11
+                },
+                "policy_id": {
+                  "bytes": 32,
+                  "tokens": 11,
+                  "type": "str",
+                  "handoff_frequency": 4
+                },
+                "mappings": {
+                  "bytes": 376,
+                  "tokens": 128,
+                  "type": "list",
+                  "handoff_frequency": 1
+                },
+                "coverage_percentage": {
+                  "bytes": 29,
+                  "tokens": 11,
+                  "type": "float",
+                  "handoff_frequency": 1
+                }
+              },
+              "size_evidence_status": "runtime_payload_measured"
+            },
+            "consumer_mapping": {
+              "producer_agent": "clause_mapping_agent",
+              "consumer_agent": "compliance_deviation_agent",
+              "consumer_declared_inputs": [
+                "mappings",
+                "mandatory_requirements"
+              ],
+              "consumer_prompt_source": "mcp_prompt_metrics_full",
+              "field_classifications": {
+                "contract_id": {
+                  "field": "contract_id",
+                  "classification": "required",
+                  "is_conditional": false,
+                  "reason": "Explicit input field placeholder in consumer prompt",
+                  "bytes": 32,
+                  "tokens": 15
+                },
+                "policy_id": {
+                  "field": "policy_id",
+                  "classification": "uncertain",
+                  "is_conditional": false,
+                  "reason": "Absent from declared_inputs, but shares domain stem(s) ['policy'] with consumer instructions/goal.",
+                  "bytes": 32,
+                  "tokens": 11
+                },
+                "mappings": {
+                  "field": "mappings",
+                  "classification": "required",
+                  "is_conditional": false,
+                  "reason": "Explicitly listed in consumer declared_inputs",
+                  "bytes": 376,
+                  "tokens": 128
+                },
+                "coverage_percentage": {
+                  "field": "coverage_percentage",
+                  "classification": "potentially_redundant",
+                  "is_conditional": false,
+                  "reason": "Not in consumer declared_inputs and unreferenced in consumer task/prompt.",
+                  "bytes": 29,
+                  "tokens": 11
+                }
+              },
+              "required_fields": [
+                "contract_id",
+                "mappings"
+              ],
+              "used_fields": [],
+              "potentially_redundant_fields": [
+                "coverage_percentage"
+              ],
+              "duplicate_fields": [],
+              "uncertain_fields": [
+                "policy_id"
+              ],
+              "conditional_fields_preserved": [],
+              "needs_groq_semantic_analysis": true,
+              "semantic_ambiguity_reasons": [
+                "Field 'policy_id': semantic stem overlap ['policy'] despite missing from declared_inputs."
+              ]
+            }
+          },
+          "groq_semantic_analysis": {
+            "used_groq": true,
+            "accepted": false,
+            "fallback_to_conservative_python": true,
+            "rejection_reason": "groq_semantic_error:groq_api_error:APIConnectionError",
+            "validated_result": null
+          },
+          "evidence_provenance": [
+            "stage_3_graph",
+            "stage_4_profiles",
+            "stage_10_evidence"
+          ]
+        },
+        "proposed_compact_payload_schema": {
+          "retained_fields": [
+            "contract_id",
+            "policy_id",
+            "mappings"
+          ],
+          "excluded_fields": [
+            "coverage_percentage"
+          ],
+          "shared_store_references": [],
+          "typed_delta_projection": true
+        },
+        "proposed_solution": "Transmit compact projected fields ['contract_id', 'policy_id', 'mappings'] from 'clause_mapping_agent' to 'compliance_deviation_agent' (excluding ['coverage_percentage'] from the inter-agent wire payload while preserving all global state).",
+        "expected_benefit": {
+          "original_payload_tokens_per_handoff": 160,
+          "proposed_payload_tokens_per_handoff": 151,
+          "tokens_saved_per_handoff": 9,
+          "token_savings_pct": 5.62,
+          "original_payload_bytes_per_handoff": 469,
+          "proposed_payload_bytes_per_handoff": 440,
+          "bytes_saved_per_handoff": 29,
+          "byte_savings_pct": 6.18,
+          "fields_removed_count": 1,
+          "fields_retained_count": 3,
+          "observation_count": 30,
+          "estimated_repeated_transmissions_eliminated_per_run": 0,
+          "evidence_basis": "runtime_payload_observed",
+          "measurement_type": "estimated_heuristic_tokenizer",
+          "is_estimate": true,
+          "quality_impact": "Requires shadow validation to confirm consumer accuracy with compact payload."
+        },
+        "tradeoffs_and_risks": {
+          "latency_tradeoff": "Lower payload serialization/prompt-prefill volume; runtime delta requires validation.",
+          "token_cost_tradeoff": "Projects 9 fewer payload tokens per execution (5.62% reduction).",
+          "output_quality_risk": "Moderate (changing inter-agent handoff schemas requires regression verification).",
+          "implementation_complexity": "Low",
+          "shared_storage_reference_dependency": false
+        },
+        "tier": "Tier 2",
+        "requires_validation": true,
+        "allocated_key": "GROQ_API_KEY_9 (masked: gsk_...k7Gf)",
+        "feasibility_tier": "Tier 2: High potential, moderate trade-off"
+      },
+      {
+        "candidate_id": "HANDOFF-CLAUSE_EXTRACTION_AGENT-TO-RISK_AMBIGUITY_AGENT",
+        "dimension": "communication_data_handoff",
+        "title": "Compact Handoff Payload Schema for clause_extraction_agent -> risk_ambiguity_agent",
+        "target_agents": [
+          "clause_extraction_agent",
+          "risk_ambiguity_agent"
+        ],
+        "observed_problem": "Verified handoff 'clause_extraction_agent -> risk_ambiguity_agent' transmits 4 field(s) (['contract_id', 'clauses', 'absent_clause_types', 'extraction_notes']), of which 1 (['extraction_notes']) are redundant or duplicate for downstream consumption. Observed single-execution payload measures 478 tokens (1580 bytes, runtime_payload_observed); compact projection reduces payload to 459 tokens (1498 bytes, -19 tokens / 3.97%).",
+        "supporting_evidence": {
+          "mcp_stage_source": [
+            "stage_3_graph",
+            "stage_4_profiles",
+            "stage_10_evidence"
+          ],
+          "producer_agent": "clause_extraction_agent",
+          "consumer_agent": "risk_ambiguity_agent",
+          "verified_dependency_relationship": "declared_dependency",
+          "original_transmitted_fields": [
+            "contract_id",
+            "clauses",
+            "absent_clause_types",
+            "extraction_notes"
+          ],
+          "consumer_required_fields": [
+            "contract_id",
+            "clauses"
+          ],
+          "consumer_used_fields": [],
+          "conditional_fields_preserved": [],
+          "potentially_redundant_fields": [
+            "extraction_notes"
+          ],
+          "duplicate_fields": [],
+          "uncertain_fields": [
+            "absent_clause_types"
+          ],
+          "fields_retained": [
+            "contract_id",
+            "clauses",
+            "absent_clause_types"
+          ],
+          "fields_excluded": [
+            "extraction_notes"
+          ],
+          "fields_replaced_with_reference": [],
+          "field_change_reasons": {
+            "contract_id": "Explicit input field placeholder in consumer prompt",
+            "clauses": "Explicitly listed in consumer declared_inputs",
+            "absent_clause_types": "Conservatively retained (uncertain necessity).",
+            "extraction_notes": "Not in consumer declared_inputs and unreferenced in consumer task/prompt."
+          },
+          "original_payload_tokens": 478,
+          "proposed_payload_tokens": 459,
+          "tokens_saved": 19,
+          "savings_percentage": 3.97,
+          "original_payload_bytes": 1580,
+          "proposed_payload_bytes": 1498,
+          "bytes_saved": 82,
+          "byte_savings_percentage": 5.19,
+          "observation_count": 30,
+          "repeated_across_handoffs": [
+            "contract_id",
+            "clauses",
+            "absent_clause_types",
+            "extraction_notes"
+          ],
+          "tokenization_method": "conservative_bpe_heuristic",
+          "is_exact_tokenizer": false,
+          "measurement_type": "estimated_heuristic_tokenizer",
+          "evidence_quality": "runtime_observed",
+          "evidence_basis": "runtime_payload_observed",
+          "original_payload_sample": {
+            "contract_id": "CTR-2026-0001",
+            "clauses": [
+              {
+                "clause_id": "CLS-0001-PAY",
+                "clause_type": "payment_terms",
+                "clause_title": "Section 3: Invoicing and Payment Terms",
+                "clause_text": "Invoices shall be payable within ninety (90) days of receipt by Customer.",
+                "section_reference": "Section 3.1"
+              },
+              {
+                "clause_id": "CLS-0001-DATA",
+                "clause_type": "data_protection",
+                "clause_title": "Section 8: Security & Breach Notification",
+                "clause_text": "Vendor shall notify Customer in writing within twenty-four (24) hours of becoming aware of any confirmed Data Breach.",
+                "section_reference": "Section 8.2"
+              },
+              {
+                "clause_id": "CLS-0001-LIAB",
+                "clause_type": "liability_cap",
+                "clause_title": "Section 10: Limitation of Liability",
+                "clause_text": "Each party's maximum aggregate liability shall be strictly limited to the total fees paid under this Agreement in the preceding twelve (12) months.",
+                "section_reference": "Section 10.1"
+              },
+              {
+                "clause_id": "CLS-0001-TERM",
+                "clause_type": "termination",
+                "clause_title": "Section 12: Term and Termination",
+                "clause_text": "Either party may terminate this Agreement for convenience upon providing thirty (30) days prior written notice.",
+                "section_reference": "Section 12.1"
+              },
+              {
+                "clause_id": "CLS-0001-REN",
+                "clause_type": "renewal",
+                "clause_title": "Section 12: Renewal Provisions",
+                "clause_text": "This Agreement renews on an annual basis unless either party gives notice of non-renewal at least 30 days prior.",
+                "section_reference": "Section 12.4"
+              }
+            ],
+            "absent_clause_types": [],
+            "extraction_notes": [
+              "Document extracted once for downstream policy comparison"
+            ]
+          },
+          "proposed_compact_payload_sample": {
+            "contract_id": "CTR-2026-0001",
+            "clauses": [
+              {
+                "clause_id": "CLS-0001-PAY",
+                "clause_type": "payment_terms",
+                "clause_title": "Section 3: Invoicing and Payment Terms",
+                "clause_text": "Invoices shall be payable within ninety (90) days of receipt by Customer.",
+                "section_reference": "Section 3.1"
+              },
+              {
+                "clause_id": "CLS-0001-DATA",
+                "clause_type": "data_protection",
+                "clause_title": "Section 8: Security & Breach Notification",
+                "clause_text": "Vendor shall notify Customer in writing within twenty-four (24) hours of becoming aware of any confirmed Data Breach.",
+                "section_reference": "Section 8.2"
+              },
+              {
+                "clause_id": "CLS-0001-LIAB",
+                "clause_type": "liability_cap",
+                "clause_title": "Section 10: Limitation of Liability",
+                "clause_text": "Each party's maximum aggregate liability shall be strictly limited to the total fees paid under this Agreement in the preceding twelve (12) months.",
+                "section_reference": "Section 10.1"
+              },
+              {
+                "clause_id": "CLS-0001-TERM",
+                "clause_type": "termination",
+                "clause_title": "Section 12: Term and Termination",
+                "clause_text": "Either party may terminate this Agreement for convenience upon providing thirty (30) days prior written notice.",
+                "section_reference": "Section 12.1"
+              },
+              {
+                "clause_id": "CLS-0001-REN",
+                "clause_type": "renewal",
+                "clause_title": "Section 12: Renewal Provisions",
+                "clause_text": "This Agreement renews on an annual basis unless either party gives notice of non-renewal at least 30 days prior.",
+                "section_reference": "Section 12.4"
+              }
+            ],
+            "absent_clause_types": []
+          },
+          "python_analysis_results": {
+            "payload_analysis": {
+              "original_payload_tokens": 478,
+              "original_payload_bytes": 1580,
+              "transmitted_field_count": 4,
+              "is_large_payload": true,
+              "large_text_or_document_fields": [],
+              "large_json_objects": [
+                "clauses"
+              ],
+              "repeated_across_handoffs": [
+                "contract_id",
+                "clauses",
+                "absent_clause_types",
+                "extraction_notes"
+              ],
+              "repeated_metadata_fields": [],
+              "repeated_static_fields": [
+                "clauses",
+                "contract_id",
+                "extraction_notes"
+              ],
+              "duplicate_value_pairs": [],
+              "per_field_metrics": {
+                "contract_id": {
+                  "bytes": 32,
+                  "tokens": 15,
+                  "type": "str",
+                  "handoff_frequency": 11
+                },
+                "clauses": {
+                  "bytes": 1439,
+                  "tokens": 437,
+                  "type": "list",
+                  "handoff_frequency": 3
+                },
+                "absent_clause_types": {
+                  "bytes": 27,
+                  "tokens": 10,
+                  "type": "list",
+                  "handoff_frequency": 3
+                },
+                "extraction_notes": {
+                  "bytes": 82,
+                  "tokens": 24,
+                  "type": "list",
+                  "handoff_frequency": 3
+                }
+              },
+              "size_evidence_status": "runtime_payload_measured"
+            },
+            "consumer_mapping": {
+              "producer_agent": "clause_extraction_agent",
+              "consumer_agent": "risk_ambiguity_agent",
+              "consumer_declared_inputs": [
+                "clauses"
+              ],
+              "consumer_prompt_source": "mcp_prompt_metrics_full",
+              "field_classifications": {
+                "contract_id": {
+                  "field": "contract_id",
+                  "classification": "required",
+                  "is_conditional": false,
+                  "reason": "Explicit input field placeholder in consumer prompt",
+                  "bytes": 32,
+                  "tokens": 15
+                },
+                "clauses": {
+                  "field": "clauses",
+                  "classification": "required",
+                  "is_conditional": false,
+                  "reason": "Explicitly listed in consumer declared_inputs",
+                  "bytes": 1439,
+                  "tokens": 437
+                },
+                "absent_clause_types": {
+                  "field": "absent_clause_types",
+                  "classification": "uncertain",
+                  "is_conditional": false,
+                  "reason": "Absent from declared_inputs, but shares domain stem(s) ['clause'] with consumer instructions/goal.",
+                  "bytes": 27,
+                  "tokens": 10
+                },
+                "extraction_notes": {
+                  "field": "extraction_notes",
+                  "classification": "potentially_redundant",
+                  "is_conditional": false,
+                  "reason": "Not in consumer declared_inputs and unreferenced in consumer task/prompt.",
+                  "bytes": 82,
+                  "tokens": 24
+                }
+              },
+              "required_fields": [
+                "contract_id",
+                "clauses"
+              ],
+              "used_fields": [],
+              "potentially_redundant_fields": [
+                "extraction_notes"
+              ],
+              "duplicate_fields": [],
+              "uncertain_fields": [
+                "absent_clause_types"
+              ],
+              "conditional_fields_preserved": [],
+              "needs_groq_semantic_analysis": true,
+              "semantic_ambiguity_reasons": [
+                "Field 'absent_clause_types': semantic stem overlap ['clause'] despite missing from declared_inputs."
+              ]
+            }
+          },
+          "groq_semantic_analysis": {
+            "used_groq": true,
+            "accepted": false,
+            "fallback_to_conservative_python": true,
+            "rejection_reason": "groq_semantic_error:groq_api_error:APIConnectionError",
+            "validated_result": null
+          },
+          "evidence_provenance": [
+            "stage_3_graph",
+            "stage_4_profiles",
+            "stage_10_evidence"
+          ]
+        },
+        "proposed_compact_payload_schema": {
+          "retained_fields": [
+            "contract_id",
+            "clauses",
+            "absent_clause_types"
+          ],
+          "excluded_fields": [
+            "extraction_notes"
+          ],
+          "shared_store_references": [],
+          "typed_delta_projection": true
+        },
+        "proposed_solution": "Transmit compact projected fields ['contract_id', 'clauses', 'absent_clause_types'] from 'clause_extraction_agent' to 'risk_ambiguity_agent' (excluding ['extraction_notes'] from the inter-agent wire payload while preserving all global state).",
+        "expected_benefit": {
+          "original_payload_tokens_per_handoff": 478,
+          "proposed_payload_tokens_per_handoff": 459,
+          "tokens_saved_per_handoff": 19,
+          "token_savings_pct": 3.97,
+          "original_payload_bytes_per_handoff": 1580,
+          "proposed_payload_bytes_per_handoff": 1498,
+          "bytes_saved_per_handoff": 82,
+          "byte_savings_pct": 5.19,
+          "fields_removed_count": 1,
+          "fields_retained_count": 3,
+          "observation_count": 30,
+          "estimated_repeated_transmissions_eliminated_per_run": 1,
+          "evidence_basis": "runtime_payload_observed",
+          "measurement_type": "estimated_heuristic_tokenizer",
+          "is_estimate": true,
+          "quality_impact": "Requires shadow validation to confirm consumer accuracy with compact payload."
+        },
+        "tradeoffs_and_risks": {
+          "latency_tradeoff": "Lower payload serialization/prompt-prefill volume; runtime delta requires validation.",
+          "token_cost_tradeoff": "Projects 19 fewer payload tokens per execution (3.97% reduction).",
+          "output_quality_risk": "Moderate (changing inter-agent handoff schemas requires regression verification).",
+          "implementation_complexity": "Low",
+          "shared_storage_reference_dependency": false
+        },
+        "tier": "Tier 2",
+        "requires_validation": true,
+        "allocated_key": "GROQ_API_KEY_9 (masked: gsk_...k7Gf)",
+        "feasibility_tier": "Tier 2: High potential, moderate trade-off"
+      },
+      {
+        "candidate_id": "HANDOFF-CLAUSE_EXTRACTION_AGENT-TO-CROSS_CLAUSE_CONSISTENCY_AGENT",
+        "dimension": "communication_data_handoff",
+        "title": "Compact Handoff Payload Schema for clause_extraction_agent -> cross_clause_consistency_agent",
+        "target_agents": [
+          "clause_extraction_agent",
+          "cross_clause_consistency_agent"
+        ],
+        "observed_problem": "Verified handoff 'clause_extraction_agent -> cross_clause_consistency_agent' transmits 4 field(s) (['contract_id', 'clauses', 'absent_clause_types', 'extraction_notes']), of which 1 (['extraction_notes']) are redundant or duplicate for downstream consumption. Observed single-execution payload measures 478 tokens (1580 bytes, runtime_payload_observed); compact projection reduces payload to 459 tokens (1498 bytes, -19 tokens / 3.97%).",
+        "supporting_evidence": {
+          "mcp_stage_source": [
+            "stage_3_graph",
+            "stage_4_profiles",
+            "stage_10_evidence"
+          ],
+          "producer_agent": "clause_extraction_agent",
+          "consumer_agent": "cross_clause_consistency_agent",
+          "verified_dependency_relationship": "declared_dependency",
+          "original_transmitted_fields": [
+            "contract_id",
+            "clauses",
+            "absent_clause_types",
+            "extraction_notes"
+          ],
+          "consumer_required_fields": [
+            "contract_id",
+            "clauses"
+          ],
+          "consumer_used_fields": [],
+          "conditional_fields_preserved": [],
+          "potentially_redundant_fields": [
+            "extraction_notes"
+          ],
+          "duplicate_fields": [],
+          "uncertain_fields": [
+            "absent_clause_types"
+          ],
+          "fields_retained": [
+            "contract_id",
+            "clauses",
+            "absent_clause_types"
+          ],
+          "fields_excluded": [
+            "extraction_notes"
+          ],
+          "fields_replaced_with_reference": [],
+          "field_change_reasons": {
+            "contract_id": "Explicit input field placeholder in consumer prompt",
+            "clauses": "Explicitly listed in consumer declared_inputs",
+            "absent_clause_types": "Conservatively retained (uncertain necessity).",
+            "extraction_notes": "Not in consumer declared_inputs and unreferenced in consumer task/prompt."
+          },
+          "original_payload_tokens": 478,
+          "proposed_payload_tokens": 459,
+          "tokens_saved": 19,
+          "savings_percentage": 3.97,
+          "original_payload_bytes": 1580,
+          "proposed_payload_bytes": 1498,
+          "bytes_saved": 82,
+          "byte_savings_percentage": 5.19,
+          "observation_count": 30,
+          "repeated_across_handoffs": [
+            "contract_id",
+            "clauses",
+            "absent_clause_types",
+            "extraction_notes"
+          ],
+          "tokenization_method": "conservative_bpe_heuristic",
+          "is_exact_tokenizer": false,
+          "measurement_type": "estimated_heuristic_tokenizer",
+          "evidence_quality": "runtime_observed",
+          "evidence_basis": "runtime_payload_observed",
+          "original_payload_sample": {
+            "contract_id": "CTR-2026-0001",
+            "clauses": [
+              {
+                "clause_id": "CLS-0001-PAY",
+                "clause_type": "payment_terms",
+                "clause_title": "Section 3: Invoicing and Payment Terms",
+                "clause_text": "Invoices shall be payable within ninety (90) days of receipt by Customer.",
+                "section_reference": "Section 3.1"
+              },
+              {
+                "clause_id": "CLS-0001-DATA",
+                "clause_type": "data_protection",
+                "clause_title": "Section 8: Security & Breach Notification",
+                "clause_text": "Vendor shall notify Customer in writing within twenty-four (24) hours of becoming aware of any confirmed Data Breach.",
+                "section_reference": "Section 8.2"
+              },
+              {
+                "clause_id": "CLS-0001-LIAB",
+                "clause_type": "liability_cap",
+                "clause_title": "Section 10: Limitation of Liability",
+                "clause_text": "Each party's maximum aggregate liability shall be strictly limited to the total fees paid under this Agreement in the preceding twelve (12) months.",
+                "section_reference": "Section 10.1"
+              },
+              {
+                "clause_id": "CLS-0001-TERM",
+                "clause_type": "termination",
+                "clause_title": "Section 12: Term and Termination",
+                "clause_text": "Either party may terminate this Agreement for convenience upon providing thirty (30) days prior written notice.",
+                "section_reference": "Section 12.1"
+              },
+              {
+                "clause_id": "CLS-0001-REN",
+                "clause_type": "renewal",
+                "clause_title": "Section 12: Renewal Provisions",
+                "clause_text": "This Agreement renews on an annual basis unless either party gives notice of non-renewal at least 30 days prior.",
+                "section_reference": "Section 12.4"
+              }
+            ],
+            "absent_clause_types": [],
+            "extraction_notes": [
+              "Document extracted once for downstream policy comparison"
+            ]
+          },
+          "proposed_compact_payload_sample": {
+            "contract_id": "CTR-2026-0001",
+            "clauses": [
+              {
+                "clause_id": "CLS-0001-PAY",
+                "clause_type": "payment_terms",
+                "clause_title": "Section 3: Invoicing and Payment Terms",
+                "clause_text": "Invoices shall be payable within ninety (90) days of receipt by Customer.",
+                "section_reference": "Section 3.1"
+              },
+              {
+                "clause_id": "CLS-0001-DATA",
+                "clause_type": "data_protection",
+                "clause_title": "Section 8: Security & Breach Notification",
+                "clause_text": "Vendor shall notify Customer in writing within twenty-four (24) hours of becoming aware of any confirmed Data Breach.",
+                "section_reference": "Section 8.2"
+              },
+              {
+                "clause_id": "CLS-0001-LIAB",
+                "clause_type": "liability_cap",
+                "clause_title": "Section 10: Limitation of Liability",
+                "clause_text": "Each party's maximum aggregate liability shall be strictly limited to the total fees paid under this Agreement in the preceding twelve (12) months.",
+                "section_reference": "Section 10.1"
+              },
+              {
+                "clause_id": "CLS-0001-TERM",
+                "clause_type": "termination",
+                "clause_title": "Section 12: Term and Termination",
+                "clause_text": "Either party may terminate this Agreement for convenience upon providing thirty (30) days prior written notice.",
+                "section_reference": "Section 12.1"
+              },
+              {
+                "clause_id": "CLS-0001-REN",
+                "clause_type": "renewal",
+                "clause_title": "Section 12: Renewal Provisions",
+                "clause_text": "This Agreement renews on an annual basis unless either party gives notice of non-renewal at least 30 days prior.",
+                "section_reference": "Section 12.4"
+              }
+            ],
+            "absent_clause_types": []
+          },
+          "python_analysis_results": {
+            "payload_analysis": {
+              "original_payload_tokens": 478,
+              "original_payload_bytes": 1580,
+              "transmitted_field_count": 4,
+              "is_large_payload": true,
+              "large_text_or_document_fields": [],
+              "large_json_objects": [
+                "clauses"
+              ],
+              "repeated_across_handoffs": [
+                "contract_id",
+                "clauses",
+                "absent_clause_types",
+                "extraction_notes"
+              ],
+              "repeated_metadata_fields": [],
+              "repeated_static_fields": [
+                "clauses",
+                "contract_id",
+                "extraction_notes"
+              ],
+              "duplicate_value_pairs": [],
+              "per_field_metrics": {
+                "contract_id": {
+                  "bytes": 32,
+                  "tokens": 15,
+                  "type": "str",
+                  "handoff_frequency": 11
+                },
+                "clauses": {
+                  "bytes": 1439,
+                  "tokens": 437,
+                  "type": "list",
+                  "handoff_frequency": 3
+                },
+                "absent_clause_types": {
+                  "bytes": 27,
+                  "tokens": 10,
+                  "type": "list",
+                  "handoff_frequency": 3
+                },
+                "extraction_notes": {
+                  "bytes": 82,
+                  "tokens": 24,
+                  "type": "list",
+                  "handoff_frequency": 3
+                }
+              },
+              "size_evidence_status": "runtime_payload_measured"
+            },
+            "consumer_mapping": {
+              "producer_agent": "clause_extraction_agent",
+              "consumer_agent": "cross_clause_consistency_agent",
+              "consumer_declared_inputs": [
+                "clauses",
+                "effective_date",
+                "expiration_date"
+              ],
+              "consumer_prompt_source": "mcp_prompt_metrics_full",
+              "field_classifications": {
+                "contract_id": {
+                  "field": "contract_id",
+                  "classification": "required",
+                  "is_conditional": false,
+                  "reason": "Explicit input field placeholder in consumer prompt",
+                  "bytes": 32,
+                  "tokens": 15
+                },
+                "clauses": {
+                  "field": "clauses",
+                  "classification": "required",
+                  "is_conditional": false,
+                  "reason": "Explicitly listed in consumer declared_inputs",
+                  "bytes": 1439,
+                  "tokens": 437
+                },
+                "absent_clause_types": {
+                  "field": "absent_clause_types",
+                  "classification": "uncertain",
+                  "is_conditional": false,
+                  "reason": "Absent from declared_inputs, but shares domain stem(s) ['clause', 'type'] with consumer instructions/goal.",
+                  "bytes": 27,
+                  "tokens": 10
+                },
+                "extraction_notes": {
+                  "field": "extraction_notes",
+                  "classification": "potentially_redundant",
+                  "is_conditional": false,
+                  "reason": "Not in consumer declared_inputs and unreferenced in consumer task/prompt.",
+                  "bytes": 82,
+                  "tokens": 24
+                }
+              },
+              "required_fields": [
+                "contract_id",
+                "clauses"
+              ],
+              "used_fields": [],
+              "potentially_redundant_fields": [
+                "extraction_notes"
+              ],
+              "duplicate_fields": [],
+              "uncertain_fields": [
+                "absent_clause_types"
+              ],
+              "conditional_fields_preserved": [],
+              "needs_groq_semantic_analysis": true,
+              "semantic_ambiguity_reasons": [
+                "Field 'absent_clause_types': semantic stem overlap ['clause', 'type'] despite missing from declared_inputs."
+              ]
+            }
+          },
+          "groq_semantic_analysis": {
+            "used_groq": true,
+            "accepted": false,
+            "fallback_to_conservative_python": true,
+            "rejection_reason": "groq_semantic_error:groq_api_error:APIConnectionError",
+            "validated_result": null
+          },
+          "evidence_provenance": [
+            "stage_3_graph",
+            "stage_4_profiles",
+            "stage_10_evidence"
+          ]
+        },
+        "proposed_compact_payload_schema": {
+          "retained_fields": [
+            "contract_id",
+            "clauses",
+            "absent_clause_types"
+          ],
+          "excluded_fields": [
+            "extraction_notes"
+          ],
+          "shared_store_references": [],
+          "typed_delta_projection": true
+        },
+        "proposed_solution": "Transmit compact projected fields ['contract_id', 'clauses', 'absent_clause_types'] from 'clause_extraction_agent' to 'cross_clause_consistency_agent' (excluding ['extraction_notes'] from the inter-agent wire payload while preserving all global state).",
+        "expected_benefit": {
+          "original_payload_tokens_per_handoff": 478,
+          "proposed_payload_tokens_per_handoff": 459,
+          "tokens_saved_per_handoff": 19,
+          "token_savings_pct": 3.97,
+          "original_payload_bytes_per_handoff": 1580,
+          "proposed_payload_bytes_per_handoff": 1498,
+          "bytes_saved_per_handoff": 82,
+          "byte_savings_pct": 5.19,
+          "fields_removed_count": 1,
+          "fields_retained_count": 3,
+          "observation_count": 30,
+          "estimated_repeated_transmissions_eliminated_per_run": 1,
+          "evidence_basis": "runtime_payload_observed",
+          "measurement_type": "estimated_heuristic_tokenizer",
+          "is_estimate": true,
+          "quality_impact": "Requires shadow validation to confirm consumer accuracy with compact payload."
+        },
+        "tradeoffs_and_risks": {
+          "latency_tradeoff": "Lower payload serialization/prompt-prefill volume; runtime delta requires validation.",
+          "token_cost_tradeoff": "Projects 19 fewer payload tokens per execution (3.97% reduction).",
+          "output_quality_risk": "Moderate (changing inter-agent handoff schemas requires regression verification).",
+          "implementation_complexity": "Low",
+          "shared_storage_reference_dependency": false
+        },
+        "tier": "Tier 2",
+        "requires_validation": true,
+        "allocated_key": "GROQ_API_KEY_9 (masked: gsk_...k7Gf)",
+        "feasibility_tier": "Tier 2: High potential, moderate trade-off"
+      },
+      {
+        "candidate_id": "HANDOFF-EVIDENCE_VALIDATION_AGENT-TO-CONTRACT_INDEPENDENT_REVIEW_AGENT",
+        "dimension": "communication_data_handoff",
+        "title": "Compact Handoff Payload Schema for evidence_validation_agent -> contract_independent_review_agent",
+        "target_agents": [
+          "evidence_validation_agent",
+          "contract_independent_review_agent"
+        ],
+        "observed_problem": "Verified handoff 'evidence_validation_agent -> contract_independent_review_agent' transmits 5 field(s) (['contract_id', 'all_citations_valid', 'verified_finding_ids', 'invalid_or_unsupported_findings', 'evidence_notes']), of which 1 (['evidence_notes']) are redundant or duplicate for downstream consumption. Observed single-execution payload measures 278 tokens (819 bytes, runtime_payload_observed); compact projection reduces payload to 69 tokens (182 bytes, -209 tokens / 75.18%).",
+        "supporting_evidence": {
+          "mcp_stage_source": [
+            "stage_3_graph",
+            "stage_4_profiles",
+            "stage_10_evidence"
+          ],
+          "producer_agent": "evidence_validation_agent",
+          "consumer_agent": "contract_independent_review_agent",
+          "verified_dependency_relationship": "declared_dependency",
+          "original_transmitted_fields": [
+            "contract_id",
+            "all_citations_valid",
+            "verified_finding_ids",
+            "invalid_or_unsupported_findings",
+            "evidence_notes"
+          ],
+          "consumer_required_fields": [
+            "contract_id",
+            "all_citations_valid"
+          ],
+          "consumer_used_fields": [],
+          "conditional_fields_preserved": [],
+          "potentially_redundant_fields": [
+            "evidence_notes"
+          ],
+          "duplicate_fields": [],
+          "uncertain_fields": [
+            "invalid_or_unsupported_findings",
+            "verified_finding_ids"
+          ],
+          "fields_retained": [
+            "contract_id",
+            "all_citations_valid",
+            "verified_finding_ids",
+            "invalid_or_unsupported_findings"
+          ],
+          "fields_excluded": [
+            "evidence_notes"
+          ],
+          "fields_replaced_with_reference": [],
+          "field_change_reasons": {
+            "contract_id": "Explicit input field placeholder in consumer prompt",
+            "all_citations_valid": "Explicitly listed in consumer declared_inputs",
+            "verified_finding_ids": "Conservatively retained (uncertain necessity).",
+            "invalid_or_unsupported_findings": "Conservatively retained (uncertain necessity).",
+            "evidence_notes": "Not in consumer declared_inputs and unreferenced in consumer task/prompt."
+          },
+          "original_payload_tokens": 278,
+          "proposed_payload_tokens": 69,
+          "tokens_saved": 209,
+          "savings_percentage": 75.18,
+          "original_payload_bytes": 819,
+          "proposed_payload_bytes": 182,
+          "bytes_saved": 637,
+          "byte_savings_percentage": 77.78,
+          "observation_count": 30,
+          "repeated_across_handoffs": [
+            "contract_id"
+          ],
+          "tokenization_method": "conservative_bpe_heuristic",
+          "is_exact_tokenizer": false,
+          "measurement_type": "estimated_heuristic_tokenizer",
+          "evidence_quality": "runtime_observed",
+          "evidence_basis": "runtime_payload_observed",
+          "original_payload_sample": {
+            "contract_id": "CTR-2026-0001",
+            "all_citations_valid": true,
+            "verified_finding_ids": [
+              "R001",
+              "R002",
+              "R003",
+              "R004",
+              "R005",
+              "R006",
+              "R007"
+            ],
+            "invalid_or_unsupported_findings": [],
+            "evidence_notes": [
+              "Finding R001 cites clause CLS-0001-PAY, which exists in the contract (Section 3.1).",
+              "Finding R002 cites clause CLS-0001-DATA, which exists in the contract (Section 8.2).",
+              "Finding R003 cites clause CLS-0001-DATA, which exists in the contract (Section 8.2).",
+              "Finding R004 cites clause CLS-0001-LIAB, which exists in the contract (Section 10.1).",
+              "Finding R005 cites clause CLS-0001-LIAB, which exists in the contract (Section 10.1).",
+              "Finding R006 cites clause CLS-0001-REN, which exists in the contract (Section 12.4).",
+              "Finding R007 cites clause CLS-0001-REN, which exists in the contract (Section 12.4)."
+            ]
+          },
+          "proposed_compact_payload_sample": {
+            "contract_id": "CTR-2026-0001",
+            "all_citations_valid": true,
+            "verified_finding_ids": [
+              "R001",
+              "R002",
+              "R003",
+              "R004",
+              "R005",
+              "R006",
+              "R007"
+            ],
+            "invalid_or_unsupported_findings": []
+          },
+          "python_analysis_results": {
+            "payload_analysis": {
+              "original_payload_tokens": 278,
+              "original_payload_bytes": 819,
+              "transmitted_field_count": 5,
+              "is_large_payload": true,
+              "large_text_or_document_fields": [],
+              "large_json_objects": [
+                "evidence_notes"
+              ],
+              "repeated_across_handoffs": [
+                "contract_id"
+              ],
+              "repeated_metadata_fields": [],
+              "repeated_static_fields": [
+                "contract_id"
+              ],
+              "duplicate_value_pairs": [],
+              "per_field_metrics": {
+                "contract_id": {
+                  "bytes": 32,
+                  "tokens": 15,
+                  "type": "str",
+                  "handoff_frequency": 11
+                },
+                "all_citations_valid": {
+                  "bytes": 29,
+                  "tokens": 9,
+                  "type": "bool",
+                  "handoff_frequency": 1
+                },
+                "verified_finding_ids": {
+                  "bytes": 82,
+                  "tokens": 41,
+                  "type": "list",
+                  "handoff_frequency": 1
+                },
+                "invalid_or_unsupported_findings": {
+                  "bytes": 39,
+                  "tokens": 12,
+                  "type": "list",
+                  "handoff_frequency": 1
+                },
+                "evidence_notes": {
+                  "bytes": 637,
+                  "tokens": 210,
+                  "type": "list",
+                  "handoff_frequency": 1
+                }
+              },
+              "size_evidence_status": "runtime_payload_measured"
+            },
+            "consumer_mapping": {
+              "producer_agent": "evidence_validation_agent",
+              "consumer_agent": "contract_independent_review_agent",
+              "consumer_declared_inputs": [
+                "deviations",
+                "risk_findings",
+                "inconsistencies",
+                "all_citations_valid"
+              ],
+              "consumer_prompt_source": "mcp_prompt_metrics_full",
+              "field_classifications": {
+                "contract_id": {
+                  "field": "contract_id",
+                  "classification": "required",
+                  "is_conditional": false,
+                  "reason": "Explicit input field placeholder in consumer prompt",
+                  "bytes": 32,
+                  "tokens": 15
+                },
+                "all_citations_valid": {
+                  "field": "all_citations_valid",
+                  "classification": "required",
+                  "is_conditional": false,
+                  "reason": "Explicitly listed in consumer declared_inputs",
+                  "bytes": 29,
+                  "tokens": 9
+                },
+                "verified_finding_ids": {
+                  "field": "verified_finding_ids",
+                  "classification": "uncertain",
+                  "is_conditional": false,
+                  "reason": "Absent from declared_inputs, but shares domain stem(s) ['finding'] with consumer instructions/goal.",
+                  "bytes": 82,
+                  "tokens": 41
+                },
+                "invalid_or_unsupported_findings": {
+                  "field": "invalid_or_unsupported_findings",
+                  "classification": "uncertain",
+                  "is_conditional": false,
+                  "reason": "Absent from declared_inputs, but shares domain stem(s) ['finding', 'findings'] with consumer instructions/goal.",
+                  "bytes": 39,
+                  "tokens": 12
+                },
+                "evidence_notes": {
+                  "field": "evidence_notes",
+                  "classification": "potentially_redundant",
+                  "is_conditional": false,
+                  "reason": "Not in consumer declared_inputs and unreferenced in consumer task/prompt.",
+                  "bytes": 637,
+                  "tokens": 210
+                }
+              },
+              "required_fields": [
+                "contract_id",
+                "all_citations_valid"
+              ],
+              "used_fields": [],
+              "potentially_redundant_fields": [
+                "evidence_notes"
+              ],
+              "duplicate_fields": [],
+              "uncertain_fields": [
+                "verified_finding_ids",
+                "invalid_or_unsupported_findings"
+              ],
+              "conditional_fields_preserved": [],
+              "needs_groq_semantic_analysis": true,
+              "semantic_ambiguity_reasons": [
+                "Field 'verified_finding_ids': semantic stem overlap ['finding'] despite missing from declared_inputs.",
+                "Field 'invalid_or_unsupported_findings': semantic stem overlap ['finding', 'findings'] despite missing from declared_inputs."
+              ]
+            }
+          },
+          "groq_semantic_analysis": {
+            "used_groq": true,
+            "accepted": false,
+            "fallback_to_conservative_python": true,
+            "rejection_reason": "groq_semantic_error:groq_api_error:APIConnectionError",
+            "validated_result": null
+          },
+          "evidence_provenance": [
+            "stage_3_graph",
+            "stage_4_profiles",
+            "stage_10_evidence"
+          ]
+        },
+        "proposed_compact_payload_schema": {
+          "retained_fields": [
+            "contract_id",
+            "all_citations_valid",
+            "verified_finding_ids",
+            "invalid_or_unsupported_findings"
+          ],
+          "excluded_fields": [
+            "evidence_notes"
+          ],
+          "shared_store_references": [],
+          "typed_delta_projection": true
+        },
+        "proposed_solution": "Transmit compact projected fields ['contract_id', 'all_citations_valid', 'verified_finding_ids', 'invalid_or_unsupported_findings'] from 'evidence_validation_agent' to 'contract_independent_review_agent' (excluding ['evidence_notes'] from the inter-agent wire payload while preserving all global state).",
+        "expected_benefit": {
+          "original_payload_tokens_per_handoff": 278,
+          "proposed_payload_tokens_per_handoff": 69,
+          "tokens_saved_per_handoff": 209,
+          "token_savings_pct": 75.18,
+          "original_payload_bytes_per_handoff": 819,
+          "proposed_payload_bytes_per_handoff": 182,
+          "bytes_saved_per_handoff": 637,
+          "byte_savings_pct": 77.78,
+          "fields_removed_count": 1,
+          "fields_retained_count": 4,
+          "observation_count": 30,
+          "estimated_repeated_transmissions_eliminated_per_run": 0,
+          "evidence_basis": "runtime_payload_observed",
+          "measurement_type": "estimated_heuristic_tokenizer",
+          "is_estimate": true,
+          "quality_impact": "Requires shadow validation to confirm consumer accuracy with compact payload."
+        },
+        "tradeoffs_and_risks": {
+          "latency_tradeoff": "Lower payload serialization/prompt-prefill volume; runtime delta requires validation.",
+          "token_cost_tradeoff": "Projects 209 fewer payload tokens per execution (75.18% reduction).",
+          "output_quality_risk": "Moderate (changing inter-agent handoff schemas requires regression verification).",
+          "implementation_complexity": "Low",
+          "shared_storage_reference_dependency": false
+        },
+        "tier": "Tier 2",
+        "requires_validation": true,
+        "allocated_key": "GROQ_API_KEY_9 (masked: gsk_...k7Gf)",
+        "feasibility_tier": "Tier 2: High potential, moderate trade-off"
+      }
+    ]
+  },
   "additional_optimization_opportunities": [
     {
       "candidate_id": "ADDITIONAL-EARLY-EXIT",
@@ -727,7 +3510,8 @@
       },
       "tier": "Tier 2",
       "requires_validation": true,
-      "allocated_key": "GROQ_API_KEY_10 (masked: gsk_...DBpq)"
+      "allocated_key": "GROQ_API_KEY_10 (masked: gsk_...DBpq)",
+      "feasibility_tier": "Tier 2: High potential, moderate trade-off"
     }
   ],
   "prioritized_action_plan": {
@@ -776,126 +3560,6 @@
         "justification": "High expected benefit with low implementation complexity and zero functional risk."
       },
       {
-        "candidate_id": "PROMPT-CLAUSE_EXTRACTION_AGENT",
-        "title": "Compress Bloated Prompt Template for clause_extraction_agent",
-        "target_agents": [
-          "clause_extraction_agent"
-        ],
-        "expected_benefit": {
-          "token_savings_pct": 35.0,
-          "token_savings_count": 256,
-          "cost_savings_pct": 35.0,
-          "latency_savings_pct": 15.0,
-          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
-        },
-        "justification": "High expected benefit with low implementation complexity and zero functional risk."
-      },
-      {
-        "candidate_id": "PROMPT-CLAUSE_MAPPING_AGENT",
-        "title": "Compress Bloated Prompt Template for clause_mapping_agent",
-        "target_agents": [
-          "clause_mapping_agent"
-        ],
-        "expected_benefit": {
-          "token_savings_pct": 35.0,
-          "token_savings_count": 263,
-          "cost_savings_pct": 35.0,
-          "latency_savings_pct": 15.0,
-          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
-        },
-        "justification": "High expected benefit with low implementation complexity and zero functional risk."
-      },
-      {
-        "candidate_id": "PROMPT-COMPLIANCE_DEVIATION_AGENT",
-        "title": "Compress Bloated Prompt Template for compliance_deviation_agent",
-        "target_agents": [
-          "compliance_deviation_agent"
-        ],
-        "expected_benefit": {
-          "token_savings_pct": 35.0,
-          "token_savings_count": 168,
-          "cost_savings_pct": 35.0,
-          "latency_savings_pct": 15.0,
-          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
-        },
-        "justification": "High expected benefit with low implementation complexity and zero functional risk."
-      },
-      {
-        "candidate_id": "PROMPT-CONTRACT_INDEPENDENT_REVIEW_AGENT",
-        "title": "Compress Bloated Prompt Template for contract_independent_review_agent",
-        "target_agents": [
-          "contract_independent_review_agent"
-        ],
-        "expected_benefit": {
-          "token_savings_pct": 35.0,
-          "token_savings_count": 386,
-          "cost_savings_pct": 35.0,
-          "latency_savings_pct": 15.0,
-          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
-        },
-        "justification": "High expected benefit with low implementation complexity and zero functional risk."
-      },
-      {
-        "candidate_id": "PROMPT-CROSS_CLAUSE_CONSISTENCY_AGENT",
-        "title": "Compress Bloated Prompt Template for cross_clause_consistency_agent",
-        "target_agents": [
-          "cross_clause_consistency_agent"
-        ],
-        "expected_benefit": {
-          "token_savings_pct": 35.0,
-          "token_savings_count": 412,
-          "cost_savings_pct": 35.0,
-          "latency_savings_pct": 15.0,
-          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
-        },
-        "justification": "High expected benefit with low implementation complexity and zero functional risk."
-      },
-      {
-        "candidate_id": "PROMPT-EVIDENCE_VALIDATION_AGENT",
-        "title": "Compress Bloated Prompt Template for evidence_validation_agent",
-        "target_agents": [
-          "evidence_validation_agent"
-        ],
-        "expected_benefit": {
-          "token_savings_pct": 35.0,
-          "token_savings_count": 462,
-          "cost_savings_pct": 35.0,
-          "latency_savings_pct": 15.0,
-          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
-        },
-        "justification": "High expected benefit with low implementation complexity and zero functional risk."
-      },
-      {
-        "candidate_id": "PROMPT-FINAL_COMPLIANCE_REPORT_AGENT",
-        "title": "Compress Bloated Prompt Template for final_compliance_report_agent",
-        "target_agents": [
-          "final_compliance_report_agent"
-        ],
-        "expected_benefit": {
-          "token_savings_pct": 35.0,
-          "token_savings_count": 649,
-          "cost_savings_pct": 35.0,
-          "latency_savings_pct": 15.0,
-          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
-        },
-        "justification": "High expected benefit with low implementation complexity and zero functional risk."
-      },
-      {
-        "candidate_id": "PROMPT-RISK_AMBIGUITY_AGENT",
-        "title": "Compress Bloated Prompt Template for risk_ambiguity_agent",
-        "target_agents": [
-          "risk_ambiguity_agent"
-        ],
-        "expected_benefit": {
-          "token_savings_pct": 35.0,
-          "token_savings_count": 220,
-          "cost_savings_pct": 35.0,
-          "latency_savings_pct": 15.0,
-          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
-        },
-        "justification": "High expected benefit with low implementation complexity and zero functional risk."
-      },
-      {
         "candidate_id": "TOOL-CLAUSE_EXTRACTION_AGENT",
         "title": "Deterministic Tool Result Caching for clause_extraction_agent",
         "target_agents": [
@@ -910,38 +3574,6 @@
       }
     ],
     "tier_2_implementation_with_validation": [
-      {
-        "candidate_id": "CONSOLIDATE-CONTRACT_INTAKE_AGENT-CLAUSE_EXTRACTION_AGENT",
-        "title": "Consolidate contract_intake_agent and clause_extraction_agent into Unified Agent",
-        "target_agents": [
-          "contract_intake_agent",
-          "clause_extraction_agent"
-        ],
-        "expected_benefit": {
-          "latency_savings_pct": 25.0,
-          "latency_savings_seconds": 0.94,
-          "token_savings_pct": 20.0,
-          "token_savings_count": 408,
-          "quality_impact": "Maintains full reasoning fidelity by handling extraction and categorization in a single coherent prompt."
-        },
-        "validation_requirements": "Requires shadow execution testing against baseline traces to ensure full accuracy."
-      },
-      {
-        "candidate_id": "CONSOLIDATE-COMPLIANCE_DEVIATION_AGENT-RISK_AMBIGUITY_AGENT",
-        "title": "Consolidate compliance_deviation_agent and risk_ambiguity_agent into Unified Agent",
-        "target_agents": [
-          "compliance_deviation_agent",
-          "risk_ambiguity_agent"
-        ],
-        "expected_benefit": {
-          "latency_savings_pct": 25.0,
-          "latency_savings_seconds": 1.22,
-          "token_savings_pct": 20.0,
-          "token_savings_count": 537,
-          "quality_impact": "Maintains full reasoning fidelity by handling extraction and categorization in a single coherent prompt."
-        },
-        "validation_requirements": "Requires shadow execution testing against baseline traces to ensure full accuracy."
-      },
       {
         "candidate_id": "MODEL-CLAUSE_EXTRACTION_AGENT",
         "title": "Route clause_extraction_agent to Smaller/Faster Model (requires validation)",
@@ -971,19 +3603,164 @@
         "validation_requirements": "Requires shadow execution testing against baseline traces to ensure full accuracy."
       },
       {
-        "candidate_id": "COMM-STATE-STREAMLINING",
-        "title": "Streamline Intermediate Handoff Payloads to Field-Specific Deltas",
+        "candidate_id": "HANDOFF-CONTRACT_INTAKE_AGENT-TO-CLAUSE_EXTRACTION_AGENT",
+        "title": "Compact Handoff Payload Schema for contract_intake_agent -> clause_extraction_agent",
+        "target_agents": [
+          "contract_intake_agent",
+          "clause_extraction_agent"
+        ],
+        "expected_benefit": {
+          "original_payload_tokens_per_handoff": 187,
+          "proposed_payload_tokens_per_handoff": 122,
+          "tokens_saved_per_handoff": 65,
+          "token_savings_pct": 34.76,
+          "original_payload_bytes_per_handoff": 521,
+          "proposed_payload_bytes_per_handoff": 346,
+          "bytes_saved_per_handoff": 175,
+          "byte_savings_pct": 33.59,
+          "fields_removed_count": 2,
+          "fields_retained_count": 9,
+          "observation_count": 30,
+          "estimated_repeated_transmissions_eliminated_per_run": 2,
+          "evidence_basis": "runtime_payload_observed",
+          "measurement_type": "estimated_heuristic_tokenizer",
+          "is_estimate": true,
+          "quality_impact": "Requires shadow validation to confirm consumer accuracy with compact payload."
+        },
+        "validation_requirements": "Requires shadow execution testing against baseline traces to ensure full accuracy."
+      },
+      {
+        "candidate_id": "HANDOFF-CONTRACT_INTAKE_AGENT-TO-POLICY_INTERPRETATION_AGENT",
+        "title": "Compact Handoff Payload Schema for contract_intake_agent -> policy_interpretation_agent",
+        "target_agents": [
+          "contract_intake_agent",
+          "policy_interpretation_agent"
+        ],
+        "expected_benefit": {
+          "original_payload_tokens_per_handoff": 187,
+          "proposed_payload_tokens_per_handoff": 52,
+          "tokens_saved_per_handoff": 135,
+          "token_savings_pct": 72.19,
+          "original_payload_bytes_per_handoff": 521,
+          "proposed_payload_bytes_per_handoff": 133,
+          "bytes_saved_per_handoff": 388,
+          "byte_savings_pct": 74.47,
+          "fields_removed_count": 7,
+          "fields_retained_count": 4,
+          "observation_count": 30,
+          "estimated_repeated_transmissions_eliminated_per_run": 7,
+          "evidence_basis": "runtime_payload_observed",
+          "measurement_type": "estimated_heuristic_tokenizer",
+          "is_estimate": true,
+          "quality_impact": "Requires shadow validation to confirm consumer accuracy with compact payload."
+        },
+        "validation_requirements": "Requires shadow execution testing against baseline traces to ensure full accuracy."
+      },
+      {
+        "candidate_id": "HANDOFF-CLAUSE_MAPPING_AGENT-TO-COMPLIANCE_DEVIATION_AGENT",
+        "title": "Compact Handoff Payload Schema for clause_mapping_agent -> compliance_deviation_agent",
+        "target_agents": [
+          "clause_mapping_agent",
+          "compliance_deviation_agent"
+        ],
+        "expected_benefit": {
+          "original_payload_tokens_per_handoff": 160,
+          "proposed_payload_tokens_per_handoff": 151,
+          "tokens_saved_per_handoff": 9,
+          "token_savings_pct": 5.62,
+          "original_payload_bytes_per_handoff": 469,
+          "proposed_payload_bytes_per_handoff": 440,
+          "bytes_saved_per_handoff": 29,
+          "byte_savings_pct": 6.18,
+          "fields_removed_count": 1,
+          "fields_retained_count": 3,
+          "observation_count": 30,
+          "estimated_repeated_transmissions_eliminated_per_run": 0,
+          "evidence_basis": "runtime_payload_observed",
+          "measurement_type": "estimated_heuristic_tokenizer",
+          "is_estimate": true,
+          "quality_impact": "Requires shadow validation to confirm consumer accuracy with compact payload."
+        },
+        "validation_requirements": "Requires shadow execution testing against baseline traces to ensure full accuracy."
+      },
+      {
+        "candidate_id": "HANDOFF-CLAUSE_EXTRACTION_AGENT-TO-RISK_AMBIGUITY_AGENT",
+        "title": "Compact Handoff Payload Schema for clause_extraction_agent -> risk_ambiguity_agent",
         "target_agents": [
           "clause_extraction_agent",
-          "clause_mapping_agent",
-          "compliance_deviation_agent",
+          "risk_ambiguity_agent"
+        ],
+        "expected_benefit": {
+          "original_payload_tokens_per_handoff": 478,
+          "proposed_payload_tokens_per_handoff": 459,
+          "tokens_saved_per_handoff": 19,
+          "token_savings_pct": 3.97,
+          "original_payload_bytes_per_handoff": 1580,
+          "proposed_payload_bytes_per_handoff": 1498,
+          "bytes_saved_per_handoff": 82,
+          "byte_savings_pct": 5.19,
+          "fields_removed_count": 1,
+          "fields_retained_count": 3,
+          "observation_count": 30,
+          "estimated_repeated_transmissions_eliminated_per_run": 1,
+          "evidence_basis": "runtime_payload_observed",
+          "measurement_type": "estimated_heuristic_tokenizer",
+          "is_estimate": true,
+          "quality_impact": "Requires shadow validation to confirm consumer accuracy with compact payload."
+        },
+        "validation_requirements": "Requires shadow execution testing against baseline traces to ensure full accuracy."
+      },
+      {
+        "candidate_id": "HANDOFF-CLAUSE_EXTRACTION_AGENT-TO-CROSS_CLAUSE_CONSISTENCY_AGENT",
+        "title": "Compact Handoff Payload Schema for clause_extraction_agent -> cross_clause_consistency_agent",
+        "target_agents": [
+          "clause_extraction_agent",
+          "cross_clause_consistency_agent"
+        ],
+        "expected_benefit": {
+          "original_payload_tokens_per_handoff": 478,
+          "proposed_payload_tokens_per_handoff": 459,
+          "tokens_saved_per_handoff": 19,
+          "token_savings_pct": 3.97,
+          "original_payload_bytes_per_handoff": 1580,
+          "proposed_payload_bytes_per_handoff": 1498,
+          "bytes_saved_per_handoff": 82,
+          "byte_savings_pct": 5.19,
+          "fields_removed_count": 1,
+          "fields_retained_count": 3,
+          "observation_count": 30,
+          "estimated_repeated_transmissions_eliminated_per_run": 1,
+          "evidence_basis": "runtime_payload_observed",
+          "measurement_type": "estimated_heuristic_tokenizer",
+          "is_estimate": true,
+          "quality_impact": "Requires shadow validation to confirm consumer accuracy with compact payload."
+        },
+        "validation_requirements": "Requires shadow execution testing against baseline traces to ensure full accuracy."
+      },
+      {
+        "candidate_id": "HANDOFF-EVIDENCE_VALIDATION_AGENT-TO-CONTRACT_INDEPENDENT_REVIEW_AGENT",
+        "title": "Compact Handoff Payload Schema for evidence_validation_agent -> contract_independent_review_agent",
+        "target_agents": [
+          "evidence_validation_agent",
           "contract_independent_review_agent"
         ],
         "expected_benefit": {
-          "token_savings_pct": 22.0,
-          "latency_savings_pct": 10.0,
-          "cost_savings_pct": 22.0,
-          "quality_impact": "Reduces context dilution and LLM attention distraction."
+          "original_payload_tokens_per_handoff": 278,
+          "proposed_payload_tokens_per_handoff": 69,
+          "tokens_saved_per_handoff": 209,
+          "token_savings_pct": 75.18,
+          "original_payload_bytes_per_handoff": 819,
+          "proposed_payload_bytes_per_handoff": 182,
+          "bytes_saved_per_handoff": 637,
+          "byte_savings_pct": 77.78,
+          "fields_removed_count": 1,
+          "fields_retained_count": 4,
+          "observation_count": 30,
+          "estimated_repeated_transmissions_eliminated_per_run": 0,
+          "evidence_basis": "runtime_payload_observed",
+          "measurement_type": "estimated_heuristic_tokenizer",
+          "is_estimate": true,
+          "quality_impact": "Requires shadow validation to confirm consumer accuracy with compact payload."
         },
         "validation_requirements": "Requires shadow execution testing against baseline traces to ensure full accuracy."
       },
@@ -1011,9 +3788,7 @@
       {
         "phase": "Phase 1: Quick Wins (Tier 1)",
         "actions": [
-          "Compress prompt templates by removing repetitive instructions and schemas.",
-          "Implement scatter-gather parallel execution for verified independent agent pairs.",
-          "Consolidate tightly coupled sequential extraction agents."
+          "Implement scatter-gather parallel execution for verified independent agent pairs."
         ],
         "projected_timeframe": "1-2 sprints"
       },
@@ -1021,6 +3796,8 @@
         "phase": "Phase 2: Validated Enhancements (Tier 2)",
         "actions": [
           "Shadow test compact models for syntactic document intake nodes.",
+          "Validate and deploy consolidated sequential agent prompts (Dimension B) against baseline regression traces.",
+          "Validate compressed agent and unified prompts (Dimension E) against baseline traces prior to rollout.",
           "Implement fast-path early exit for verified zero-deviation artifacts."
         ],
         "projected_timeframe": "2-3 sprints"

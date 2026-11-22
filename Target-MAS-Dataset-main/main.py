@@ -497,6 +497,41 @@ def cmd_ast_analyze(args):
                 print(f"  - {p.name} ({p.stat().st_size:,} bytes)")
 
 
+def cmd_model_select(args):
+    from optimization_agent.model_selection import run_model_selection
+    print(f"\n[AWO] Running JEV Agentic Model Selection for workflow '{args.workflow}', agent '{args.agent}'...")
+    res = run_model_selection(
+        workflow_id=args.workflow,
+        agent_id=args.agent,
+        output_dir=args.output_dir,
+        export_report=True,
+    )
+    if args.json:
+        print(json.dumps(res, indent=2))
+    else:
+        req = res.get("agent_requirements", {})
+        recom = res.get("model_recommendation", {})
+        print("\n" + "=" * 70)
+        print(" AWO JEV MODEL SELECTION RESULTS")
+        print("=" * 70)
+        print(f" Workflow:        {res.get('workflow_name')} ({res.get('workflow_id')})")
+        print(f" Target Agent:    {res.get('selected_agent_id')}")
+        print(f" Baseline Model:  {res.get('baseline_model')}")
+        print("-" * 70)
+        print(" [JEV Agent 1: Requirement Analysis]")
+        print(f"   Task Complexity:     {req.get('task_complexity', {}).get('class')}")
+        print(f"   Prompt Complexity:   {req.get('prompt_complexity', {}).get('class')}")
+        print(f"   Token Consumption:   {req.get('token_consumption', {}).get('class')}")
+        print("-" * 70)
+        print(" [JEV Agent 2: Model Selection]")
+        print(f"   Recommended Model:   {recom.get('selected_model')}")
+        print(f"   Selection Validated: {recom.get('selection_validated')}")
+        print(f"   Rationale:           {recom.get('reason')}")
+        print(f"   Choice Confidence:   {recom.get('choice_confidence')}")
+        print(f"   Downgrade Candidate: {res.get('selection_validation', {}).get('is_downgrade_candidate')}")
+        print("=" * 70 + "\n")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Agentic Workflow Optimizer - Multi-Agent Workflows CLI")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
@@ -538,6 +573,14 @@ def main():
     p_px = subparsers.add_parser("launch-phoenix", help="Start Arize Phoenix local tracing UI")
     p_px.add_argument("--port", type=int, default=6006, help="Port to run Phoenix UI on (default: 6006)")
     p_px.set_defaults(func=cmd_launch_phoenix)
+
+    # Model Selection command (JEV-based Agentic Model Selection)
+    p_ms = subparsers.add_parser("model-select", help="Run JEV-based Agentic Model Selection for a specific agent")
+    p_ms.add_argument("--workflow", required=True, help="Target workflow ID (e.g. contract_review)")
+    p_ms.add_argument("--agent", required=True, help="Target agent ID (e.g. clause_mapping_agent)")
+    p_ms.add_argument("--output-dir", help="Optional custom directory to export reports")
+    p_ms.add_argument("--json", action="store_true", help="Print raw JSON report to stdout")
+    p_ms.set_defaults(func=cmd_model_select)
 
     # Key validation command
     parser_keys = subparsers.add_parser("validate-keys", help="Validate workflow Groq API key configuration")

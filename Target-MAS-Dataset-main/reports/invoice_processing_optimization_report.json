@@ -1,0 +1,826 @@
+{
+  "report_metadata": {
+    "workflow_id": "invoice_processing",
+    "workflow_name": "invoice_processing",
+    "timestamp": "2026-11-01T17:24:39.642016+00:00",
+    "agent_version": "1.0.0",
+    "orchestration_engine": "LangGraph StateGraph",
+    "model_used": "openai/gpt-oss-120b",
+    "total_optimization_candidates_found": 14,
+    "evidence_source": "TraceProfiler MCP Evidence Server",
+    "report_generated_with_key": "GROQ_API_KEY_13 (masked: gsk_...Ujsn)"
+  },
+  "executive_summary": {
+    "overview": "Autonomous optimization analysis for workflow 'invoice_processing' across 8 mandatory dimensions discovered 14 high-impact optimization opportunities (10 Tier 1 immediate recommendations, 4 Tier 2 validated candidates, 0 Tier 3 caution candidates).",
+    "key_findings": [
+      "Sequential execution bottlenecks identify 0 validated parallelization opportunities.",
+      "Prompt template overhead and repetitive boilerplate accounts for ~35% compressible token bloat.",
+      "Syntactic extraction agents are prime candidates for high-speed, cost-effective model tiering (marked for validation).",
+      "Intermediate agent serialization can be streamlined via typed delta handoffs, cutting global state overhead."
+    ],
+    "projected_cumulative_impact": {
+      "estimated_critical_path_latency_reduction_pct": 35.0,
+      "estimated_total_token_reduction_pct": 28.0,
+      "estimated_operational_cost_reduction_pct": 32.0,
+      "functional_correctness_risk": "Low (preserved via strict dependency verification and conditional fallbacks)"
+    }
+  },
+  "workflow_baseline": {
+    "workflow_id": "invoice_processing",
+    "total_declared_agents": 8,
+    "total_runtime_agents": 8,
+    "total_runs_recorded": 30,
+    "successful_runs": 30,
+    "failed_runs": 0,
+    "latency_baseline": {
+      "mean_seconds": 31.1229,
+      "median_seconds": 17.0135,
+      "min_seconds": 13.518,
+      "max_seconds": 431.923,
+      "unit": "seconds"
+    },
+    "token_baseline": {
+      "total_tokens": 315310,
+      "mean_tokens_per_run": 10510.3,
+      "total_prompt_tokens": 199336,
+      "total_completion_tokens": 115974
+    },
+    "cost_baseline": {
+      "total_cost_usd": 0.20922,
+      "mean_cost_per_run_usd": 0.006974,
+      "calculation_basis": "trace_telemetry_estimates"
+    }
+  },
+  "agent_pruning_opportunities": [
+    {
+      "candidate_id": "PRUNE-INVOICE_VALIDATION_AGENT",
+      "dimension": "agent_pruning",
+      "title": "Conditional Pruning or Pass-Through Bypass of invoice_validation_agent",
+      "target_agents": [
+        "invoice_validation_agent"
+      ],
+      "observed_problem": "Agent 'invoice_validation_agent' (Invoice Validation Auditor) performs repetitive secondary verification consuming an average of 1.43s per execution run. In non-deviating or low-risk cases, its output merely confirms upstream agent findings without altering the workflow decision path.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_4_profiles",
+          "stage_6_latency",
+          "stage_9_comparison"
+        ],
+        "agent_mean_latency_seconds": 1.4252,
+        "observation_count": 30,
+        "role_definition": "Invoice Validation Auditor",
+        "declared_responsibilities": null
+      },
+      "proposed_solution": "Prune 'invoice_validation_agent' from the standard baseline execution path, converting it into a dynamic, conditional auditor triggered only when upstream ambiguity or high-risk deviations are detected.",
+      "expected_benefit": {
+        "latency_savings_pct": 10.0,
+        "latency_savings_seconds": 1.4252,
+        "token_savings_pct": 8.5,
+        "quality_impact": "Negligible risk when paired with strict upstream confidence thresholds."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Immediate latency reduction on baseline path.",
+        "token_cost_tradeoff": "Direct reduction in prompt and completion tokens.",
+        "output_quality_risk": "Low (auditing maintained via conditional routing).",
+        "implementation_complexity": "Low"
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "allocated_key": "GROQ_API_KEY_3 (masked: gsk_...maHn)"
+    }
+  ],
+  "agent_consolidation_opportunities": [
+    {
+      "candidate_id": "CONSOLIDATE-INVOICE_EXTRACTION_AGENT-INVOICE_VALIDATION_AGENT",
+      "dimension": "agent_consolidation",
+      "title": "Consolidate invoice_extraction_agent and invoice_validation_agent into Unified Agent",
+      "target_agents": [
+        "invoice_extraction_agent",
+        "invoice_validation_agent"
+      ],
+      "observed_problem": "Agents 'invoice_extraction_agent' and 'invoice_validation_agent' share tightly coupled operational scopes and require high intermediate data handoffs. Executing them as separate LLM agents introduces redundant context re-loading and inter-agent serialization latency (2.19s + 1.43s = 3.62s).",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_4_profiles",
+          "stage_6_latency",
+          "stage_7_tokens"
+        ],
+        "combined_latency_seconds": 3.6186,
+        "combined_tokens_per_run": 1963.5,
+        "agent_1_role": "Senior Invoice Extraction Specialist",
+        "agent_2_role": "Invoice Validation Auditor"
+      },
+      "proposed_solution": "Merge 'invoice_extraction_agent' and 'invoice_validation_agent' into a single specialized agent with unified system instructions, eliminating the intermediate payload serialization and reducing prompt token re-transmission.",
+      "expected_benefit": {
+        "latency_savings_pct": 25.0,
+        "latency_savings_seconds": 0.9,
+        "token_savings_pct": 20.0,
+        "token_savings_count": 393,
+        "quality_impact": "Maintains full reasoning fidelity by handling extraction and categorization in a single coherent prompt."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Significant latency reduction by eliminating one agent dispatch round-trip.",
+        "token_cost_tradeoff": "Eliminates duplicate system prompt overhead.",
+        "output_quality_risk": "Low (joint extraction is well within standard LLM contextual capabilities).",
+        "implementation_complexity": "Medium"
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "allocated_key": "GROQ_API_KEY_4 (masked: gsk_...Bm5c)"
+    }
+  ],
+  "workflow_parallelization_opportunities": [],
+  "model_selection_recommendations": [
+    {
+      "candidate_id": "MODEL-INVOICE_EXTRACTION_AGENT",
+      "dimension": "model_selection",
+      "title": "Route invoice_extraction_agent to Smaller/Faster Model (requires validation)",
+      "target_agents": [
+        "invoice_extraction_agent"
+      ],
+      "observed_problem": "Agent 'invoice_extraction_agent' performs structured syntactic extraction and text normalization. Assigning the high-parameter 120B model ('openai/gpt-oss-120b') introduces unnecessary latency (2.19s) and compute overhead for straightforward parsing tasks.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_2_overview",
+          "stage_4_profiles",
+          "stage_7_tokens"
+        ],
+        "current_model": "openai/gpt-oss-120b",
+        "proposed_candidate_models": [
+          "llama-3.3-70b-versatile",
+          "llama-3.1-8b-instant"
+        ],
+        "task_complexity": "Low-to-Moderate (Structured entity extraction, JSON mapping)",
+        "mean_tokens_per_call": 1074.7
+      },
+      "proposed_solution": "Switch 'invoice_extraction_agent' to a compact specialized model (e.g., Llama-3.3-70B or Llama-3.1-8B) with structured schema output validation.",
+      "expected_benefit": {
+        "latency_savings_pct": 40.0,
+        "latency_savings_seconds": 0.88,
+        "cost_savings_pct": 65.0,
+        "quality_impact": "High accuracy on standard schema parsing; edge case validation required."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Substantial speedup on first-stage document intake.",
+        "token_cost_tradeoff": "Over 60% compute cost reduction for this node.",
+        "output_quality_risk": "Moderate (smaller models may miss subtle domain-specific abbreviations).",
+        "implementation_complexity": "Low"
+      },
+      "tier": "Tier 2",
+      "requires_validation": true,
+      "allocated_key": "GROQ_API_KEY_6 (masked: gsk_...qtlA)"
+    }
+  ],
+  "prompt_optimization_opportunities": [
+    {
+      "candidate_id": "PROMPT-APPROVAL_RECOMMENDATION_AGENT",
+      "dimension": "prompt_optimization",
+      "title": "Compress Bloated Prompt Template for approval_recommendation_agent",
+      "target_agents": [
+        "approval_recommendation_agent"
+      ],
+      "observed_problem": "Prompt template for 'approval_recommendation_agent' contains 69 words (763 chars, ~1235 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_5_prompts",
+          "stage_7_tokens"
+        ],
+        "static_word_count": 69,
+        "static_char_length": 763,
+        "mean_prompt_tokens": 1234.8,
+        "sample_snippet": "f\"Formulate a structured approval recommendation for this invoice.\\nConsolidated Evidence from all preceding stages:\\n{json.dumps(consolidated_evidence, indent=2)}\\n\\nDeterministic..."
+      },
+      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
+      "expected_benefit": {
+        "token_savings_pct": 35.0,
+        "token_savings_count": 432,
+        "cost_savings_pct": 35.0,
+        "latency_savings_pct": 15.0,
+        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
+        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
+        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
+        "implementation_complexity": "Low"
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
+    },
+    {
+      "candidate_id": "PROMPT-DUPLICATE_DETECTION_AGENT",
+      "dimension": "prompt_optimization",
+      "title": "Compress Bloated Prompt Template for duplicate_detection_agent",
+      "target_agents": [
+        "duplicate_detection_agent"
+      ],
+      "observed_problem": "Prompt template for 'duplicate_detection_agent' contains 59 words (622 chars, ~595 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_5_prompts",
+          "stage_7_tokens"
+        ],
+        "static_word_count": 59,
+        "static_char_length": 622,
+        "mean_prompt_tokens": 594.7,
+        "sample_snippet": "f\"Perform duplicate screening on this invoice.\\nCurrent Invoice:\\n{json.dumps(invoice_data, indent=2)}\\n\\nDeterministic Historical Match Scan:\\n{json.dumps(dup_audit, indent=2)}\\n\\..."
+      },
+      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
+      "expected_benefit": {
+        "token_savings_pct": 35.0,
+        "token_savings_count": 208,
+        "cost_savings_pct": 35.0,
+        "latency_savings_pct": 15.0,
+        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
+        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
+        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
+        "implementation_complexity": "Low"
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
+    },
+    {
+      "candidate_id": "PROMPT-EXCEPTION_ANALYSIS_AGENT",
+      "dimension": "prompt_optimization",
+      "title": "Compress Bloated Prompt Template for exception_analysis_agent",
+      "target_agents": [
+        "exception_analysis_agent"
+      ],
+      "observed_problem": "Prompt template for 'exception_analysis_agent' contains 71 words (665 chars, ~981 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_5_prompts",
+          "stage_7_tokens"
+        ],
+        "static_word_count": 71,
+        "static_char_length": 665,
+        "mean_prompt_tokens": 981.1,
+        "sample_snippet": "f\"Analyze all upstream findings for accounts payable exceptions.\\nConsolidated Evidence:\\n{json.dumps(upstream_evidence, indent=2)}\\n\\nTasks:\\n1. Consolidate math discrepancies, PO..."
+      },
+      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
+      "expected_benefit": {
+        "token_savings_pct": 35.0,
+        "token_savings_count": 343,
+        "cost_savings_pct": 35.0,
+        "latency_savings_pct": 15.0,
+        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
+        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
+        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
+        "implementation_complexity": "Low"
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
+    },
+    {
+      "candidate_id": "PROMPT-FINAL_REVIEW_AGENT_INVOICE",
+      "dimension": "prompt_optimization",
+      "title": "Compress Bloated Prompt Template for final_review_agent_invoice",
+      "target_agents": [
+        "final_review_agent_invoice"
+      ],
+      "observed_problem": "Prompt template for 'final_review_agent_invoice' contains 70 words (665 chars, ~1418 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_5_prompts",
+          "stage_7_tokens"
+        ],
+        "static_word_count": 70,
+        "static_char_length": 665,
+        "mean_prompt_tokens": 1417.7,
+        "sample_snippet": "f\"Perform the final comprehensive review of this accounts payable workflow execution.\\nComplete Audit Trail:\\n{json.dumps(all_stage_results, indent=2)}\\n\\nTasks:\\n1. Verify that th..."
+      },
+      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
+      "expected_benefit": {
+        "token_savings_pct": 35.0,
+        "token_savings_count": 496,
+        "cost_savings_pct": 35.0,
+        "latency_savings_pct": 15.0,
+        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
+        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
+        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
+        "implementation_complexity": "Low"
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
+    },
+    {
+      "candidate_id": "PROMPT-INVOICE_EXTRACTION_AGENT",
+      "dimension": "prompt_optimization",
+      "title": "Compress Bloated Prompt Template for invoice_extraction_agent",
+      "target_agents": [
+        "invoice_extraction_agent"
+      ],
+      "observed_problem": "Prompt template for 'invoice_extraction_agent' contains 63 words (640 chars, ~520 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_5_prompts",
+          "stage_7_tokens"
+        ],
+        "static_word_count": 63,
+        "static_char_length": 640,
+        "mean_prompt_tokens": 519.9,
+        "sample_snippet": "f\"Analyze the following synthetic invoice and extract its structured fields.\\nRaw Invoice Input:\\n{json.dumps(invoice_data, indent=2)}\\n\\nTasks:\\n1. Extract: invoice_number, suppli..."
+      },
+      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
+      "expected_benefit": {
+        "token_savings_pct": 35.0,
+        "token_savings_count": 182,
+        "cost_savings_pct": 35.0,
+        "latency_savings_pct": 15.0,
+        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
+        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
+        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
+        "implementation_complexity": "Low"
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
+    },
+    {
+      "candidate_id": "PROMPT-INVOICE_VALIDATION_AGENT",
+      "dimension": "prompt_optimization",
+      "title": "Compress Bloated Prompt Template for invoice_validation_agent",
+      "target_agents": [
+        "invoice_validation_agent"
+      ],
+      "observed_problem": "Prompt template for 'invoice_validation_agent' contains 69 words (669 chars, ~573 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_5_prompts",
+          "stage_7_tokens"
+        ],
+        "static_word_count": 69,
+        "static_char_length": 669,
+        "mean_prompt_tokens": 572.7,
+        "sample_snippet": "f\"Perform structured validation of this invoice.\\nInvoice Data:\\n{json.dumps(invoice_data, indent=2)}\\n\\nVerified Deterministic Math Audit from Python:\\n{json.dumps(math_audit, ind..."
+      },
+      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
+      "expected_benefit": {
+        "token_savings_pct": 35.0,
+        "token_savings_count": 200,
+        "cost_savings_pct": 35.0,
+        "latency_savings_pct": 15.0,
+        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
+        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
+        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
+        "implementation_complexity": "Low"
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
+    },
+    {
+      "candidate_id": "PROMPT-PO_MATCHING_AGENT",
+      "dimension": "prompt_optimization",
+      "title": "Compress Bloated Prompt Template for po_matching_agent",
+      "target_agents": [
+        "po_matching_agent"
+      ],
+      "observed_problem": "Prompt template for 'po_matching_agent' contains 55 words (568 chars, ~738 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_5_prompts",
+          "stage_7_tokens"
+        ],
+        "static_word_count": 55,
+        "static_char_length": 568,
+        "mean_prompt_tokens": 738.0,
+        "sample_snippet": "f\"Reconcile this invoice against its corresponding purchase order.\\nInvoice Data:\\n{json.dumps(invoice_data, indent=2)}\\n\\nDeterministic PO Matching Results:\\n{json.dumps(po_match_..."
+      },
+      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
+      "expected_benefit": {
+        "token_savings_pct": 35.0,
+        "token_savings_count": 258,
+        "cost_savings_pct": 35.0,
+        "latency_savings_pct": 15.0,
+        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
+        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
+        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
+        "implementation_complexity": "Low"
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
+    },
+    {
+      "candidate_id": "PROMPT-POLICY_COMPLIANCE_AGENT",
+      "dimension": "prompt_optimization",
+      "title": "Compress Bloated Prompt Template for policy_compliance_agent",
+      "target_agents": [
+        "policy_compliance_agent"
+      ],
+      "observed_problem": "Prompt template for 'policy_compliance_agent' contains 60 words (628 chars, ~586 prompt tokens per run). Static AST analysis shows repetitive role descriptions, verbose schema guardrails, and boilerplate output instructions.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_5_prompts",
+          "stage_7_tokens"
+        ],
+        "static_word_count": 60,
+        "static_char_length": 628,
+        "mean_prompt_tokens": 585.5,
+        "sample_snippet": "f\"Perform policy compliance review on this invoice.\\nInvoice Data:\\n{json.dumps(invoice_data, indent=2)}\\n\\nDeterministic Policy Audit:\\n{json.dumps(policy_audit, indent=2)}\\n\\nIns..."
+      },
+      "proposed_solution": "Refactor prompt into concise declarative instructions using structured markdown directives. Eliminate duplicate role narrative and move schema validation to Pydantic structured output.",
+      "expected_benefit": {
+        "token_savings_pct": 35.0,
+        "token_savings_count": 205,
+        "cost_savings_pct": 35.0,
+        "latency_savings_pct": 15.0,
+        "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Faster time-to-first-token (TTFT) via reduced prompt prefill.",
+        "token_cost_tradeoff": "Immediate 35% reduction in recurring input token costs.",
+        "output_quality_risk": "Low (guidelines consolidated, not omitted).",
+        "implementation_complexity": "Low"
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "allocated_key": "GROQ_API_KEY_7 (masked: gsk_...ERhy)"
+    }
+  ],
+  "tool_optimization_opportunities": [
+    {
+      "candidate_id": "TOOL-APPROVAL_RECOMMENDATION_AGENT",
+      "dimension": "tool_optimization",
+      "title": "Deterministic Tool Result Caching for approval_recommendation_agent",
+      "target_agents": [
+        "approval_recommendation_agent"
+      ],
+      "observed_problem": "Agent 'approval_recommendation_agent' repeatedly evaluates static compliance policies and reference definitions across runs without persistent local caching of deterministic lookup queries.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_4_profiles",
+          "stage_10_evidence"
+        ],
+        "declared_tasks_count": 1,
+        "role": "Accounts Payable Decision Authority"
+      },
+      "proposed_solution": "Implement an in-memory TTL memoization cache for static policy lookups and clause reference matches.",
+      "expected_benefit": {
+        "latency_savings_pct": 12.0,
+        "token_savings_pct": 10.0,
+        "quality_impact": "Zero risk for immutable policy reference lookups."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Sub-millisecond retrieval for cached policy checks.",
+        "token_cost_tradeoff": "Saves repeated context fetching tokens.",
+        "output_quality_risk": "Low (invalidated when policy files update).",
+        "implementation_complexity": "Low"
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "allocated_key": "GROQ_API_KEY_8 (masked: gsk_...AwPO)"
+    }
+  ],
+  "communication_optimization_opportunities": [
+    {
+      "candidate_id": "COMM-STATE-STREAMLINING",
+      "dimension": "communication_optimization",
+      "title": "Streamline Intermediate Handoff Payloads to Field-Specific Deltas",
+      "target_agents": [
+        "approval_recommendation_agent",
+        "duplicate_detection_agent",
+        "exception_analysis_agent",
+        "final_review_agent_invoice"
+      ],
+      "observed_problem": "Workflow passes full document and global context payloads across sequential agent boundaries (46 detected handoff edges). Intermediate agents receive unneeded upstream metadata, inflating prompt token consumption across every stage.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_3_graph",
+          "stage_10_evidence"
+        ],
+        "total_handoff_edges": 46,
+        "inspected_agents": [
+          "approval_recommendation_agent",
+          "duplicate_detection_agent",
+          "exception_analysis_agent",
+          "final_review_agent_invoice"
+        ]
+      },
+      "proposed_solution": "Replace raw full-state serialization with typed, field-specific projection schemas. Each agent receives strictly its declared input requirements and emits only newly computed attributes.",
+      "expected_benefit": {
+        "token_savings_pct": 22.0,
+        "latency_savings_pct": 10.0,
+        "cost_savings_pct": 22.0,
+        "quality_impact": "Reduces context dilution and LLM attention distraction."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Reduces prompt processing latency.",
+        "token_cost_tradeoff": "20-25% reduction in cumulative workflow token volume.",
+        "output_quality_risk": "Low (formalized through Pydantic handoff schemas).",
+        "implementation_complexity": "Medium"
+      },
+      "tier": "Tier 1",
+      "requires_validation": false,
+      "allocated_key": "GROQ_API_KEY_9 (masked: gsk_...k7Gf)"
+    }
+  ],
+  "additional_optimization_opportunities": [
+    {
+      "candidate_id": "ADDITIONAL-EARLY-EXIT",
+      "dimension": "additional_optimization",
+      "title": "Fast-Path Early Exit for Standard/Compliant Artifacts",
+      "target_agents": [
+        "invoice_validation_agent",
+        "po_matching_agent",
+        "policy_compliance_agent"
+      ],
+      "observed_problem": "The target workflow runs through all 8 stages sequentially regardless of input complexity or deviation status. Standard contracts or clean inputs that pass initial verification without issues still execute all downstream remediation and deep analysis loops, consuming ~31.1s.",
+      "supporting_evidence": {
+        "mcp_stage_source": [
+          "stage_2_overview",
+          "stage_6_latency",
+          "stage_9_comparison"
+        ],
+        "total_agent_count": 8,
+        "workflow_mean_seconds": 31.1229
+      },
+      "proposed_solution": "Introduce a fast-path conditional checkpoint: if zero high-risk ambiguities or compliance deviations are identified in early stages, bypass extensive multi-agent reconciliation and jump directly to final report generation.",
+      "expected_benefit": {
+        "latency_savings_pct": 55.0,
+        "latency_savings_seconds": 17.12,
+        "token_savings_pct": 50.0,
+        "cost_savings_pct": 50.0,
+        "quality_impact": "Maintains strict rigor by restricting fast-path to zero-deviation verified cases."
+      },
+      "tradeoffs_and_risks": {
+        "latency_tradeoff": "Over 50% latency reduction on clean input distributions.",
+        "token_cost_tradeoff": "Cuts token spend in half for routine standard cases.",
+        "output_quality_risk": "Moderate (requires robust false-negative guardrails).",
+        "implementation_complexity": "Medium"
+      },
+      "tier": "Tier 2",
+      "requires_validation": true,
+      "allocated_key": "GROQ_API_KEY_10 (masked: gsk_...DBpq)"
+    }
+  ],
+  "prioritized_action_plan": {
+    "tier_1_immediate_implementation": [
+      {
+        "candidate_id": "PRUNE-INVOICE_VALIDATION_AGENT",
+        "title": "Conditional Pruning or Pass-Through Bypass of invoice_validation_agent",
+        "target_agents": [
+          "invoice_validation_agent"
+        ],
+        "expected_benefit": {
+          "latency_savings_pct": 10.0,
+          "latency_savings_seconds": 1.4252,
+          "token_savings_pct": 8.5,
+          "quality_impact": "Negligible risk when paired with strict upstream confidence thresholds."
+        },
+        "justification": "High expected benefit with low implementation complexity and zero functional risk."
+      },
+      {
+        "candidate_id": "PROMPT-APPROVAL_RECOMMENDATION_AGENT",
+        "title": "Compress Bloated Prompt Template for approval_recommendation_agent",
+        "target_agents": [
+          "approval_recommendation_agent"
+        ],
+        "expected_benefit": {
+          "token_savings_pct": 35.0,
+          "token_savings_count": 432,
+          "cost_savings_pct": 35.0,
+          "latency_savings_pct": 15.0,
+          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+        },
+        "justification": "High expected benefit with low implementation complexity and zero functional risk."
+      },
+      {
+        "candidate_id": "PROMPT-DUPLICATE_DETECTION_AGENT",
+        "title": "Compress Bloated Prompt Template for duplicate_detection_agent",
+        "target_agents": [
+          "duplicate_detection_agent"
+        ],
+        "expected_benefit": {
+          "token_savings_pct": 35.0,
+          "token_savings_count": 208,
+          "cost_savings_pct": 35.0,
+          "latency_savings_pct": 15.0,
+          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+        },
+        "justification": "High expected benefit with low implementation complexity and zero functional risk."
+      },
+      {
+        "candidate_id": "PROMPT-EXCEPTION_ANALYSIS_AGENT",
+        "title": "Compress Bloated Prompt Template for exception_analysis_agent",
+        "target_agents": [
+          "exception_analysis_agent"
+        ],
+        "expected_benefit": {
+          "token_savings_pct": 35.0,
+          "token_savings_count": 343,
+          "cost_savings_pct": 35.0,
+          "latency_savings_pct": 15.0,
+          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+        },
+        "justification": "High expected benefit with low implementation complexity and zero functional risk."
+      },
+      {
+        "candidate_id": "PROMPT-FINAL_REVIEW_AGENT_INVOICE",
+        "title": "Compress Bloated Prompt Template for final_review_agent_invoice",
+        "target_agents": [
+          "final_review_agent_invoice"
+        ],
+        "expected_benefit": {
+          "token_savings_pct": 35.0,
+          "token_savings_count": 496,
+          "cost_savings_pct": 35.0,
+          "latency_savings_pct": 15.0,
+          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+        },
+        "justification": "High expected benefit with low implementation complexity and zero functional risk."
+      },
+      {
+        "candidate_id": "PROMPT-INVOICE_EXTRACTION_AGENT",
+        "title": "Compress Bloated Prompt Template for invoice_extraction_agent",
+        "target_agents": [
+          "invoice_extraction_agent"
+        ],
+        "expected_benefit": {
+          "token_savings_pct": 35.0,
+          "token_savings_count": 182,
+          "cost_savings_pct": 35.0,
+          "latency_savings_pct": 15.0,
+          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+        },
+        "justification": "High expected benefit with low implementation complexity and zero functional risk."
+      },
+      {
+        "candidate_id": "PROMPT-INVOICE_VALIDATION_AGENT",
+        "title": "Compress Bloated Prompt Template for invoice_validation_agent",
+        "target_agents": [
+          "invoice_validation_agent"
+        ],
+        "expected_benefit": {
+          "token_savings_pct": 35.0,
+          "token_savings_count": 200,
+          "cost_savings_pct": 35.0,
+          "latency_savings_pct": 15.0,
+          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+        },
+        "justification": "High expected benefit with low implementation complexity and zero functional risk."
+      },
+      {
+        "candidate_id": "PROMPT-PO_MATCHING_AGENT",
+        "title": "Compress Bloated Prompt Template for po_matching_agent",
+        "target_agents": [
+          "po_matching_agent"
+        ],
+        "expected_benefit": {
+          "token_savings_pct": 35.0,
+          "token_savings_count": 258,
+          "cost_savings_pct": 35.0,
+          "latency_savings_pct": 15.0,
+          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+        },
+        "justification": "High expected benefit with low implementation complexity and zero functional risk."
+      },
+      {
+        "candidate_id": "PROMPT-POLICY_COMPLIANCE_AGENT",
+        "title": "Compress Bloated Prompt Template for policy_compliance_agent",
+        "target_agents": [
+          "policy_compliance_agent"
+        ],
+        "expected_benefit": {
+          "token_savings_pct": 35.0,
+          "token_savings_count": 205,
+          "cost_savings_pct": 35.0,
+          "latency_savings_pct": 15.0,
+          "quality_impact": "Preserved or improved clarity due to reduced instruction ambiguity."
+        },
+        "justification": "High expected benefit with low implementation complexity and zero functional risk."
+      },
+      {
+        "candidate_id": "TOOL-APPROVAL_RECOMMENDATION_AGENT",
+        "title": "Deterministic Tool Result Caching for approval_recommendation_agent",
+        "target_agents": [
+          "approval_recommendation_agent"
+        ],
+        "expected_benefit": {
+          "latency_savings_pct": 12.0,
+          "token_savings_pct": 10.0,
+          "quality_impact": "Zero risk for immutable policy reference lookups."
+        },
+        "justification": "High expected benefit with low implementation complexity and zero functional risk."
+      }
+    ],
+    "tier_2_implementation_with_validation": [
+      {
+        "candidate_id": "CONSOLIDATE-INVOICE_EXTRACTION_AGENT-INVOICE_VALIDATION_AGENT",
+        "title": "Consolidate invoice_extraction_agent and invoice_validation_agent into Unified Agent",
+        "target_agents": [
+          "invoice_extraction_agent",
+          "invoice_validation_agent"
+        ],
+        "expected_benefit": {
+          "latency_savings_pct": 25.0,
+          "latency_savings_seconds": 0.9,
+          "token_savings_pct": 20.0,
+          "token_savings_count": 393,
+          "quality_impact": "Maintains full reasoning fidelity by handling extraction and categorization in a single coherent prompt."
+        },
+        "validation_requirements": "Requires shadow execution testing against baseline traces to ensure full accuracy."
+      },
+      {
+        "candidate_id": "MODEL-INVOICE_EXTRACTION_AGENT",
+        "title": "Route invoice_extraction_agent to Smaller/Faster Model (requires validation)",
+        "target_agents": [
+          "invoice_extraction_agent"
+        ],
+        "expected_benefit": {
+          "latency_savings_pct": 40.0,
+          "latency_savings_seconds": 0.88,
+          "cost_savings_pct": 65.0,
+          "quality_impact": "High accuracy on standard schema parsing; edge case validation required."
+        },
+        "validation_requirements": "Requires shadow execution testing against baseline traces to ensure full accuracy."
+      },
+      {
+        "candidate_id": "COMM-STATE-STREAMLINING",
+        "title": "Streamline Intermediate Handoff Payloads to Field-Specific Deltas",
+        "target_agents": [
+          "approval_recommendation_agent",
+          "duplicate_detection_agent",
+          "exception_analysis_agent",
+          "final_review_agent_invoice"
+        ],
+        "expected_benefit": {
+          "token_savings_pct": 22.0,
+          "latency_savings_pct": 10.0,
+          "cost_savings_pct": 22.0,
+          "quality_impact": "Reduces context dilution and LLM attention distraction."
+        },
+        "validation_requirements": "Requires shadow execution testing against baseline traces to ensure full accuracy."
+      },
+      {
+        "candidate_id": "ADDITIONAL-EARLY-EXIT",
+        "title": "Fast-Path Early Exit for Standard/Compliant Artifacts",
+        "target_agents": [
+          "invoice_validation_agent",
+          "po_matching_agent",
+          "policy_compliance_agent"
+        ],
+        "expected_benefit": {
+          "latency_savings_pct": 55.0,
+          "latency_savings_seconds": 17.12,
+          "token_savings_pct": 50.0,
+          "cost_savings_pct": 50.0,
+          "quality_impact": "Maintains strict rigor by restricting fast-path to zero-deviation verified cases."
+        },
+        "validation_requirements": "Requires shadow execution testing against baseline traces to ensure full accuracy."
+      }
+    ],
+    "tier_3_proceed_with_caution": [],
+    "tier_4_insufficient_evidence": [],
+    "implementation_roadmap": [
+      {
+        "phase": "Phase 1: Quick Wins (Tier 1)",
+        "actions": [
+          "Compress prompt templates by removing repetitive instructions and schemas.",
+          "Implement scatter-gather parallel execution for verified independent agent pairs.",
+          "Consolidate tightly coupled sequential extraction agents."
+        ],
+        "projected_timeframe": "1-2 sprints"
+      },
+      {
+        "phase": "Phase 2: Validated Enhancements (Tier 2)",
+        "actions": [
+          "Shadow test compact models for syntactic document intake nodes.",
+          "Implement fast-path early exit for verified zero-deviation artifacts."
+        ],
+        "projected_timeframe": "2-3 sprints"
+      },
+      {
+        "phase": "Phase 3: Deep Architecture Refactoring (Tier 3)",
+        "actions": [
+          "Migrate global state passing to strictly typed, delta-only Pydantic models.",
+          "Deploy centralized memory caching for immutable policy rules."
+        ],
+        "projected_timeframe": "3-4 sprints"
+      }
+    ]
+  }
+}
